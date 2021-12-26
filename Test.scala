@@ -4,10 +4,12 @@ import scalanative.libc.*
 import scala.language.implicitConversions
 import libclang.defs.*
 
-@main def hello =
-  val filename = c"header.c"
+@main def hello(file: String) =
 
-  Zone { implicit z =>
+  inline def zone(inline f: Zone ?=> Unit) = Zone.apply(z => f(using z))
+
+  zone {
+    val filename = toCString(file)
     val index = clang_createIndex(0, 0)
     val unit = clang_parseTranslationUnit(
       index,
@@ -20,21 +22,26 @@ import libclang.defs.*
     )
 
     val cursor = clang_getTranslationUnitCursor(unit)
-    import CXCursor.*
-    println(cursor.kind)
+    val storage = CXString.allocate(1)
+
     val ptr =
-      CXCursorVisitor { (c: CXCursor, parent: CXCursor, _: CXClientData) =>
-        println(c)
+      clang_visitChildren(
+        cursor,
+        CXCursorVisitor {
+          (cursor: CXCursor, parent: CXCursor, _: CXClientData) =>
+            zone {
+              val spelling = clang_getCursorSpelling(cursor).string
+              val typ = clang_getCursorKindSpelling(cursor.kind).string
+              println(
+                s"Cursor kind is ${cursor.kind} Name of cursor is $spelling and the type is $typ"
+              )
+            }
 
-        CXChildVisitResult.CXChildVisit_Recurse
-      }
+            CXChildVisitResult.CXChildVisit_Recurse
+        },
+        CXClientData.NULL
+      )
 
-    println(ptr.raw.apply(CXCursor.NULL, CXCursor.NULL, CXClientData.NULL))
-    clang_visitChildren(
-      cursor,
-      ptr,
-      CXClientData.NULL
-    )
     clang_disposeTranslationUnit(unit)
     clang_disposeIndex(index)
   }

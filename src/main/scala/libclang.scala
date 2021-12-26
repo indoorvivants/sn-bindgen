@@ -12,14 +12,16 @@ object defs:
 
   abstract class CEnum[T](using eq: T =:= Int):
     given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
+    extension (t: T) def int: CInt = eq.apply(t)
+
   abstract class CEnumU[T](using eq: T =:= UInt):
     given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
 
   object CXUnsafeFile:
     extension (cxuf: CXUnsavedFile)
-      def Filename = cxuf._1
-      def Context = cxuf._2
-      def Length = cxuf._3
+      inline def Filename = cxuf._1
+      inline def Context = cxuf._2
+      inline def Length = cxuf._3
 
   opaque type CXTranslationUnit_Flags = CUnsignedInt
   object CXTranslationUnit_Flags extends CEnumU[CXTranslationUnit_Flags]:
@@ -27,16 +29,26 @@ object defs:
     private val zero = 0x00.toUInt
     val CXTranslationUnit_None: T = zero
 
-  opaque type CXCursor = CStruct3[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
-  object CXCursor:
+  abstract class Wrapper[T, W <: Ptr[T]](using tg: Tag[T]):
+    given Tag[W] = Tag.Ptr(tg).asInstanceOf[Tag[W]]
+    inline def allocate(inline n: CSSize)(using zone: Zone): W =
+      alloc[T](n)(using tg, zone).asInstanceOf[W]
+
+  opaque type CXCursorImpl =
+    CStruct3[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
+  opaque type CXCursor = Ptr[CXCursorImpl]
+  object CXCursor extends Wrapper[CXCursorImpl, CXCursor]:
     val NULL: CXCursor = null
     extension (cursor: CXCursor)
       def kind: CXCursorKind = cursor._1
       def xdata: CInt = cursor._2
 
     given Tag[CXCursor] =
-      Tag
-        .materializeCStruct3Tag[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
+      Tag.Ptr(
+        Tag
+          .materializeCStruct3Tag[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
+      )
+  end CXCursor
 
   opaque type CXCursorKind = CInt
   object CXKursorKind extends CEnum[CXCursorKind]:
@@ -47,6 +59,20 @@ object defs:
     val CXCursor_EnumDecl: CXCursorKind = 5
   end CXKursorKind
 
+  opaque type CXStringImpl = CStruct2[Ptr[Byte], UInt]
+  object CXStringImpl:
+    given Tag[CXStringImpl] = Tag.materializeCStruct2Tag[Ptr[Byte], UInt]
+
+  opaque type CXString = Ptr[CXStringImpl]
+  object CXString extends Wrapper[CXStringImpl, CXString]:
+    extension (cxs: CXString)
+      def data: Ptr[Byte] = cxs._1
+      def string(using Zone): String =
+        val orig = clang_getCString(cxs)
+        val str = fromCString(orig)
+        clang_disposeString(cxs)
+        str
+
   opaque type CXChildVisitResult = Int
   object CXChildVisitResult extends CEnum[CXChildVisitResult]:
     val CXChildVisit_Break: CXChildVisitResult = 0
@@ -54,13 +80,12 @@ object defs:
     val CXChildVisit_Recurse: CXChildVisitResult = 2
   end CXChildVisitResult
 
-  type CXClientData = Ptr[Byte]
+  opaque type CXClientData = Ptr[Byte]
   object CXClientData:
     val NULL: CXClientData = null
     given Tag[CXClientData] =
       Tag
         .materializePtrTag[Byte](using Tag.Byte)
-        .asInstanceOf[Tag[CXClientData]]
 
   opaque type CXCursorVisitor =
     CFuncPtr3[CXCursor, CXCursor, CXClientData, CXChildVisitResult]
@@ -69,10 +94,6 @@ object defs:
     inline def apply(
         inline f: (CXCursor, CXCursor, CXClientData) => CXChildVisitResult
     ): CXCursorVisitor = CFuncPtr3.fromScalaFunction(f)
-
-    extension (v: CXCursorVisitor)
-      inline def raw
-          : CFuncPtr3[CXCursor, CXCursor, CXClientData, CXChildVisitResult] = v
 
   opaque type CXLanguageKind = Int
   object CXLanguageKind extends CEnum[CXErrorCode]:
@@ -94,16 +115,27 @@ object defs:
 
   object wrappers:
     def clang_getNullCursor()(implicit z: Zone) =
-      val ptr = alloc[CXCursor](1)
+      val ptr = alloc[CXCursorImpl](1)
       wrap_getNullCursor(ptr)
-      !ptr
+      ptr
 
-    def clang_getTranslationUnitCursor(unit: CXTranslationUnit)(implicit
-        z: Zone
+    def clang_getTranslationUnitCursor(unit: CXTranslationUnit)(using
+        Zone
     ): CXCursor =
-      val ptr = alloc[CXCursor](1)
+      val ptr = alloc[CXCursorImpl](1)
       wrap_getTranslationUnitCursor(ptr, unit)
-      !ptr
+      ptr
+
+    def clang_hashCursor(curs: CXCursor): UInt = wrap_hashCursor(curs)
+    def clang_visitChildren(curs: CXCursor): UInt = wrap_hashCursor(curs)
+    def clang_getCursorSpelling(curs: CXCursor)(using Zone): CXString =
+      val ptr = CXString.allocate(1)
+      wrap_getCursorSpelling(curs, ptr)
+      ptr
+    def clang_getCursorKindSpelling(curs: CXCursorKind)(using Zone): CXString =
+      val ptr = CXString.allocate(1)
+      wrap_getCursorKindSpelling(curs, ptr)
+      ptr
   end wrappers
 
   @extern
@@ -136,22 +168,43 @@ object defs:
 
     def clang_disposeIndex(CIdx: CXIndex): Unit = extern
     def clang_disposeTranslationUnit(unit: CXTranslationUnit): Unit = extern
-    def clang_getCursorKind(unit: CXCursor): Unit = extern
+    def clang_getCursorKind(unit: CXCursor): CXCursorKind = extern
     def clang_getCursorLanguage(cursor: CXCursor): CXLanguageKind = extern
 
-    @name("scalanative_clang_getNullCursor")
-    private[libclang] def wrap_getNullCursor(ptr: Ptr[CXCursor]): Unit = extern
+    private[libclang] def wrap_getNullCursor(ptr: CXCursor): Unit = extern
 
-    @name("scalanative_clang_getTranslationUnitCursor")
+    private[libclang] def wrap_getCursorSpelling(
+        cursor: CXCursor,
+        str: CXString
+    ): Unit = extern
+
+    private[libclang] def wrap_getCursorKindSpelling(
+        cursor: CXCursorKind,
+        ptr: CXString
+    ): Unit = extern
+
     private[libclang] def wrap_getTranslationUnitCursor(
-        ptr: Ptr[CXCursor],
+        ptr: CXCursor,
         unit: CXTranslationUnit
     ): Unit = extern
 
+    private[libclang] def wrap_hashCursor(ptr: CXCursor): UInt = extern
+
+    @name("wrap_visitChildren")
     def clang_visitChildren(
         parent: CXCursor,
         visitor: CXCursorVisitor,
         data: CXClientData
-    ): Unit = extern
+    ): UInt = extern
+
+    @name("wrap_getCString")
+    def clang_getCString(cxs: CXString): CString = extern
+
+    @name("wrap_disposeString")
+    def clang_disposeString(cxs: CXString): Unit = extern
+
+  // @name()
+  // def clang_getCursorKindSpelling()
+
   end methods
 end defs
