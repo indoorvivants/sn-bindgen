@@ -1,0 +1,10 @@
+*.class
+*.tasty
+.metals
+.bloop
+.bsp
+.sbt
+
+**/target/**
+project/project
+project/metals.sbt
