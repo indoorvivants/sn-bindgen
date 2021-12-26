@@ -3,6 +3,7 @@ import scala.scalanative.unsigned.*
 import scalanative.libc.*
 import scala.language.implicitConversions
 import libclang.defs.*
+import libclang.types.*
 
 @main def hello(file: String) =
 

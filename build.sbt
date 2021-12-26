@@ -10,4 +10,4 @@ nativeConfig ~= { conf =>
     .withCompileOptions(Seq("-I/opt/homebrew/opt/llvm/include"))
 }
 
-scalacOptions += "-Yretain-trees"
+/* scalacOptions += "-Yretain-trees" */
