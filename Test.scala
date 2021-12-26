@@ -32,8 +32,10 @@ import libclang.defs.*
             zone {
               val spelling = clang_getCursorSpelling(cursor).string
               val typ = clang_getCursorKindSpelling(cursor.kind).string
+              val t = clang_getCursorType(cursor)
+              val spelling_typ = clang_getTypeSpelling(t).string
               println(
-                s"Cursor kind is ${cursor.kind} Name of cursor is $spelling and the type is $typ"
+                s"Cursor kind is ${cursor.kind}\n Name of cursor is $spelling\n and the type is $typ, type is '$spelling_typ'"
               )
             }
 

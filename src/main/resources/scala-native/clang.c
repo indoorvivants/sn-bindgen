@@ -38,3 +38,18 @@ void wrap_getCursorKindSpelling(enum CXCursorKind kind, CXString *cxstr) {
   CXString cs = clang_getCursorKindSpelling(kind);
   memcpy(cxstr, &cs, sizeof(CXString));
 }
+
+void wrap_getCursorType(CXCursor *curs, CXType *cxtype) {
+  CXType cs = clang_getCursorType(*curs);
+  memcpy(cxtype, &cs, sizeof(CXType));
+}
+
+void wrap_getResultType(CXType *cxtype) {
+  CXType cs = clang_getResultType(*cxtype);
+  memcpy(cxtype, &cs, sizeof(CXType));
+}
+
+void wrap_getTypeSpelling(CXType *cxtype, CXString *cxs) {
+  CXString cs = clang_getTypeSpelling(*cxtype);
+  memcpy(cxs, &cs, sizeof(CXString));
+}

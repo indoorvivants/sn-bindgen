@@ -73,6 +73,14 @@ object defs:
         clang_disposeString(cxs)
         str
 
+  opaque type CXTypeKind = Int
+  object CXTypeKind extends CEnum[CXTypeKind]
+
+  opaque type CXTypeImpl = CStruct2[CXTypeKind, CArray[Ptr[Byte], Nat._2]]
+  opaque type CXType = Ptr[CXTypeImpl]
+  object CXType extends Wrapper[CXTypeImpl, CXType]:
+    extension (t: CXType) def kind: CXTypeKind = t._1
+
   opaque type CXChildVisitResult = Int
   object CXChildVisitResult extends CEnum[CXChildVisitResult]:
     val CXChildVisit_Break: CXChildVisitResult = 0
@@ -136,6 +144,21 @@ object defs:
       val ptr = CXString.allocate(1)
       wrap_getCursorKindSpelling(curs, ptr)
       ptr
+
+    def clang_getCursorType(curs: CXCursor)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getCursorType(curs, ptr)
+      ptr
+
+    def clang_getResultType(curs: CXType)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getResultType(curs, ptr)
+      ptr
+
+    def clang_getTypeSpelling(curs: CXType)(using Zone): CXString =
+      val ptr = CXString.allocate(1)
+      wrap_getTypeSpelling(curs, ptr)
+      ptr
   end wrappers
 
   @extern
@@ -188,6 +211,21 @@ object defs:
         unit: CXTranslationUnit
     ): Unit = extern
 
+    private[libclang] def wrap_getCursorType(
+        ptr: CXCursor,
+        unit: CXType
+    ): Unit = extern
+
+    private[libclang] def wrap_getResultType(
+        ptr: CXType,
+        unit: CXType
+    ): Unit = extern
+    
+    private[libclang] def wrap_getTypeSpelling(
+        ptr: CXType,
+        unit: CXString
+    ): Unit = extern
+
     private[libclang] def wrap_hashCursor(ptr: CXCursor): UInt = extern
 
     @name("wrap_visitChildren")
@@ -202,9 +240,6 @@ object defs:
 
     @name("wrap_disposeString")
     def clang_disposeString(cxs: CXString): Unit = extern
-
-  // @name()
-  // def clang_getCursorKindSpelling()
 
   end methods
 end defs
