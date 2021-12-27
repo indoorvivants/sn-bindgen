@@ -44,6 +44,15 @@ void wrap_getCursorType(CXCursor *curs, CXType *cxtype) {
   memcpy(cxtype, &cs, sizeof(CXType));
 }
 
+void wrap_getEnumDeclIntegerType(CXCursor *curs, CXType *cxtype) {
+  CXType cs = clang_getEnumDeclIntegerType(*curs);
+  memcpy(cxtype, &cs, sizeof(CXType));
+}
+
+long long wrap_getEnumConstantDeclValue(CXCursor *curs) {
+  return clang_getEnumConstantDeclValue(*curs);
+}
+
 void wrap_getResultType(CXType *cxtype) {
   CXType cs = clang_getResultType(*cxtype);
   memcpy(cxtype, &cs, sizeof(CXType));
@@ -51,5 +60,10 @@ void wrap_getResultType(CXType *cxtype) {
 
 void wrap_getTypeSpelling(CXType *cxtype, CXString *cxs) {
   CXString cs = clang_getTypeSpelling(*cxtype);
+  memcpy(cxs, &cs, sizeof(CXString));
+}
+
+void wrap_getTypedefName(CXType *cxtype, CXString *cxs) {
+  CXString cs = clang_getTypedefName(*cxtype);
   memcpy(cxs, &cs, sizeof(CXString));
 }

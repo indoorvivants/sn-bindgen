@@ -16,6 +16,7 @@ object defs:
   export methods.*
   export wrappers.*
 
+  import enumerations.*
   import types.*
 
   object wrappers:
@@ -51,10 +52,20 @@ object defs:
       val ptr = CXType.allocate(1)
       wrap_getResultType(curs, ptr)
       ptr
+    
+    def clang_getEnumDeclIntegerType(curs: CXCursor)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getEnumDeclIntegerType(curs, ptr)
+      ptr
 
     def clang_getTypeSpelling(curs: CXType)(using Zone): CXString =
       val ptr = CXString.allocate(1)
       wrap_getTypeSpelling(curs, ptr)
+      ptr
+
+    def clang_getTypedefName(curs: CXType)(using Zone): CXString =
+      val ptr = CXString.allocate(1)
+      wrap_getTypedefName(curs, ptr)
       ptr
   end wrappers
 
@@ -117,8 +128,18 @@ object defs:
         ptr: CXType,
         unit: CXType
     ): Unit = extern
+    
+    private[libclang] def wrap_getEnumDeclIntegerType(
+        cursor: CXCursor,
+        result: CXType
+    ): Unit = extern
 
     private[libclang] def wrap_getTypeSpelling(
+        ptr: CXType,
+        unit: CXString
+    ): Unit = extern
+    
+    private[libclang] def wrap_getTypedefName(
         ptr: CXType,
         unit: CXString
     ): Unit = extern
@@ -137,6 +158,9 @@ object defs:
 
     @name("wrap_disposeString")
     def clang_disposeString(cxs: CXString): Unit = extern
+    
+    @name("wrap_getEnumConstantDeclValue")
+    def clang_getEnumConstantDeclValue(curs: CXCursor): CLongLong = extern
 
   end methods
 end defs
