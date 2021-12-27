@@ -43,13 +43,14 @@ object types:
   end CXCursor
 
   opaque type CXCursorKind = CInt
-  object CXKursorKind extends CEnum[CXCursorKind]:
+  object CXCursorKind extends CEnum[CXCursorKind]:
     val CXCursor_UnexposedDecl: CXCursorKind = 1
     val CXCursor_StructDecl: CXCursorKind = 2
     val CXCursor_UnionDecl: CXCursorKind = 3
     val CXCursor_ClassDecl: CXCursorKind = 4
     val CXCursor_EnumDecl: CXCursorKind = 5
-  end CXKursorKind
+    val CXCursor_FieldDecl: CXCursorKind = 6
+  end CXCursorKind
 
   opaque type CXStringImpl = CStruct2[Ptr[Byte], UInt]
   object CXStringImpl:

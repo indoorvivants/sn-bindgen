@@ -20,7 +20,7 @@ object defs:
 
   object wrappers:
     def clang_getNullCursor()(implicit z: Zone) =
-      val ptr = CXCursor.allocate(1) //alloc[CXCursorImpl](1)
+      val ptr = CXCursor.allocate(1)
       wrap_getNullCursor(ptr)
       ptr
 
