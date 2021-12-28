@@ -1,5 +1,7 @@
 package bindgen
 
+import bindgen.Def.Binding
+
 object render:
   def enumeration(model: Def.Enum, line: Appender)(using
       Config
@@ -92,17 +94,62 @@ object render:
     end match
   end scalaType
 
-  def natDigits(i: Int): String =
+  def binding(binding: Def.Binding, sb: StringBuilder)(using
+      Config
+  ) =
+    sb.append("object predef:")
+    render.nest {
+      val predef = """
+      |abstract class CEnum[T](using eq: T =:= Int):
+      |  given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
+      |  extension (t: T) def int: CInt = eq.apply(t)
+      |
+      |abstract class CEnumU[T](using eq: T =:= UInt):
+      |  given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+      """.stripMargin.linesIterator
+      predef.foreach(render.to(sb))
+    }
+
+    sb.append("object enumerations:\n")
+    render.nest {
+      render.to(sb)("import predef.*")
+      binding.enums.zipWithIndex.foreach { case (en, idx) =>
+        render.enumeration(
+          en,
+          render.to(sb)
+        )
+        if idx != binding.enums.size - 1 then sb.append("\n")
+      }
+    }
+
+    sb.append("object structs:\n")
+    render.nest {
+      render.to(sb)("import predef.*, enumerations.*")
+
+      binding.structs.zipWithIndex.foreach { case (en, idx) =>
+        render.struct(
+          en,
+          render.to(sb)
+        )
+        if idx != binding.structs.size - 1 then sb.append("\n")
+      }
+    }
+  end binding
+
+  private def natDigits(i: Int): String =
     if i <= 9 then s"Nat._$i"
     else
       val digits = i.toString.iterator.toList.map("_" + _).mkString(", ")
       s"Nat.Digit${digits.size}[$digits]"
 
-  def indent(using c: Config): String = (" " * (c.indentSize * c.indents))
-  def nest(f: Config ?=> Unit)(using config: Config) = f(using
+  private def indent(using c: Config): String =
+    (" " * (c.indentSize * c.indents))
+
+  private def nest(f: Config ?=> Unit)(using config: Config) = f(using
     Config(config.indentSize, indents = config.indents + 1)
   )
-  def to(sb: java.lang.StringBuilder)(using config: Config): Appender =
+
+  private def to(sb: StringBuilder)(using config: Config): Appender =
     line => sb.append(indent(using config) + line + "\n")
 
   type Appender = Config ?=> String => Unit
