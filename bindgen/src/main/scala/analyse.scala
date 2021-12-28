@@ -38,7 +38,7 @@ def analyse(file: String)(using Zone): Def.Binding =
             if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
               val function = visitFunction(cursor)
               binding.functions.add(function)
-              println("Defined func: " + function)
+              System.err.println("Defined func: " + function)
 
             if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
               val typ = clang_getTypedefDeclUnderlyingType(cursor)
@@ -46,7 +46,7 @@ def analyse(file: String)(using Zone): Def.Binding =
               val recordType = clang_Type_getNamedType(typ)
               val struct =
                 visitStruct(clang_getTypeDeclaration(recordType), name)
-              println("Defined struct: " + struct)
+              System.err.println("Defined struct: " + struct)
               binding.structs.add(struct)
             end if
 

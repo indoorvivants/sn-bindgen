@@ -23,8 +23,10 @@ def constructType(typ: CXType)(using
       name
 
     case CXType_Enum =>
-      val enumName = clang_getCursorSpelling(clang_getTypeDeclaration(typ)).string
-      
+      val enumName = clang_getCursorSpelling(
+        clang_getTypeDeclaration(typ)
+      ).string
+
       CType.Typedef(enumName)
 
     case CXType_FunctionProto =>
@@ -82,7 +84,7 @@ def constructType(typ: CXType)(using
     case CXType_Double     => CType.NumericReal(FloatingBase.Double)
     case CXType_LongDouble => CType.NumericReal(FloatingBase.LongDouble)
 
-    case other => println(s"Unknown type: $spelling"); CType.Void;
+    case other => System.err.println(s"Unknown type: $spelling"); CType.Void;
   end match
 
 end constructType

@@ -17,7 +17,7 @@ object render:
 
     nest {
       if numericType.sign == SignType.Signed then
-        line(s"inline def define(inline a: $underlyingTypeRender) = a")
+        line(s"inline def define(inline a: $underlyingTypeRender): $opaqueType = a")
       else
         val extension = numericType.base match
           case IntegralBase.Int   => "Int"
@@ -25,7 +25,7 @@ object render:
           case IntegralBase.Short => "Short"
           case IntegralBase.Char  => "Byte"
         line(
-          s"transparent inline def define(inline a: Long): $opaqueType = a.toU$extension"
+          s"inline def define(inline a: Long): $opaqueType = a.toU$extension"
         )
       end if
       model.values.foreach { case (constName, value) =>
