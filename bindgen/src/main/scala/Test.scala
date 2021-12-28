@@ -25,7 +25,11 @@ inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
       CXTranslationUnit_Flags.CXTranslationUnit_None
     )
     val bindingMem = stackalloc[Def.Binding](1)
-    !bindingMem = Def.Binding(enums = mutable.Set.empty)
+    !bindingMem = Def.Binding(
+      enums = mutable.Set.empty,
+      structs = mutable.Set.empty,
+      functions = mutable.Set.empty
+    )
 
     clang_visitChildren(
       clang_getTranslationUnitCursor(unit),
@@ -33,10 +37,20 @@ inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
         (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
           val binding = !(data.unwrap[Def.Binding])
           zone {
-            // if cursor.kind == CXCursorKind.CXCursor_StructDecl then
-            //   visitStruct(cursor)
-            //   CXChildVisitResult.CXChildVisit_Continue
-            // else CXChildVisitResult.CXChildVisit_Recurse
+            if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
+              val function = visitFunction(cursor)
+              binding.functions.add(function)
+              println("Defined func: " + function)
+
+            if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+              val typ = clang_getTypedefDeclUnderlyingType(cursor)
+              val name = clang_getCursorSpelling(cursor).string
+              val recordType = clang_Type_getNamedType(typ)
+              val struct =
+                visitStruct(clang_getTypeDeclaration(recordType), name)
+              println("Defined struct: " + struct)
+              binding.structs.add(struct)
+            end if
 
             if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
               binding.enums.add(
@@ -46,20 +60,53 @@ inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
                 )
               )
           }
-
-          CXChildVisitResult.CXChildVisit_Recurse
+          if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+            CXChildVisitResult.CXChildVisit_Continue
+          else CXChildVisitResult.CXChildVisit_Recurse
       },
       CXClientData.wrap(bindingMem)
     )
 
     val sb = new java.lang.StringBuilder
 
-    given Config = Config(indent = 2)
-    
+    given default: Config = Config(indentSize = 2)
+
+    sb.append("object predef:")
+    render.nest {
+      val predef = """
+      |abstract class CEnum[T](using eq: T =:= Int):
+      |  given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
+      |  extension (t: T) def int: CInt = eq.apply(t)
+      |
+      |abstract class CEnumU[T](using eq: T =:= UInt):
+      |  given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+      """.stripMargin.linesIterator
+      predef.foreach(render.to(sb))
+    }
+
     sb.append("object enumerations:\n")
-    (!bindingMem).enums.zipWithIndex.foreach { case (en, idx) =>
-      render.enumeration(en, (s: String) => sb.append(render.indent + s + "\n"))
-      if idx != (!bindingMem).enums.size - 1 then sb.append("\n")
+    render.nest {
+      render.to(sb)("import predef.*")
+      (!bindingMem).enums.zipWithIndex.foreach { case (en, idx) =>
+        render.enumeration(
+          en,
+          render.to(sb)
+        )
+        if idx != (!bindingMem).enums.size - 1 then sb.append("\n")
+      }
+    }
+
+    sb.append("object structs:\n")
+    render.nest {
+      render.to(sb)("import predef.*, enumerations.*")
+
+      (!bindingMem).structs.zipWithIndex.foreach { case (en, idx) =>
+        render.struct(
+          en,
+          render.to(sb)
+        )
+        if idx != (!bindingMem).structs.size - 1 then sb.append("\n")
+      }
     }
     println(sb.toString)
 
@@ -67,53 +114,3 @@ inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
     clang_disposeIndex(index)
   }
 end hello
-
-def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using Zone) =
-  val mem = stackalloc[Def.Enum](1)
-  !mem = Def.Enum(mutable.ListBuffer.empty, name = "", intType = "")
-  zone {
-    (!mem).intType =
-      clang_getTypeSpelling(clang_getEnumDeclIntegerType(cursor)).string
-    val typ = clang_getCursorType(cursor)
-    val name = clang_getTypeSpelling(typ).string
-    (!mem).name = if name.startsWith("enum ") then name.drop(5) else name
-  }
-
-  clang_visitChildren(
-    cursor,
-    CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
-      zone {
-        if cursor.kind == CXCursorKind.CXCursor_EnumConstantDecl then
-          val s = clang_getCursorSpelling(cursor).string
-          val ref = !d.unwrap[Def.Enum]
-          ref.values.addOne(
-            s -> clang_getEnumConstantDeclValue(cursor)
-          )
-          CXChildVisitResult.CXChildVisit_Continue
-        else CXChildVisitResult.CXChildVisit_Recurse
-      }
-    },
-    CXClientData.wrap(mem)
-  )
-  !mem
-end visitEnum
-
-def visitStruct(cursor: CXCursor)(using Zone) =
-  val mem = stackalloc[mutable.ListBuffer[String]](1)
-  !mem = mutable.ListBuffer.empty[String]
-  clang_visitChildren(
-    cursor,
-    CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
-      zone {
-        if cursor.kind == CXCursorKind.CXCursor_FieldDecl then
-          val s = clang_getCursorSpelling(cursor).string
-          (!d.unwrap[mutable.ListBuffer[String]]).addOne(s)
-          CXChildVisitResult.CXChildVisit_Continue
-        else CXChildVisitResult.CXChildVisit_Recurse
-      }
-    },
-    CXClientData.wrap(mem)
-  )
-
-  (!mem).result
-end visitStruct

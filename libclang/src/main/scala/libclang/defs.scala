@@ -52,10 +52,15 @@ object defs:
       val ptr = CXType.allocate(1)
       wrap_getResultType(curs, ptr)
       ptr
-    
+
     def clang_getEnumDeclIntegerType(curs: CXCursor)(using Zone): CXType =
       val ptr = CXType.allocate(1)
       wrap_getEnumDeclIntegerType(curs, ptr)
+      ptr
+
+    def clang_getTypedefDeclUnderlyingType(curs: CXCursor)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getTypedefDeclUnderlyingType(curs, ptr)
       ptr
 
     def clang_getTypeSpelling(curs: CXType)(using Zone): CXString =
@@ -63,9 +68,38 @@ object defs:
       wrap_getTypeSpelling(curs, ptr)
       ptr
 
+    def clang_getTypeKindSpelling(curs: CXTypeKind)(using Zone): CXString =
+      val ptr = CXString.allocate(1)
+      wrap_getTypeKindSpelling(curs, ptr)
+      ptr
+
     def clang_getTypedefName(curs: CXType)(using Zone): CXString =
       val ptr = CXString.allocate(1)
       wrap_getTypedefName(curs, ptr)
+      ptr
+
+    def clang_getPointeeType(curs: CXType)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getPointeeType(curs, ptr)
+      ptr
+
+    def clang_getArrayElementType(curs: CXType)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getArrayElementType(curs, ptr)
+      ptr
+    def clang_getArgType(curs: CXType, idx: CInt)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getArgType(curs, ptr, idx)
+      ptr
+    
+    def clang_Type_getNamedType(curs: CXType)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_Type_getNamedType(curs, ptr)
+      ptr
+    
+    def clang_getTypeDeclaration(curs: CXType)(using Zone): CXCursor =
+      val ptr = CXCursor.allocate(1)
+      wrap_getTypeDeclaration(curs, ptr)
       ptr
   end wrappers
 
@@ -128,8 +162,13 @@ object defs:
         ptr: CXType,
         unit: CXType
     ): Unit = extern
-    
+
     private[libclang] def wrap_getEnumDeclIntegerType(
+        cursor: CXCursor,
+        result: CXType
+    ): Unit = extern
+
+    private[libclang] def wrap_getTypedefDeclUnderlyingType(
         cursor: CXCursor,
         result: CXType
     ): Unit = extern
@@ -138,10 +177,41 @@ object defs:
         ptr: CXType,
         unit: CXString
     ): Unit = extern
-    
+
+    private[libclang] def wrap_getTypeKindSpelling(
+        ptr: CXTypeKind,
+        unit: CXString
+    ): Unit = extern
+
     private[libclang] def wrap_getTypedefName(
         ptr: CXType,
         unit: CXString
+    ): Unit = extern
+
+    private[libclang] def wrap_getPointeeType(
+        ptr: CXType,
+        unit: CXType
+    ): Unit = extern
+
+    private[libclang] def wrap_getArrayElementType(
+        ptr: CXType,
+        unit: CXType
+    ): Unit = extern
+    
+    private[libclang] def wrap_Type_getNamedType(
+        ptr: CXType,
+        unit: CXType
+    ): Unit = extern
+    
+    private[libclang] def wrap_getTypeDeclaration(
+        ptr: CXType,
+        unit: CXCursor
+    ): Unit = extern
+
+    private[libclang] def wrap_getArgType(
+        functionType: CXType,
+        elementType: CXType,
+        idx: CInt
     ): Unit = extern
 
     private[libclang] def wrap_hashCursor(ptr: CXCursor): UInt = extern
@@ -158,9 +228,22 @@ object defs:
 
     @name("wrap_disposeString")
     def clang_disposeString(cxs: CXString): Unit = extern
-    
+
     @name("wrap_getEnumConstantDeclValue")
     def clang_getEnumConstantDeclValue(curs: CXCursor): CLongLong = extern
 
+    @name("wrap_getNumArgTypes")
+    def clang_getNumArgTypes(curs: CXType): CInt = extern
+
+    @name("wrap_getArraySize")
+    def clang_getArraySize(curs: CXType): CInt = extern
+
+    @name("wrap_Cursor_isAnonymousRecordDecl")
+    def clang_Cursor_isAnonymousRecordDecl(curs: CXCursor): CUnsignedInt =
+      extern
+
+    @name("wrap_Cursor_isAnonymous")
+    def clang_Cursor_isAnonymous(curs: CXCursor): CUnsignedInt =
+      extern
   end methods
 end defs
