@@ -34,28 +34,30 @@ def analyse(file: String)(using Zone): Def.Binding =
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
         val binding = !(data.unwrap[Def.Binding])
         zone {
-          if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
-            val function = visitFunction(cursor)
-            binding.functions.add(function)
-            println("Defined func: " + function)
+          try
+            if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
+              val function = visitFunction(cursor)
+              binding.functions.add(function)
+              println("Defined func: " + function)
 
-          if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-            val typ = clang_getTypedefDeclUnderlyingType(cursor)
-            val name = clang_getCursorSpelling(cursor).string
-            val recordType = clang_Type_getNamedType(typ)
-            val struct =
-              visitStruct(clang_getTypeDeclaration(recordType), name)
-            println("Defined struct: " + struct)
-            binding.structs.add(struct)
-          end if
+            if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+              val typ = clang_getTypedefDeclUnderlyingType(cursor)
+              val name = clang_getCursorSpelling(cursor).string
+              val recordType = clang_Type_getNamedType(typ)
+              val struct =
+                visitStruct(clang_getTypeDeclaration(recordType), name)
+              println("Defined struct: " + struct)
+              binding.structs.add(struct)
+            end if
 
-          if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
-            binding.enums.add(
-              visitEnum(
-                cursor,
-                clang_getCursorType(parent).kind == CXTypeKind.CXType_Typedef
+            if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
+              binding.enums.add(
+                visitEnum(
+                  cursor,
+                  clang_getCursorType(parent).kind == CXTypeKind.CXType_Typedef
+                )
               )
-            )
+          catch case exc => println("Failed with $exc")
         }
         if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
           CXChildVisitResult.CXChildVisit_Continue

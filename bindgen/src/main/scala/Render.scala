@@ -94,12 +94,20 @@ object render:
     end match
   end scalaType
 
-  def binding(binding: Def.Binding, sb: StringBuilder)(using
-      Config
+  def binding(packageName: String, binding: Def.Binding, sb: StringBuilder)(
+      using Config
   ) =
+    sb.append(s"package $packageName\n")
+    sb.append("""
+      |import scala.scalanative.unsafe.*
+      |import scala.scalanative.unsigned.*
+      |import scalanative.libc.*
+      """.stripMargin.trim)
+    sb.append("\n")
     sb.append("object predef:")
     render.nest {
       val predef = """
+      |
       |abstract class CEnum[T](using eq: T =:= Int):
       |  given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
       |  extension (t: T) def int: CInt = eq.apply(t)
@@ -114,10 +122,11 @@ object render:
     render.nest {
       render.to(sb)("import predef.*")
       binding.enums.zipWithIndex.foreach { case (en, idx) =>
-        render.enumeration(
+        try render.enumeration(
           en,
           render.to(sb)
         )
+        catch exc => System.err.println(s"Failed to render $en: $exc")
         if idx != binding.enums.size - 1 then sb.append("\n")
       }
     }
@@ -127,10 +136,11 @@ object render:
       render.to(sb)("import predef.*, enumerations.*")
 
       binding.structs.zipWithIndex.foreach { case (en, idx) =>
-        render.struct(
+        try render.struct(
           en,
           render.to(sb)
         )
+        catch exc => System.err.println(s"Failed to render $en: $exc")
         if idx != binding.structs.size - 1 then sb.append("\n")
       }
     }
