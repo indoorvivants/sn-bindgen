@@ -8,6 +8,15 @@ import libclang.types.*
 import libclang.enumerations.*
 import scala.collection.mutable
 
+def addBuiltin(binding: Def.Binding): Def.Binding =
+  binding.copy(aliases =
+    binding.aliases
+      .addOne(Def.Alias("size_t", CType.Builtin(BuiltinType.size_t)))
+      .addOne(
+        Def.Alias("ssize_t", CType.Builtin(BuiltinType.ssize_t))
+      )
+  )
+
 def analyse(file: String)(using Zone): Def.Binding =
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
@@ -61,7 +70,7 @@ def analyse(file: String)(using Zone): Def.Binding =
 
             if cursor.kind == CXCursorKind.CXCursor_StructDecl then
               val name = clang_getCursorSpelling(cursor).string
-              if (!binding.structs.exists(_.name == name)) then
+              if name != "" && (!binding.structs.exists(_.name == name)) then
                 binding.structs.add(visitStruct(cursor, name))
 
             if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
@@ -87,5 +96,5 @@ def analyse(file: String)(using Zone): Def.Binding =
   clang_disposeTranslationUnit(unit)
   clang_disposeIndex(index)
 
-  !bindingMem
+  addBuiltin(!bindingMem)
 end analyse

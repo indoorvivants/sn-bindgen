@@ -49,30 +49,85 @@ object render:
   end enumeration
 
   def struct(model: Def.Struct, line: Appender)(using Config) =
-    val structName = model.name
-    val structType = CType.Struct(model.fields.map(_._2).toList)
+    val (struct, rewriteFields) = deRecurse(model)
+    val structName = struct.name
+    val structType = CType.Struct(struct.fields.map(_._2).toList)
     val tpe = scalaType(structType)
     line(s"opaque type $structName = $tpe")
     line(s"object $structName:")
     nest {
       if model.fields.nonEmpty then
-        val paramTypes = model.fields.map(_._2).map(scalaType).mkString(", ")
+        val paramTypes = struct.fields.map(_._2).map(scalaType).mkString(", ")
         val tag =
           s"given Tag[$structName] = ${scalaTag(structType)}"
         line(tag)
         line(s"extension (struct: $structName)")
         nest {
-          model.fields.zipWithIndex.foreach {
+          struct.fields.zipWithIndex.foreach {
             case ((fieldName, fieldType), idx) =>
-              line(
-                s"def ${escape(fieldName)}: ${scalaType(fieldType)} = struct._${idx + 1}"
-              )
+              if !rewriteFields.contains(fieldName) then
+                line(
+                  s"def ${escape(fieldName)}: ${scalaType(fieldType)} = struct._${idx + 1}"
+                )
+              else
+                val newType = scalaType(CType.Pointer(CType.RecordRef(structName)))
+                line(
+                  s"def ${escape(fieldName)}: $newType = struct._${idx + 1}.asInstanceOf[$newType]"
+                )
+              end if
           }
         }
       else line(s"given Tag[$structName] = Tag.materializeCStruct0Tag")
       end if
     }
   end struct
+
+  case class error(msg: String) extends Exception(msg)
+
+  def deRecurse(struct: Def.Struct): (Def.Struct, Set[String]) =
+    val structType = CType.Struct(struct.fields.map(_._2).toList)
+    val structName = struct.name
+
+    def referencesThis(typ: CType): Boolean =
+      import CType.*
+      typ match
+        case Pointer(Typedef(structName))   => true
+        case Pointer(RecordRef(structName)) => true
+        case _                              => false
+
+    def selfReferential(typ: CType): Boolean =
+      import CType.*
+      typ match
+        case Typedef(structName)   => true
+        case RecordRef(structName) => true
+        case _                     => false
+
+    val isPointerRecursive: Boolean =
+      struct.fields.map(_._2).exists(referencesThis)
+
+    val isRecursive = struct.fields.map(_._2).exists(selfReferential)
+
+    if isRecursive then
+      throw error(
+        s"struct '${struct.name}' is self-referential, and I don't know how to de-recurse it"
+      )
+
+    if !isPointerRecursive then (struct, Set.empty)
+    else
+      val rewrite = struct.fields.collect {
+        case (name, typ) if referencesThis(typ) => name
+      }
+
+      val newfields = struct.fields.map {
+        case (name, typ) if referencesThis(typ) =>
+          name -> CType.Pointer(CType.Void)
+        case other => other
+      }
+
+      struct.copy(newfields) -> rewrite.toSet
+
+    end if
+  end deRecurse
 
   def function(model: Def.Function, line: Appender)(using Config) =
     import model.*
@@ -107,7 +162,9 @@ object render:
         s"Tag.$sign$base"
       case Typedef(n) => s"Tag[$n]"
 
-      case RecordRef(n) => s"Tag[$n]"
+      case RecordRef(n)                 => s"Tag[$n]"
+      case Builtin(BuiltinType.size_t)  => "Tag.ULong"
+      case Builtin(BuiltinType.ssize_t) => "Tag.Long"
       case Function(ret, params) =>
         val paramTypes =
           (params.map(_.of) ++ List(ret)).map(scalaType).mkString(", ")
@@ -131,8 +188,10 @@ object render:
   private def scalaType(typ: CType): String =
     import CType.*
     typ match
-      case Typedef(name)   => name
-      case RecordRef(name) => name
+      case Typedef(name)                => name
+      case RecordRef(name)              => name
+      case Builtin(BuiltinType.size_t)  => "CSize"
+      case Builtin(BuiltinType.ssize_t) => "CSSize"
       case Pointer(to) =>
         to match
           case Void         => "Ptr[Byte]" // there's no void type on SN

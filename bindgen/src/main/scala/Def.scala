@@ -42,6 +42,7 @@ enum CType:
   case NumericIntegral(base: IntegralBase, sign: SignType)
   case NumericReal(base: FloatingBase)
   case NumericComplex(base: FloatingBase)
+  case Builtin(which: BuiltinType)
 
   case Typedef(name: String)
   case RecordRef(name: String)
@@ -53,6 +54,9 @@ enum CType:
         case Pointer(of)   => f(Pointer(f(of)))
         case Struct(of)    => f(Struct(of.map(f)))
 end CType
+
+enum BuiltinType:
+  case size_t, ssize_t
 
 enum SignType:
   case Signed, Unsigned
@@ -66,6 +70,8 @@ object CType:
 
   val UnsignedChar: NumericIntegral =
     CType.NumericIntegral(IntegralBase.Char, SignType.Unsigned)
+
+  val Byte = CType.NumericIntegral(IntegralBase.Char, SignType.Signed)
 end CType
 
 enum IntegralBase:
