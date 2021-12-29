@@ -343,6 +343,9 @@ object enumerations:
     val CXTranslationUnit_VisitImplicitAttributes: CXTranslationUnit_Flags = 8192
     val CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles: CXTranslationUnit_Flags = 16384
     val CXTranslationUnit_RetainExcludedConditionalBlocks: CXTranslationUnit_Flags = 32768
+    
+    extension (d: CXTranslationUnit_Flags)
+      def `|`(other: CXTranslationUnit_Flags): CXTranslationUnit_Flags = d | other
 
   opaque type CXLoadDiag_Error = Int
   object CXLoadDiag_Error extends CEnum[CXLoadDiag_Error]:

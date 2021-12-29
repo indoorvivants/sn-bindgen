@@ -12,11 +12,22 @@ import java.io.File
 
 inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
 
-@main def hello(packageName: String, file: String) =
+@main def out(packageName: String, file: String) =
   zone {
     val binding = analyse(file)
     val sb = StringBuilder()
     render.binding(packageName, binding, sb)(using Config(indentSize = 2))
-    val fw = new FileWriter(new File("bindgen/src/test/scala/_playground.scala"))
-    fw.write(sb.result)
+    println(sb.result)
   }
+
+// @main def out(packageName: String, file: String, targetFile: String) =
+//   zone {
+//     val binding = analyse(file)
+//     val sb = StringBuilder()
+//     render.binding(packageName, binding, sb)(using Config(indentSize = 2))
+//     val fw =
+//       new FileWriter(new File(s"bindgen/src/test/scala/$targetFile.scala"))
+//     sb.result.linesWithSeparators.foreach { line =>
+//       fw.write(line)
+//     }
+//   }

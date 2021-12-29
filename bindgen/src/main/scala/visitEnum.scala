@@ -10,7 +10,7 @@ import scala.collection.mutable
 
 def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using Zone) =
   val mem = stackalloc[Def.Enum](1)
-  !mem = Def.Enum(mutable.ListBuffer.empty, name = "", intType = None)
+  !mem = Def.Enum(mutable.ListBuffer.empty, name = None, intType = None)
   zone {
     (!mem).intType =
       Option(constructType(clang_getEnumDeclIntegerType(cursor))).collect {
@@ -18,7 +18,9 @@ def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using Zone) =
       }
     val typ = clang_getCursorType(cursor)
     val name = clang_getTypeSpelling(typ).string
-    (!mem).name = if name.startsWith("enum ") then name.drop(5) else name
+    if clang_Cursor_isAnonymous(cursor) == 0.toUInt then
+      (!mem).name =
+        Some(if name.startsWith("enum ") then name.drop(5) else name)
   }
 
   clang_visitChildren(
@@ -26,10 +28,10 @@ def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using Zone) =
     CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
       zone {
         if cursor.kind == CXCursorKind.CXCursor_EnumConstantDecl then
-          val s = clang_getCursorSpelling(cursor).string
+          val enumConstant = clang_getCursorSpelling(cursor).string
           val ref = !d.unwrap[Def.Enum]
           ref.values.addOne(
-            s -> clang_getEnumConstantDeclValue(cursor)
+            enumConstant -> clang_getEnumConstantDeclValue(cursor)
           )
           CXChildVisitResult.CXChildVisit_Continue
         else CXChildVisitResult.CXChildVisit_Recurse

@@ -39,6 +39,8 @@ object types:
       )
   end CXCursor
 
+
+
   opaque type CXStringImpl = CStruct2[Ptr[Byte], UInt]
   object CXStringImpl:
     given Tag[CXStringImpl] = Tag.materializeCStruct2Tag[Ptr[Byte], UInt]
@@ -57,6 +59,10 @@ object types:
   opaque type CXType = Ptr[CXTypeImpl]
   object CXType extends Wrapper[CXTypeImpl, CXType]:
     extension (t: CXType) def kind: CXTypeKind = t._1
+  
+  opaque type CXSourceLocationImpl = CStruct2[CArray[Ptr[Byte], Nat._2], Int]
+  opaque type CXSourceLocation = Ptr[CXSourceLocationImpl]
+  object CXSourceLocation extends Wrapper[CXSourceLocationImpl, CXSourceLocation]
 
   opaque type CXClientData = Ptr[Byte]
   object CXClientData:

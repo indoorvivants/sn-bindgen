@@ -91,15 +91,20 @@ object defs:
       val ptr = CXType.allocate(1)
       wrap_getArgType(curs, ptr, idx)
       ptr
-    
+
     def clang_Type_getNamedType(curs: CXType)(using Zone): CXType =
       val ptr = CXType.allocate(1)
       wrap_Type_getNamedType(curs, ptr)
       ptr
-    
+
     def clang_getTypeDeclaration(curs: CXType)(using Zone): CXCursor =
       val ptr = CXCursor.allocate(1)
       wrap_getTypeDeclaration(curs, ptr)
+      ptr
+    
+    def clang_getCursorLocation(curs: CXCursor)(using Zone): CXSourceLocation =
+      val ptr = CXSourceLocation.allocate(1)
+      wrap_getCursorLocation(curs, ptr)
       ptr
   end wrappers
 
@@ -197,12 +202,12 @@ object defs:
         ptr: CXType,
         unit: CXType
     ): Unit = extern
-    
+
     private[libclang] def wrap_Type_getNamedType(
         ptr: CXType,
         unit: CXType
     ): Unit = extern
-    
+
     private[libclang] def wrap_getTypeDeclaration(
         ptr: CXType,
         unit: CXCursor
@@ -212,6 +217,11 @@ object defs:
         functionType: CXType,
         elementType: CXType,
         idx: CInt
+    ): Unit = extern
+
+    private[libclang] def wrap_getCursorLocation(
+        curs: CXCursor,
+        loc: CXSourceLocation
     ): Unit = extern
 
     private[libclang] def wrap_hashCursor(ptr: CXCursor): UInt = extern
@@ -244,6 +254,10 @@ object defs:
 
     @name("wrap_Cursor_isAnonymous")
     def clang_Cursor_isAnonymous(curs: CXCursor): CUnsignedInt =
+      extern
+
+    @name("wrap_Location_isFromMainFile")
+    def clang_Location_isFromMainFile(curs: CXSourceLocation): CUnsignedInt =
       extern
   end methods
 end defs

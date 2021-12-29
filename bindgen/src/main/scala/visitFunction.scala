@@ -29,7 +29,10 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
         zone {
           val builder = (!d.unwrap[Def.Function])
           if cursor.kind == CXCursorKind.CXCursor_ParmDecl then
-            val parameterName = clang_getCursorSpelling(cursor).string
+            val parameterName = Option(clang_getCursorSpelling(cursor).string)
+              .filter(_.nonEmpty)
+              .getOrElse(s"_${builder.parameters.size}")
+
             val parameterType = constructType(clang_getCursorType(cursor))
 
             builder.parameters.addOne(parameterName -> parameterType)

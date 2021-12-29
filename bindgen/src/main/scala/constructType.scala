@@ -15,9 +15,17 @@ def constructType(typ: CXType)(using
 ): CType =
   import CXTypeKind.*
   val typekind = typ.kind
-  lazy val spelling = clang_getTypeKindSpelling(typekind).string
+  lazy val spelling =
+    s"""
+    |Kind: ${clang_getTypeKindSpelling(typekind).string}, 
+    | full type: ${clang_getTypeSpelling(typ).string}
+    """.stripMargin
 
   typekind match
+    case CXType_Record =>
+      val name = clang_getCursorSpelling(clang_getTypeDeclaration(typ))
+
+      CType.RecordRef(name.string)
     case CXType_Elaborated =>
       val name = constructType(clang_Type_getNamedType(typ))
       name
@@ -58,6 +66,8 @@ def constructType(typ: CXType)(using
     case CXType_Bool => CType.Bool
     case CXType_Void => CType.Void
     // integral types: signed
+    case CXType_SChar =>
+      CType.NumericIntegral(IntegralBase.Char, SignType.Signed)
     case CXType_Int =>
       CType.NumericIntegral(IntegralBase.Int, SignType.Signed)
     case CXType_Short =>
@@ -68,7 +78,7 @@ def constructType(typ: CXType)(using
       CType.NumericIntegral(IntegralBase.LongLong, SignType.Signed)
 
     // integral types: unsigned
-    case CXType_UChar =>
+    case CXType_UChar | CXType_Char_S =>
       CType.NumericIntegral(IntegralBase.Char, SignType.Unsigned)
     case CXType_UInt =>
       CType.NumericIntegral(IntegralBase.Int, SignType.Unsigned)

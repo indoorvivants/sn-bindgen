@@ -12,6 +12,8 @@ def analyse(file: String)(using Zone): Def.Binding =
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
   val l = List.newBuilder[String]
+  val flags =
+    CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies // | CXTranslationUnit_Flags.CXTranslationUnit_SingleFileParse
   val unit = clang_parseTranslationUnit(
     index,
     filename,
@@ -19,13 +21,14 @@ def analyse(file: String)(using Zone): Def.Binding =
     0.toUInt,
     null,
     0.toUInt,
-    CXTranslationUnit_Flags.CXTranslationUnit_None
+    flags
   )
   val bindingMem = stackalloc[Def.Binding](1)
   !bindingMem = Def.Binding(
     enums = mutable.Set.empty,
     structs = mutable.Set.empty,
-    functions = mutable.Set.empty
+    functions = mutable.Set.empty,
+    aliases = mutable.Set.empty
   )
 
   clang_visitChildren(
@@ -35,6 +38,9 @@ def analyse(file: String)(using Zone): Def.Binding =
         val binding = !(data.unwrap[Def.Binding])
         zone {
           try
+            val loc = clang_getCursorLocation(cursor)
+            println(clang_Location_isFromMainFile(loc))
+
             if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
               val function = visitFunction(cursor)
               binding.functions.add(function)
@@ -43,11 +49,14 @@ def analyse(file: String)(using Zone): Def.Binding =
             if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
               val typ = clang_getTypedefDeclUnderlyingType(cursor)
               val name = clang_getCursorSpelling(cursor).string
-              val recordType = clang_Type_getNamedType(typ)
-              val struct =
-                visitStruct(clang_getTypeDeclaration(recordType), name)
-              System.err.println("Defined struct: " + struct)
-              binding.structs.add(struct)
+              val referencedType = clang_Type_getNamedType(typ)
+              val typeDecl = clang_getTypeDeclaration(referencedType)
+              if (referencedType.kind == CXTypeKind.CXType_Enum) then
+                binding.enums.add(visitEnum(typeDecl, true))
+              else if (referencedType.kind == CXTypeKind.CXType_Record) then
+                binding.structs.add(visitStruct(typeDecl, name))
+              else binding.aliases.add(Def.Alias(name, constructType(typ)))
+              end if
             end if
 
             if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
@@ -57,7 +66,7 @@ def analyse(file: String)(using Zone): Def.Binding =
                   clang_getCursorType(parent).kind == CXTypeKind.CXType_Typedef
                 )
               )
-          catch case exc => println("Failed with $exc")
+          catch case exc => println(s"Failed analysis with $exc")
         }
         if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
           CXChildVisitResult.CXChildVisit_Continue
