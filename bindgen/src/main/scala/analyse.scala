@@ -35,16 +35,16 @@ def analyse(file: String)(using Zone): Def.Binding =
     clang_getTranslationUnitCursor(unit),
     CXCursorVisitor {
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
-        val binding = !(data.unwrap[Def.Binding])
         zone {
-          try
-            val loc = clang_getCursorLocation(cursor)
-            println(clang_Location_isFromMainFile(loc))
-
+          val binding = !(data.unwrap[Def.Binding])
+          val loc = clang_getCursorLocation(cursor)
+          val isFromMainFile = clang_Location_isFromMainFile(loc) == 1.toUInt
+          if isFromMainFile then
             if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
               val function = visitFunction(cursor)
               binding.functions.add(function)
               System.err.println("Defined func: " + function)
+            end if
 
             if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
               val typ = clang_getTypedefDeclUnderlyingType(cursor)
@@ -59,6 +59,11 @@ def analyse(file: String)(using Zone): Def.Binding =
               end if
             end if
 
+            if cursor.kind == CXCursorKind.CXCursor_StructDecl then
+              val name = clang_getCursorSpelling(cursor).string
+              if (!binding.structs.exists(_.name == name)) then
+                binding.structs.add(visitStruct(cursor, name))
+
             if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
               binding.enums.add(
                 visitEnum(
@@ -66,11 +71,15 @@ def analyse(file: String)(using Zone): Def.Binding =
                   clang_getCursorType(parent).kind == CXTypeKind.CXType_Typedef
                 )
               )
-          catch case exc => println(s"Failed analysis with $exc")
+            end if
+
+            if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+              CXChildVisitResult.CXChildVisit_Continue
+            else CXChildVisitResult.CXChildVisit_Recurse
+          else CXChildVisitResult.CXChildVisit_Continue
+          end if
         }
-        if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-          CXChildVisitResult.CXChildVisit_Continue
-        else CXChildVisitResult.CXChildVisit_Recurse
+
     },
     CXClientData.wrap(bindingMem)
   )

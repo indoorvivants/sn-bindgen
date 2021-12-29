@@ -17,9 +17,9 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
     val returnType = clang_getResultType(typ)
 
     !mem = Def.Function(
-      functionName,
-      constructType(returnType),
-      ListBuffer.empty,
+      name = functionName,
+      returnType = constructType(returnType),
+      parameters = ListBuffer.empty,
       tpe = CFunctionType.Extern
     )
 
@@ -33,11 +33,17 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
               .filter(_.nonEmpty)
               .getOrElse(s"_${builder.parameters.size}")
 
+            System.err.println(parameterName)
+
             val parameterType = constructType(clang_getCursorType(cursor))
 
             builder.parameters.addOne(parameterName -> parameterType)
             CXChildVisitResult.CXChildVisit_Continue
-          else CXChildVisitResult.CXChildVisit_Recurse
+          else
+            System.err.println(
+              s"Not a parmdecl, but ${clang_getCursorKindSpelling(cursor.kind).string}"
+            )
+            CXChildVisitResult.CXChildVisit_Recurse
           end if
         }
       },

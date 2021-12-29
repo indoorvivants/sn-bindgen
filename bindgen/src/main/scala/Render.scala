@@ -7,6 +7,7 @@ object render:
   private def escape(name: String) =
     name match
       case "type"   => "`type`"
+      case "val"    => "`val`"
       case "class"  => "`class`"
       case "object" => "`object`"
       case other    => other
@@ -53,11 +54,11 @@ object render:
     val tpe = scalaType(structType)
     line(s"opaque type $structName = $tpe")
     line(s"object $structName:")
-    if model.fields.nonEmpty then
-      val paramTypes = model.fields.map(_._2).map(scalaType).mkString(", ")
-      val tag =
-        s"given Tag[$structName] = ${scalaTag(structType)}" // Tag.materializeCStruct${model.fields.size}Tag[$paramTypes]"
-      nest {
+    nest {
+      if model.fields.nonEmpty then
+        val paramTypes = model.fields.map(_._2).map(scalaType).mkString(", ")
+        val tag =
+          s"given Tag[$structName] = ${scalaTag(structType)}"
         line(tag)
         line(s"extension (struct: $structName)")
         nest {
@@ -68,9 +69,9 @@ object render:
               )
           }
         }
-      }
-    else line(s"given Tag[$structName] = Tag.materializeCStruct0Tag")
-    end if
+      else line(s"given Tag[$structName] = Tag.materializeCStruct0Tag")
+      end if
+    }
   end struct
 
   def function(model: Def.Function, line: Appender)(using Config) =
@@ -89,6 +90,7 @@ object render:
       case model: Struct =>
         val paramTypes = model.fields.map(scalaType).mkString(", ")
         s"Tag.materializeCStruct${model.fields.size}Tag[$paramTypes]"
+
       case n: NumericIntegral =>
         import IntegralBase.*
         import SignType.*
@@ -103,17 +105,26 @@ object render:
           case _        => ""
 
         s"Tag.$sign$base"
-      case Typedef(n)   => s"Tag[$n]"
+      case Typedef(n) => s"Tag[$n]"
+
       case RecordRef(n) => s"Tag[$n]"
+      case Function(ret, params) =>
+        val paramTypes =
+          (params.map(_.of) ++ List(ret)).map(scalaType).mkString(", ")
+        s"Tag.materializeCFuncPtr${paramTypes.size - 1}Tag[$paramTypes]"
+
       case n: NumericReal =>
         n.base match
           case FloatingBase.Float => "Tag.Float"
           case _                  => "Tag.Double"
+
+      case Pointer(Void) => s"Tag.Ptr(Tag.Byte)"
+
       case Pointer(of) =>
         s"Tag.Ptr[${scalaType(of)}](${scalaTag(of)})"
 
       case Arr(tpe, Some(n)) =>
-        s"Tag.CArray[${scalaType(tpe)}, ${natDigits(n)}](${scalaTag(tpe)}, Tag[${natDigits(n)}])"
+        s"Tag.CArray[${scalaType(tpe)}, ${natDigits(n)}](${scalaTag(tpe)}, ${natDigitsTag(n)})"
     end match
   end scalaTag
 
@@ -148,10 +159,19 @@ object render:
           case Unsigned => "CUnsigned"
 
         prefix + bs
+      case Function(ret, params) =>
+        val args = params.size
+        val types =
+          (params.map(_.of) ++ List(ret))
+            .map(scalaType)
+            .mkString("[", ", ", "]")
+        s"CFuncPtr$args$types"
 
-      case Struct(fields) =>
-        val parameters = fields.map(scalaType).mkString("[", ", ", "]")
-        s"CStruct${fields.size}$parameters"
+      case Struct(fields) if fields.size <= 22 =>
+        if fields.nonEmpty then
+          val parameters = fields.map(scalaType).mkString("[", ", ", "]")
+          s"CStruct${fields.size}$parameters"
+        else "CStruct0"
 
       case Arr(of, size) =>
         size match
@@ -168,8 +188,8 @@ object render:
     val underlyingType = scalaType(model.underlying)
     import CType.*
     val isOpaque = model.underlying match
-      case _: Typedef | _: RecordRef => false
-      case _                         => true
+      case _: Typedef | _: RecordRef | _: Function => false
+      case _                                       => true
 
     val modifier = if isOpaque then "opaque " else ""
     line(s"${modifier}type ${model.name} = $underlyingType")
@@ -177,7 +197,7 @@ object render:
       line(s"object ${model.name}: ")
       nest {
         line(s"given Tag[${model.name}] = ${scalaTag(model.underlying)}")
-        line(s"def apply(o: $underlyingType): ${model.name} = o")
+        line(s"inline def apply(inline o: $underlyingType): ${model.name} = o")
       }
   end alias
 
@@ -216,57 +236,86 @@ object render:
       }
       s"import ${filtered.map { sc => sc + ".*" }.mkString(", ")}"
 
-    if binding.enums.nonEmpty then
-      sb.append("object enumerations:\n")
-      render.nest {
-        render.to(sb)("import predef.*")
-        binding.enums.filter(_.name.isDefined).zipWithIndex.foreach {
-          case (en, idx) =>
-            try render.enumeration(
-              en,
-              render.to(sb)
-            )
-            catch exc => System.err.println(s"Failed to render $en: $exc")
-            if idx != binding.enums.size - 1 then sb.append("\n")
-        }
-      }
-    end if
-
-    if binding.aliases.nonEmpty then
-      sb.append("object aliases:\n")
-      render.nest {
-        // render.to(sb)(imports)
-        binding.aliases.zipWithIndex.foreach { case (en, idx) =>
-          try render.alias(
+    sb.append("object types:\n")
+    render.nest {
+      render.to(sb)("import predef.*")
+      binding.enums.filter(_.name.isDefined).zipWithIndex.foreach {
+        case (en, idx) =>
+          try render.enumeration(
             en,
             render.to(sb)
           )
           catch exc => System.err.println(s"Failed to render $en: $exc")
-          if idx != binding.aliases.size - 1 then sb.append("\n")
-        }
+          if idx != binding.enums.size - 1 then sb.append("\n")
       }
-    end if
-
-    if binding.structs.nonEmpty then
-      sb.append("\nobject structs:\n")
-      render.nest {
-        render.to(sb)(imports("aliases", "structs", "enumerations"))
-
-        binding.structs.zipWithIndex.foreach { case (en, idx) =>
-          try render.struct(
-            en,
-            render.to(sb)
-          )
-          catch exc => System.err.println(s"Failed to render $en: $exc")
-          if idx != binding.structs.size - 1 then sb.append("\n")
-        }
+      binding.aliases.zipWithIndex.foreach { case (en, idx) =>
+        try render.alias(
+          en,
+          render.to(sb)
+        )
+        catch exc => System.err.println(s"Failed to render $en: $exc")
+        if idx != binding.aliases.size - 1 then sb.append("\n")
       }
-    end if
+      binding.structs.zipWithIndex.foreach { case (en, idx) =>
+        try render.struct(
+          en,
+          render.to(sb)
+        )
+        catch exc => System.err.println(s"Failed to render $en: $exc")
+        if idx != binding.structs.size - 1 then sb.append("\n")
+      }
+    }
+
+    // if binding.enums.nonEmpty then
+    //   sb.append("object enumerations\n")
+    //   render.nest {
+    //     render.to(sb)("import predef.*")
+    //     binding.enums.filter(_.name.isDefined).zipWithIndex.foreach {
+    //       case (en, idx) =>
+    //         try render.enumeration(
+    //           en,
+    //           render.to(sb)
+    //         )
+    //         catch exc => System.err.println(s"Failed to render $en: $exc")
+    //         if idx != binding.enums.size - 1 then sb.append("\n")
+    //     }
+    //   }
+    // end if
+
+    // if binding.aliases.nonEmpty then
+    //   sb.append("object aliases:\n")
+    //   render.nest {
+    //     binding.aliases.zipWithIndex.foreach { case (en, idx) =>
+    //       try render.alias(
+    //         en,
+    //         render.to(sb)
+    //       )
+    //       catch exc => System.err.println(s"Failed to render $en: $exc")
+    //       if idx != binding.aliases.size - 1 then sb.append("\n")
+    //     }
+    //   }
+    // end if
+
+    // if binding.structs.nonEmpty then
+    //   sb.append("\nobject structs:\n")
+    //   render.nest {
+    //     render.to(sb)(imports("aliases", "structs", "enumerations"))
+
+    //     binding.structs.zipWithIndex.foreach { case (en, idx) =>
+    //       try render.struct(
+    //         en,
+    //         render.to(sb)
+    //       )
+    //       catch exc => System.err.println(s"Failed to render $en: $exc")
+    //       if idx != binding.structs.size - 1 then sb.append("\n")
+    //     }
+    //   }
+    // end if
 
     if binding.functions.nonEmpty then
       sb.append("\n@extern\nobject functions: \n")
       render.nest {
-        render.to(sb)(imports("aliases", "structs", "enumerations"))
+        render.to(sb)("import types.*\n")
         binding.functions.zipWithIndex.foreach { case (func, idx) =>
           try render.function(
             func,
@@ -285,6 +334,13 @@ object render:
       val digits = i.toString.toIterator.toList
       val rendered = digits.map("Nat._" + _).mkString(", ")
       s"Nat.Digit${digits.size}[$rendered]"
+
+  private def natDigitsTag(i: Int): String =
+    if i <= 9 then s"Tag.Nat$i"
+    else
+      val digits = i.toString.toIterator.toList
+      val rendered = digits.map("Nat._" + _).mkString(", ")
+      s"Tag.Digit${digits.size}[$rendered]"
 
   private def indent(using c: Config): String =
     (" " * (c.indentSize * c.indents))
