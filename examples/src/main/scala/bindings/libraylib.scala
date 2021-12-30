@@ -904,31 +904,16 @@ object types:
   opaque type rAudioBuffer = CStruct0
   object rAudioBuffer:
     given _tag: Tag[rAudioBuffer] = Tag.materializeCStruct0Tag
-@link("ray")
+@link("raylib")
 @extern
-object functions: 
+private[libraylib] object extern_functions: 
   import types.*
 
   def BeginBlendMode(mode: CInt): Unit = extern
 
   def BeginDrawing(): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def BeginMode2D(camera: Camera2D): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def BeginMode3D(camera: Camera3D): Unit = extern
-
   def BeginScissorMode(x: CInt, y: CInt, width: CInt, height: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def BeginShaderMode(shader: Shader): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def BeginTextureMode(target: RenderTexture2D): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def BeginVrStereoMode(config: VrStereoConfig): Unit = extern
 
   def ChangeDirectory(): CInt = extern
 
@@ -954,9 +939,6 @@ object functions:
 
   def CheckCollisionSpheres(): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ClearBackground(color: Color): Unit = extern
-
   def ClearDirectoryFiles(): Unit = extern
 
   def ClearDroppedFiles(): Unit = extern
@@ -969,27 +951,6 @@ object functions:
 
   def CodepointToUTF8(codepoint: CInt, byteSize: Ptr[CInt]): CString = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorAlpha(color: Color, alpha: Float): Color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorAlphaBlend(dst: Color, src: Color, tint: Color): Color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorFromHSV(hue: Float, saturation: Float, value: Float): Color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorFromNormalized(normalized: Vector4): Color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorNormalize(color: Color): Vector4 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorToHSV(color: Color): Vector3 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorToInt(color: Color): CInt = extern
-
   def CompressData(data: Ptr[CUnsignedChar], dataLength: CInt, compDataLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
 
   def DecodeDataBase64(data: Ptr[CUnsignedChar], outputLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
@@ -1000,249 +961,9 @@ object functions:
 
   def DisableCursor(): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawBillboard(camera: Camera, texture: Texture2D, position: Vector3, size: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawBillboardPro(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawBillboardRec(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawBoundingBox(box: BoundingBox, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircle(centerX: CInt, centerY: CInt, radius: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircle3D(center: Vector3, radius: Float, rotationAxis: Vector3, rotationAngle: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleGradient(centerX: CInt, centerY: CInt, radius: Float, color1: Color, color2: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleLines(centerX: CInt, centerY: CInt, radius: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleSector(center: Vector2, radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleSectorLines(center: Vector2, radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleV(center: Vector2, radius: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCube(position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCubeTexture(texture: Texture2D, position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCubeTextureRec(texture: Texture2D, source: Rectangle, position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCubeV(position: Vector3, size: Vector3, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCubeWires(position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCubeWiresV(position: Vector3, size: Vector3, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCylinder(position: Vector3, radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCylinderEx(startPos: Vector3, endPos: Vector3, startRadius: Float, endRadius: Float, sides: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCylinderWires(position: Vector3, radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCylinderWiresEx(startPos: Vector3, endPos: Vector3, startRadius: Float, endRadius: Float, sides: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawEllipse(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawEllipseLines(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Color): Unit = extern
-
   def DrawFPS(posX: CInt, posY: CInt): Unit = extern
 
   def DrawGrid(slices: CInt, spacing: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLine(startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLine3D(startPos: Vector3, endPos: Vector3, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineBezier(startPos: Vector2, endPos: Vector2, thick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineEx(startPos: Vector2, endPos: Vector2, thick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineStrip(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineV(startPos: Vector2, endPos: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawMesh(mesh: Mesh, material: Material, transform: Matrix): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawMeshInstanced(mesh: Mesh, material: Material, transforms: Ptr[Matrix], instances: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawModel(model: Model, position: Vector3, scale: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: Float, scale: Vector3, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawModelWires(model: Model, position: Vector3, scale: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: Float, scale: Vector3, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPixel(posX: CInt, posY: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPixelV(position: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPlane(centerPos: Vector3, size: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPoint3D(position: Vector3, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPoly(center: Vector2, sides: CInt, radius: Float, rotation: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPolyLines(center: Vector2, sides: CInt, radius: Float, rotation: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPolyLinesEx(center: Vector2, sides: CInt, radius: Float, rotation: Float, lineThick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRay(ray: Ray, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangle(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleGradientEx(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleGradientH(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Color, color2: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleGradientV(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Color, color2: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleLines(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleLinesEx(rec: Rectangle, lineThick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectanglePro(rec: Rectangle, origin: Vector2, rotation: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleRec(rec: Rectangle, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleRounded(rec: Rectangle, roundness: Float, segments: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleRoundedLines(rec: Rectangle, roundness: Float, segments: CInt, lineThick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleV(position: Vector2, size: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRing(center: Vector2, innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRingLines(center: Vector2, innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawSphere(centerPos: Vector3, radius: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawSphereEx(centerPos: Vector3, radius: Float, rings: CInt, slices: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawSphereWires(centerPos: Vector3, radius: Float, rings: CInt, slices: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawText(text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextCodepoint(font: Font, codepoint: CInt, position: Vector2, fontSize: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextEx(font: Font, text: CString, position: Vector2, fontSize: Float, spacing: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextPro(font: Font, text: CString, position: Vector2, origin: Vector2, rotation: Float, fontSize: Float, spacing: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTexture(texture: Texture2D, posX: CInt, posY: CInt, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureEx(texture: Texture2D, position: Vector2, rotation: Float, scale: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTexturePoly(texture: Texture2D, center: Vector2, points: Ptr[Vector2], texcoords: Ptr[Vector2], pointCount: CInt, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTexturePro(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureQuad(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureRec(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureTiled(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: Float, scale: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureV(texture: Texture2D, position: Vector2, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangle3D(v1: Vector3, v2: Vector3, v3: Vector3, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangleFan(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangleStrip(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangleStrip3D(points: Ptr[Vector3], pointCount: CInt, color: Color): Unit = extern
 
   def EnableCursor(): Unit = extern
 
@@ -1274,79 +995,13 @@ object functions:
 
   def ExportWaveAsCode(): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def Fade(color: Color, alpha: Float): Color = extern
-
   def FileExists(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageCellular(width: CInt, height: CInt, tileSize: CInt): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageChecked(width: CInt, height: CInt, checksX: CInt, checksY: CInt, col1: Color, col2: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageColor(width: CInt, height: CInt, color: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageFontAtlas(chars: Ptr[GlyphInfo], recs: Ptr[Ptr[Rectangle]], glyphCount: CInt, fontSize: CInt, padding: CInt, packMethod: CInt): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageGradientH(width: CInt, height: CInt, left: Color, right: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageGradientRadial(width: CInt, height: CInt, density: Float, inner: Color, outer: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageGradientV(width: CInt, height: CInt, top: Color, bottom: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageWhiteNoise(width: CInt, height: CInt, factor: Float): Image = extern
 
   def GenMeshBinormals(mesh: Ptr[Mesh]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshCone(radius: Float, height: Float, slices: CInt): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshCube(width: Float, height: Float, length: Float): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshCylinder(radius: Float, height: Float, slices: CInt): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshHeightmap(heightmap: Image, size: Vector3): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshHemiSphere(radius: Float, rings: CInt, slices: CInt): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshKnot(radius: Float, size: Float, radSeg: CInt, sides: CInt): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshPlane(width: Float, length: Float, resX: CInt, resZ: CInt): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshPoly(sides: CInt, radius: Float): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshSphere(radius: Float, rings: CInt, slices: CInt): Mesh = extern
-
   def GenMeshTangents(mesh: Ptr[Mesh]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshTorus(radius: Float, size: Float, radSeg: CInt, sides: CInt): Mesh = extern
-
   def GenTextureMipmaps(texture: Ptr[Texture2D]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetCameraMatrix(camera: Camera): Matrix = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetCameraMatrix2D(camera: Camera2D): Matrix = extern
 
   def GetCharPressed(): CInt = extern
 
@@ -1355,12 +1010,6 @@ object functions:
   def GetCodepoint(text: CString, bytesProcessed: Ptr[CInt]): CInt = extern
 
   def GetCodepointCount(text: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetCollisionRec(rec1: Rectangle, rec2: Rectangle): Rectangle = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetColor(hexValue: CUnsignedInt): Color = extern
 
   def GetCurrentMonitor(): CInt = extern
 
@@ -1380,9 +1029,6 @@ object functions:
 
   def GetFileNameWithoutExt(filePath: CString): CString = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetFontDefault(): Font = extern
-
   def GetFrameTime(): Float = extern
 
   def GetGamepadAxisCount(gamepad: CInt): CInt = extern
@@ -1397,38 +1043,11 @@ object functions:
 
   def GetGestureDragAngle(): Float = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGestureDragVector(): Vector2 = extern
-
   def GetGestureHoldDuration(): Float = extern
 
   def GetGesturePinchAngle(): Float = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGesturePinchVector(): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGlyphAtlasRec(font: Font, codepoint: CInt): Rectangle = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGlyphIndex(font: Font, codepoint: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGlyphInfo(font: Font, codepoint: CInt): GlyphInfo = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetImageAlphaBorder(image: Image, threshold: Float): Rectangle = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetImageColor(image: Image, x: CInt, y: CInt): Color = extern
-
   def GetKeyPressed(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMeshBoundingBox(mesh: Mesh): BoundingBox = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetModelBoundingBox(model: Model): BoundingBox = extern
 
   def GetMonitorCount(): CInt = extern
 
@@ -1440,21 +1059,9 @@ object functions:
 
   def GetMonitorPhysicalWidth(monitor: CInt): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMonitorPosition(monitor: CInt): Vector2 = extern
-
   def GetMonitorRefreshRate(monitor: CInt): CInt = extern
 
   def GetMonitorWidth(monitor: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMouseDelta(): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMousePosition(): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMouseRay(mousePosition: Vector2, camera: Camera): Ray = extern
 
   def GetMouseWheelMove(): Float = extern
 
@@ -1462,38 +1069,11 @@ object functions:
 
   def GetMouseY(): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMusicTimeLength(music: Music): Float = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMusicTimePlayed(music: Music): Float = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetPixelColor(srcPtr: Ptr[Byte], format: CInt): Color = extern
-
   def GetPixelDataSize(width: CInt, height: CInt, format: CInt): CInt = extern
 
   def GetPrevDirectoryPath(dirPath: CString): CString = extern
 
   def GetRandomValue(min: CInt, max: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionBox(ray: Ray, box: BoundingBox): RayCollision = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionMesh(ray: Ray, mesh: Mesh, transform: Matrix): RayCollision = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionModel(ray: Ray, model: Model): RayCollision = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionQuad(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): RayCollision = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionSphere(ray: Ray, center: Vector3, radius: Float): RayCollision = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision = extern
 
   def GetRenderHeight(): CInt = extern
 
@@ -1501,16 +1081,7 @@ object functions:
 
   def GetScreenHeight(): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetScreenToWorld2D(position: Vector2, camera: Camera2D): Vector2 = extern
-
   def GetScreenWidth(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetShaderLocation(shader: Shader, uniformName: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetShaderLocationAttrib(shader: Shader, attribName: CString): CInt = extern
 
   def GetSoundsPlaying(): CInt = extern
 
@@ -1520,46 +1091,19 @@ object functions:
 
   def GetTouchPointId(index: CInt): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetTouchPosition(index: CInt): Vector2 = extern
-
   def GetTouchX(): CInt = extern
 
   def GetTouchY(): CInt = extern
 
   def GetWindowHandle(): Ptr[Byte] = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWindowPosition(): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWindowScaleDPI(): Vector2 = extern
-
   def GetWorkingDirectory(): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWorldToScreen(position: Vector3, camera: Camera): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWorldToScreen2D(position: Vector2, camera: Camera2D): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWorldToScreenEx(position: Vector3, camera: Camera, width: CInt, height: CInt): Vector2 = extern
 
   def HideCursor(): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageAlphaClear(image: Ptr[Image], color: Color, threshold: Float): Unit = extern
-
   def ImageAlphaCrop(image: Ptr[Image], threshold: Float): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageAlphaMask(image: Ptr[Image], alphaMask: Image): Unit = extern
-
   def ImageAlphaPremultiply(image: Ptr[Image]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageClearBackground(dst: Ptr[Image], color: Color): Unit = extern
 
   def ImageColorBrightness(image: Ptr[Image], brightness: CInt): Unit = extern
 
@@ -1569,58 +1113,7 @@ object functions:
 
   def ImageColorInvert(image: Ptr[Image]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageColorReplace(image: Ptr[Image], color: Color, replace: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageColorTint(image: Ptr[Image], color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageCopy(image: Image): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageCrop(image: Ptr[Image], crop: Rectangle): Unit = extern
-
   def ImageDither(image: Ptr[Image], rBpp: CInt, gBpp: CInt, bBpp: CInt, aBpp: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDraw(dst: Ptr[Image], src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawCircle(dst: Ptr[Image], centerX: CInt, centerY: CInt, radius: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawCircleV(dst: Ptr[Image], center: Vector2, radius: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawLine(dst: Ptr[Image], startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawLineV(dst: Ptr[Image], start: Vector2, end: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawPixel(dst: Ptr[Image], posX: CInt, posY: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawPixelV(dst: Ptr[Image], position: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawRectangle(dst: Ptr[Image], posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawRectangleLines(dst: Ptr[Image], rec: Rectangle, thick: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawRectangleRec(dst: Ptr[Image], rec: Rectangle, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawRectangleV(dst: Ptr[Image], position: Vector2, size: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawText(dst: Ptr[Image], text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawTextEx(dst: Ptr[Image], font: Font, text: CString, position: Vector2, fontSize: Float, spacing: Float, tint: Color): Unit = extern
 
   def ImageFlipHorizontal(image: Ptr[Image]): Unit = extern
 
@@ -1628,30 +1121,15 @@ object functions:
 
   def ImageFormat(image: Ptr[Image], newFormat: CInt): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageFromImage(image: Image, rec: Rectangle): Image = extern
-
   def ImageMipmaps(image: Ptr[Image]): Unit = extern
 
   def ImageResize(image: Ptr[Image], newWidth: CInt, newHeight: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageResizeCanvas(image: Ptr[Image], newWidth: CInt, newHeight: CInt, offsetX: CInt, offsetY: CInt, fill: Color): Unit = extern
 
   def ImageResizeNN(image: Ptr[Image], newWidth: CInt, newHeight: CInt): Unit = extern
 
   def ImageRotateCCW(image: Ptr[Image]): Unit = extern
 
   def ImageRotateCW(image: Ptr[Image]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageText(text: CString, fontSize: CInt, color: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageTextEx(font: Font, text: CString, fontSize: Float, spacing: Float, tint: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageToPOT(image: Ptr[Image], fill: Color): Unit = extern
 
   def InitAudioDevice(): Unit = extern
 
@@ -1721,116 +1199,23 @@ object functions:
 
   def IsWindowState(): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadAudioStream(sampleRate: CUnsignedInt, sampleSize: CUnsignedInt, channels: CUnsignedInt): AudioStream = extern
-
   def LoadCodepoints(text: CString, count: Ptr[CInt]): Ptr[CInt] = extern
 
   def LoadFileData(fileName: CString, bytesRead: Ptr[CUnsignedInt]): Ptr[CUnsignedChar] = extern
 
   def LoadFileText(fileName: CString): CString = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadFont(fileName: CString): Font = extern
-
   def LoadFontData(fileData: Ptr[CUnsignedChar], dataSize: CInt, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt, `type`: CInt): Ptr[GlyphInfo] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadFontEx(fileName: CString, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt): Font = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadFontFromImage(image: Image, key: Color, firstChar: CInt): Font = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadFontFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt): Font = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImage(fileName: CString): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageAnim(fileName: CString, frames: Ptr[CInt]): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageColors(image: Image): Ptr[Color] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageFromScreen(): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageFromTexture(texture: Texture2D): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImagePalette(image: Image, maxPaletteSize: CInt, colorCount: Ptr[CInt]): Ptr[Color] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageRaw(fileName: CString, width: CInt, height: CInt, format: CInt, headerSize: CInt): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadMaterialDefault(): Material = extern
 
   def LoadMaterials(fileName: CString, materialCount: Ptr[CInt]): Ptr[Material] = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadModel(fileName: CString): Model = extern
-
   def LoadModelAnimations(fileName: CString, animCount: Ptr[CUnsignedInt]): Ptr[ModelAnimation] = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadModelFromMesh(mesh: Mesh): Model = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadMusicStream(fileName: CString): Music = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadMusicStreamFromMemory(fileType: CString, data: Ptr[CUnsignedChar], dataSize: CInt): Music = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadRenderTexture(width: CInt, height: CInt): RenderTexture2D = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadShader(vsFileName: CString, fsFileName: CString): Shader = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadShaderFromMemory(vsCode: CString, fsCode: CString): Shader = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadSound(fileName: CString): Sound = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadSoundFromWave(wave: Wave): Sound = extern
-
   def LoadStorageValue(position: CUnsignedInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadTexture(fileName: CString): Texture2D = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadTextureCubemap(image: Image, layout: CInt): TextureCubemap = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadTextureFromImage(image: Image): Texture2D = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadVrStereoConfig(device: VrDeviceInfo): VrStereoConfig = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadWave(fileName: CString): Wave = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadWaveFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt): Wave = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadWaveSamples(wave: Wave): Ptr[Float] = extern
 
   def MaximizeWindow(): Unit = extern
 
   def MeasureText(text: CString, fontSize: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def MeasureTextEx(font: Font, text: CString, fontSize: Float, spacing: Float): Vector2 = extern
 
   def MemAlloc(size: CInt): Ptr[Byte] = extern
 
@@ -1842,39 +1227,9 @@ object functions:
 
   def OpenURL(url: CString): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PauseAudioStream(stream: AudioStream): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PauseMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PauseSound(sound: Sound): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PlayAudioStream(stream: AudioStream): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PlayMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PlaySound(sound: Sound): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PlaySoundMulti(sound: Sound): Unit = extern
-
   def PollInputEvents(): Unit = extern
 
   def RestoreWindow(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ResumeAudioStream(stream: AudioStream): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ResumeMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ResumeSound(sound: Sound): Unit = extern
 
   def SaveFileData(): CInt = extern
 
@@ -1882,21 +1237,9 @@ object functions:
 
   def SaveStorageValue(): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SeekMusicStream(music: Music, position: Float): Unit = extern
-
   def SetAudioStreamBufferSizeDefault(size: CInt): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetAudioStreamPitch(stream: AudioStream, pitch: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetAudioStreamVolume(stream: AudioStream, volume: Float): Unit = extern
-
   def SetCameraAltControl(keyAlt: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetCameraMode(camera: Camera, mode: CInt): Unit = extern
 
   def SetCameraMoveControls(keyFront: CInt, keyBack: CInt, keyRight: CInt, keyLeft: CInt, keyUp: CInt, keyDown: CInt): Unit = extern
 
@@ -1920,9 +1263,6 @@ object functions:
 
   def SetMasterVolume(volume: Float): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetMaterialTexture(material: Ptr[Material], mapType: CInt, texture: Texture2D): Unit = extern
-
   def SetModelMeshMaterial(model: Ptr[Model], meshId: CInt, materialId: CInt): Unit = extern
 
   def SetMouseCursor(cursor: CInt): Unit = extern
@@ -1933,56 +1273,17 @@ object functions:
 
   def SetMouseScale(scaleX: Float, scaleY: Float): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetMusicPitch(music: Music, pitch: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetMusicVolume(music: Music, volume: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetPixelColor(dstPtr: Ptr[Byte], color: Color, format: CInt): Unit = extern
-
   def SetRandomSeed(seed: CUnsignedInt): Unit = extern
 
   def SetSaveFileDataCallback(callback: CInt): Unit = extern
 
   def SetSaveFileTextCallback(callback: SaveFileTextCallback): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShaderValue(shader: Shader, locIndex: CInt, value: Ptr[Byte], uniformType: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShaderValueMatrix(shader: Shader, locIndex: CInt, mat: Matrix): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShaderValueTexture(shader: Shader, locIndex: CInt, texture: Texture2D): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShaderValueV(shader: Shader, locIndex: CInt, value: Ptr[Byte], uniformType: CInt, count: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShapesTexture(texture: Texture2D, source: Rectangle): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetSoundPitch(sound: Sound, pitch: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetSoundVolume(sound: Sound, volume: Float): Unit = extern
-
   def SetTargetFPS(fps: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetTextureFilter(texture: Texture2D, filter: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetTextureWrap(texture: Texture2D, wrap: CInt): Unit = extern
 
   def SetTraceLogCallback(callback: TraceLogCallback): Unit = extern
 
   def SetTraceLogLevel(logLevel: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetWindowIcon(image: Image): Unit = extern
 
   def SetWindowMinSize(width: CInt, height: CInt): Unit = extern
 
@@ -1999,15 +1300,6 @@ object functions:
   def SetWindowTitle(title: CString): Unit = extern
 
   def ShowCursor(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def StopAudioStream(stream: AudioStream): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def StopMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def StopSound(sound: Sound): Unit = extern
 
   def StopSoundMulti(): Unit = extern
 
@@ -2051,100 +1343,2172 @@ object functions:
 
   def TraceLog(logLevel: CInt, text: CString): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadAudioStream(stream: AudioStream): Unit = extern
-
   def UnloadCodepoints(codepoints: Ptr[CInt]): Unit = extern
 
   def UnloadFileData(data: Ptr[CUnsignedChar]): Unit = extern
 
   def UnloadFileText(text: CString): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadFont(font: Font): Unit = extern
-
   def UnloadFontData(chars: Ptr[GlyphInfo], glyphCount: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadImage(image: Image): Unit = extern
 
   def UnloadImageColors(colors: Ptr[Color]): Unit = extern
 
   def UnloadImagePalette(colors: Ptr[Color]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadMaterial(material: Material): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadMesh(mesh: Mesh): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadModel(model: Model): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadModelAnimation(anim: ModelAnimation): Unit = extern
-
   def UnloadModelAnimations(animations: Ptr[ModelAnimation], count: CUnsignedInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadModelKeepMeshes(model: Model): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadRenderTexture(target: RenderTexture2D): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadShader(shader: Shader): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadSound(sound: Sound): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadTexture(texture: Texture2D): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadVrStereoConfig(config: VrStereoConfig): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadWave(wave: Wave): Unit = extern
 
   def UnloadWaveSamples(samples: Ptr[Float]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateAudioStream(stream: AudioStream, data: Ptr[Byte], frameCount: CInt): Unit = extern
-
   def UpdateCamera(camera: Ptr[Camera]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateMeshBuffer(mesh: Mesh, index: CInt, data: Ptr[Byte], dataSize: CInt, offset: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateSound(sound: Sound, data: Ptr[Byte], sampleCount: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateTexture(texture: Texture2D, pixels: Ptr[Byte]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateTextureRec(texture: Texture2D, rec: Rectangle, pixels: Ptr[Byte]): Unit = extern
 
   def UploadMesh(mesh: Ptr[Mesh], dynamic: bool): Unit = extern
 
   def WaitTime(ms: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def WaveCopy(wave: Wave): Wave = extern
 
   def WaveCrop(wave: Ptr[Wave], initSample: CInt, finalSample: CInt): Unit = extern
 
   def WaveFormat(wave: Ptr[Wave], sampleRate: CInt, sampleSize: CInt, channels: CInt): Unit = extern
 
   def WindowShouldClose(): CInt = extern
+
+  @name("__sn_wrap_UpdateTextureRec")
+  private[libraylib] def __sn_wrap_UpdateTextureRec(texture: Ptr[Texture2D], rec: Ptr[Rectangle], pixels: Ptr[Byte]): Unit = extern
+
+  @name("__sn_wrap_ImageClearBackground")
+  private[libraylib] def __sn_wrap_ImageClearBackground(dst: Ptr[Image], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageToPOT")
+  private[libraylib] def __sn_wrap_ImageToPOT(image: Ptr[Image], fill: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadTextureFromImage")
+  private[libraylib] def __sn_wrap_LoadTextureFromImage(image: Ptr[Image], __return: Ptr[Texture2D]): Unit = extern
+
+  @name("__sn_wrap_GetShaderLocationAttrib")
+  private[libraylib] def __sn_wrap_GetShaderLocationAttrib(shader: Ptr[Shader], attribName: CString): CInt = extern
+
+  @name("__sn_wrap_GenImageFontAtlas")
+  private[libraylib] def __sn_wrap_GenImageFontAtlas(chars: Ptr[GlyphInfo], recs: Ptr[Ptr[Rectangle]], glyphCount: CInt, fontSize: CInt, padding: CInt, packMethod: CInt, __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_PlayMusicStream")
+  private[libraylib] def __sn_wrap_PlayMusicStream(music: Ptr[Music]): Unit = extern
+
+  @name("__sn_wrap_GetShaderLocation")
+  private[libraylib] def __sn_wrap_GetShaderLocation(shader: Ptr[Shader], uniformName: CString): CInt = extern
+
+  @name("__sn_wrap_DrawCylinderWiresEx")
+  private[libraylib] def __sn_wrap_DrawCylinderWiresEx(startPos: Ptr[Vector3], endPos: Ptr[Vector3], startRadius: Float, endRadius: Float, sides: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawLine")
+  private[libraylib] def __sn_wrap_DrawLine(startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_SetAudioStreamPitch")
+  private[libraylib] def __sn_wrap_SetAudioStreamPitch(stream: Ptr[AudioStream], pitch: Float): Unit = extern
+
+  @name("__sn_wrap_BeginVrStereoMode")
+  private[libraylib] def __sn_wrap_BeginVrStereoMode(config: Ptr[VrStereoConfig]): Unit = extern
+
+  @name("__sn_wrap_LoadMaterialDefault")
+  private[libraylib] def __sn_wrap_LoadMaterialDefault(__return: Ptr[Material]): Unit = extern
+
+  @name("__sn_wrap_DrawEllipse")
+  private[libraylib] def __sn_wrap_DrawEllipse(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageAlphaClear")
+  private[libraylib] def __sn_wrap_ImageAlphaClear(image: Ptr[Image], color: Ptr[Color], threshold: Float): Unit = extern
+
+  @name("__sn_wrap_StopMusicStream")
+  private[libraylib] def __sn_wrap_StopMusicStream(music: Ptr[Music]): Unit = extern
+
+  @name("__sn_wrap_DrawTriangle3D")
+  private[libraylib] def __sn_wrap_DrawTriangle3D(v1: Ptr[Vector3], v2: Ptr[Vector3], v3: Ptr[Vector3], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawCubeV")
+  private[libraylib] def __sn_wrap_DrawCubeV(position: Ptr[Vector3], size: Ptr[Vector3], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadWaveSamples")
+  private[libraylib] def __sn_wrap_LoadWaveSamples(wave: Ptr[Wave]): Ptr[Float] = extern
+
+  @name("__sn_wrap_DrawTriangleStrip3D")
+  private[libraylib] def __sn_wrap_DrawTriangleStrip3D(points: Ptr[Vector3], pointCount: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GenMeshHemiSphere")
+  private[libraylib] def __sn_wrap_GenMeshHemiSphere(radius: Float, rings: CInt, slices: CInt, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_SetShaderValueV")
+  private[libraylib] def __sn_wrap_SetShaderValueV(shader: Ptr[Shader], locIndex: CInt, value: Ptr[Byte], uniformType: CInt, count: CInt): Unit = extern
+
+  @name("__sn_wrap_LoadAudioStream")
+  private[libraylib] def __sn_wrap_LoadAudioStream(sampleRate: CUnsignedInt, sampleSize: CUnsignedInt, channels: CUnsignedInt, __return: Ptr[AudioStream]): Unit = extern
+
+  @name("__sn_wrap_DrawTextureV")
+  private[libraylib] def __sn_wrap_DrawTextureV(texture: Ptr[Texture2D], position: Ptr[Vector2], tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GenMeshPoly")
+  private[libraylib] def __sn_wrap_GenMeshPoly(sides: CInt, radius: Float, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_DrawCylinder")
+  private[libraylib] def __sn_wrap_DrawCylinder(position: Ptr[Vector3], radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadFontFromMemory")
+  private[libraylib] def __sn_wrap_LoadFontFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt, __return: Ptr[Font]): Unit = extern
+
+  @name("__sn_wrap_SetMusicVolume")
+  private[libraylib] def __sn_wrap_SetMusicVolume(music: Ptr[Music], volume: Float): Unit = extern
+
+  @name("__sn_wrap_ColorAlphaBlend")
+  private[libraylib] def __sn_wrap_ColorAlphaBlend(dst: Ptr[Color], src: Ptr[Color], tint: Ptr[Color], __return: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawSphere")
+  private[libraylib] def __sn_wrap_DrawSphere(centerPos: Ptr[Vector3], radius: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_BeginShaderMode")
+  private[libraylib] def __sn_wrap_BeginShaderMode(shader: Ptr[Shader]): Unit = extern
+
+  @name("__sn_wrap_DrawTextureEx")
+  private[libraylib] def __sn_wrap_DrawTextureEx(texture: Ptr[Texture2D], position: Ptr[Vector2], rotation: Float, scale: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageColorReplace")
+  private[libraylib] def __sn_wrap_ImageColorReplace(image: Ptr[Image], color: Ptr[Color], replace: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UnloadModelAnimation")
+  private[libraylib] def __sn_wrap_UnloadModelAnimation(anim: Ptr[ModelAnimation]): Unit = extern
+
+  @name("__sn_wrap_GetCameraMatrix2D")
+  private[libraylib] def __sn_wrap_GetCameraMatrix2D(camera: Ptr[Camera2D], __return: Ptr[Matrix]): Unit = extern
+
+  @name("__sn_wrap_GetRayCollisionBox")
+  private[libraylib] def __sn_wrap_GetRayCollisionBox(ray: Ptr[Ray], box: Ptr[BoundingBox], __return: Ptr[RayCollision]): Unit = extern
+
+  @name("__sn_wrap_GetMusicTimePlayed")
+  private[libraylib] def __sn_wrap_GetMusicTimePlayed(music: Ptr[Music]): Float = extern
+
+  @name("__sn_wrap_DrawLineV")
+  private[libraylib] def __sn_wrap_DrawLineV(startPos: Ptr[Vector2], endPos: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawTextPro")
+  private[libraylib] def __sn_wrap_DrawTextPro(font: Ptr[Font], text: CString, position: Ptr[Vector2], origin: Ptr[Vector2], rotation: Float, fontSize: Float, spacing: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawTextureQuad")
+  private[libraylib] def __sn_wrap_DrawTextureQuad(texture: Ptr[Texture2D], tiling: Ptr[Vector2], offset: Ptr[Vector2], quad: Ptr[Rectangle], tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GenImageGradientH")
+  private[libraylib] def __sn_wrap_GenImageGradientH(width: CInt, height: CInt, left: Ptr[Color], right: Ptr[Color], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawCubeWires")
+  private[libraylib] def __sn_wrap_DrawCubeWires(position: Ptr[Vector3], width: Float, height: Float, length: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ColorNormalize")
+  private[libraylib] def __sn_wrap_ColorNormalize(color: Ptr[Color], __return: Ptr[Vector4]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawRectangleRec")
+  private[libraylib] def __sn_wrap_ImageDrawRectangleRec(dst: Ptr[Image], rec: Ptr[Rectangle], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawRectangle")
+  private[libraylib] def __sn_wrap_ImageDrawRectangle(dst: Ptr[Image], posX: CInt, posY: CInt, width: CInt, height: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadFont")
+  private[libraylib] def __sn_wrap_LoadFont(fileName: CString, __return: Ptr[Font]): Unit = extern
+
+  @name("__sn_wrap_UnloadRenderTexture")
+  private[libraylib] def __sn_wrap_UnloadRenderTexture(target: Ptr[RenderTexture2D]): Unit = extern
+
+  @name("__sn_wrap_DrawLine3D")
+  private[libraylib] def __sn_wrap_DrawLine3D(startPos: Ptr[Vector3], endPos: Ptr[Vector3], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UnloadMesh")
+  private[libraylib] def __sn_wrap_UnloadMesh(mesh: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_DrawTriangleFan")
+  private[libraylib] def __sn_wrap_DrawTriangleFan(points: Ptr[Vector2], pointCount: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawMesh")
+  private[libraylib] def __sn_wrap_DrawMesh(mesh: Ptr[Mesh], material: Ptr[Material], transform: Ptr[Matrix]): Unit = extern
+
+  @name("__sn_wrap_DrawTextEx")
+  private[libraylib] def __sn_wrap_DrawTextEx(font: Ptr[Font], text: CString, position: Ptr[Vector2], fontSize: Float, spacing: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadRenderTexture")
+  private[libraylib] def __sn_wrap_LoadRenderTexture(width: CInt, height: CInt, __return: Ptr[RenderTexture2D]): Unit = extern
+
+  @name("__sn_wrap_UnloadModelKeepMeshes")
+  private[libraylib] def __sn_wrap_UnloadModelKeepMeshes(model: Ptr[Model]): Unit = extern
+
+  @name("__sn_wrap_ImageFromImage")
+  private[libraylib] def __sn_wrap_ImageFromImage(image: Ptr[Image], rec: Ptr[Rectangle], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawPoint3D")
+  private[libraylib] def __sn_wrap_DrawPoint3D(position: Ptr[Vector3], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_BeginTextureMode")
+  private[libraylib] def __sn_wrap_BeginTextureMode(target: Ptr[RenderTexture2D]): Unit = extern
+
+  @name("__sn_wrap_SetTextureWrap")
+  private[libraylib] def __sn_wrap_SetTextureWrap(texture: Ptr[Texture2D], wrap: CInt): Unit = extern
+
+  @name("__sn_wrap_GenMeshPlane")
+  private[libraylib] def __sn_wrap_GenMeshPlane(width: Float, length: Float, resX: CInt, resZ: CInt, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_LoadShaderFromMemory")
+  private[libraylib] def __sn_wrap_LoadShaderFromMemory(vsCode: CString, fsCode: CString, __return: Ptr[Shader]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawCircleV")
+  private[libraylib] def __sn_wrap_ImageDrawCircleV(dst: Ptr[Image], center: Ptr[Vector2], radius: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawCircleV")
+  private[libraylib] def __sn_wrap_DrawCircleV(center: Ptr[Vector2], radius: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawCubeTextureRec")
+  private[libraylib] def __sn_wrap_DrawCubeTextureRec(texture: Ptr[Texture2D], source: Ptr[Rectangle], position: Ptr[Vector3], width: Float, height: Float, length: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UpdateTexture")
+  private[libraylib] def __sn_wrap_UpdateTexture(texture: Ptr[Texture2D], pixels: Ptr[Byte]): Unit = extern
+
+  @name("__sn_wrap_ColorToInt")
+  private[libraylib] def __sn_wrap_ColorToInt(color: Ptr[Color]): CInt = extern
+
+  @name("__sn_wrap_GenMeshTorus")
+  private[libraylib] def __sn_wrap_GenMeshTorus(radius: Float, size: Float, radSeg: CInt, sides: CInt, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_LoadImageColors")
+  private[libraylib] def __sn_wrap_LoadImageColors(image: Ptr[Image]): Ptr[Color] = extern
+
+  @name("__sn_wrap_DrawTriangleLines")
+  private[libraylib] def __sn_wrap_DrawTriangleLines(v1: Ptr[Vector2], v2: Ptr[Vector2], v3: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageResizeCanvas")
+  private[libraylib] def __sn_wrap_ImageResizeCanvas(image: Ptr[Image], newWidth: CInt, newHeight: CInt, offsetX: CInt, offsetY: CInt, fill: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawRectangleV")
+  private[libraylib] def __sn_wrap_ImageDrawRectangleV(dst: Ptr[Image], position: Ptr[Vector2], size: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadModelFromMesh")
+  private[libraylib] def __sn_wrap_LoadModelFromMesh(mesh: Ptr[Mesh], __return: Ptr[Model]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleLines")
+  private[libraylib] def __sn_wrap_DrawRectangleLines(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleGradientV")
+  private[libraylib] def __sn_wrap_DrawRectangleGradientV(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Ptr[Color], color2: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawTextureNPatch")
+  private[libraylib] def __sn_wrap_DrawTextureNPatch(texture: Ptr[Texture2D], nPatchInfo: Ptr[NPatchInfo], dest: Ptr[Rectangle], origin: Ptr[Vector2], rotation: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetCollisionRec")
+  private[libraylib] def __sn_wrap_GetCollisionRec(rec1: Ptr[Rectangle], rec2: Ptr[Rectangle], __return: Ptr[Rectangle]): Unit = extern
+
+  @name("__sn_wrap_GetMusicTimeLength")
+  private[libraylib] def __sn_wrap_GetMusicTimeLength(music: Ptr[Music]): Float = extern
+
+  @name("__sn_wrap_GetRayCollisionTriangle")
+  private[libraylib] def __sn_wrap_GetRayCollisionTriangle(ray: Ptr[Ray], p1: Ptr[Vector3], p2: Ptr[Vector3], p3: Ptr[Vector3], __return: Ptr[RayCollision]): Unit = extern
+
+  @name("__sn_wrap_DrawTextureTiled")
+  private[libraylib] def __sn_wrap_DrawTextureTiled(texture: Ptr[Texture2D], source: Ptr[Rectangle], dest: Ptr[Rectangle], origin: Ptr[Vector2], rotation: Float, scale: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetFontDefault")
+  private[libraylib] def __sn_wrap_GetFontDefault(__return: Ptr[Font]): Unit = extern
+
+  @name("__sn_wrap_SetSoundVolume")
+  private[libraylib] def __sn_wrap_SetSoundVolume(sound: Ptr[Sound], volume: Float): Unit = extern
+
+  @name("__sn_wrap_ImageDrawCircle")
+  private[libraylib] def __sn_wrap_ImageDrawCircle(dst: Ptr[Image], centerX: CInt, centerY: CInt, radius: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetWorldToScreenEx")
+  private[libraylib] def __sn_wrap_GetWorldToScreenEx(position: Ptr[Vector3], camera: Ptr[Camera], width: CInt, height: CInt, __return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_GetMousePosition")
+  private[libraylib] def __sn_wrap_GetMousePosition(__return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_SetSoundPitch")
+  private[libraylib] def __sn_wrap_SetSoundPitch(sound: Ptr[Sound], pitch: Float): Unit = extern
+
+  @name("__sn_wrap_DrawModelEx")
+  private[libraylib] def __sn_wrap_DrawModelEx(model: Ptr[Model], position: Ptr[Vector3], rotationAxis: Ptr[Vector3], rotationAngle: Float, scale: Ptr[Vector3], tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawCircleGradient")
+  private[libraylib] def __sn_wrap_DrawCircleGradient(centerX: CInt, centerY: CInt, radius: Float, color1: Ptr[Color], color2: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawTextCodepoint")
+  private[libraylib] def __sn_wrap_DrawTextCodepoint(font: Ptr[Font], codepoint: CInt, position: Ptr[Vector2], fontSize: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadImageFromTexture")
+  private[libraylib] def __sn_wrap_LoadImageFromTexture(texture: Ptr[Texture2D], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_LoadTextureCubemap")
+  private[libraylib] def __sn_wrap_LoadTextureCubemap(image: Ptr[Image], layout: CInt, __return: Ptr[TextureCubemap]): Unit = extern
+
+  @name("__sn_wrap_DrawLineStrip")
+  private[libraylib] def __sn_wrap_DrawLineStrip(points: Ptr[Vector2], pointCount: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_SetShapesTexture")
+  private[libraylib] def __sn_wrap_SetShapesTexture(texture: Ptr[Texture2D], source: Ptr[Rectangle]): Unit = extern
+
+  @name("__sn_wrap_ImageText")
+  private[libraylib] def __sn_wrap_ImageText(text: CString, fontSize: CInt, color: Ptr[Color], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_SetShaderValue")
+  private[libraylib] def __sn_wrap_SetShaderValue(shader: Ptr[Shader], locIndex: CInt, value: Ptr[Byte], uniformType: CInt): Unit = extern
+
+  @name("__sn_wrap_SetMusicPitch")
+  private[libraylib] def __sn_wrap_SetMusicPitch(music: Ptr[Music], pitch: Float): Unit = extern
+
+  @name("__sn_wrap_DrawTextureRec")
+  private[libraylib] def __sn_wrap_DrawTextureRec(texture: Ptr[Texture2D], source: Ptr[Rectangle], position: Ptr[Vector2], tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadVrStereoConfig")
+  private[libraylib] def __sn_wrap_LoadVrStereoConfig(device: Ptr[VrDeviceInfo], __return: Ptr[VrStereoConfig]): Unit = extern
+
+  @name("__sn_wrap_DrawBoundingBox")
+  private[libraylib] def __sn_wrap_DrawBoundingBox(box: Ptr[BoundingBox], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawCylinderEx")
+  private[libraylib] def __sn_wrap_DrawCylinderEx(startPos: Ptr[Vector3], endPos: Ptr[Vector3], startRadius: Float, endRadius: Float, sides: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_SetShaderValueMatrix")
+  private[libraylib] def __sn_wrap_SetShaderValueMatrix(shader: Ptr[Shader], locIndex: CInt, mat: Ptr[Matrix]): Unit = extern
+
+  @name("__sn_wrap_DrawCube")
+  private[libraylib] def __sn_wrap_DrawCube(position: Ptr[Vector3], width: Float, height: Float, length: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawCylinderWires")
+  private[libraylib] def __sn_wrap_DrawCylinderWires(position: Ptr[Vector3], radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetModelBoundingBox")
+  private[libraylib] def __sn_wrap_GetModelBoundingBox(model: Ptr[Model], __return: Ptr[BoundingBox]): Unit = extern
+
+  @name("__sn_wrap_UpdateSound")
+  private[libraylib] def __sn_wrap_UpdateSound(sound: Ptr[Sound], data: Ptr[Byte], sampleCount: CInt): Unit = extern
+
+  @name("__sn_wrap_GenMeshCone")
+  private[libraylib] def __sn_wrap_GenMeshCone(radius: Float, height: Float, slices: CInt, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_DrawCubeTexture")
+  private[libraylib] def __sn_wrap_DrawCubeTexture(texture: Ptr[Texture2D], position: Ptr[Vector3], width: Float, height: Float, length: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetGesturePinchVector")
+  private[libraylib] def __sn_wrap_GetGesturePinchVector(__return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_DrawLineBezierCubic")
+  private[libraylib] def __sn_wrap_DrawLineBezierCubic(startPos: Ptr[Vector2], endPos: Ptr[Vector2], startControlPos: Ptr[Vector2], endControlPos: Ptr[Vector2], thick: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetPixelColor")
+  private[libraylib] def __sn_wrap_GetPixelColor(srcPtr: Ptr[Byte], format: CInt, __return: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UpdateAudioStream")
+  private[libraylib] def __sn_wrap_UpdateAudioStream(stream: Ptr[AudioStream], data: Ptr[Byte], frameCount: CInt): Unit = extern
+
+  @name("__sn_wrap_DrawLineBezier")
+  private[libraylib] def __sn_wrap_DrawLineBezier(startPos: Ptr[Vector2], endPos: Ptr[Vector2], thick: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangle")
+  private[libraylib] def __sn_wrap_DrawRectangle(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UnloadFont")
+  private[libraylib] def __sn_wrap_UnloadFont(font: Ptr[Font]): Unit = extern
+
+  @name("__sn_wrap_UpdateMeshBuffer")
+  private[libraylib] def __sn_wrap_UpdateMeshBuffer(mesh: Ptr[Mesh], index: CInt, data: Ptr[Byte], dataSize: CInt, offset: CInt): Unit = extern
+
+  @name("__sn_wrap_DrawMeshInstanced")
+  private[libraylib] def __sn_wrap_DrawMeshInstanced(mesh: Ptr[Mesh], material: Ptr[Material], transforms: Ptr[Matrix], instances: CInt): Unit = extern
+
+  @name("__sn_wrap_GenMeshKnot")
+  private[libraylib] def __sn_wrap_GenMeshKnot(radius: Float, size: Float, radSeg: CInt, sides: CInt, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_UnloadMusicStream")
+  private[libraylib] def __sn_wrap_UnloadMusicStream(music: Ptr[Music]): Unit = extern
+
+  @name("__sn_wrap_GetImageColor")
+  private[libraylib] def __sn_wrap_GetImageColor(image: Ptr[Image], x: CInt, y: CInt, __return: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawPlane")
+  private[libraylib] def __sn_wrap_DrawPlane(centerPos: Ptr[Vector3], size: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleRounded")
+  private[libraylib] def __sn_wrap_DrawRectangleRounded(rec: Ptr[Rectangle], roundness: Float, segments: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageColorTint")
+  private[libraylib] def __sn_wrap_ImageColorTint(image: Ptr[Image], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UpdateMusicStream")
+  private[libraylib] def __sn_wrap_UpdateMusicStream(music: Ptr[Music]): Unit = extern
+
+  @name("__sn_wrap_DrawCircleSectorLines")
+  private[libraylib] def __sn_wrap_DrawCircleSectorLines(center: Ptr[Vector2], radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_PlayAudioStream")
+  private[libraylib] def __sn_wrap_PlayAudioStream(stream: Ptr[AudioStream]): Unit = extern
+
+  @name("__sn_wrap_LoadImageRaw")
+  private[libraylib] def __sn_wrap_LoadImageRaw(fileName: CString, width: CInt, height: CInt, format: CInt, headerSize: CInt, __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_ResumeMusicStream")
+  private[libraylib] def __sn_wrap_ResumeMusicStream(music: Ptr[Music]): Unit = extern
+
+  @name("__sn_wrap_SetTextureFilter")
+  private[libraylib] def __sn_wrap_SetTextureFilter(texture: Ptr[Texture2D], filter: CInt): Unit = extern
+
+  @name("__sn_wrap_BeginMode2D")
+  private[libraylib] def __sn_wrap_BeginMode2D(camera: Ptr[Camera2D]): Unit = extern
+
+  @name("__sn_wrap_LoadSoundFromWave")
+  private[libraylib] def __sn_wrap_LoadSoundFromWave(wave: Ptr[Wave], __return: Ptr[Sound]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawLineV")
+  private[libraylib] def __sn_wrap_ImageDrawLineV(dst: Ptr[Image], start: Ptr[Vector2], end: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ColorAlpha")
+  private[libraylib] def __sn_wrap_ColorAlpha(color: Ptr[Color], alpha: Float, __return: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetCameraMatrix")
+  private[libraylib] def __sn_wrap_GetCameraMatrix(camera: Ptr[Camera], __return: Ptr[Matrix]): Unit = extern
+
+  @name("__sn_wrap_UnloadShader")
+  private[libraylib] def __sn_wrap_UnloadShader(shader: Ptr[Shader]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawPixelV")
+  private[libraylib] def __sn_wrap_ImageDrawPixelV(dst: Ptr[Image], position: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GenImageWhiteNoise")
+  private[libraylib] def __sn_wrap_GenImageWhiteNoise(width: CInt, height: CInt, factor: Float, __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawText")
+  private[libraylib] def __sn_wrap_ImageDrawText(dst: Ptr[Image], text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawLine")
+  private[libraylib] def __sn_wrap_ImageDrawLine(dst: Ptr[Image], startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawSphereEx")
+  private[libraylib] def __sn_wrap_DrawSphereEx(centerPos: Ptr[Vector3], radius: Float, rings: CInt, slices: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetRayCollisionMesh")
+  private[libraylib] def __sn_wrap_GetRayCollisionMesh(ray: Ptr[Ray], mesh: Ptr[Mesh], transform: Ptr[Matrix], __return: Ptr[RayCollision]): Unit = extern
+
+  @name("__sn_wrap_SetPixelColor")
+  private[libraylib] def __sn_wrap_SetPixelColor(dstPtr: Ptr[Byte], color: Ptr[Color], format: CInt): Unit = extern
+
+  @name("__sn_wrap_UnloadAudioStream")
+  private[libraylib] def __sn_wrap_UnloadAudioStream(stream: Ptr[AudioStream]): Unit = extern
+
+  @name("__sn_wrap_LoadMusicStreamFromMemory")
+  private[libraylib] def __sn_wrap_LoadMusicStreamFromMemory(fileType: CString, data: Ptr[CUnsignedChar], dataSize: CInt, __return: Ptr[Music]): Unit = extern
+
+  @name("__sn_wrap_DrawCircle")
+  private[libraylib] def __sn_wrap_DrawCircle(centerX: CInt, centerY: CInt, radius: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_MeasureTextEx")
+  private[libraylib] def __sn_wrap_MeasureTextEx(font: Ptr[Font], text: CString, fontSize: Float, spacing: Float, __return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_GenImageChecked")
+  private[libraylib] def __sn_wrap_GenImageChecked(width: CInt, height: CInt, checksX: CInt, checksY: CInt, col1: Ptr[Color], col2: Ptr[Color], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawPixelV")
+  private[libraylib] def __sn_wrap_DrawPixelV(position: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawBillboard")
+  private[libraylib] def __sn_wrap_DrawBillboard(camera: Ptr[Camera], texture: Ptr[Texture2D], position: Ptr[Vector3], size: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetRayCollisionQuad")
+  private[libraylib] def __sn_wrap_GetRayCollisionQuad(ray: Ptr[Ray], p1: Ptr[Vector3], p2: Ptr[Vector3], p3: Ptr[Vector3], p4: Ptr[Vector3], __return: Ptr[RayCollision]): Unit = extern
+
+  @name("__sn_wrap_GetWindowPosition")
+  private[libraylib] def __sn_wrap_GetWindowPosition(__return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_DrawTexturePoly")
+  private[libraylib] def __sn_wrap_DrawTexturePoly(texture: Ptr[Texture2D], center: Ptr[Vector2], points: Ptr[Vector2], texcoords: Ptr[Vector2], pointCount: CInt, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GenMeshHeightmap")
+  private[libraylib] def __sn_wrap_GenMeshHeightmap(heightmap: Ptr[Image], size: Ptr[Vector3], __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_ClearBackground")
+  private[libraylib] def __sn_wrap_ClearBackground(color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectanglePro")
+  private[libraylib] def __sn_wrap_DrawRectanglePro(rec: Ptr[Rectangle], origin: Ptr[Vector2], rotation: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawPoly")
+  private[libraylib] def __sn_wrap_DrawPoly(center: Ptr[Vector2], sides: CInt, radius: Float, rotation: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_PlaySound")
+  private[libraylib] def __sn_wrap_PlaySound(sound: Ptr[Sound]): Unit = extern
+
+  @name("__sn_wrap_DrawTriangle")
+  private[libraylib] def __sn_wrap_DrawTriangle(v1: Ptr[Vector2], v2: Ptr[Vector2], v3: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UnloadSound")
+  private[libraylib] def __sn_wrap_UnloadSound(sound: Ptr[Sound]): Unit = extern
+
+  @name("__sn_wrap_GenImageGradientRadial")
+  private[libraylib] def __sn_wrap_GenImageGradientRadial(width: CInt, height: CInt, density: Float, inner: Ptr[Color], outer: Ptr[Color], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_GenImageCellular")
+  private[libraylib] def __sn_wrap_GenImageCellular(width: CInt, height: CInt, tileSize: CInt, __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_LoadImageFromScreen")
+  private[libraylib] def __sn_wrap_LoadImageFromScreen(__return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_StopAudioStream")
+  private[libraylib] def __sn_wrap_StopAudioStream(stream: Ptr[AudioStream]): Unit = extern
+
+  @name("__sn_wrap_UnloadTexture")
+  private[libraylib] def __sn_wrap_UnloadTexture(texture: Ptr[Texture2D]): Unit = extern
+
+  @name("__sn_wrap_LoadSound")
+  private[libraylib] def __sn_wrap_LoadSound(fileName: CString, __return: Ptr[Sound]): Unit = extern
+
+  @name("__sn_wrap_LoadShader")
+  private[libraylib] def __sn_wrap_LoadShader(vsFileName: CString, fsFileName: CString, __return: Ptr[Shader]): Unit = extern
+
+  @name("__sn_wrap_DrawEllipseLines")
+  private[libraylib] def __sn_wrap_DrawEllipseLines(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetMouseDelta")
+  private[libraylib] def __sn_wrap_GetMouseDelta(__return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_GetGlyphAtlasRec")
+  private[libraylib] def __sn_wrap_GetGlyphAtlasRec(font: Ptr[Font], codepoint: CInt, __return: Ptr[Rectangle]): Unit = extern
+
+  @name("__sn_wrap_ColorFromNormalized")
+  private[libraylib] def __sn_wrap_ColorFromNormalized(normalized: Ptr[Vector4], __return: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UnloadImage")
+  private[libraylib] def __sn_wrap_UnloadImage(image: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawBillboardRec")
+  private[libraylib] def __sn_wrap_DrawBillboardRec(camera: Ptr[Camera], texture: Ptr[Texture2D], source: Ptr[Rectangle], position: Ptr[Vector3], size: Ptr[Vector2], tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadWaveFromMemory")
+  private[libraylib] def __sn_wrap_LoadWaveFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt, __return: Ptr[Wave]): Unit = extern
+
+  @name("__sn_wrap_GetMonitorPosition")
+  private[libraylib] def __sn_wrap_GetMonitorPosition(monitor: CInt, __return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_GetMouseRay")
+  private[libraylib] def __sn_wrap_GetMouseRay(mousePosition: Ptr[Vector2], camera: Ptr[Camera], __return: Ptr[Ray]): Unit = extern
+
+  @name("__sn_wrap_GetScreenToWorld2D")
+  private[libraylib] def __sn_wrap_GetScreenToWorld2D(position: Ptr[Vector2], camera: Ptr[Camera2D], __return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_LoadWave")
+  private[libraylib] def __sn_wrap_LoadWave(fileName: CString, __return: Ptr[Wave]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawPixel")
+  private[libraylib] def __sn_wrap_ImageDrawPixel(dst: Ptr[Image], posX: CInt, posY: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawTexture")
+  private[libraylib] def __sn_wrap_DrawTexture(texture: Ptr[Texture2D], posX: CInt, posY: CInt, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_SetCameraMode")
+  private[libraylib] def __sn_wrap_SetCameraMode(camera: Ptr[Camera], mode: CInt): Unit = extern
+
+  @name("__sn_wrap_GetRayCollisionModel")
+  private[libraylib] def __sn_wrap_GetRayCollisionModel(ray: Ptr[Ray], model: Ptr[Model], __return: Ptr[RayCollision]): Unit = extern
+
+  @name("__sn_wrap_DrawPixel")
+  private[libraylib] def __sn_wrap_DrawPixel(posX: CInt, posY: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_BeginMode3D")
+  private[libraylib] def __sn_wrap_BeginMode3D(camera: Ptr[Camera3D]): Unit = extern
+
+  @name("__sn_wrap_ImageCrop")
+  private[libraylib] def __sn_wrap_ImageCrop(image: Ptr[Image], crop: Ptr[Rectangle]): Unit = extern
+
+  @name("__sn_wrap_GetWindowScaleDPI")
+  private[libraylib] def __sn_wrap_GetWindowScaleDPI(__return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_DrawTexturePro")
+  private[libraylib] def __sn_wrap_DrawTexturePro(texture: Ptr[Texture2D], source: Ptr[Rectangle], dest: Ptr[Rectangle], origin: Ptr[Vector2], rotation: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleRoundedLines")
+  private[libraylib] def __sn_wrap_DrawRectangleRoundedLines(rec: Ptr[Rectangle], roundness: Float, segments: CInt, lineThick: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ResumeAudioStream")
+  private[libraylib] def __sn_wrap_ResumeAudioStream(stream: Ptr[AudioStream]): Unit = extern
+
+  @name("__sn_wrap_GetWorldToScreen")
+  private[libraylib] def __sn_wrap_GetWorldToScreen(position: Ptr[Vector3], camera: Ptr[Camera], __return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_GetWorldToScreen2D")
+  private[libraylib] def __sn_wrap_GetWorldToScreen2D(position: Ptr[Vector2], camera: Ptr[Camera2D], __return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_SetAudioStreamVolume")
+  private[libraylib] def __sn_wrap_SetAudioStreamVolume(stream: Ptr[AudioStream], volume: Float): Unit = extern
+
+  @name("__sn_wrap_DrawModelWires")
+  private[libraylib] def __sn_wrap_DrawModelWires(model: Ptr[Model], position: Ptr[Vector3], scale: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawBillboardPro")
+  private[libraylib] def __sn_wrap_DrawBillboardPro(camera: Ptr[Camera], texture: Ptr[Texture2D], source: Ptr[Rectangle], position: Ptr[Vector3], up: Ptr[Vector3], size: Ptr[Vector2], origin: Ptr[Vector2], rotation: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ColorToHSV")
+  private[libraylib] def __sn_wrap_ColorToHSV(color: Ptr[Color], __return: Ptr[Vector3]): Unit = extern
+
+  @name("__sn_wrap_ResumeSound")
+  private[libraylib] def __sn_wrap_ResumeSound(sound: Ptr[Sound]): Unit = extern
+
+  @name("__sn_wrap_Fade")
+  private[libraylib] def __sn_wrap_Fade(color: Ptr[Color], alpha: Float, __return: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GenImageGradientV")
+  private[libraylib] def __sn_wrap_GenImageGradientV(width: CInt, height: CInt, top: Ptr[Color], bottom: Ptr[Color], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_GenMeshCubicmap")
+  private[libraylib] def __sn_wrap_GenMeshCubicmap(cubicmap: Ptr[Image], cubeSize: Ptr[Vector3], __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_LoadImagePalette")
+  private[libraylib] def __sn_wrap_LoadImagePalette(image: Ptr[Image], maxPaletteSize: CInt, colorCount: Ptr[CInt]): Ptr[Color] = extern
+
+  @name("__sn_wrap_GenImageColor")
+  private[libraylib] def __sn_wrap_GenImageColor(width: CInt, height: CInt, color: Ptr[Color], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawCircle3D")
+  private[libraylib] def __sn_wrap_DrawCircle3D(center: Ptr[Vector3], radius: Float, rotationAxis: Ptr[Vector3], rotationAngle: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleV")
+  private[libraylib] def __sn_wrap_DrawRectangleV(position: Ptr[Vector2], size: Ptr[Vector2], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleRec")
+  private[libraylib] def __sn_wrap_DrawRectangleRec(rec: Ptr[Rectangle], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UnloadModel")
+  private[libraylib] def __sn_wrap_UnloadModel(model: Ptr[Model]): Unit = extern
+
+  @name("__sn_wrap_SetShaderValueTexture")
+  private[libraylib] def __sn_wrap_SetShaderValueTexture(shader: Ptr[Shader], locIndex: CInt, texture: Ptr[Texture2D]): Unit = extern
+
+  @name("__sn_wrap_ImageDraw")
+  private[libraylib] def __sn_wrap_ImageDraw(dst: Ptr[Image], src: Ptr[Image], srcRec: Ptr[Rectangle], dstRec: Ptr[Rectangle], tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleGradientH")
+  private[libraylib] def __sn_wrap_DrawRectangleGradientH(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Ptr[Color], color2: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadMusicStream")
+  private[libraylib] def __sn_wrap_LoadMusicStream(fileName: CString, __return: Ptr[Music]): Unit = extern
+
+  @name("__sn_wrap_StopSound")
+  private[libraylib] def __sn_wrap_StopSound(sound: Ptr[Sound]): Unit = extern
+
+  @name("__sn_wrap_LoadImage")
+  private[libraylib] def __sn_wrap_LoadImage(fileName: CString, __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawTriangleStrip")
+  private[libraylib] def __sn_wrap_DrawTriangleStrip(points: Ptr[Vector2], pointCount: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawLineEx")
+  private[libraylib] def __sn_wrap_DrawLineEx(startPos: Ptr[Vector2], endPos: Ptr[Vector2], thick: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ColorFromHSV")
+  private[libraylib] def __sn_wrap_ColorFromHSV(hue: Float, saturation: Float, value: Float, __return: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRingLines")
+  private[libraylib] def __sn_wrap_DrawRingLines(center: Ptr[Vector2], innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadModel")
+  private[libraylib] def __sn_wrap_LoadModel(fileName: CString, __return: Ptr[Model]): Unit = extern
+
+  @name("__sn_wrap_ImageTextEx")
+  private[libraylib] def __sn_wrap_ImageTextEx(font: Ptr[Font], text: CString, fontSize: Float, spacing: Float, tint: Ptr[Color], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawRing")
+  private[libraylib] def __sn_wrap_DrawRing(center: Ptr[Vector2], innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetImageAlphaBorder")
+  private[libraylib] def __sn_wrap_GetImageAlphaBorder(image: Ptr[Image], threshold: Float, __return: Ptr[Rectangle]): Unit = extern
+
+  @name("__sn_wrap_SetWindowIcon")
+  private[libraylib] def __sn_wrap_SetWindowIcon(image: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_GetGlyphInfo")
+  private[libraylib] def __sn_wrap_GetGlyphInfo(font: Ptr[Font], codepoint: CInt, __return: Ptr[GlyphInfo]): Unit = extern
+
+  @name("__sn_wrap_UnloadVrStereoConfig")
+  private[libraylib] def __sn_wrap_UnloadVrStereoConfig(config: Ptr[VrStereoConfig]): Unit = extern
+
+  @name("__sn_wrap_PauseAudioStream")
+  private[libraylib] def __sn_wrap_PauseAudioStream(stream: Ptr[AudioStream]): Unit = extern
+
+  @name("__sn_wrap_PlaySoundMulti")
+  private[libraylib] def __sn_wrap_PlaySoundMulti(sound: Ptr[Sound]): Unit = extern
+
+  @name("__sn_wrap_GenMeshSphere")
+  private[libraylib] def __sn_wrap_GenMeshSphere(radius: Float, rings: CInt, slices: CInt, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_PauseSound")
+  private[libraylib] def __sn_wrap_PauseSound(sound: Ptr[Sound]): Unit = extern
+
+  @name("__sn_wrap_GetGestureDragVector")
+  private[libraylib] def __sn_wrap_GetGestureDragVector(__return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_WaveCopy")
+  private[libraylib] def __sn_wrap_WaveCopy(wave: Ptr[Wave], __return: Ptr[Wave]): Unit = extern
+
+  @name("__sn_wrap_DrawModel")
+  private[libraylib] def __sn_wrap_DrawModel(model: Ptr[Model], position: Ptr[Vector3], scale: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawText")
+  private[libraylib] def __sn_wrap_DrawText(text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadFontEx")
+  private[libraylib] def __sn_wrap_LoadFontEx(fileName: CString, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt, __return: Ptr[Font]): Unit = extern
+
+  @name("__sn_wrap_ImageAlphaMask")
+  private[libraylib] def __sn_wrap_ImageAlphaMask(image: Ptr[Image], alphaMask: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_UpdateModelAnimation")
+  private[libraylib] def __sn_wrap_UpdateModelAnimation(model: Ptr[Model], anim: Ptr[ModelAnimation], frame: CInt): Unit = extern
+
+  @name("__sn_wrap_SetMaterialTexture")
+  private[libraylib] def __sn_wrap_SetMaterialTexture(material: Ptr[Material], mapType: CInt, texture: Ptr[Texture2D]): Unit = extern
+
+  @name("__sn_wrap_SeekMusicStream")
+  private[libraylib] def __sn_wrap_SeekMusicStream(music: Ptr[Music], position: Float): Unit = extern
+
+  @name("__sn_wrap_ImageDrawTextEx")
+  private[libraylib] def __sn_wrap_ImageDrawTextEx(dst: Ptr[Image], font: Ptr[Font], text: CString, position: Ptr[Vector2], fontSize: Float, spacing: Float, tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetColor")
+  private[libraylib] def __sn_wrap_GetColor(hexValue: CUnsignedInt, __return: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleGradientEx")
+  private[libraylib] def __sn_wrap_DrawRectangleGradientEx(rec: Ptr[Rectangle], col1: Ptr[Color], col2: Ptr[Color], col3: Ptr[Color], col4: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_UnloadWave")
+  private[libraylib] def __sn_wrap_UnloadWave(wave: Ptr[Wave]): Unit = extern
+
+  @name("__sn_wrap_DrawCircleLines")
+  private[libraylib] def __sn_wrap_DrawCircleLines(centerX: CInt, centerY: CInt, radius: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetTouchPosition")
+  private[libraylib] def __sn_wrap_GetTouchPosition(index: CInt, __return: Ptr[Vector2]): Unit = extern
+
+  @name("__sn_wrap_LoadImageAnim")
+  private[libraylib] def __sn_wrap_LoadImageAnim(fileName: CString, frames: Ptr[CInt], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawCubeWiresV")
+  private[libraylib] def __sn_wrap_DrawCubeWiresV(position: Ptr[Vector3], size: Ptr[Vector3], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GenMeshCube")
+  private[libraylib] def __sn_wrap_GenMeshCube(width: Float, height: Float, length: Float, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_GetGlyphIndex")
+  private[libraylib] def __sn_wrap_GetGlyphIndex(font: Ptr[Font], codepoint: CInt): CInt = extern
+
+  @name("__sn_wrap_DrawCircleSector")
+  private[libraylib] def __sn_wrap_DrawCircleSector(center: Ptr[Vector2], radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageCopy")
+  private[libraylib] def __sn_wrap_ImageCopy(image: Ptr[Image], __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_UnloadMaterial")
+  private[libraylib] def __sn_wrap_UnloadMaterial(material: Ptr[Material]): Unit = extern
+
+  @name("__sn_wrap_LoadImageFromMemory")
+  private[libraylib] def __sn_wrap_LoadImageFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt, __return: Ptr[Image]): Unit = extern
+
+  @name("__sn_wrap_DrawRay")
+  private[libraylib] def __sn_wrap_DrawRay(ray: Ptr[Ray], color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetMeshBoundingBox")
+  private[libraylib] def __sn_wrap_GetMeshBoundingBox(mesh: Ptr[Mesh], __return: Ptr[BoundingBox]): Unit = extern
+
+  @name("__sn_wrap_DrawLineBezierQuad")
+  private[libraylib] def __sn_wrap_DrawLineBezierQuad(startPos: Ptr[Vector2], endPos: Ptr[Vector2], controlPos: Ptr[Vector2], thick: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_DrawPolyLines")
+  private[libraylib] def __sn_wrap_DrawPolyLines(center: Ptr[Vector2], sides: CInt, radius: Float, rotation: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_LoadFontFromImage")
+  private[libraylib] def __sn_wrap_LoadFontFromImage(image: Ptr[Image], key: Ptr[Color], firstChar: CInt, __return: Ptr[Font]): Unit = extern
+
+  @name("__sn_wrap_LoadTexture")
+  private[libraylib] def __sn_wrap_LoadTexture(fileName: CString, __return: Ptr[Texture2D]): Unit = extern
+
+  @name("__sn_wrap_DrawPolyLinesEx")
+  private[libraylib] def __sn_wrap_DrawPolyLinesEx(center: Ptr[Vector2], sides: CInt, radius: Float, rotation: Float, lineThick: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_PauseMusicStream")
+  private[libraylib] def __sn_wrap_PauseMusicStream(music: Ptr[Music]): Unit = extern
+
+  @name("__sn_wrap_DrawModelWiresEx")
+  private[libraylib] def __sn_wrap_DrawModelWiresEx(model: Ptr[Model], position: Ptr[Vector3], rotationAxis: Ptr[Vector3], rotationAngle: Float, scale: Ptr[Vector3], tint: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GenMeshCylinder")
+  private[libraylib] def __sn_wrap_GenMeshCylinder(radius: Float, height: Float, slices: CInt, __return: Ptr[Mesh]): Unit = extern
+
+  @name("__sn_wrap_DrawRectangleLinesEx")
+  private[libraylib] def __sn_wrap_DrawRectangleLinesEx(rec: Ptr[Rectangle], lineThick: Float, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_GetRayCollisionSphere")
+  private[libraylib] def __sn_wrap_GetRayCollisionSphere(ray: Ptr[Ray], center: Ptr[Vector3], radius: Float, __return: Ptr[RayCollision]): Unit = extern
+
+  @name("__sn_wrap_DrawSphereWires")
+  private[libraylib] def __sn_wrap_DrawSphereWires(centerPos: Ptr[Vector3], radius: Float, rings: CInt, slices: CInt, color: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_ImageDrawRectangleLines")
+  private[libraylib] def __sn_wrap_ImageDrawRectangleLines(dst: Ptr[Image], rec: Ptr[Rectangle], thick: CInt, color: Ptr[Color]): Unit = extern
+
+object functions: 
+  import types.*, extern_functions.*
+
+  export extern_functions.*
+
+  def BeginMode2D(camera: Camera2D)(using Zone): Unit = 
+    val _ptr_0 = alloc[Camera2D](1)
+    __sn_wrap_BeginMode2D(_ptr_0)
+
+  def BeginMode3D(camera: Camera3D)(using Zone): Unit = 
+    val _ptr_0 = alloc[Camera3D](1)
+    __sn_wrap_BeginMode3D(_ptr_0)
+
+  def BeginShaderMode(shader: Shader)(using Zone): Unit = 
+    val _ptr_0 = alloc[Shader](1)
+    __sn_wrap_BeginShaderMode(_ptr_0)
+
+  def BeginTextureMode(target: RenderTexture2D)(using Zone): Unit = 
+    val _ptr_0 = alloc[RenderTexture2D](1)
+    __sn_wrap_BeginTextureMode(_ptr_0)
+
+  def BeginVrStereoMode(config: VrStereoConfig)(using Zone): Unit = 
+    val _ptr_0 = alloc[VrStereoConfig](1)
+    __sn_wrap_BeginVrStereoMode(_ptr_0)
+
+  def ClearBackground(color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Color](1)
+    __sn_wrap_ClearBackground(_ptr_0)
+
+  def ColorAlpha(color: Color, alpha: Float)(using Zone): Color = 
+    val _ptr_0 = alloc[Color](1)
+    val _ptr_return = alloc[Color](1)
+    __sn_wrap_ColorAlpha(_ptr_0, alpha, _ptr_return)
+    !_ptr_return
+
+  def ColorAlphaBlend(dst: Color, src: Color, tint: Color)(using Zone): Color = 
+    val _ptr_0 = alloc[Color](1)
+    val _ptr_1 = alloc[Color](1)
+    val _ptr_2 = alloc[Color](1)
+    val _ptr_return = alloc[Color](1)
+    __sn_wrap_ColorAlphaBlend(_ptr_0, _ptr_1, _ptr_2, _ptr_return)
+    !_ptr_return
+
+  def ColorFromHSV(hue: Float, saturation: Float, value: Float)(using Zone): Color = 
+    val _ptr_return = alloc[Color](1)
+    __sn_wrap_ColorFromHSV(hue, saturation, value, _ptr_return)
+    !_ptr_return
+
+  def ColorFromNormalized(normalized: Vector4)(using Zone): Color = 
+    val _ptr_0 = alloc[Vector4](1)
+    val _ptr_return = alloc[Color](1)
+    __sn_wrap_ColorFromNormalized(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def ColorNormalize(color: Color)(using Zone): Vector4 = 
+    val _ptr_0 = alloc[Color](1)
+    val _ptr_return = alloc[Vector4](1)
+    __sn_wrap_ColorNormalize(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def ColorToHSV(color: Color)(using Zone): Vector3 = 
+    val _ptr_0 = alloc[Color](1)
+    val _ptr_return = alloc[Vector3](1)
+    __sn_wrap_ColorToHSV(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def ColorToInt(color: Color)(using Zone): CInt = 
+    val _ptr_0 = alloc[Color](1)
+    __sn_wrap_ColorToInt(_ptr_0)
+
+  def DrawBillboard(camera: Camera, texture: Texture2D, position: Vector3, size: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Camera](1)
+    val _ptr_1 = alloc[Texture2D](1)
+    val _ptr_2 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawBillboard(_ptr_0, _ptr_1, _ptr_2, size, _ptr_4)
+
+  def DrawBillboardPro(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Camera](1)
+    val _ptr_1 = alloc[Texture2D](1)
+    val _ptr_2 = alloc[Rectangle](1)
+    val _ptr_3 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Vector3](1)
+    val _ptr_5 = alloc[Vector2](1)
+    val _ptr_6 = alloc[Vector2](1)
+    val _ptr_8 = alloc[Color](1)
+    __sn_wrap_DrawBillboardPro(_ptr_0, _ptr_1, _ptr_2, _ptr_3, _ptr_4, _ptr_5, _ptr_6, rotation, _ptr_8)
+
+  def DrawBillboardRec(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Camera](1)
+    val _ptr_1 = alloc[Texture2D](1)
+    val _ptr_2 = alloc[Rectangle](1)
+    val _ptr_3 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawBillboardRec(_ptr_0, _ptr_1, _ptr_2, _ptr_3, _ptr_4, _ptr_5)
+
+  def DrawBoundingBox(box: BoundingBox, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[BoundingBox](1)
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_DrawBoundingBox(_ptr_0, _ptr_1)
+
+  def DrawCircle(centerX: CInt, centerY: CInt, radius: Float, color: Color)(using Zone): Unit = 
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawCircle(centerX, centerY, radius, _ptr_3)
+
+  def DrawCircle3D(center: Vector3, radius: Float, rotationAxis: Vector3, rotationAngle: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawCircle3D(_ptr_0, radius, _ptr_2, rotationAngle, _ptr_4)
+
+  def DrawCircleGradient(centerX: CInt, centerY: CInt, radius: Float, color1: Color, color2: Color)(using Zone): Unit = 
+    val _ptr_3 = alloc[Color](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawCircleGradient(centerX, centerY, radius, _ptr_3, _ptr_4)
+
+  def DrawCircleLines(centerX: CInt, centerY: CInt, radius: Float, color: Color)(using Zone): Unit = 
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawCircleLines(centerX, centerY, radius, _ptr_3)
+
+  def DrawCircleSector(center: Vector2, radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawCircleSector(_ptr_0, radius, startAngle, endAngle, segments, _ptr_5)
+
+  def DrawCircleSectorLines(center: Vector2, radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawCircleSectorLines(_ptr_0, radius, startAngle, endAngle, segments, _ptr_5)
+
+  def DrawCircleV(center: Vector2, radius: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawCircleV(_ptr_0, radius, _ptr_2)
+
+  def DrawCube(position: Vector3, width: Float, height: Float, length: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawCube(_ptr_0, width, height, length, _ptr_4)
+
+  def DrawCubeTexture(texture: Texture2D, position: Vector3, width: Float, height: Float, length: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawCubeTexture(_ptr_0, _ptr_1, width, height, length, _ptr_5)
+
+  def DrawCubeTextureRec(texture: Texture2D, source: Rectangle, position: Vector3, width: Float, height: Float, length: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Rectangle](1)
+    val _ptr_2 = alloc[Vector3](1)
+    val _ptr_6 = alloc[Color](1)
+    __sn_wrap_DrawCubeTextureRec(_ptr_0, _ptr_1, _ptr_2, width, height, length, _ptr_6)
+
+  def DrawCubeV(position: Vector3, size: Vector3, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawCubeV(_ptr_0, _ptr_1, _ptr_2)
+
+  def DrawCubeWires(position: Vector3, width: Float, height: Float, length: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawCubeWires(_ptr_0, width, height, length, _ptr_4)
+
+  def DrawCubeWiresV(position: Vector3, size: Vector3, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawCubeWiresV(_ptr_0, _ptr_1, _ptr_2)
+
+  def DrawCylinder(position: Vector3, radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawCylinder(_ptr_0, radiusTop, radiusBottom, height, slices, _ptr_5)
+
+  def DrawCylinderEx(startPos: Vector3, endPos: Vector3, startRadius: Float, endRadius: Float, sides: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawCylinderEx(_ptr_0, _ptr_1, startRadius, endRadius, sides, _ptr_5)
+
+  def DrawCylinderWires(position: Vector3, radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawCylinderWires(_ptr_0, radiusTop, radiusBottom, height, slices, _ptr_5)
+
+  def DrawCylinderWiresEx(startPos: Vector3, endPos: Vector3, startRadius: Float, endRadius: Float, sides: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawCylinderWiresEx(_ptr_0, _ptr_1, startRadius, endRadius, sides, _ptr_5)
+
+  def DrawEllipse(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawEllipse(centerX, centerY, radiusH, radiusV, _ptr_4)
+
+  def DrawEllipseLines(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawEllipseLines(centerX, centerY, radiusH, radiusV, _ptr_4)
+
+  def DrawLine(startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawLine(startPosX, startPosY, endPosX, endPosY, _ptr_4)
+
+  def DrawLine3D(startPos: Vector3, endPos: Vector3, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawLine3D(_ptr_0, _ptr_1, _ptr_2)
+
+  def DrawLineBezier(startPos: Vector2, endPos: Vector2, thick: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawLineBezier(_ptr_0, _ptr_1, thick, _ptr_3)
+
+  def DrawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawLineBezierCubic(_ptr_0, _ptr_1, _ptr_2, _ptr_3, thick, _ptr_5)
+
+  def DrawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawLineBezierQuad(_ptr_0, _ptr_1, _ptr_2, thick, _ptr_4)
+
+  def DrawLineEx(startPos: Vector2, endPos: Vector2, thick: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawLineEx(_ptr_0, _ptr_1, thick, _ptr_3)
+
+  def DrawLineStrip(points: Ptr[Vector2], pointCount: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawLineStrip(points, pointCount, _ptr_2)
+
+  def DrawLineV(startPos: Vector2, endPos: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawLineV(_ptr_0, _ptr_1, _ptr_2)
+
+  def DrawMesh(mesh: Mesh, material: Material, transform: Matrix)(using Zone): Unit = 
+    val _ptr_0 = alloc[Mesh](1)
+    val _ptr_1 = alloc[Material](1)
+    val _ptr_2 = alloc[Matrix](1)
+    __sn_wrap_DrawMesh(_ptr_0, _ptr_1, _ptr_2)
+
+  def DrawMeshInstanced(mesh: Mesh, material: Material, transforms: Ptr[Matrix], instances: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Mesh](1)
+    val _ptr_1 = alloc[Material](1)
+    __sn_wrap_DrawMeshInstanced(_ptr_0, _ptr_1, transforms, instances)
+
+  def DrawModel(model: Model, position: Vector3, scale: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Model](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawModel(_ptr_0, _ptr_1, scale, _ptr_3)
+
+  def DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: Float, scale: Vector3, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Model](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Vector3](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawModelEx(_ptr_0, _ptr_1, _ptr_2, rotationAngle, _ptr_4, _ptr_5)
+
+  def DrawModelWires(model: Model, position: Vector3, scale: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Model](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawModelWires(_ptr_0, _ptr_1, scale, _ptr_3)
+
+  def DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: Float, scale: Vector3, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Model](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Vector3](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawModelWiresEx(_ptr_0, _ptr_1, _ptr_2, rotationAngle, _ptr_4, _ptr_5)
+
+  def DrawPixel(posX: CInt, posY: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawPixel(posX, posY, _ptr_2)
+
+  def DrawPixelV(position: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_DrawPixelV(_ptr_0, _ptr_1)
+
+  def DrawPlane(centerPos: Vector3, size: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawPlane(_ptr_0, _ptr_1, _ptr_2)
+
+  def DrawPoint3D(position: Vector3, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_DrawPoint3D(_ptr_0, _ptr_1)
+
+  def DrawPoly(center: Vector2, sides: CInt, radius: Float, rotation: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawPoly(_ptr_0, sides, radius, rotation, _ptr_4)
+
+  def DrawPolyLines(center: Vector2, sides: CInt, radius: Float, rotation: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawPolyLines(_ptr_0, sides, radius, rotation, _ptr_4)
+
+  def DrawPolyLinesEx(center: Vector2, sides: CInt, radius: Float, rotation: Float, lineThick: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawPolyLinesEx(_ptr_0, sides, radius, rotation, lineThick, _ptr_5)
+
+  def DrawRay(ray: Ray, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Ray](1)
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_DrawRay(_ptr_0, _ptr_1)
+
+  def DrawRectangle(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawRectangle(posX, posY, width, height, _ptr_4)
+
+  def DrawRectangleGradientEx(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Rectangle](1)
+    val _ptr_1 = alloc[Color](1)
+    val _ptr_2 = alloc[Color](1)
+    val _ptr_3 = alloc[Color](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawRectangleGradientEx(_ptr_0, _ptr_1, _ptr_2, _ptr_3, _ptr_4)
+
+  def DrawRectangleGradientH(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Color, color2: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawRectangleGradientH(posX, posY, width, height, _ptr_4, _ptr_5)
+
+  def DrawRectangleGradientV(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Color, color2: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawRectangleGradientV(posX, posY, width, height, _ptr_4, _ptr_5)
+
+  def DrawRectangleLines(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawRectangleLines(posX, posY, width, height, _ptr_4)
+
+  def DrawRectangleLinesEx(rec: Rectangle, lineThick: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Rectangle](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawRectangleLinesEx(_ptr_0, lineThick, _ptr_2)
+
+  def DrawRectanglePro(rec: Rectangle, origin: Vector2, rotation: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Rectangle](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawRectanglePro(_ptr_0, _ptr_1, rotation, _ptr_3)
+
+  def DrawRectangleRec(rec: Rectangle, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Rectangle](1)
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_DrawRectangleRec(_ptr_0, _ptr_1)
+
+  def DrawRectangleRounded(rec: Rectangle, roundness: Float, segments: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Rectangle](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawRectangleRounded(_ptr_0, roundness, segments, _ptr_3)
+
+  def DrawRectangleRoundedLines(rec: Rectangle, roundness: Float, segments: CInt, lineThick: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Rectangle](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawRectangleRoundedLines(_ptr_0, roundness, segments, lineThick, _ptr_4)
+
+  def DrawRectangleV(position: Vector2, size: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawRectangleV(_ptr_0, _ptr_1, _ptr_2)
+
+  def DrawRing(center: Vector2, innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_6 = alloc[Color](1)
+    __sn_wrap_DrawRing(_ptr_0, innerRadius, outerRadius, startAngle, endAngle, segments, _ptr_6)
+
+  def DrawRingLines(center: Vector2, innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_6 = alloc[Color](1)
+    __sn_wrap_DrawRingLines(_ptr_0, innerRadius, outerRadius, startAngle, endAngle, segments, _ptr_6)
+
+  def DrawSphere(centerPos: Vector3, radius: Float, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawSphere(_ptr_0, radius, _ptr_2)
+
+  def DrawSphereEx(centerPos: Vector3, radius: Float, rings: CInt, slices: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawSphereEx(_ptr_0, radius, rings, slices, _ptr_4)
+
+  def DrawSphereWires(centerPos: Vector3, radius: Float, rings: CInt, slices: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawSphereWires(_ptr_0, radius, rings, slices, _ptr_4)
+
+  def DrawText(text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawText(text, posX, posY, fontSize, _ptr_4)
+
+  def DrawTextCodepoint(font: Font, codepoint: CInt, position: Vector2, fontSize: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Font](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawTextCodepoint(_ptr_0, codepoint, _ptr_2, fontSize, _ptr_4)
+
+  def DrawTextEx(font: Font, text: CString, position: Vector2, fontSize: Float, spacing: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Font](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawTextEx(_ptr_0, text, _ptr_2, fontSize, spacing, _ptr_5)
+
+  def DrawTextPro(font: Font, text: CString, position: Vector2, origin: Vector2, rotation: Float, fontSize: Float, spacing: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Font](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Vector2](1)
+    val _ptr_7 = alloc[Color](1)
+    __sn_wrap_DrawTextPro(_ptr_0, text, _ptr_2, _ptr_3, rotation, fontSize, spacing, _ptr_7)
+
+  def DrawTexture(texture: Texture2D, posX: CInt, posY: CInt, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawTexture(_ptr_0, posX, posY, _ptr_3)
+
+  def DrawTextureEx(texture: Texture2D, position: Vector2, rotation: Float, scale: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawTextureEx(_ptr_0, _ptr_1, rotation, scale, _ptr_4)
+
+  def DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[NPatchInfo](1)
+    val _ptr_2 = alloc[Rectangle](1)
+    val _ptr_3 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawTextureNPatch(_ptr_0, _ptr_1, _ptr_2, _ptr_3, rotation, _ptr_5)
+
+  def DrawTexturePoly(texture: Texture2D, center: Vector2, points: Ptr[Vector2], texcoords: Ptr[Vector2], pointCount: CInt, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawTexturePoly(_ptr_0, _ptr_1, points, texcoords, pointCount, _ptr_5)
+
+  def DrawTexturePro(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Rectangle](1)
+    val _ptr_2 = alloc[Rectangle](1)
+    val _ptr_3 = alloc[Vector2](1)
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_DrawTexturePro(_ptr_0, _ptr_1, _ptr_2, _ptr_3, rotation, _ptr_5)
+
+  def DrawTextureQuad(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Rectangle](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_DrawTextureQuad(_ptr_0, _ptr_1, _ptr_2, _ptr_3, _ptr_4)
+
+  def DrawTextureRec(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Rectangle](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawTextureRec(_ptr_0, _ptr_1, _ptr_2, _ptr_3)
+
+  def DrawTextureTiled(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: Float, scale: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Rectangle](1)
+    val _ptr_2 = alloc[Rectangle](1)
+    val _ptr_3 = alloc[Vector2](1)
+    val _ptr_6 = alloc[Color](1)
+    __sn_wrap_DrawTextureTiled(_ptr_0, _ptr_1, _ptr_2, _ptr_3, rotation, scale, _ptr_6)
+
+  def DrawTextureV(texture: Texture2D, position: Vector2, tint: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawTextureV(_ptr_0, _ptr_1, _ptr_2)
+
+  def DrawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawTriangle(_ptr_0, _ptr_1, _ptr_2, _ptr_3)
+
+  def DrawTriangle3D(v1: Vector3, v2: Vector3, v3: Vector3, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Vector3](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawTriangle3D(_ptr_0, _ptr_1, _ptr_2, _ptr_3)
+
+  def DrawTriangleFan(points: Ptr[Vector2], pointCount: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawTriangleFan(points, pointCount, _ptr_2)
+
+  def DrawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_DrawTriangleLines(_ptr_0, _ptr_1, _ptr_2, _ptr_3)
+
+  def DrawTriangleStrip(points: Ptr[Vector2], pointCount: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawTriangleStrip(points, pointCount, _ptr_2)
+
+  def DrawTriangleStrip3D(points: Ptr[Vector3], pointCount: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_DrawTriangleStrip3D(points, pointCount, _ptr_2)
+
+  def Fade(color: Color, alpha: Float)(using Zone): Color = 
+    val _ptr_0 = alloc[Color](1)
+    val _ptr_return = alloc[Color](1)
+    __sn_wrap_Fade(_ptr_0, alpha, _ptr_return)
+    !_ptr_return
+
+  def GenImageCellular(width: CInt, height: CInt, tileSize: CInt)(using Zone): Image = 
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_GenImageCellular(width, height, tileSize, _ptr_return)
+    !_ptr_return
+
+  def GenImageChecked(width: CInt, height: CInt, checksX: CInt, checksY: CInt, col1: Color, col2: Color)(using Zone): Image = 
+    val _ptr_4 = alloc[Color](1)
+    val _ptr_5 = alloc[Color](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_GenImageChecked(width, height, checksX, checksY, _ptr_4, _ptr_5, _ptr_return)
+    !_ptr_return
+
+  def GenImageColor(width: CInt, height: CInt, color: Color)(using Zone): Image = 
+    val _ptr_2 = alloc[Color](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_GenImageColor(width, height, _ptr_2, _ptr_return)
+    !_ptr_return
+
+  def GenImageFontAtlas(chars: Ptr[GlyphInfo], recs: Ptr[Ptr[Rectangle]], glyphCount: CInt, fontSize: CInt, padding: CInt, packMethod: CInt)(using Zone): Image = 
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_GenImageFontAtlas(chars, recs, glyphCount, fontSize, padding, packMethod, _ptr_return)
+    !_ptr_return
+
+  def GenImageGradientH(width: CInt, height: CInt, left: Color, right: Color)(using Zone): Image = 
+    val _ptr_2 = alloc[Color](1)
+    val _ptr_3 = alloc[Color](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_GenImageGradientH(width, height, _ptr_2, _ptr_3, _ptr_return)
+    !_ptr_return
+
+  def GenImageGradientRadial(width: CInt, height: CInt, density: Float, inner: Color, outer: Color)(using Zone): Image = 
+    val _ptr_3 = alloc[Color](1)
+    val _ptr_4 = alloc[Color](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_GenImageGradientRadial(width, height, density, _ptr_3, _ptr_4, _ptr_return)
+    !_ptr_return
+
+  def GenImageGradientV(width: CInt, height: CInt, top: Color, bottom: Color)(using Zone): Image = 
+    val _ptr_2 = alloc[Color](1)
+    val _ptr_3 = alloc[Color](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_GenImageGradientV(width, height, _ptr_2, _ptr_3, _ptr_return)
+    !_ptr_return
+
+  def GenImageWhiteNoise(width: CInt, height: CInt, factor: Float)(using Zone): Image = 
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_GenImageWhiteNoise(width, height, factor, _ptr_return)
+    !_ptr_return
+
+  def GenMeshCone(radius: Float, height: Float, slices: CInt)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshCone(radius, height, slices, _ptr_return)
+    !_ptr_return
+
+  def GenMeshCube(width: Float, height: Float, length: Float)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshCube(width, height, length, _ptr_return)
+    !_ptr_return
+
+  def GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3)(using Zone): Mesh = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshCubicmap(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GenMeshCylinder(radius: Float, height: Float, slices: CInt)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshCylinder(radius, height, slices, _ptr_return)
+    !_ptr_return
+
+  def GenMeshHeightmap(heightmap: Image, size: Vector3)(using Zone): Mesh = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshHeightmap(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GenMeshHemiSphere(radius: Float, rings: CInt, slices: CInt)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshHemiSphere(radius, rings, slices, _ptr_return)
+    !_ptr_return
+
+  def GenMeshKnot(radius: Float, size: Float, radSeg: CInt, sides: CInt)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshKnot(radius, size, radSeg, sides, _ptr_return)
+    !_ptr_return
+
+  def GenMeshPlane(width: Float, length: Float, resX: CInt, resZ: CInt)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshPlane(width, length, resX, resZ, _ptr_return)
+    !_ptr_return
+
+  def GenMeshPoly(sides: CInt, radius: Float)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshPoly(sides, radius, _ptr_return)
+    !_ptr_return
+
+  def GenMeshSphere(radius: Float, rings: CInt, slices: CInt)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshSphere(radius, rings, slices, _ptr_return)
+    !_ptr_return
+
+  def GenMeshTorus(radius: Float, size: Float, radSeg: CInt, sides: CInt)(using Zone): Mesh = 
+    val _ptr_return = alloc[Mesh](1)
+    __sn_wrap_GenMeshTorus(radius, size, radSeg, sides, _ptr_return)
+    !_ptr_return
+
+  def GetCameraMatrix(camera: Camera)(using Zone): Matrix = 
+    val _ptr_0 = alloc[Camera](1)
+    val _ptr_return = alloc[Matrix](1)
+    __sn_wrap_GetCameraMatrix(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def GetCameraMatrix2D(camera: Camera2D)(using Zone): Matrix = 
+    val _ptr_0 = alloc[Camera2D](1)
+    val _ptr_return = alloc[Matrix](1)
+    __sn_wrap_GetCameraMatrix2D(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def GetCollisionRec(rec1: Rectangle, rec2: Rectangle)(using Zone): Rectangle = 
+    val _ptr_0 = alloc[Rectangle](1)
+    val _ptr_1 = alloc[Rectangle](1)
+    val _ptr_return = alloc[Rectangle](1)
+    __sn_wrap_GetCollisionRec(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GetColor(hexValue: CUnsignedInt)(using Zone): Color = 
+    val _ptr_return = alloc[Color](1)
+    __sn_wrap_GetColor(hexValue, _ptr_return)
+    !_ptr_return
+
+  def GetFontDefault()(using Zone): Font = 
+    val _ptr_return = alloc[Font](1)
+    __sn_wrap_GetFontDefault(_ptr_return)
+    !_ptr_return
+
+  def GetGestureDragVector()(using Zone): Vector2 = 
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetGestureDragVector(_ptr_return)
+    !_ptr_return
+
+  def GetGesturePinchVector()(using Zone): Vector2 = 
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetGesturePinchVector(_ptr_return)
+    !_ptr_return
+
+  def GetGlyphAtlasRec(font: Font, codepoint: CInt)(using Zone): Rectangle = 
+    val _ptr_0 = alloc[Font](1)
+    val _ptr_return = alloc[Rectangle](1)
+    __sn_wrap_GetGlyphAtlasRec(_ptr_0, codepoint, _ptr_return)
+    !_ptr_return
+
+  def GetGlyphIndex(font: Font, codepoint: CInt)(using Zone): CInt = 
+    val _ptr_0 = alloc[Font](1)
+    __sn_wrap_GetGlyphIndex(_ptr_0, codepoint)
+
+  def GetGlyphInfo(font: Font, codepoint: CInt)(using Zone): GlyphInfo = 
+    val _ptr_0 = alloc[Font](1)
+    val _ptr_return = alloc[GlyphInfo](1)
+    __sn_wrap_GetGlyphInfo(_ptr_0, codepoint, _ptr_return)
+    !_ptr_return
+
+  def GetImageAlphaBorder(image: Image, threshold: Float)(using Zone): Rectangle = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_return = alloc[Rectangle](1)
+    __sn_wrap_GetImageAlphaBorder(_ptr_0, threshold, _ptr_return)
+    !_ptr_return
+
+  def GetImageColor(image: Image, x: CInt, y: CInt)(using Zone): Color = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_return = alloc[Color](1)
+    __sn_wrap_GetImageColor(_ptr_0, x, y, _ptr_return)
+    !_ptr_return
+
+  def GetMeshBoundingBox(mesh: Mesh)(using Zone): BoundingBox = 
+    val _ptr_0 = alloc[Mesh](1)
+    val _ptr_return = alloc[BoundingBox](1)
+    __sn_wrap_GetMeshBoundingBox(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def GetModelBoundingBox(model: Model)(using Zone): BoundingBox = 
+    val _ptr_0 = alloc[Model](1)
+    val _ptr_return = alloc[BoundingBox](1)
+    __sn_wrap_GetModelBoundingBox(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def GetMonitorPosition(monitor: CInt)(using Zone): Vector2 = 
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetMonitorPosition(monitor, _ptr_return)
+    !_ptr_return
+
+  def GetMouseDelta()(using Zone): Vector2 = 
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetMouseDelta(_ptr_return)
+    !_ptr_return
+
+  def GetMousePosition()(using Zone): Vector2 = 
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetMousePosition(_ptr_return)
+    !_ptr_return
+
+  def GetMouseRay(mousePosition: Vector2, camera: Camera)(using Zone): Ray = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Camera](1)
+    val _ptr_return = alloc[Ray](1)
+    __sn_wrap_GetMouseRay(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GetMusicTimeLength(music: Music)(using Zone): Float = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_GetMusicTimeLength(_ptr_0)
+
+  def GetMusicTimePlayed(music: Music)(using Zone): Float = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_GetMusicTimePlayed(_ptr_0)
+
+  def GetPixelColor(srcPtr: Ptr[Byte], format: CInt)(using Zone): Color = 
+    val _ptr_return = alloc[Color](1)
+    __sn_wrap_GetPixelColor(srcPtr, format, _ptr_return)
+    !_ptr_return
+
+  def GetRayCollisionBox(ray: Ray, box: BoundingBox)(using Zone): RayCollision = 
+    val _ptr_0 = alloc[Ray](1)
+    val _ptr_1 = alloc[BoundingBox](1)
+    val _ptr_return = alloc[RayCollision](1)
+    __sn_wrap_GetRayCollisionBox(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GetRayCollisionMesh(ray: Ray, mesh: Mesh, transform: Matrix)(using Zone): RayCollision = 
+    val _ptr_0 = alloc[Ray](1)
+    val _ptr_1 = alloc[Mesh](1)
+    val _ptr_2 = alloc[Matrix](1)
+    val _ptr_return = alloc[RayCollision](1)
+    __sn_wrap_GetRayCollisionMesh(_ptr_0, _ptr_1, _ptr_2, _ptr_return)
+    !_ptr_return
+
+  def GetRayCollisionModel(ray: Ray, model: Model)(using Zone): RayCollision = 
+    val _ptr_0 = alloc[Ray](1)
+    val _ptr_1 = alloc[Model](1)
+    val _ptr_return = alloc[RayCollision](1)
+    __sn_wrap_GetRayCollisionModel(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GetRayCollisionQuad(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3)(using Zone): RayCollision = 
+    val _ptr_0 = alloc[Ray](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Vector3](1)
+    val _ptr_3 = alloc[Vector3](1)
+    val _ptr_4 = alloc[Vector3](1)
+    val _ptr_return = alloc[RayCollision](1)
+    __sn_wrap_GetRayCollisionQuad(_ptr_0, _ptr_1, _ptr_2, _ptr_3, _ptr_4, _ptr_return)
+    !_ptr_return
+
+  def GetRayCollisionSphere(ray: Ray, center: Vector3, radius: Float)(using Zone): RayCollision = 
+    val _ptr_0 = alloc[Ray](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_return = alloc[RayCollision](1)
+    __sn_wrap_GetRayCollisionSphere(_ptr_0, _ptr_1, radius, _ptr_return)
+    !_ptr_return
+
+  def GetRayCollisionTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3)(using Zone): RayCollision = 
+    val _ptr_0 = alloc[Ray](1)
+    val _ptr_1 = alloc[Vector3](1)
+    val _ptr_2 = alloc[Vector3](1)
+    val _ptr_3 = alloc[Vector3](1)
+    val _ptr_return = alloc[RayCollision](1)
+    __sn_wrap_GetRayCollisionTriangle(_ptr_0, _ptr_1, _ptr_2, _ptr_3, _ptr_return)
+    !_ptr_return
+
+  def GetScreenToWorld2D(position: Vector2, camera: Camera2D)(using Zone): Vector2 = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Camera2D](1)
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetScreenToWorld2D(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GetShaderLocation(shader: Shader, uniformName: CString)(using Zone): CInt = 
+    val _ptr_0 = alloc[Shader](1)
+    __sn_wrap_GetShaderLocation(_ptr_0, uniformName)
+
+  def GetShaderLocationAttrib(shader: Shader, attribName: CString)(using Zone): CInt = 
+    val _ptr_0 = alloc[Shader](1)
+    __sn_wrap_GetShaderLocationAttrib(_ptr_0, attribName)
+
+  def GetTouchPosition(index: CInt)(using Zone): Vector2 = 
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetTouchPosition(index, _ptr_return)
+    !_ptr_return
+
+  def GetWindowPosition()(using Zone): Vector2 = 
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetWindowPosition(_ptr_return)
+    !_ptr_return
+
+  def GetWindowScaleDPI()(using Zone): Vector2 = 
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetWindowScaleDPI(_ptr_return)
+    !_ptr_return
+
+  def GetWorldToScreen(position: Vector3, camera: Camera)(using Zone): Vector2 = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Camera](1)
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetWorldToScreen(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GetWorldToScreen2D(position: Vector2, camera: Camera2D)(using Zone): Vector2 = 
+    val _ptr_0 = alloc[Vector2](1)
+    val _ptr_1 = alloc[Camera2D](1)
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetWorldToScreen2D(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def GetWorldToScreenEx(position: Vector3, camera: Camera, width: CInt, height: CInt)(using Zone): Vector2 = 
+    val _ptr_0 = alloc[Vector3](1)
+    val _ptr_1 = alloc[Camera](1)
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_GetWorldToScreenEx(_ptr_0, _ptr_1, width, height, _ptr_return)
+    !_ptr_return
+
+  def ImageAlphaClear(image: Ptr[Image], color: Color, threshold: Float)(using Zone): Unit = 
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_ImageAlphaClear(image, _ptr_1, threshold)
+
+  def ImageAlphaMask(image: Ptr[Image], alphaMask: Image)(using Zone): Unit = 
+    val _ptr_1 = alloc[Image](1)
+    __sn_wrap_ImageAlphaMask(image, _ptr_1)
+
+  def ImageClearBackground(dst: Ptr[Image], color: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_ImageClearBackground(dst, _ptr_1)
+
+  def ImageColorReplace(image: Ptr[Image], color: Color, replace: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Color](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_ImageColorReplace(image, _ptr_1, _ptr_2)
+
+  def ImageColorTint(image: Ptr[Image], color: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_ImageColorTint(image, _ptr_1)
+
+  def ImageCopy(image: Image)(using Zone): Image = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_ImageCopy(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def ImageCrop(image: Ptr[Image], crop: Rectangle)(using Zone): Unit = 
+    val _ptr_1 = alloc[Rectangle](1)
+    __sn_wrap_ImageCrop(image, _ptr_1)
+
+  def ImageDraw(dst: Ptr[Image], src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Image](1)
+    val _ptr_2 = alloc[Rectangle](1)
+    val _ptr_3 = alloc[Rectangle](1)
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_ImageDraw(dst, _ptr_1, _ptr_2, _ptr_3, _ptr_4)
+
+  def ImageDrawCircle(dst: Ptr[Image], centerX: CInt, centerY: CInt, radius: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_4 = alloc[Color](1)
+    __sn_wrap_ImageDrawCircle(dst, centerX, centerY, radius, _ptr_4)
+
+  def ImageDrawCircleV(dst: Ptr[Image], center: Vector2, radius: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_ImageDrawCircleV(dst, _ptr_1, radius, _ptr_3)
+
+  def ImageDrawLine(dst: Ptr[Image], startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_ImageDrawLine(dst, startPosX, startPosY, endPosX, endPosY, _ptr_5)
+
+  def ImageDrawLineV(dst: Ptr[Image], start: Vector2, end: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_ImageDrawLineV(dst, _ptr_1, _ptr_2, _ptr_3)
+
+  def ImageDrawPixel(dst: Ptr[Image], posX: CInt, posY: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_ImageDrawPixel(dst, posX, posY, _ptr_3)
+
+  def ImageDrawPixelV(dst: Ptr[Image], position: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_ImageDrawPixelV(dst, _ptr_1, _ptr_2)
+
+  def ImageDrawRectangle(dst: Ptr[Image], posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_ImageDrawRectangle(dst, posX, posY, width, height, _ptr_5)
+
+  def ImageDrawRectangleLines(dst: Ptr[Image], rec: Rectangle, thick: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Rectangle](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_ImageDrawRectangleLines(dst, _ptr_1, thick, _ptr_3)
+
+  def ImageDrawRectangleRec(dst: Ptr[Image], rec: Rectangle, color: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Rectangle](1)
+    val _ptr_2 = alloc[Color](1)
+    __sn_wrap_ImageDrawRectangleRec(dst, _ptr_1, _ptr_2)
+
+  def ImageDrawRectangleV(dst: Ptr[Image], position: Vector2, size: Vector2, color: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Vector2](1)
+    val _ptr_2 = alloc[Vector2](1)
+    val _ptr_3 = alloc[Color](1)
+    __sn_wrap_ImageDrawRectangleV(dst, _ptr_1, _ptr_2, _ptr_3)
+
+  def ImageDrawText(dst: Ptr[Image], text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Color)(using Zone): Unit = 
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_ImageDrawText(dst, text, posX, posY, fontSize, _ptr_5)
+
+  def ImageDrawTextEx(dst: Ptr[Image], font: Font, text: CString, position: Vector2, fontSize: Float, spacing: Float, tint: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Font](1)
+    val _ptr_3 = alloc[Vector2](1)
+    val _ptr_6 = alloc[Color](1)
+    __sn_wrap_ImageDrawTextEx(dst, _ptr_1, text, _ptr_3, fontSize, spacing, _ptr_6)
+
+  def ImageFromImage(image: Image, rec: Rectangle)(using Zone): Image = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_1 = alloc[Rectangle](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_ImageFromImage(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def ImageResizeCanvas(image: Ptr[Image], newWidth: CInt, newHeight: CInt, offsetX: CInt, offsetY: CInt, fill: Color)(using Zone): Unit = 
+    val _ptr_5 = alloc[Color](1)
+    __sn_wrap_ImageResizeCanvas(image, newWidth, newHeight, offsetX, offsetY, _ptr_5)
+
+  def ImageText(text: CString, fontSize: CInt, color: Color)(using Zone): Image = 
+    val _ptr_2 = alloc[Color](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_ImageText(text, fontSize, _ptr_2, _ptr_return)
+    !_ptr_return
+
+  def ImageTextEx(font: Font, text: CString, fontSize: Float, spacing: Float, tint: Color)(using Zone): Image = 
+    val _ptr_0 = alloc[Font](1)
+    val _ptr_4 = alloc[Color](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_ImageTextEx(_ptr_0, text, fontSize, spacing, _ptr_4, _ptr_return)
+    !_ptr_return
+
+  def ImageToPOT(image: Ptr[Image], fill: Color)(using Zone): Unit = 
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_ImageToPOT(image, _ptr_1)
+
+  def LoadAudioStream(sampleRate: CUnsignedInt, sampleSize: CUnsignedInt, channels: CUnsignedInt)(using Zone): AudioStream = 
+    val _ptr_return = alloc[AudioStream](1)
+    __sn_wrap_LoadAudioStream(sampleRate, sampleSize, channels, _ptr_return)
+    !_ptr_return
+
+  def LoadFont(fileName: CString)(using Zone): Font = 
+    val _ptr_return = alloc[Font](1)
+    __sn_wrap_LoadFont(fileName, _ptr_return)
+    !_ptr_return
+
+  def LoadFontEx(fileName: CString, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt)(using Zone): Font = 
+    val _ptr_return = alloc[Font](1)
+    __sn_wrap_LoadFontEx(fileName, fontSize, fontChars, glyphCount, _ptr_return)
+    !_ptr_return
+
+  def LoadFontFromImage(image: Image, key: Color, firstChar: CInt)(using Zone): Font = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_1 = alloc[Color](1)
+    val _ptr_return = alloc[Font](1)
+    __sn_wrap_LoadFontFromImage(_ptr_0, _ptr_1, firstChar, _ptr_return)
+    !_ptr_return
+
+  def LoadFontFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt)(using Zone): Font = 
+    val _ptr_return = alloc[Font](1)
+    __sn_wrap_LoadFontFromMemory(fileType, fileData, dataSize, fontSize, fontChars, glyphCount, _ptr_return)
+    !_ptr_return
+
+  def LoadImage(fileName: CString)(using Zone): Image = 
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_LoadImage(fileName, _ptr_return)
+    !_ptr_return
+
+  def LoadImageAnim(fileName: CString, frames: Ptr[CInt])(using Zone): Image = 
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_LoadImageAnim(fileName, frames, _ptr_return)
+    !_ptr_return
+
+  def LoadImageColors(image: Image)(using Zone): Ptr[Color] = 
+    val _ptr_0 = alloc[Image](1)
+    __sn_wrap_LoadImageColors(_ptr_0)
+
+  def LoadImageFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt)(using Zone): Image = 
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_LoadImageFromMemory(fileType, fileData, dataSize, _ptr_return)
+    !_ptr_return
+
+  def LoadImageFromScreen()(using Zone): Image = 
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_LoadImageFromScreen(_ptr_return)
+    !_ptr_return
+
+  def LoadImageFromTexture(texture: Texture2D)(using Zone): Image = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_LoadImageFromTexture(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def LoadImagePalette(image: Image, maxPaletteSize: CInt, colorCount: Ptr[CInt])(using Zone): Ptr[Color] = 
+    val _ptr_0 = alloc[Image](1)
+    __sn_wrap_LoadImagePalette(_ptr_0, maxPaletteSize, colorCount)
+
+  def LoadImageRaw(fileName: CString, width: CInt, height: CInt, format: CInt, headerSize: CInt)(using Zone): Image = 
+    val _ptr_return = alloc[Image](1)
+    __sn_wrap_LoadImageRaw(fileName, width, height, format, headerSize, _ptr_return)
+    !_ptr_return
+
+  def LoadMaterialDefault()(using Zone): Material = 
+    val _ptr_return = alloc[Material](1)
+    __sn_wrap_LoadMaterialDefault(_ptr_return)
+    !_ptr_return
+
+  def LoadModel(fileName: CString)(using Zone): Model = 
+    val _ptr_return = alloc[Model](1)
+    __sn_wrap_LoadModel(fileName, _ptr_return)
+    !_ptr_return
+
+  def LoadModelFromMesh(mesh: Mesh)(using Zone): Model = 
+    val _ptr_0 = alloc[Mesh](1)
+    val _ptr_return = alloc[Model](1)
+    __sn_wrap_LoadModelFromMesh(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def LoadMusicStream(fileName: CString)(using Zone): Music = 
+    val _ptr_return = alloc[Music](1)
+    __sn_wrap_LoadMusicStream(fileName, _ptr_return)
+    !_ptr_return
+
+  def LoadMusicStreamFromMemory(fileType: CString, data: Ptr[CUnsignedChar], dataSize: CInt)(using Zone): Music = 
+    val _ptr_return = alloc[Music](1)
+    __sn_wrap_LoadMusicStreamFromMemory(fileType, data, dataSize, _ptr_return)
+    !_ptr_return
+
+  def LoadRenderTexture(width: CInt, height: CInt)(using Zone): RenderTexture2D = 
+    val _ptr_return = alloc[RenderTexture2D](1)
+    __sn_wrap_LoadRenderTexture(width, height, _ptr_return)
+    !_ptr_return
+
+  def LoadShader(vsFileName: CString, fsFileName: CString)(using Zone): Shader = 
+    val _ptr_return = alloc[Shader](1)
+    __sn_wrap_LoadShader(vsFileName, fsFileName, _ptr_return)
+    !_ptr_return
+
+  def LoadShaderFromMemory(vsCode: CString, fsCode: CString)(using Zone): Shader = 
+    val _ptr_return = alloc[Shader](1)
+    __sn_wrap_LoadShaderFromMemory(vsCode, fsCode, _ptr_return)
+    !_ptr_return
+
+  def LoadSound(fileName: CString)(using Zone): Sound = 
+    val _ptr_return = alloc[Sound](1)
+    __sn_wrap_LoadSound(fileName, _ptr_return)
+    !_ptr_return
+
+  def LoadSoundFromWave(wave: Wave)(using Zone): Sound = 
+    val _ptr_0 = alloc[Wave](1)
+    val _ptr_return = alloc[Sound](1)
+    __sn_wrap_LoadSoundFromWave(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def LoadTexture(fileName: CString)(using Zone): Texture2D = 
+    val _ptr_return = alloc[Texture2D](1)
+    __sn_wrap_LoadTexture(fileName, _ptr_return)
+    !_ptr_return
+
+  def LoadTextureCubemap(image: Image, layout: CInt)(using Zone): TextureCubemap = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_return = alloc[TextureCubemap](1)
+    __sn_wrap_LoadTextureCubemap(_ptr_0, layout, _ptr_return)
+    !_ptr_return
+
+  def LoadTextureFromImage(image: Image)(using Zone): Texture2D = 
+    val _ptr_0 = alloc[Image](1)
+    val _ptr_return = alloc[Texture2D](1)
+    __sn_wrap_LoadTextureFromImage(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def LoadVrStereoConfig(device: VrDeviceInfo)(using Zone): VrStereoConfig = 
+    val _ptr_0 = alloc[VrDeviceInfo](1)
+    val _ptr_return = alloc[VrStereoConfig](1)
+    __sn_wrap_LoadVrStereoConfig(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def LoadWave(fileName: CString)(using Zone): Wave = 
+    val _ptr_return = alloc[Wave](1)
+    __sn_wrap_LoadWave(fileName, _ptr_return)
+    !_ptr_return
+
+  def LoadWaveFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt)(using Zone): Wave = 
+    val _ptr_return = alloc[Wave](1)
+    __sn_wrap_LoadWaveFromMemory(fileType, fileData, dataSize, _ptr_return)
+    !_ptr_return
+
+  def LoadWaveSamples(wave: Wave)(using Zone): Ptr[Float] = 
+    val _ptr_0 = alloc[Wave](1)
+    __sn_wrap_LoadWaveSamples(_ptr_0)
+
+  def MeasureTextEx(font: Font, text: CString, fontSize: Float, spacing: Float)(using Zone): Vector2 = 
+    val _ptr_0 = alloc[Font](1)
+    val _ptr_return = alloc[Vector2](1)
+    __sn_wrap_MeasureTextEx(_ptr_0, text, fontSize, spacing, _ptr_return)
+    !_ptr_return
+
+  def PauseAudioStream(stream: AudioStream)(using Zone): Unit = 
+    val _ptr_0 = alloc[AudioStream](1)
+    __sn_wrap_PauseAudioStream(_ptr_0)
+
+  def PauseMusicStream(music: Music)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_PauseMusicStream(_ptr_0)
+
+  def PauseSound(sound: Sound)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_PauseSound(_ptr_0)
+
+  def PlayAudioStream(stream: AudioStream)(using Zone): Unit = 
+    val _ptr_0 = alloc[AudioStream](1)
+    __sn_wrap_PlayAudioStream(_ptr_0)
+
+  def PlayMusicStream(music: Music)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_PlayMusicStream(_ptr_0)
+
+  def PlaySound(sound: Sound)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_PlaySound(_ptr_0)
+
+  def PlaySoundMulti(sound: Sound)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_PlaySoundMulti(_ptr_0)
+
+  def ResumeAudioStream(stream: AudioStream)(using Zone): Unit = 
+    val _ptr_0 = alloc[AudioStream](1)
+    __sn_wrap_ResumeAudioStream(_ptr_0)
+
+  def ResumeMusicStream(music: Music)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_ResumeMusicStream(_ptr_0)
+
+  def ResumeSound(sound: Sound)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_ResumeSound(_ptr_0)
+
+  def SeekMusicStream(music: Music, position: Float)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_SeekMusicStream(_ptr_0, position)
+
+  def SetAudioStreamPitch(stream: AudioStream, pitch: Float)(using Zone): Unit = 
+    val _ptr_0 = alloc[AudioStream](1)
+    __sn_wrap_SetAudioStreamPitch(_ptr_0, pitch)
+
+  def SetAudioStreamVolume(stream: AudioStream, volume: Float)(using Zone): Unit = 
+    val _ptr_0 = alloc[AudioStream](1)
+    __sn_wrap_SetAudioStreamVolume(_ptr_0, volume)
+
+  def SetCameraMode(camera: Camera, mode: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Camera](1)
+    __sn_wrap_SetCameraMode(_ptr_0, mode)
+
+  def SetMaterialTexture(material: Ptr[Material], mapType: CInt, texture: Texture2D)(using Zone): Unit = 
+    val _ptr_2 = alloc[Texture2D](1)
+    __sn_wrap_SetMaterialTexture(material, mapType, _ptr_2)
+
+  def SetMusicPitch(music: Music, pitch: Float)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_SetMusicPitch(_ptr_0, pitch)
+
+  def SetMusicVolume(music: Music, volume: Float)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_SetMusicVolume(_ptr_0, volume)
+
+  def SetPixelColor(dstPtr: Ptr[Byte], color: Color, format: CInt)(using Zone): Unit = 
+    val _ptr_1 = alloc[Color](1)
+    __sn_wrap_SetPixelColor(dstPtr, _ptr_1, format)
+
+  def SetShaderValue(shader: Shader, locIndex: CInt, value: Ptr[Byte], uniformType: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Shader](1)
+    __sn_wrap_SetShaderValue(_ptr_0, locIndex, value, uniformType)
+
+  def SetShaderValueMatrix(shader: Shader, locIndex: CInt, mat: Matrix)(using Zone): Unit = 
+    val _ptr_0 = alloc[Shader](1)
+    val _ptr_2 = alloc[Matrix](1)
+    __sn_wrap_SetShaderValueMatrix(_ptr_0, locIndex, _ptr_2)
+
+  def SetShaderValueTexture(shader: Shader, locIndex: CInt, texture: Texture2D)(using Zone): Unit = 
+    val _ptr_0 = alloc[Shader](1)
+    val _ptr_2 = alloc[Texture2D](1)
+    __sn_wrap_SetShaderValueTexture(_ptr_0, locIndex, _ptr_2)
+
+  def SetShaderValueV(shader: Shader, locIndex: CInt, value: Ptr[Byte], uniformType: CInt, count: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Shader](1)
+    __sn_wrap_SetShaderValueV(_ptr_0, locIndex, value, uniformType, count)
+
+  def SetShapesTexture(texture: Texture2D, source: Rectangle)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Rectangle](1)
+    __sn_wrap_SetShapesTexture(_ptr_0, _ptr_1)
+
+  def SetSoundPitch(sound: Sound, pitch: Float)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_SetSoundPitch(_ptr_0, pitch)
+
+  def SetSoundVolume(sound: Sound, volume: Float)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_SetSoundVolume(_ptr_0, volume)
+
+  def SetTextureFilter(texture: Texture2D, filter: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    __sn_wrap_SetTextureFilter(_ptr_0, filter)
+
+  def SetTextureWrap(texture: Texture2D, wrap: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    __sn_wrap_SetTextureWrap(_ptr_0, wrap)
+
+  def SetWindowIcon(image: Image)(using Zone): Unit = 
+    val _ptr_0 = alloc[Image](1)
+    __sn_wrap_SetWindowIcon(_ptr_0)
+
+  def StopAudioStream(stream: AudioStream)(using Zone): Unit = 
+    val _ptr_0 = alloc[AudioStream](1)
+    __sn_wrap_StopAudioStream(_ptr_0)
+
+  def StopMusicStream(music: Music)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_StopMusicStream(_ptr_0)
+
+  def StopSound(sound: Sound)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_StopSound(_ptr_0)
+
+  def UnloadAudioStream(stream: AudioStream)(using Zone): Unit = 
+    val _ptr_0 = alloc[AudioStream](1)
+    __sn_wrap_UnloadAudioStream(_ptr_0)
+
+  def UnloadFont(font: Font)(using Zone): Unit = 
+    val _ptr_0 = alloc[Font](1)
+    __sn_wrap_UnloadFont(_ptr_0)
+
+  def UnloadImage(image: Image)(using Zone): Unit = 
+    val _ptr_0 = alloc[Image](1)
+    __sn_wrap_UnloadImage(_ptr_0)
+
+  def UnloadMaterial(material: Material)(using Zone): Unit = 
+    val _ptr_0 = alloc[Material](1)
+    __sn_wrap_UnloadMaterial(_ptr_0)
+
+  def UnloadMesh(mesh: Mesh)(using Zone): Unit = 
+    val _ptr_0 = alloc[Mesh](1)
+    __sn_wrap_UnloadMesh(_ptr_0)
+
+  def UnloadModel(model: Model)(using Zone): Unit = 
+    val _ptr_0 = alloc[Model](1)
+    __sn_wrap_UnloadModel(_ptr_0)
+
+  def UnloadModelAnimation(anim: ModelAnimation)(using Zone): Unit = 
+    val _ptr_0 = alloc[ModelAnimation](1)
+    __sn_wrap_UnloadModelAnimation(_ptr_0)
+
+  def UnloadModelKeepMeshes(model: Model)(using Zone): Unit = 
+    val _ptr_0 = alloc[Model](1)
+    __sn_wrap_UnloadModelKeepMeshes(_ptr_0)
+
+  def UnloadMusicStream(music: Music)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_UnloadMusicStream(_ptr_0)
+
+  def UnloadRenderTexture(target: RenderTexture2D)(using Zone): Unit = 
+    val _ptr_0 = alloc[RenderTexture2D](1)
+    __sn_wrap_UnloadRenderTexture(_ptr_0)
+
+  def UnloadShader(shader: Shader)(using Zone): Unit = 
+    val _ptr_0 = alloc[Shader](1)
+    __sn_wrap_UnloadShader(_ptr_0)
+
+  def UnloadSound(sound: Sound)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_UnloadSound(_ptr_0)
+
+  def UnloadTexture(texture: Texture2D)(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    __sn_wrap_UnloadTexture(_ptr_0)
+
+  def UnloadVrStereoConfig(config: VrStereoConfig)(using Zone): Unit = 
+    val _ptr_0 = alloc[VrStereoConfig](1)
+    __sn_wrap_UnloadVrStereoConfig(_ptr_0)
+
+  def UnloadWave(wave: Wave)(using Zone): Unit = 
+    val _ptr_0 = alloc[Wave](1)
+    __sn_wrap_UnloadWave(_ptr_0)
+
+  def UpdateAudioStream(stream: AudioStream, data: Ptr[Byte], frameCount: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[AudioStream](1)
+    __sn_wrap_UpdateAudioStream(_ptr_0, data, frameCount)
+
+  def UpdateMeshBuffer(mesh: Mesh, index: CInt, data: Ptr[Byte], dataSize: CInt, offset: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Mesh](1)
+    __sn_wrap_UpdateMeshBuffer(_ptr_0, index, data, dataSize, offset)
+
+  def UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Model](1)
+    val _ptr_1 = alloc[ModelAnimation](1)
+    __sn_wrap_UpdateModelAnimation(_ptr_0, _ptr_1, frame)
+
+  def UpdateMusicStream(music: Music)(using Zone): Unit = 
+    val _ptr_0 = alloc[Music](1)
+    __sn_wrap_UpdateMusicStream(_ptr_0)
+
+  def UpdateSound(sound: Sound, data: Ptr[Byte], sampleCount: CInt)(using Zone): Unit = 
+    val _ptr_0 = alloc[Sound](1)
+    __sn_wrap_UpdateSound(_ptr_0, data, sampleCount)
+
+  def UpdateTexture(texture: Texture2D, pixels: Ptr[Byte])(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    __sn_wrap_UpdateTexture(_ptr_0, pixels)
+
+  def UpdateTextureRec(texture: Texture2D, rec: Rectangle, pixels: Ptr[Byte])(using Zone): Unit = 
+    val _ptr_0 = alloc[Texture2D](1)
+    val _ptr_1 = alloc[Rectangle](1)
+    __sn_wrap_UpdateTextureRec(_ptr_0, _ptr_1, pixels)
+
+  def WaveCopy(wave: Wave)(using Zone): Wave = 
+    val _ptr_0 = alloc[Wave](1)
+    val _ptr_return = alloc[Wave](1)
+    __sn_wrap_WaveCopy(_ptr_0, _ptr_return)
+    !_ptr_return
+
 

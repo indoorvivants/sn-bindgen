@@ -1804,34 +1804,184 @@ object types:
       def _mbstateL: CLongLong = !struct.at(0).asInstanceOf[Ptr[CLongLong]]
 @link("sokol")
 @extern
-object functions: 
+private[libsokol] object extern_functions: 
   import types.*
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_activate_context(ctx_id: sg_context): Unit = extern
+  @name("__sn_wrap_sg_append_buffer")
+  private[libsokol] def __sn_wrap_sg_append_buffer(buf: Ptr[sg_buffer], data: Ptr[sg_range]): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_buffer(): sg_buffer = extern
+  @name("__sn_wrap_sg_update_image")
+  private[libsokol] def __sn_wrap_sg_update_image(img: Ptr[sg_image], data: Ptr[sg_image_data]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_image(): sg_image = extern
+  @name("__sn_wrap_sg_activate_context")
+  private[libsokol] def __sn_wrap_sg_activate_context(ctx_id: Ptr[sg_context]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_pass(): sg_pass = extern
+  @name("__sn_wrap_sg_query_pass_info")
+  private[libsokol] def __sn_wrap_sg_query_pass_info(pass: Ptr[sg_pass], __return: Ptr[sg_pass_info]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_pipeline(): sg_pipeline = extern
+  @name("__sn_wrap_sg_fail_shader")
+  private[libsokol] def __sn_wrap_sg_fail_shader(shd_id: Ptr[sg_shader]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_shader(): sg_shader = extern
+  @name("__sn_wrap_sg_query_pass_defaults")
+  private[libsokol] def __sn_wrap_sg_query_pass_defaults(desc: Ptr[sg_pass_desc], __return: Ptr[sg_pass_desc]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_append_buffer(buf: sg_buffer, data: Ptr[sg_range]): CInt = extern
+  @name("__sn_wrap_sg_dealloc_pipeline")
+  private[libsokol] def __sn_wrap_sg_dealloc_pipeline(pip_id: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_query_desc")
+  private[libsokol] def __sn_wrap_sg_query_desc(__return: Ptr[sg_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_fail_image")
+  private[libsokol] def __sn_wrap_sg_fail_image(img_id: Ptr[sg_image]): Unit = extern
+
+  @name("__sn_wrap_sg_query_image_info")
+  private[libsokol] def __sn_wrap_sg_query_image_info(img: Ptr[sg_image], __return: Ptr[sg_image_info]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pass_state")
+  private[libsokol] def __sn_wrap_sg_query_pass_state(pass: Ptr[sg_pass]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_destroy_pass")
+  private[libsokol] def __sn_wrap_sg_destroy_pass(pass: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_dealloc_shader")
+  private[libsokol] def __sn_wrap_sg_dealloc_shader(shd_id: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pipeline_defaults")
+  private[libsokol] def __sn_wrap_sg_query_pipeline_defaults(desc: Ptr[sg_pipeline_desc], __return: Ptr[sg_pipeline_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_init_image")
+  private[libsokol] def __sn_wrap_sg_init_image(img_id: Ptr[sg_image], desc: Ptr[sg_image_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_update_buffer")
+  private[libsokol] def __sn_wrap_sg_update_buffer(buf: Ptr[sg_buffer], data: Ptr[sg_range]): Unit = extern
+
+  @name("__sn_wrap_sg_fail_pipeline")
+  private[libsokol] def __sn_wrap_sg_fail_pipeline(pip_id: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pixelformat")
+  private[libsokol] def __sn_wrap_sg_query_pixelformat(fmt: sg_pixel_format, __return: Ptr[sg_pixelformat_info]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pipeline_state")
+  private[libsokol] def __sn_wrap_sg_query_pipeline_state(pip: Ptr[sg_pipeline]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_fail_buffer")
+  private[libsokol] def __sn_wrap_sg_fail_buffer(buf_id: Ptr[sg_buffer]): Unit = extern
+
+  @name("__sn_wrap_sg_setup_context")
+  private[libsokol] def __sn_wrap_sg_setup_context(__return: Ptr[sg_context]): Unit = extern
+
+  @name("__sn_wrap_sg_dealloc_buffer")
+  private[libsokol] def __sn_wrap_sg_dealloc_buffer(buf_id: Ptr[sg_buffer]): Unit = extern
+
+  @name("__sn_wrap_sg_make_image")
+  private[libsokol] def __sn_wrap_sg_make_image(desc: Ptr[sg_image_desc], __return: Ptr[sg_image]): Unit = extern
+
+  @name("__sn_wrap_sg_destroy_image")
+  private[libsokol] def __sn_wrap_sg_destroy_image(img: Ptr[sg_image]): Unit = extern
+
+  @name("__sn_wrap_sg_alloc_pipeline")
+  private[libsokol] def __sn_wrap_sg_alloc_pipeline(__return: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_query_image_state")
+  private[libsokol] def __sn_wrap_sg_query_image_state(img: Ptr[sg_image]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_destroy_pipeline")
+  private[libsokol] def __sn_wrap_sg_destroy_pipeline(pip: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_make_pipeline")
+  private[libsokol] def __sn_wrap_sg_make_pipeline(desc: Ptr[sg_pipeline_desc], __return: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_fail_pass")
+  private[libsokol] def __sn_wrap_sg_fail_pass(pass_id: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_init_pipeline")
+  private[libsokol] def __sn_wrap_sg_init_pipeline(pip_id: Ptr[sg_pipeline], desc: Ptr[sg_pipeline_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_init_buffer")
+  private[libsokol] def __sn_wrap_sg_init_buffer(buf_id: Ptr[sg_buffer], desc: Ptr[sg_buffer_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pipeline_info")
+  private[libsokol] def __sn_wrap_sg_query_pipeline_info(pip: Ptr[sg_pipeline], __return: Ptr[sg_pipeline_info]): Unit = extern
+
+  @name("__sn_wrap_sg_query_buffer_defaults")
+  private[libsokol] def __sn_wrap_sg_query_buffer_defaults(desc: Ptr[sg_buffer_desc], __return: Ptr[sg_buffer_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_make_buffer")
+  private[libsokol] def __sn_wrap_sg_make_buffer(desc: Ptr[sg_buffer_desc], __return: Ptr[sg_buffer]): Unit = extern
+
+  @name("__sn_wrap_sg_alloc_shader")
+  private[libsokol] def __sn_wrap_sg_alloc_shader(__return: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_alloc_buffer")
+  private[libsokol] def __sn_wrap_sg_alloc_buffer(__return: Ptr[sg_buffer]): Unit = extern
+
+  @name("__sn_wrap_sg_query_limits")
+  private[libsokol] def __sn_wrap_sg_query_limits(__return: Ptr[sg_limits]): Unit = extern
+
+  @name("__sn_wrap_sg_discard_context")
+  private[libsokol] def __sn_wrap_sg_discard_context(ctx_id: Ptr[sg_context]): Unit = extern
+
+  @name("__sn_wrap_sg_install_trace_hooks")
+  private[libsokol] def __sn_wrap_sg_install_trace_hooks(trace_hooks: Ptr[sg_trace_hooks], __return: Ptr[sg_trace_hooks]): Unit = extern
+
+  @name("__sn_wrap_sg_alloc_image")
+  private[libsokol] def __sn_wrap_sg_alloc_image(__return: Ptr[sg_image]): Unit = extern
+
+  @name("__sn_wrap_sg_init_shader")
+  private[libsokol] def __sn_wrap_sg_init_shader(shd_id: Ptr[sg_shader], desc: Ptr[sg_shader_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_destroy_buffer")
+  private[libsokol] def __sn_wrap_sg_destroy_buffer(buf: Ptr[sg_buffer]): Unit = extern
+
+  @name("__sn_wrap_sg_query_shader_info")
+  private[libsokol] def __sn_wrap_sg_query_shader_info(shd: Ptr[sg_shader], __return: Ptr[sg_shader_info]): Unit = extern
+
+  @name("__sn_wrap_sg_init_pass")
+  private[libsokol] def __sn_wrap_sg_init_pass(pass_id: Ptr[sg_pass], desc: Ptr[sg_pass_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_image_defaults")
+  private[libsokol] def __sn_wrap_sg_query_image_defaults(desc: Ptr[sg_image_desc], __return: Ptr[sg_image_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_buffer_state")
+  private[libsokol] def __sn_wrap_sg_query_buffer_state(buf: Ptr[sg_buffer]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_query_shader_state")
+  private[libsokol] def __sn_wrap_sg_query_shader_state(shd: Ptr[sg_shader]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_query_buffer_info")
+  private[libsokol] def __sn_wrap_sg_query_buffer_info(buf: Ptr[sg_buffer], __return: Ptr[sg_buffer_info]): Unit = extern
+
+  @name("__sn_wrap_sg_destroy_shader")
+  private[libsokol] def __sn_wrap_sg_destroy_shader(shd: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_make_shader")
+  private[libsokol] def __sn_wrap_sg_make_shader(desc: Ptr[sg_shader_desc], __return: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_alloc_pass")
+  private[libsokol] def __sn_wrap_sg_alloc_pass(__return: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_dealloc_pass")
+  private[libsokol] def __sn_wrap_sg_dealloc_pass(pass_id: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_apply_pipeline")
+  private[libsokol] def __sn_wrap_sg_apply_pipeline(pip: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_begin_pass")
+  private[libsokol] def __sn_wrap_sg_begin_pass(pass: Ptr[sg_pass], pass_action: Ptr[sg_pass_action]): Unit = extern
+
+  @name("__sn_wrap_sg_query_features")
+  private[libsokol] def __sn_wrap_sg_query_features(__return: Ptr[sg_features]): Unit = extern
+
+  @name("__sn_wrap_sg_make_pass")
+  private[libsokol] def __sn_wrap_sg_make_pass(desc: Ptr[sg_pass_desc], __return: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_dealloc_image")
+  private[libsokol] def __sn_wrap_sg_dealloc_image(img_id: Ptr[sg_image]): Unit = extern
+
+  @name("__sn_wrap_sg_query_shader_defaults")
+  private[libsokol] def __sn_wrap_sg_query_shader_defaults(desc: Ptr[sg_shader_desc], __return: Ptr[sg_shader_desc]): Unit = extern
 
   def sg_apply_bindings(bindings: Ptr[sg_bindings]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_apply_pipeline(pip: sg_pipeline): Unit = extern
 
   def sg_apply_scissor_rect(x: CInt, y: CInt, width: CInt, height: CInt, origin_top_left: CInt): Unit = extern
 
@@ -1847,99 +1997,15 @@ object functions:
 
   def sg_begin_default_passf(pass_action: Ptr[sg_pass_action], width: Float, height: Float): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_begin_pass(pass: sg_pass, pass_action: Ptr[sg_pass_action]): Unit = extern
-
   def sg_commit(): Unit = extern
 
   def sg_d3d11_device(): Ptr[Byte] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_buffer(buf_id: sg_buffer): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_image(img_id: sg_image): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_pass(pass_id: sg_pass): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_pipeline(pip_id: sg_pipeline): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_shader(shd_id: sg_shader): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_buffer(buf: sg_buffer): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_image(img: sg_image): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_pass(pass: sg_pass): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_pipeline(pip: sg_pipeline): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_shader(shd: sg_shader): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_discard_context(ctx_id: sg_context): Unit = extern
 
   def sg_draw(base_element: CInt, num_elements: CInt, num_instances: CInt): Unit = extern
 
   def sg_end_pass(): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_fail_buffer(buf_id: sg_buffer): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_fail_image(img_id: sg_image): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_fail_pass(pass_id: sg_pass): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_fail_pipeline(pip_id: sg_pipeline): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_fail_shader(shd_id: sg_shader): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_init_buffer(buf_id: sg_buffer, desc: Ptr[sg_buffer_desc]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_init_image(img_id: sg_image, desc: Ptr[sg_image_desc]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_init_pass(pass_id: sg_pass, desc: Ptr[sg_pass_desc]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_init_pipeline(pip_id: sg_pipeline, desc: Ptr[sg_pipeline_desc]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_init_shader(shd_id: sg_shader, desc: Ptr[sg_shader_desc]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_install_trace_hooks(trace_hooks: Ptr[sg_trace_hooks]): sg_trace_hooks = extern
-
   def sg_isvalid(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_buffer(desc: Ptr[sg_buffer_desc]): sg_buffer = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_image(desc: Ptr[sg_image_desc]): sg_image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_pass(desc: Ptr[sg_pass_desc]): sg_pass = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_pipeline(desc: Ptr[sg_pipeline_desc]): sg_pipeline = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_shader(desc: Ptr[sg_shader_desc]): sg_shader = extern
 
   def sg_mtl_device(): Ptr[Byte] = extern
 
@@ -1951,71 +2017,11 @@ object functions:
 
   def sg_query_backend(): sg_backend = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_buffer_defaults(desc: Ptr[sg_buffer_desc]): sg_buffer_desc = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_buffer_info(buf: sg_buffer): sg_buffer_info = extern
-
   def sg_query_buffer_overflow(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_buffer_state(buf: sg_buffer): sg_resource_state = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_desc(): sg_desc = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_features(): sg_features = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_image_defaults(desc: Ptr[sg_image_desc]): sg_image_desc = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_image_info(img: sg_image): sg_image_info = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_image_state(img: sg_image): sg_resource_state = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_limits(): sg_limits = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pass_defaults(desc: Ptr[sg_pass_desc]): sg_pass_desc = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pass_info(pass: sg_pass): sg_pass_info = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pass_state(pass: sg_pass): sg_resource_state = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pipeline_defaults(desc: Ptr[sg_pipeline_desc]): sg_pipeline_desc = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pipeline_info(pip: sg_pipeline): sg_pipeline_info = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pipeline_state(pip: sg_pipeline): sg_resource_state = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pixelformat(fmt: sg_pixel_format): sg_pixelformat_info = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_shader_defaults(desc: Ptr[sg_shader_desc]): sg_shader_desc = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_shader_info(shd: sg_shader): sg_shader_info = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_shader_state(shd: sg_shader): sg_resource_state = extern
 
   def sg_reset_state_cache(): Unit = extern
 
   def sg_setup(desc: Ptr[sg_desc]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_setup_context(): sg_context = extern
 
   def sg_shutdown(): Unit = extern
 
@@ -2029,9 +2035,272 @@ object functions:
 
   def sg_uninit_shader(): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_update_buffer(buf: sg_buffer, data: Ptr[sg_range]): Unit = extern
+object functions: 
+  import types.*, extern_functions.*
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_update_image(img: sg_image, data: Ptr[sg_image_data]): Unit = extern
+  export extern_functions.*
+
+  def sg_activate_context(ctx_id: sg_context)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_context](1)
+    __sn_wrap_sg_activate_context(_ptr_0)
+
+  def sg_alloc_buffer()(using Zone): sg_buffer = 
+    val _ptr_return = alloc[sg_buffer](1)
+    __sn_wrap_sg_alloc_buffer(_ptr_return)
+    !_ptr_return
+
+  def sg_alloc_image()(using Zone): sg_image = 
+    val _ptr_return = alloc[sg_image](1)
+    __sn_wrap_sg_alloc_image(_ptr_return)
+    !_ptr_return
+
+  def sg_alloc_pass()(using Zone): sg_pass = 
+    val _ptr_return = alloc[sg_pass](1)
+    __sn_wrap_sg_alloc_pass(_ptr_return)
+    !_ptr_return
+
+  def sg_alloc_pipeline()(using Zone): sg_pipeline = 
+    val _ptr_return = alloc[sg_pipeline](1)
+    __sn_wrap_sg_alloc_pipeline(_ptr_return)
+    !_ptr_return
+
+  def sg_alloc_shader()(using Zone): sg_shader = 
+    val _ptr_return = alloc[sg_shader](1)
+    __sn_wrap_sg_alloc_shader(_ptr_return)
+    !_ptr_return
+
+  def sg_append_buffer(buf: sg_buffer, data: Ptr[sg_range])(using Zone): CInt = 
+    val _ptr_0 = alloc[sg_buffer](1)
+    __sn_wrap_sg_append_buffer(_ptr_0, data)
+
+  def sg_apply_pipeline(pip: sg_pipeline)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pipeline](1)
+    __sn_wrap_sg_apply_pipeline(_ptr_0)
+
+  def sg_begin_pass(pass: sg_pass, pass_action: Ptr[sg_pass_action])(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pass](1)
+    __sn_wrap_sg_begin_pass(_ptr_0, pass_action)
+
+  def sg_dealloc_buffer(buf_id: sg_buffer)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_buffer](1)
+    __sn_wrap_sg_dealloc_buffer(_ptr_0)
+
+  def sg_dealloc_image(img_id: sg_image)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_image](1)
+    __sn_wrap_sg_dealloc_image(_ptr_0)
+
+  def sg_dealloc_pass(pass_id: sg_pass)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pass](1)
+    __sn_wrap_sg_dealloc_pass(_ptr_0)
+
+  def sg_dealloc_pipeline(pip_id: sg_pipeline)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pipeline](1)
+    __sn_wrap_sg_dealloc_pipeline(_ptr_0)
+
+  def sg_dealloc_shader(shd_id: sg_shader)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_shader](1)
+    __sn_wrap_sg_dealloc_shader(_ptr_0)
+
+  def sg_destroy_buffer(buf: sg_buffer)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_buffer](1)
+    __sn_wrap_sg_destroy_buffer(_ptr_0)
+
+  def sg_destroy_image(img: sg_image)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_image](1)
+    __sn_wrap_sg_destroy_image(_ptr_0)
+
+  def sg_destroy_pass(pass: sg_pass)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pass](1)
+    __sn_wrap_sg_destroy_pass(_ptr_0)
+
+  def sg_destroy_pipeline(pip: sg_pipeline)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pipeline](1)
+    __sn_wrap_sg_destroy_pipeline(_ptr_0)
+
+  def sg_destroy_shader(shd: sg_shader)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_shader](1)
+    __sn_wrap_sg_destroy_shader(_ptr_0)
+
+  def sg_discard_context(ctx_id: sg_context)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_context](1)
+    __sn_wrap_sg_discard_context(_ptr_0)
+
+  def sg_fail_buffer(buf_id: sg_buffer)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_buffer](1)
+    __sn_wrap_sg_fail_buffer(_ptr_0)
+
+  def sg_fail_image(img_id: sg_image)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_image](1)
+    __sn_wrap_sg_fail_image(_ptr_0)
+
+  def sg_fail_pass(pass_id: sg_pass)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pass](1)
+    __sn_wrap_sg_fail_pass(_ptr_0)
+
+  def sg_fail_pipeline(pip_id: sg_pipeline)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pipeline](1)
+    __sn_wrap_sg_fail_pipeline(_ptr_0)
+
+  def sg_fail_shader(shd_id: sg_shader)(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_shader](1)
+    __sn_wrap_sg_fail_shader(_ptr_0)
+
+  def sg_init_buffer(buf_id: sg_buffer, desc: Ptr[sg_buffer_desc])(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_buffer](1)
+    __sn_wrap_sg_init_buffer(_ptr_0, desc)
+
+  def sg_init_image(img_id: sg_image, desc: Ptr[sg_image_desc])(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_image](1)
+    __sn_wrap_sg_init_image(_ptr_0, desc)
+
+  def sg_init_pass(pass_id: sg_pass, desc: Ptr[sg_pass_desc])(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pass](1)
+    __sn_wrap_sg_init_pass(_ptr_0, desc)
+
+  def sg_init_pipeline(pip_id: sg_pipeline, desc: Ptr[sg_pipeline_desc])(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_pipeline](1)
+    __sn_wrap_sg_init_pipeline(_ptr_0, desc)
+
+  def sg_init_shader(shd_id: sg_shader, desc: Ptr[sg_shader_desc])(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_shader](1)
+    __sn_wrap_sg_init_shader(_ptr_0, desc)
+
+  def sg_install_trace_hooks(trace_hooks: Ptr[sg_trace_hooks])(using Zone): sg_trace_hooks = 
+    val _ptr_return = alloc[sg_trace_hooks](1)
+    __sn_wrap_sg_install_trace_hooks(trace_hooks, _ptr_return)
+    !_ptr_return
+
+  def sg_make_buffer(desc: Ptr[sg_buffer_desc])(using Zone): sg_buffer = 
+    val _ptr_return = alloc[sg_buffer](1)
+    __sn_wrap_sg_make_buffer(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_make_image(desc: Ptr[sg_image_desc])(using Zone): sg_image = 
+    val _ptr_return = alloc[sg_image](1)
+    __sn_wrap_sg_make_image(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_make_pass(desc: Ptr[sg_pass_desc])(using Zone): sg_pass = 
+    val _ptr_return = alloc[sg_pass](1)
+    __sn_wrap_sg_make_pass(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_make_pipeline(desc: Ptr[sg_pipeline_desc])(using Zone): sg_pipeline = 
+    val _ptr_return = alloc[sg_pipeline](1)
+    __sn_wrap_sg_make_pipeline(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_make_shader(desc: Ptr[sg_shader_desc])(using Zone): sg_shader = 
+    val _ptr_return = alloc[sg_shader](1)
+    __sn_wrap_sg_make_shader(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_query_buffer_defaults(desc: Ptr[sg_buffer_desc])(using Zone): sg_buffer_desc = 
+    val _ptr_return = alloc[sg_buffer_desc](1)
+    __sn_wrap_sg_query_buffer_defaults(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_query_buffer_info(buf: sg_buffer)(using Zone): sg_buffer_info = 
+    val _ptr_0 = alloc[sg_buffer](1)
+    val _ptr_return = alloc[sg_buffer_info](1)
+    __sn_wrap_sg_query_buffer_info(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def sg_query_buffer_state(buf: sg_buffer)(using Zone): sg_resource_state = 
+    val _ptr_0 = alloc[sg_buffer](1)
+    __sn_wrap_sg_query_buffer_state(_ptr_0)
+
+  def sg_query_desc()(using Zone): sg_desc = 
+    val _ptr_return = alloc[sg_desc](1)
+    __sn_wrap_sg_query_desc(_ptr_return)
+    !_ptr_return
+
+  def sg_query_features()(using Zone): sg_features = 
+    val _ptr_return = alloc[sg_features](1)
+    __sn_wrap_sg_query_features(_ptr_return)
+    !_ptr_return
+
+  def sg_query_image_defaults(desc: Ptr[sg_image_desc])(using Zone): sg_image_desc = 
+    val _ptr_return = alloc[sg_image_desc](1)
+    __sn_wrap_sg_query_image_defaults(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_query_image_info(img: sg_image)(using Zone): sg_image_info = 
+    val _ptr_0 = alloc[sg_image](1)
+    val _ptr_return = alloc[sg_image_info](1)
+    __sn_wrap_sg_query_image_info(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def sg_query_image_state(img: sg_image)(using Zone): sg_resource_state = 
+    val _ptr_0 = alloc[sg_image](1)
+    __sn_wrap_sg_query_image_state(_ptr_0)
+
+  def sg_query_limits()(using Zone): sg_limits = 
+    val _ptr_return = alloc[sg_limits](1)
+    __sn_wrap_sg_query_limits(_ptr_return)
+    !_ptr_return
+
+  def sg_query_pass_defaults(desc: Ptr[sg_pass_desc])(using Zone): sg_pass_desc = 
+    val _ptr_return = alloc[sg_pass_desc](1)
+    __sn_wrap_sg_query_pass_defaults(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_query_pass_info(pass: sg_pass)(using Zone): sg_pass_info = 
+    val _ptr_0 = alloc[sg_pass](1)
+    val _ptr_return = alloc[sg_pass_info](1)
+    __sn_wrap_sg_query_pass_info(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def sg_query_pass_state(pass: sg_pass)(using Zone): sg_resource_state = 
+    val _ptr_0 = alloc[sg_pass](1)
+    __sn_wrap_sg_query_pass_state(_ptr_0)
+
+  def sg_query_pipeline_defaults(desc: Ptr[sg_pipeline_desc])(using Zone): sg_pipeline_desc = 
+    val _ptr_return = alloc[sg_pipeline_desc](1)
+    __sn_wrap_sg_query_pipeline_defaults(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_query_pipeline_info(pip: sg_pipeline)(using Zone): sg_pipeline_info = 
+    val _ptr_0 = alloc[sg_pipeline](1)
+    val _ptr_return = alloc[sg_pipeline_info](1)
+    __sn_wrap_sg_query_pipeline_info(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def sg_query_pipeline_state(pip: sg_pipeline)(using Zone): sg_resource_state = 
+    val _ptr_0 = alloc[sg_pipeline](1)
+    __sn_wrap_sg_query_pipeline_state(_ptr_0)
+
+  def sg_query_pixelformat(fmt: sg_pixel_format)(using Zone): sg_pixelformat_info = 
+    val _ptr_return = alloc[sg_pixelformat_info](1)
+    __sn_wrap_sg_query_pixelformat(fmt, _ptr_return)
+    !_ptr_return
+
+  def sg_query_shader_defaults(desc: Ptr[sg_shader_desc])(using Zone): sg_shader_desc = 
+    val _ptr_return = alloc[sg_shader_desc](1)
+    __sn_wrap_sg_query_shader_defaults(desc, _ptr_return)
+    !_ptr_return
+
+  def sg_query_shader_info(shd: sg_shader)(using Zone): sg_shader_info = 
+    val _ptr_0 = alloc[sg_shader](1)
+    val _ptr_return = alloc[sg_shader_info](1)
+    __sn_wrap_sg_query_shader_info(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def sg_query_shader_state(shd: sg_shader)(using Zone): sg_resource_state = 
+    val _ptr_0 = alloc[sg_shader](1)
+    __sn_wrap_sg_query_shader_state(_ptr_0)
+
+  def sg_setup_context()(using Zone): sg_context = 
+    val _ptr_return = alloc[sg_context](1)
+    __sn_wrap_sg_setup_context(_ptr_return)
+    !_ptr_return
+
+  def sg_update_buffer(buf: sg_buffer, data: Ptr[sg_range])(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_buffer](1)
+    __sn_wrap_sg_update_buffer(_ptr_0, data)
+
+  def sg_update_image(img: sg_image, data: Ptr[sg_image_data])(using Zone): Unit = 
+    val _ptr_0 = alloc[sg_image](1)
+    __sn_wrap_sg_update_image(_ptr_0, data)
+
 

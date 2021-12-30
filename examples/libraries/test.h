@@ -35,49 +35,52 @@ typedef struct {
 
 typedef int Hello;
 
-struct point {
-    int x;
-    int y;
-};
+/* struct point { */
+/*     int x; */
+/*     int y; */
+/* }; */
 
-typedef struct point point;
+/* typedef struct point point; */
 
-union myUn{
-    int i;
-    long double t;
-    struct point p;
-} ;
+/* union myUn{ */
+/*     int i; */
+/*     long double t; */
+/*     struct point p; */
+/* } ; */
 
-typedef struct bigStruct {
-    long one;
-    char two;
-    int three;
-    float four;
-    double five;
-    struct point six;
-    struct point *seven;
-    int eight;
-    int nine;
-    int ten;
-    int eleven;
-    int twelve;
-    int thirteen;
-    int fourteen;
-    int fifteen;
-    int sixteen;
-    int seventeen;
-    int eighteen;
-    int nineteen;
-    int twenty;
-    int twentyOne;
-    int twentyTwo;
-    int twentyThree;
-    union myUn twentyFive;
-    int twentySix;
-} bigStruct;
+/* typedef struct bigStruct { */
+/*     long one; */
+/*     char two; */
+/*     int three; */
+/*     float four; */
+/*     double five; */
+/*     struct point six; */
+/*     struct point *seven; */
+/*     int eight; */
+/*     int nine; */
+/*     int ten; */
+/*     int eleven; */
+/*     int twelve; */
+/*     int thirteen; */
+/*     int fourteen; */
+/*     int fifteen; */
+/*     int sixteen; */
+/*     int seventeen; */
+/*     int eighteen; */
+/*     int nineteen; */
+/*     int twenty; */
+/*     int twentyOne; */
+/*     int twentyTwo; */
+/*     int twentyThree; */
+/*     union myUn twentyFive; */
+/*     int twentySix; */
+/* } bigStruct; */
 
   
  /**
   * Retrieve the type of a CXCursor (if any).
   */
  CXType clang_getCursorType(size_t hel, CXCursor C, CXType *types[3], long double *idx);
+ CXTypeKind clang_getCursorKing(size_t hel, CXCursor C, CXType *types[3], long double *idx);
+
+ CXTypeKind clang_getCursorKing(size_t hel, CXType *types[3], long double *idx);

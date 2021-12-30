@@ -1984,7 +1984,7 @@ object types:
       def _mbstateL: CLongLong = !struct.at(0).asInstanceOf[Ptr[CLongLong]]
 @link("clang")
 @extern
-object functions: 
+private[libclang] object extern_functions: 
   import types.*
 
   def asctime(_0: Ptr[tm]): CString = extern
@@ -2400,4 +2400,10 @@ object functions:
   def tzset(): Unit = extern
 
   def tzsetwall(): Unit = extern
+
+object functions: 
+  import types.*, extern_functions.*
+
+  export extern_functions.*
+
 

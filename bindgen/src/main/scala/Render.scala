@@ -4,6 +4,7 @@ import bindgen.Def.Binding
 import scala.scalanative.unsafe.Tag
 import scala.runtime.AbstractFunction4
 import scala.scalanative.annotation.alwaysinline
+import scala.collection.mutable.ListBuffer
 
 object render:
   private def escape(name: String) =
@@ -182,21 +183,82 @@ object render:
   def function(model: Def.Function, line: Appender)(using
       AliasResolver,
       Config
-  ) =
+  ): Unit =
     import model.*
 
     val arglist = parameters
       .map((name, ctype) => s"${escape(name)}: ${scalaType(ctype)}")
       .mkString(", ")
-    if isIllegalFunction(
-        model.returnType,
-        model.parameters.toList.map(_._2)
-      )
-    then
-      line(
-        "// this function will not work on Scala Native as it has direct Struct parameter or returns a struct"
-      )
-    line(s"def $name($arglist): ${scalaType(returnType)} = extern")
+
+    val privatise = model.tpe match
+      case f: CFunctionType.ExternRename => s"private[$packageName] "
+      case _                             => ""
+
+    val isFunctionRewrite =
+      model.tpe match
+        case CFunctionType.Extern => false
+        case _                    => true
+      end match
+
+    // if !isFunctionRewrite && isIllegalFunction(
+    //     model.returnType,
+    //     model.parameters.toList.map(_._2)
+    //   )
+    // then
+    //   val rewrites = functionRewriter(model)
+
+    //   line(s"object $name:")
+    //   nest {
+    //     rewrites.foreach { m =>
+    //       function(m, line)
+    //       line("")
+    //     }
+    //   }
+    // else
+    model.tpe match
+      case CFunctionType.Extern =>
+        line(
+          s"${privatise}def $name($arglist): ${scalaType(returnType)} = extern"
+        )
+      case CFunctionType.ExternRename(name, _) =>
+        line(s"""@name("$name")""")
+        line(
+          s"${privatise}def $name($arglist): ${scalaType(returnType)} = extern"
+        )
+      case CFunctionType.Delegate(rewrites, returnAsWell, delegateTo) =>
+        line(s"def $name($arglist)(using Zone): ${scalaType(returnType)} = ")
+        def ptr_name(n: String) = s"_ptr_$n"
+        nest {
+          rewrites.toList.sorted.foreach { idx =>
+            val (name, typ) = model.parameters(idx)
+            line(
+              s"val ${ptr_name(idx.toString)} = alloc[${scalaType(typ)}](1)"
+            )
+          }
+
+          if returnAsWell then
+            line(
+              s"val ${ptr_name("return")} = alloc[${scalaType(model.returnType)}](1)"
+            )
+
+          val delegateCallArgList =
+            ListBuffer.empty[String]
+
+          (0 until model.parameters.size).foreach { i =>
+            if !rewrites.contains(i) then
+              delegateCallArgList.addOne(model.parameters(i)._1)
+            else delegateCallArgList.addOne(ptr_name(i.toString))
+          }
+
+          if returnAsWell then delegateCallArgList.addOne(ptr_name("return"))
+
+          line(s"$delegateTo(${delegateCallArgList.mkString(", ")})")
+
+          if returnAsWell then line(s"!${ptr_name("return")}")
+        }
+    end match
+
+  // end if
 
   end function
 
@@ -520,21 +582,44 @@ object render:
       }
     }
 
+    val resolvedFunctions = binding.functions.flatMap(functionRewriter)
+
+    val externFunctions = resolvedFunctions.collect {
+      case f @ Def.Function(_, _, _, CFunctionType.Extern)          => f
+      case f @ Def.Function(_, _, _, _: CFunctionType.ExternRename) => f
+    }
+
+    val regularFunctions = resolvedFunctions.filterNot(externFunctions.contains)
+
     if binding.functions.nonEmpty then
       summon[Config].linkName.foreach { l =>
         sb.append(s"""@link("$l")""")
       }
-      sb.append("\n@extern\nobject functions: \n")
+      sb.append(s"\n@extern\nprivate[$packageName] object extern_functions: \n")
       render.nest {
         render.to(sb)("import types.*\n")
-        binding.functions.toList.sortBy(_.name).zipWithIndex.foreach {
+        externFunctions.toList.sortBy(_.name).zipWithIndex.foreach {
           case (func, idx) =>
             try render.function(
               func,
               render.to(sb)
             )
             catch exc => System.err.println(s"Failed to render $func: $exc")
-            if idx != binding.functions.size - 1 then sb.append("\n")
+            if idx != externFunctions.size - 1 then sb.append("\n")
+        }
+      }
+      sb.append(s"\nobject functions: \n")
+      render.nest {
+        render.to(sb)("import types.*, extern_functions.*\n")
+        render.to(sb)("export extern_functions.*\n")
+        regularFunctions.toList.sortBy(_.name).zipWithIndex.foreach {
+          case (func, idx) =>
+            try render.function(
+              func,
+              render.to(sb)
+            )
+            catch exc => System.err.println(s"Failed to render $func: $exc")
+            if idx != externFunctions.size - 1 then sb.append("\n")
         }
       }
     end if
@@ -579,7 +664,7 @@ object render:
   private def to(sb: StringBuilder)(using config: Config): Appender =
     line => sb.append(indent(using config) + line + "\n")
 
-  private def aliasResolver(name: String)(using ar: AliasResolver): CType =
+  def aliasResolver(name: String)(using ar: AliasResolver): CType =
     ar(name)
 
   private def packageName(using conf: Config): String = conf.packageName

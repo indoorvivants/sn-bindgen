@@ -550,7 +550,7 @@ object types:
       def _mbstateL: CLongLong = !struct.at(0).asInstanceOf[Ptr[CLongLong]]
 @link("cjson")
 @extern
-object functions: 
+private[libcjson] object extern_functions: 
   import types.*
 
   def cJSON_AddArrayToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
@@ -708,4 +708,10 @@ object functions:
   def cJSON_free(`object`: Ptr[Byte]): Unit = extern
 
   def cJSON_malloc(size: size_t): Ptr[Byte] = extern
+
+object functions: 
+  import types.*, extern_functions.*
+
+  export extern_functions.*
+
 

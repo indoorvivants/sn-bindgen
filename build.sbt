@@ -6,6 +6,12 @@ lazy val bindgen = project
   .dependsOn(libclang)
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
+  .settings(nativeConfig ~= { conf =>
+    conf
+      .withDump(true)
+      .withLinkingOptions(Seq("-lclang", "-L/opt/homebrew/opt/llvm/lib"))
+      .withCompileOptions(Seq("-I/opt/homebrew/opt/llvm/include"))
+  })
 
 lazy val libclang = project
   .in(file("libclang"))
@@ -40,7 +46,7 @@ lazy val examples = project
           headerFilesBase / headerFile,
           packageName,
           destinationBase / s"$packageName.scala",
-          packageName.replace("lib", "")
+          packageName.replaceFirst("lib", "")
         )
       }
 
@@ -65,12 +71,6 @@ val regenerate = taskKey[Unit]("Regenerate known bindings")
 // --------------SETTINGS-------------------------
 lazy val nativeCommon = Seq(
   resolvers += Resolver.sonatypeRepo("snapshots"),
-  scalaVersion := "3.1.0",
-  nativeConfig ~= { conf =>
-    conf
-      .withDump(true)
-      .withLinkingOptions(Seq("-lclang", "-L/opt/homebrew/opt/llvm/lib"))
-      .withCompileOptions(Seq("-I/opt/homebrew/opt/llvm/include"))
-  }
+  scalaVersion := "3.1.0"
   /* libraryDependencies += ("org.scalameta" %%% "munit" % "1.0.0-M1" cross CrossVersion.for3Use2_13) % Test */
 )

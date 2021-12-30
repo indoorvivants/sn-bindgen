@@ -1,6 +1,7 @@
 package bindgen
 
 import scala.collection.mutable.ListBuffer
+import bindgen.CType.Parameter
 
 object Def:
   import scala.collection.mutable
@@ -25,10 +26,18 @@ object Def:
       var tpe: CFunctionType
   )
   case class Alias(name: String, underlying: CType)
+
+  def typeOf(d: Function): CType.Function =
+    CType.Function(
+      d.returnType,
+      d.parameters.map { case (name, typ) => Parameter(Some(name), typ) }.toList
+    )
 end Def
 
 enum CFunctionType:
   case Extern
+  case ExternRename(name: String, internal: Boolean)
+  case Delegate(parameters: Set[Int], withReturn: Boolean, delegateTo: String)
 
 enum CType:
   case Arr(of: CType, size: Option[Int])
@@ -50,9 +59,9 @@ enum CType:
 end CType
 
 import CType.*
+
 // TODO: this will not work on a 32 architecture. Need to reference UWord somehow.
 object BuiltinType:
-  // case size_t, ssize_t
   val size_t = NumericIntegral(IntegralBase.Long, SignType.Unsigned)
   val ssize_t = NumericIntegral(IntegralBase.Long, SignType.Signed)
   val uint32_t = NumericIntegral(IntegralBase.Int, SignType.Unsigned)

@@ -1804,18 +1804,576 @@ object types:
       def slice: nk_nine_slice = !struct.at(0).asInstanceOf[Ptr[nk_nine_slice]]
 @link("nuklear")
 @extern
-object functions: 
+private[libnuklear] object extern_functions: 
   import types.*
+
+  @name("__sn_wrap_nk_rectv")
+  private[libnuklear] def __sn_wrap_nk_rectv(xywh: Ptr[Float], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_combo_begin_label")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_label(_0: Ptr[nk_context], selected: CString, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_window_get_bounds")
+  private[libnuklear] def __sn_wrap_nk_window_get_bounds(ctx: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_input_any_mouse_click_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_any_mouse_click_in_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_colorf_hsva_fv")
+  private[libnuklear] def __sn_wrap_nk_colorf_hsva_fv(hsva: Ptr[Float], in: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_button_image_label")
+  private[libnuklear] def __sn_wrap_nk_button_image_label(_0: Ptr[nk_context], img: Ptr[nk_image], _2: CString, text_alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_nine_slice_id")
+  private[libnuklear] def __sn_wrap_nk_nine_slice_id(_0: CInt, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_triangle")
+  private[libnuklear] def __sn_wrap_nk_fill_triangle(_0: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, _7: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_input_scroll")
+  private[libnuklear] def __sn_wrap_nk_input_scroll(_0: Ptr[nk_context], `val`: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_rect_size")
+  private[libnuklear] def __sn_wrap_nk_rect_size(_0: Ptr[nk_rect], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsva_f")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_combobox_string")
+  private[libnuklear] def __sn_wrap_nk_combobox_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: Ptr[CInt], count: CInt, item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_rect")
+  private[libnuklear] def __sn_wrap_nk_stroke_rect(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], rounding: Float, line_thickness: Float, _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_dv")
+  private[libnuklear] def __sn_wrap_nk_color_dv(rgba_out: Ptr[Double], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_input_is_mouse_hovering_rect")
+  private[libnuklear] def __sn_wrap_nk_input_is_mouse_hovering_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_image_label")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_image_label(_0: Ptr[nk_context], selected: CString, _2: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_hsva_colorf")
+  private[libnuklear] def __sn_wrap_nk_hsva_colorf(h: Float, s: Float, v: Float, a: Float, __return: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_input_has_mouse_click_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_has_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_is_mouse_prev_hovering_rect")
+  private[libnuklear] def __sn_wrap_nk_input_is_mouse_prev_hovering_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_rgba_hex")
+  private[libnuklear] def __sn_wrap_nk_rgba_hex(rgb: CString, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_image_handle")
+  private[libnuklear] def __sn_wrap_nk_image_handle(_0: nk_handle, __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_iv")
+  private[libnuklear] def __sn_wrap_nk_rgba_iv(rgba: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_input_is_mouse_click_down_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_is_mouse_click_down_in_rect(i: Ptr[nk_input], id: nk_buttons, b: Ptr[nk_rect], down: nk_bool): nk_bool = extern
+
+  @name("__sn_wrap_nk_rgb")
+  private[libnuklear] def __sn_wrap_nk_rgb(r: CInt, g: CInt, b: CInt, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_begin_label")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_subimage_ptr")
+  private[libnuklear] def __sn_wrap_nk_subimage_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_input_mouse_clicked")
+  private[libnuklear] def __sn_wrap_nk_input_mouse_clicked(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_separator")
+  private[libnuklear] def __sn_wrap_nk_combo_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
+
+  @name("__sn_wrap_nk_stroke_curve")
+  private[libnuklear] def __sn_wrap_nk_stroke_curve(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, _7: Float, _8: Float, line_thickness: Float, _10: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_polygon")
+  private[libnuklear] def __sn_wrap_nk_fill_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsv_b")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_b(out_h: Ptr[nk_byte], out_s: Ptr[nk_byte], out_v: Ptr[nk_byte], _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_window_set_position")
+  private[libnuklear] def __sn_wrap_nk_window_set_position(_0: Ptr[nk_context], name: CString, pos: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsv_iv")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_iv(hsv_out: Ptr[CInt], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_f")
+  private[libnuklear] def __sn_wrap_nk_rgba_f(r: Float, g: Float, b: Float, a: Float, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_combo_begin_color")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_color(_0: Ptr[nk_context], color: Ptr[nk_color], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo")
+  private[libnuklear] def __sn_wrap_nk_combo(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
+
+  @name("__sn_wrap_nk_chart_add_slot_colored")
+  private[libnuklear] def __sn_wrap_nk_chart_add_slot_colored(ctx: Ptr[nk_context], _1: nk_chart_type, _2: Ptr[nk_color], active: Ptr[nk_color], count: CInt, min_value: Float, max_value: Float): Unit = extern
+
+  @name("__sn_wrap_nk_hsva_fv")
+  private[libnuklear] def __sn_wrap_nk_hsva_fv(hsva: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_begin_image")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_image(_0: Ptr[nk_context], _1: CString, _2: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_rgb_iv")
+  private[libnuklear] def __sn_wrap_nk_rgb_iv(rgb: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_button_image_text_styled")
+  private[libnuklear] def __sn_wrap_nk_button_image_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image], _3: CString, _4: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_hsva_colorfv")
+  private[libnuklear] def __sn_wrap_nk_hsva_colorfv(c: Ptr[Float], __return: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_begin_symbol")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol(_0: Ptr[nk_context], _1: CString, _2: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_color_hsva_fv")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_fv(hsva_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_layout_space_rect_to_screen")
+  private[libnuklear] def __sn_wrap_nk_layout_space_rect_to_screen(_0: Ptr[nk_context], _1: Ptr[nk_rect], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_circle")
+  private[libnuklear] def __sn_wrap_nk_stroke_circle(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], line_thickness: Float, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsv_bv")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_bv(hsv_out: Ptr[nk_byte], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_nine_slice_ptr")
+  private[libnuklear] def __sn_wrap_nk_nine_slice_ptr(_0: Ptr[Byte], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_combo_begin_text")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_text(_0: Ptr[nk_context], selected: CString, _2: CInt, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_image_ptr")
+  private[libnuklear] def __sn_wrap_nk_image_ptr(_0: Ptr[Byte], __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hex_rgba")
+  private[libnuklear] def __sn_wrap_nk_color_hex_rgba(output: CString, _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_line")
+  private[libnuklear] def __sn_wrap_nk_stroke_line(b: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, line_thickness: Float, _6: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_vec2iv")
+  private[libnuklear] def __sn_wrap_nk_vec2iv(xy: Ptr[CInt], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_combo_string")
+  private[libnuklear] def __sn_wrap_nk_combo_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
+
+  @name("__sn_wrap_nk_select_image_text")
+  private[libnuklear] def __sn_wrap_nk_select_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  @name("__sn_wrap_nk_hsv_f")
+  private[libnuklear] def __sn_wrap_nk_hsv_f(h: Float, s: Float, v: Float, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsv_iv")
+  private[libnuklear] def __sn_wrap_nk_hsv_iv(hsv: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_subimage_id")
+  private[libnuklear] def __sn_wrap_nk_subimage_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_hsv")
+  private[libnuklear] def __sn_wrap_nk_hsv(h: CInt, s: CInt, v: CInt, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_triangle_from_direction")
+  private[libnuklear] def __sn_wrap_nk_triangle_from_direction(result: Ptr[nk_vec2], r: Ptr[nk_rect], pad_x: Float, pad_y: Float, _4: nk_heading): Unit = extern
+
+  @name("__sn_wrap_nk_label_colored")
+  private[libnuklear] def __sn_wrap_nk_label_colored(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_polygon")
+  private[libnuklear] def __sn_wrap_nk_stroke_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, line_thickness: Float, _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva_iv")
+  private[libnuklear] def __sn_wrap_nk_hsva_iv(hsva: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_selectable_image_text")
+  private[libnuklear] def __sn_wrap_nk_selectable_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  @name("__sn_wrap_nk_button_color")
+  private[libnuklear] def __sn_wrap_nk_button_color(_0: Ptr[nk_context], _1: Ptr[nk_color]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_symbol_text")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_hsv_bv")
+  private[libnuklear] def __sn_wrap_nk_hsv_bv(hsv: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_label_colored_wrap")
+  private[libnuklear] def __sn_wrap_nk_label_colored_wrap(_0: Ptr[nk_context], _1: CString, _2: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_selectable_image_label")
+  private[libnuklear] def __sn_wrap_nk_selectable_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  @name("__sn_wrap_nk_vec2v")
+  private[libnuklear] def __sn_wrap_nk_vec2v(xy: Ptr[Float], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_push_scissor")
+  private[libnuklear] def __sn_wrap_nk_push_scissor(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_layout_widget_bounds")
+  private[libnuklear] def __sn_wrap_nk_layout_widget_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_fv")
+  private[libnuklear] def __sn_wrap_nk_rgba_fv(rgba: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_polyline")
+  private[libnuklear] def __sn_wrap_nk_stroke_polyline(_0: Ptr[nk_command_buffer], points: Ptr[Float], point_count: CInt, line_thickness: Float, col: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_arc")
+  private[libnuklear] def __sn_wrap_nk_stroke_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, line_thickness: Float, _7: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_style_item_color")
+  private[libnuklear] def __sn_wrap_nk_style_item_color(_0: Ptr[nk_color], __return: Ptr[nk_style_item]): Unit = extern
+
+  @name("__sn_wrap_nk_widget_bounds")
+  private[libnuklear] def __sn_wrap_nk_widget_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_content_region")
+  private[libnuklear] def __sn_wrap_nk_window_get_content_region(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_draw_text")
+  private[libnuklear] def __sn_wrap_nk_draw_text(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], text: CString, len: CInt, _4: Ptr[nk_user_font], _5: Ptr[nk_color], _6: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_begin_titled")
+  private[libnuklear] def __sn_wrap_nk_begin_titled(ctx: Ptr[nk_context], name: CString, title: CString, bounds: Ptr[nk_rect], flags: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_color_hsva_i")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_i(h: Ptr[CInt], s: Ptr[CInt], v: Ptr[CInt], a: Ptr[CInt], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_image_color")
+  private[libnuklear] def __sn_wrap_nk_image_color(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hex_rgb")
+  private[libnuklear] def __sn_wrap_nk_color_hex_rgb(output: CString, _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_draw_nine_slice")
+  private[libnuklear] def __sn_wrap_nk_draw_nine_slice(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_nine_slice], _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsva_bv")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_bv(hsva_out: Ptr[nk_byte], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_widget_size")
+  private[libnuklear] def __sn_wrap_nk_widget_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_vec2")
+  private[libnuklear] def __sn_wrap_nk_vec2(x: Float, y: Float, __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_text_wrap_colored")
+  private[libnuklear] def __sn_wrap_nk_text_wrap_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_begin_text")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_text(_0: Ptr[nk_context], title: CString, title_len: CInt, align: nk_flags, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_item_image_text")
+  private[libnuklear] def __sn_wrap_nk_combo_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_fill_rect")
+  private[libnuklear] def __sn_wrap_nk_fill_rect(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], rounding: Float, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_combo_begin_image_text")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_image_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_rgba_u32")
+  private[libnuklear] def __sn_wrap_nk_rgba_u32(_0: nk_uint, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_button_image_text")
+  private[libnuklear] def __sn_wrap_nk_button_image_text(_0: Ptr[nk_context], img: Ptr[nk_image], _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_item_image_label")
+  private[libnuklear] def __sn_wrap_nk_menu_item_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_rgba")
+  private[libnuklear] def __sn_wrap_nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_contextual_begin")
+  private[libnuklear] def __sn_wrap_nk_contextual_begin(_0: Ptr[nk_context], _1: nk_flags, _2: Ptr[nk_vec2], trigger_bounds: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_tree_image_push_hashed")
+  private[libnuklear] def __sn_wrap_nk_tree_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_image")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_image(_0: Ptr[nk_context], img: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_widget_fitting")
+  private[libnuklear] def __sn_wrap_nk_widget_fitting(_0: Ptr[nk_rect], _1: Ptr[nk_context], _2: Ptr[nk_vec2]): nk_widget_layout_states = extern
+
+  @name("__sn_wrap_nk_combo_begin_symbol")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol(_0: Ptr[nk_context], _1: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_rgb_f")
+  private[libnuklear] def __sn_wrap_nk_rgb_f(r: Float, g: Float, b: Float, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_style_push_style_item")
+  private[libnuklear] def __sn_wrap_nk_style_push_style_item(_0: Ptr[nk_context], _1: Ptr[nk_style_item], _2: Ptr[nk_style_item]): nk_bool = extern
+
+  @name("__sn_wrap_nk_rectiv")
+  private[libnuklear] def __sn_wrap_nk_rectiv(xywh: Ptr[CInt], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_hex")
+  private[libnuklear] def __sn_wrap_nk_rgb_hex(rgb: CString, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_window_set_bounds")
+  private[libnuklear] def __sn_wrap_nk_window_set_bounds(_0: Ptr[nk_context], name: CString, bounds: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_color_picker")
+  private[libnuklear] def __sn_wrap_nk_color_picker(_0: Ptr[nk_context], _1: Ptr[nk_colorf], _2: nk_color_format, __return: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsv_i")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_i(out_h: Ptr[CInt], out_s: Ptr[CInt], out_v: Ptr[CInt], _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_style_item_hide")
+  private[libnuklear] def __sn_wrap_nk_style_item_hide(__return: Ptr[nk_style_item]): Unit = extern
+
+  @name("__sn_wrap_nk_combobox_separator")
+  private[libnuklear] def __sn_wrap_nk_combobox_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: Ptr[CInt], count: CInt, item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_content_region_min")
+  private[libnuklear] def __sn_wrap_nk_window_get_content_region_min(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsva_iv")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_iv(hsva_out: Ptr[CInt], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_layout_space_push")
+  private[libnuklear] def __sn_wrap_nk_layout_space_push(_0: Ptr[nk_context], bounds: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_combo_callback")
+  private[libnuklear] def __sn_wrap_nk_combo_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], userdata: Ptr[Byte], selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
+
+  @name("__sn_wrap_nk_begin")
+  private[libnuklear] def __sn_wrap_nk_begin(ctx: Ptr[nk_context], title: CString, bounds: Ptr[nk_rect], flags: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_sub9slice_handle")
+  private[libnuklear] def __sn_wrap_nk_sub9slice_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_size")
+  private[libnuklear] def __sn_wrap_nk_window_get_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_circle")
+  private[libnuklear] def __sn_wrap_nk_fill_circle(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_cf")
+  private[libnuklear] def __sn_wrap_nk_rgb_cf(c: Ptr[nk_colorf], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rect_pos")
+  private[libnuklear] def __sn_wrap_nk_rect_pos(_0: Ptr[nk_rect], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_contextual_item_image_text")
+  private[libnuklear] def __sn_wrap_nk_contextual_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_layout_space_bounds")
+  private[libnuklear] def __sn_wrap_nk_layout_space_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_position")
+  private[libnuklear] def __sn_wrap_nk_window_get_position(ctx: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_draw_image")
+  private[libnuklear] def __sn_wrap_nk_draw_image(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_image], _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_fv")
+  private[libnuklear] def __sn_wrap_nk_rgb_fv(rgb: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_text_colored")
+  private[libnuklear] def __sn_wrap_nk_text_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags, _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_vec2i")
+  private[libnuklear] def __sn_wrap_nk_vec2i(x: CInt, y: CInt, __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_select_image_label")
+  private[libnuklear] def __sn_wrap_nk_select_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  @name("__sn_wrap_nk_style_item_nine_slice")
+  private[libnuklear] def __sn_wrap_nk_style_item_nine_slice(slice: Ptr[nk_nine_slice], __return: Ptr[nk_style_item]): Unit = extern
+
+  @name("__sn_wrap_nk_get_null_rect")
+  private[libnuklear] def __sn_wrap_nk_get_null_rect(__return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_color_f")
+  private[libnuklear] def __sn_wrap_nk_color_f(r: Ptr[Float], g: Ptr[Float], b: Ptr[Float], a: Ptr[Float], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rect")
+  private[libnuklear] def __sn_wrap_nk_rect(x: Float, y: Float, w: Float, h: Float, __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_bv")
+  private[libnuklear] def __sn_wrap_nk_rgba_bv(rgba: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_begin_symbol_label")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_window_get_content_region_max")
+  private[libnuklear] def __sn_wrap_nk_window_get_content_region_max(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_nine_slice_handle")
+  private[libnuklear] def __sn_wrap_nk_nine_slice_handle(_0: nk_handle, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_tree_state_image_push")
+  private[libnuklear] def __sn_wrap_nk_tree_state_image_push(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
+
+  @name("__sn_wrap_nk_style_push_color")
+  private[libnuklear] def __sn_wrap_nk_style_push_color(_0: Ptr[nk_context], _1: Ptr[nk_color], _2: Ptr[nk_color]): nk_bool = extern
+
+  @name("__sn_wrap_nk_layout_space_to_local")
+  private[libnuklear] def __sn_wrap_nk_layout_space_to_local(_0: Ptr[nk_context], _1: Ptr[nk_vec2], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_cf")
+  private[libnuklear] def __sn_wrap_nk_rgba_cf(c: Ptr[nk_colorf], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_push_custom")
+  private[libnuklear] def __sn_wrap_nk_push_custom(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: nk_command_custom_callback, usr: nk_handle): Unit = extern
+
+  @name("__sn_wrap_nk_combo_begin_symbol_label")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol_label(_0: Ptr[nk_context], selected: CString, _2: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_chart_begin_colored")
+  private[libnuklear] def __sn_wrap_nk_chart_begin_colored(_0: Ptr[nk_context], _1: nk_chart_type, _2: Ptr[nk_color], active: Ptr[nk_color], num: CInt, min: Float, max: Float): nk_bool = extern
+
+  @name("__sn_wrap_nk_color_d")
+  private[libnuklear] def __sn_wrap_nk_color_d(r: Ptr[Double], g: Ptr[Double], b: Ptr[Double], a: Ptr[Double], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_u32")
+  private[libnuklear] def __sn_wrap_nk_color_u32(_0: Ptr[nk_color]): nk_uint = extern
+
+  @name("__sn_wrap_nk_recti")
+  private[libnuklear] def __sn_wrap_nk_recti(x: CInt, y: CInt, w: CInt, h: CInt, __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva")
+  private[libnuklear] def __sn_wrap_nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsva_b")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_b(h: Ptr[nk_byte], s: Ptr[nk_byte], v: Ptr[nk_byte], a: Ptr[nk_byte], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_popup_begin")
+  private[libnuklear] def __sn_wrap_nk_popup_begin(_0: Ptr[nk_context], _1: nk_popup_type, _2: CString, _3: nk_flags, bounds: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_tree_element_image_push_hashed")
+  private[libnuklear] def __sn_wrap_nk_tree_element_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
+
+  @name("__sn_wrap_nk_window_set_size")
+  private[libnuklear] def __sn_wrap_nk_window_set_size(_0: Ptr[nk_context], name: CString, _2: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_button_image_styled")
+  private[libnuklear] def __sn_wrap_nk_button_image_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image]): nk_bool = extern
+
+  @name("__sn_wrap_nk_layout_space_to_screen")
+  private[libnuklear] def __sn_wrap_nk_layout_space_to_screen(_0: Ptr[nk_context], _1: Ptr[nk_vec2], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_image")
+  private[libnuklear] def __sn_wrap_nk_image(_0: Ptr[nk_context], _1: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_button_image_label_styled")
+  private[libnuklear] def __sn_wrap_nk_button_image_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image], _3: CString, text_alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_rgb_bv")
+  private[libnuklear] def __sn_wrap_nk_rgb_bv(rgb: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_recta")
+  private[libnuklear] def __sn_wrap_nk_recta(pos: Ptr[nk_vec2], size: Ptr[nk_vec2], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_colorf_hsva_f")
+  private[libnuklear] def __sn_wrap_nk_colorf_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], in: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_style_push_vec2")
+  private[libnuklear] def __sn_wrap_nk_style_push_vec2(_0: Ptr[nk_context], _1: Ptr[nk_vec2], _2: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_color_cf")
+  private[libnuklear] def __sn_wrap_nk_color_cf(_0: Ptr[nk_color], __return: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_begin_symbol_text")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_image_id")
+  private[libnuklear] def __sn_wrap_nk_image_id(_0: CInt, __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_style_item_image")
+  private[libnuklear] def __sn_wrap_nk_style_item_image(img: Ptr[nk_image], __return: Ptr[nk_style_item]): Unit = extern
+
+  @name("__sn_wrap_nk_color_fv")
+  private[libnuklear] def __sn_wrap_nk_color_fv(rgba_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsv_fv")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_fv(hsv_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_triangle")
+  private[libnuklear] def __sn_wrap_nk_stroke_triangle(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, line_thichness: Float, _8: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_subimage_handle")
+  private[libnuklear] def __sn_wrap_nk_subimage_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_input_is_mouse_click_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_is_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_button_image")
+  private[libnuklear] def __sn_wrap_nk_button_image(_0: Ptr[nk_context], img: Ptr[nk_image]): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_has_mouse_click_down_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_has_mouse_click_down_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect], down: nk_bool): nk_bool = extern
+
+  @name("__sn_wrap_nk_color_hsv_f")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_begin_image_text")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_image_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_hsv_fv")
+  private[libnuklear] def __sn_wrap_nk_hsv_fv(hsv: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_combobox")
+  private[libnuklear] def __sn_wrap_nk_combobox(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: Ptr[CInt], item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_widget_position")
+  private[libnuklear] def __sn_wrap_nk_widget_position(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_contextual_item_image_label")
+  private[libnuklear] def __sn_wrap_nk_contextual_item_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_begin_image_label")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_image_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_item_image_label")
+  private[libnuklear] def __sn_wrap_nk_combo_item_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_sub9slice_ptr")
+  private[libnuklear] def __sn_wrap_nk_sub9slice_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_combobox_callback")
+  private[libnuklear] def __sn_wrap_nk_combobox_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], _2: Ptr[Byte], selected: Ptr[CInt], count: CInt, item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva_bv")
+  private[libnuklear] def __sn_wrap_nk_hsva_bv(hsva: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_rect_multi_color")
+  private[libnuklear] def __sn_wrap_nk_fill_rect_multi_color(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], left: Ptr[nk_color], top: Ptr[nk_color], right: Ptr[nk_color], bottom: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_content_region_size")
+  private[libnuklear] def __sn_wrap_nk_window_get_content_region_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_arc")
+  private[libnuklear] def __sn_wrap_nk_fill_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, _6: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva_f")
+  private[libnuklear] def __sn_wrap_nk_hsva_f(h: Float, s: Float, v: Float, a: Float, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_item_image_text")
+  private[libnuklear] def __sn_wrap_nk_menu_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_layout_space_rect_to_local")
+  private[libnuklear] def __sn_wrap_nk_layout_space_rect_to_local(_0: Ptr[nk_context], _1: Ptr[nk_rect], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_sub9slice_id")
+  private[libnuklear] def __sn_wrap_nk_sub9slice_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
 
   def nk__begin(_0: Ptr[nk_context]): Ptr[nk_command] = extern
 
   def nk__next(_0: Ptr[nk_context], _1: Ptr[nk_command]): Ptr[nk_command] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_begin(ctx: Ptr[nk_context], title: CString, bounds: nk_rect, flags: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_begin_titled(ctx: Ptr[nk_context], name: CString, title: CString, bounds: nk_rect, flags: nk_flags): nk_bool = extern
 
   def nk_buffer_clear(_0: Ptr[nk_buffer]): Unit = extern
 
@@ -1838,27 +2396,6 @@ object functions:
   def nk_buffer_reset(_0: Ptr[nk_buffer], `type`: nk_buffer_allocation_type): Unit = extern
 
   def nk_buffer_total(_0: Ptr[nk_buffer]): nk_size = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_color(_0: Ptr[nk_context], _1: nk_color): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image(_0: Ptr[nk_context], img: nk_image): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_label(_0: Ptr[nk_context], img: nk_image, _2: CString, text_alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, text_alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_text(_0: Ptr[nk_context], img: nk_image, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, _4: CInt, alignment: nk_flags): nk_bool = extern
 
   def nk_button_label(_0: Ptr[nk_context], title: CString): nk_bool = extern
 
@@ -1888,13 +2425,7 @@ object functions:
 
   def nk_chart_add_slot(ctx: Ptr[nk_context], _1: nk_chart_type, count: CInt, min_value: Float, max_value: Float): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_chart_add_slot_colored(ctx: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, count: CInt, min_value: Float, max_value: Float): Unit = extern
-
   def nk_chart_begin(_0: Ptr[nk_context], _1: nk_chart_type, num: CInt, min: Float, max: Float): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_chart_begin_colored(_0: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, num: CInt, min: Float, max: Float): nk_bool = extern
 
   def nk_chart_end(_0: Ptr[nk_context]): Unit = extern
 
@@ -1920,119 +2451,11 @@ object functions:
 
   def nk_clear(_0: Ptr[nk_context]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_cf(_0: nk_color): nk_colorf = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_d(r: Ptr[Double], g: Ptr[Double], b: Ptr[Double], a: Ptr[Double], _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_dv(rgba_out: Ptr[Double], _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_f(r: Ptr[Float], g: Ptr[Float], b: Ptr[Float], a: Ptr[Float], _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_fv(rgba_out: Ptr[Float], _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hex_rgb(output: CString, _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hex_rgba(output: CString, _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_b(out_h: Ptr[nk_byte], out_s: Ptr[nk_byte], out_v: Ptr[nk_byte], _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_bv(hsv_out: Ptr[nk_byte], _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_fv(hsv_out: Ptr[Float], _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_i(out_h: Ptr[CInt], out_s: Ptr[CInt], out_v: Ptr[CInt], _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_iv(hsv_out: Ptr[CInt], _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_b(h: Ptr[nk_byte], s: Ptr[nk_byte], v: Ptr[nk_byte], a: Ptr[nk_byte], _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_bv(hsva_out: Ptr[nk_byte], _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_fv(hsva_out: Ptr[Float], _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_i(h: Ptr[CInt], s: Ptr[CInt], v: Ptr[CInt], a: Ptr[CInt], _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_iv(hsva_out: Ptr[CInt], _1: nk_color): Unit = extern
-
   def nk_color_pick(_0: Ptr[nk_context], _1: Ptr[nk_colorf], _2: nk_color_format): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_picker(_0: Ptr[nk_context], _1: nk_colorf, _2: nk_color_format): nk_colorf = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_u32(_0: nk_color): nk_uint = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_colorf_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], in: nk_colorf): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_colorf_hsva_fv(hsva: Ptr[Float], in: nk_colorf): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: CInt, item_height: CInt, size: nk_vec2): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_color(_0: Ptr[nk_context], color: nk_color, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_image(_0: Ptr[nk_context], img: nk_image, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_image_label(_0: Ptr[nk_context], selected: CString, _2: nk_image, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_image_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_image, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_label(_0: Ptr[nk_context], selected: CString, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_symbol(_0: Ptr[nk_context], _1: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_symbol_label(_0: Ptr[nk_context], selected: CString, _2: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_symbol_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_text(_0: Ptr[nk_context], selected: CString, _2: CInt, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], userdata: Ptr[Byte], selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
 
   def nk_combo_close(_0: Ptr[nk_context]): Unit = extern
 
   def nk_combo_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
 
   def nk_combo_item_label(_0: Ptr[nk_context], _1: CString, alignment: nk_flags): nk_bool = extern
 
@@ -2042,36 +2465,9 @@ object functions:
 
   def nk_combo_item_text(_0: Ptr[nk_context], _1: CString, _2: CInt, alignment: nk_flags): nk_bool = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combobox(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: Ptr[CInt], item_height: CInt, size: nk_vec2): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combobox_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], _2: Ptr[Byte], selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combobox_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combobox_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_contextual_begin(_0: Ptr[nk_context], _1: nk_flags, _2: nk_vec2, trigger_bounds: nk_rect): nk_bool = extern
-
   def nk_contextual_close(_0: Ptr[nk_context]): Unit = extern
 
   def nk_contextual_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_contextual_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_contextual_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
 
   def nk_contextual_item_label(_0: Ptr[nk_context], _1: CString, align: nk_flags): nk_bool = extern
 
@@ -2080,15 +2476,6 @@ object functions:
   def nk_contextual_item_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
 
   def nk_contextual_item_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_draw_image(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_image], _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_draw_nine_slice(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_nine_slice], _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_draw_text(_0: Ptr[nk_command_buffer], _1: nk_rect, text: CString, len: CInt, _4: Ptr[nk_user_font], _5: nk_color, _6: nk_color): Unit = extern
 
   def nk_edit_buffer(_0: Ptr[nk_context], _1: nk_flags, _2: Ptr[nk_text_edit], _3: nk_plugin_filter): nk_flags = extern
 
@@ -2101,24 +2488,6 @@ object functions:
   def nk_edit_unfocus(_0: Ptr[nk_context]): Unit = extern
 
   def nk_end(ctx: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, _6: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_rect_multi_color(_0: Ptr[nk_command_buffer], _1: nk_rect, left: nk_color, top: nk_color, right: nk_color, bottom: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_triangle(_0: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, _7: nk_color): Unit = extern
 
   def nk_filter_ascii(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
 
@@ -2135,9 +2504,6 @@ object functions:
   def nk_filter_oct(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
 
   def nk_free(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_get_null_rect(): nk_rect = extern
 
   def nk_group_begin(_0: Ptr[nk_context], title: CString, _2: nk_flags): nk_bool = extern
 
@@ -2159,67 +2525,13 @@ object functions:
 
   def nk_handle_ptr(_0: Ptr[Byte]): nk_handle = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv(h: CInt, s: CInt, v: CInt): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv_bv(hsv: Ptr[nk_byte]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv_f(h: Float, s: Float, v: Float): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv_fv(hsv: Ptr[Float]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv_iv(hsv: Ptr[CInt]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_bv(hsva: Ptr[nk_byte]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_colorf(h: Float, s: Float, v: Float, a: Float): nk_colorf = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_colorfv(c: Ptr[Float]): nk_colorf = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_f(h: Float, s: Float, v: Float, a: Float): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_fv(hsva: Ptr[Float]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_iv(hsva: Ptr[CInt]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image(_0: Ptr[nk_context], _1: nk_image): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image_color(_0: Ptr[nk_context], _1: nk_image, _2: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image_handle(_0: nk_handle): nk_image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image_id(_0: CInt): nk_image = extern
-
   def nk_image_is_subimage(img: Ptr[nk_image]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image_ptr(_0: Ptr[Byte]): nk_image = extern
 
   def nk_init(_0: Ptr[nk_context], _1: Ptr[nk_allocator], _2: Ptr[nk_user_font]): nk_bool = extern
 
   def nk_init_custom(_0: Ptr[nk_context], cmds: Ptr[nk_buffer], pool: Ptr[nk_buffer], _3: Ptr[nk_user_font]): nk_bool = extern
 
   def nk_init_fixed(_0: Ptr[nk_context], memory: Ptr[Byte], size: nk_size, _3: Ptr[nk_user_font]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_any_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
 
   def nk_input_begin(_0: Ptr[nk_context]): Unit = extern
 
@@ -2233,33 +2545,15 @@ object functions:
 
   def nk_input_has_mouse_click(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_has_mouse_click_down_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect, down: nk_bool): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_has_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
-
   def nk_input_is_key_down(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
 
   def nk_input_is_key_pressed(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
 
   def nk_input_is_key_released(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_is_mouse_click_down_in_rect(i: Ptr[nk_input], id: nk_buttons, b: nk_rect, down: nk_bool): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_is_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
-
   def nk_input_is_mouse_down(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_is_mouse_hovering_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
-
   def nk_input_is_mouse_pressed(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_is_mouse_prev_hovering_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
 
   def nk_input_is_mouse_released(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
 
@@ -2267,23 +2561,11 @@ object functions:
 
   def nk_input_motion(_0: Ptr[nk_context], x: CInt, y: CInt): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_mouse_clicked(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_scroll(_0: Ptr[nk_context], `val`: nk_vec2): Unit = extern
-
   def nk_input_unicode(_0: Ptr[nk_context], _1: nk_rune): Unit = extern
 
   def nk_item_is_any_active(_0: Ptr[nk_context]): nk_bool = extern
 
   def nk_label(_0: Ptr[nk_context], _1: CString, align: nk_flags): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_label_colored(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_label_colored_wrap(_0: Ptr[nk_context], _1: CString, _2: nk_color): Unit = extern
 
   def nk_label_wrap(_0: Ptr[nk_context], _1: CString): Unit = extern
 
@@ -2317,66 +2599,15 @@ object functions:
 
   def nk_layout_space_begin(_0: Ptr[nk_context], _1: nk_layout_format, height: Float, widget_count: CInt): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_bounds(_0: Ptr[nk_context]): nk_rect = extern
-
   def nk_layout_space_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_push(_0: Ptr[nk_context], bounds: nk_rect): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_rect_to_local(_0: Ptr[nk_context], _1: nk_rect): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_rect_to_screen(_0: Ptr[nk_context], _1: nk_rect): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_to_local(_0: Ptr[nk_context], _1: nk_vec2): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_to_screen(_0: Ptr[nk_context], _1: nk_vec2): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_widget_bounds(_0: Ptr[nk_context]): nk_rect = extern
 
   def nk_list_view_begin(_0: Ptr[nk_context], out: Ptr[nk_list_view], id: CString, _3: nk_flags, row_height: CInt, row_count: CInt): nk_bool = extern
 
   def nk_list_view_end(_0: Ptr[nk_list_view]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_image(_0: Ptr[nk_context], _1: CString, _2: nk_image, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_image_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_image, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_image_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_image, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_symbol(_0: Ptr[nk_context], _1: CString, _2: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_symbol_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_symbol_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_text(_0: Ptr[nk_context], title: CString, title_len: CInt, align: nk_flags, size: nk_vec2): nk_bool = extern
-
   def nk_menu_close(_0: Ptr[nk_context]): Unit = extern
 
   def nk_menu_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
 
   def nk_menu_item_label(_0: Ptr[nk_context], _1: CString, alignment: nk_flags): nk_bool = extern
 
@@ -2392,16 +2623,7 @@ object functions:
 
   def nk_murmur_hash(key: Ptr[Byte], len: CInt, seed: nk_hash): nk_hash = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_nine_slice_handle(_0: nk_handle, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_nine_slice_id(_0: CInt, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
   def nk_nine_slice_is_sub9slice(img: Ptr[nk_nine_slice]): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_nine_slice_ptr(_0: Ptr[Byte], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
 
   def nk_option_label(_0: Ptr[nk_context], _1: CString, active: nk_bool): nk_bool = extern
 
@@ -2410,9 +2632,6 @@ object functions:
   def nk_plot(_0: Ptr[nk_context], _1: nk_chart_type, values: Ptr[Float], count: CInt, offset: CInt): Unit = extern
 
   def nk_plot_function(_0: Ptr[nk_context], _1: nk_chart_type, userdata: Ptr[Byte], value_getter: Ptr[CFuncPtr2[Ptr[Byte], CInt, Float]], count: CInt, offset: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_popup_begin(_0: Ptr[nk_context], _1: nk_popup_type, _2: CString, _3: nk_flags, bounds: nk_rect): nk_bool = extern
 
   def nk_popup_close(_0: Ptr[nk_context]): Unit = extern
 
@@ -2438,87 +2657,9 @@ object functions:
 
   def nk_propertyi(_0: Ptr[nk_context], name: CString, min: CInt, `val`: CInt, max: CInt, step: CInt, inc_per_pixel: Float): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_push_custom(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_command_custom_callback, usr: nk_handle): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_push_scissor(_0: Ptr[nk_command_buffer], _1: nk_rect): Unit = extern
-
   def nk_radio_label(_0: Ptr[nk_context], _1: CString, active: Ptr[nk_bool]): nk_bool = extern
 
   def nk_radio_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: Ptr[nk_bool]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rect(x: Float, y: Float, w: Float, h: Float): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rect_pos(_0: nk_rect): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rect_size(_0: nk_rect): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_recta(pos: nk_vec2, size: nk_vec2): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_recti(x: CInt, y: CInt, w: CInt, h: CInt): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rectiv(xywh: Ptr[CInt]): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rectv(xywh: Ptr[Float]): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb(r: CInt, g: CInt, b: CInt): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_bv(rgb: Ptr[nk_byte]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_cf(c: nk_colorf): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_f(r: Float, g: Float, b: Float): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_fv(rgb: Ptr[Float]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_hex(rgb: CString): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_iv(rgb: Ptr[CInt]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_bv(rgba: Ptr[nk_byte]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_cf(c: nk_colorf): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_f(r: Float, g: Float, b: Float, a: Float): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_fv(rgba: Ptr[Float]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_hex(rgb: CString): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_iv(rgba: Ptr[CInt]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_u32(_0: nk_uint): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_select_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: nk_bool): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_select_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
 
   def nk_select_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, value: nk_bool): nk_bool = extern
 
@@ -2527,12 +2668,6 @@ object functions:
   def nk_select_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
 
   def nk_select_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_selectable_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_selectable_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
 
   def nk_selectable_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
 
@@ -2628,30 +2763,6 @@ object functions:
 
   def nk_strmatch_fuzzy_text(txt: CString, txt_len: CInt, pattern: CString, out_score: Ptr[CInt]): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, line_thickness: Float, _7: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, line_thickness: Float, _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_curve(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, _7: Float, _8: Float, line_thickness: Float, _10: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_line(b: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, line_thickness: Float, _6: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, line_thickness: Float, _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_polyline(_0: Ptr[nk_command_buffer], points: Ptr[Float], point_count: CInt, line_thickness: Float, col: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, line_thickness: Float, _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_triangle(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, line_thichness: Float, _8: nk_color): Unit = extern
-
   def nk_strtod(str: CString, endptr: Ptr[CString]): Double = extern
 
   def nk_strtof(str: CString, endptr: Ptr[CString]): Float = extern
@@ -2665,18 +2776,6 @@ object functions:
   def nk_style_get_color_by_name(_0: nk_style_colors): CString = extern
 
   def nk_style_hide_cursor(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_item_color(_0: nk_color): nk_style_item = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_item_hide(): nk_style_item = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_item_image(img: nk_image): nk_style_item = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_item_nine_slice(slice: nk_nine_slice): nk_style_item = extern
 
   def nk_style_load_all_cursors(_0: Ptr[nk_context], _1: Ptr[nk_cursor]): Unit = extern
 
@@ -2694,20 +2793,11 @@ object functions:
 
   def nk_style_pop_vec2(_0: Ptr[nk_context]): nk_bool = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_push_color(_0: Ptr[nk_context], _1: Ptr[nk_color], _2: nk_color): nk_bool = extern
-
   def nk_style_push_flags(_0: Ptr[nk_context], _1: Ptr[nk_flags], _2: nk_flags): nk_bool = extern
 
   def nk_style_push_float(_0: Ptr[nk_context], _1: Ptr[Float], _2: Float): nk_bool = extern
 
   def nk_style_push_font(_0: Ptr[nk_context], _1: Ptr[nk_user_font]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_push_style_item(_0: Ptr[nk_context], _1: Ptr[nk_style_item], _2: nk_style_item): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_push_vec2(_0: Ptr[nk_context], _1: Ptr[nk_vec2], _2: nk_vec2): nk_bool = extern
 
   def nk_style_set_cursor(_0: Ptr[nk_context], _1: nk_style_cursor): nk_bool = extern
 
@@ -2715,33 +2805,9 @@ object functions:
 
   def nk_style_show_cursor(_0: Ptr[nk_context]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_sub9slice_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_sub9slice_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_sub9slice_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_subimage_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect): nk_image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_subimage_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect): nk_image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_subimage_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: nk_rect): nk_image = extern
-
   def nk_text(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_text_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags, _4: nk_color): Unit = extern
-
   def nk_text_wrap(_0: Ptr[nk_context], _1: CString, _2: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_text_wrap_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_color): Unit = extern
 
   def nk_textedit_cut(_0: Ptr[nk_text_edit]): nk_bool = extern
 
@@ -2771,29 +2837,17 @@ object functions:
 
   def nk_tooltip_end(_0: Ptr[nk_context]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_tree_element_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
-
   def nk_tree_element_pop(_0: Ptr[nk_context]): Unit = extern
 
   def nk_tree_element_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_tree_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt): nk_bool = extern
 
   def nk_tree_pop(_0: Ptr[nk_context]): Unit = extern
 
   def nk_tree_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt): nk_bool = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_tree_state_image_push(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
-
   def nk_tree_state_pop(_0: Ptr[nk_context]): Unit = extern
 
   def nk_tree_state_push(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_triangle_from_direction(result: Ptr[nk_vec2], r: nk_rect, pad_x: Float, pad_y: Float, _4: nk_heading): Unit = extern
 
   def nk_utf_at(buffer: CString, length: CInt, index: CInt, unicode: Ptr[nk_rune], len: Ptr[CInt]): CString = extern
 
@@ -2803,25 +2857,7 @@ object functions:
 
   def nk_utf_len(_0: CString, byte_len: CInt): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_vec2(x: Float, y: Float): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_vec2i(x: CInt, y: CInt): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_vec2iv(xy: Ptr[CInt]): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_vec2v(xy: Ptr[Float]): nk_vec2 = extern
-
   def nk_widget(_0: Ptr[nk_rect], _1: Ptr[nk_context]): nk_widget_layout_states = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_widget_bounds(_0: Ptr[nk_context]): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_widget_fitting(_0: Ptr[nk_rect], _1: Ptr[nk_context], _2: nk_vec2): nk_widget_layout_states = extern
 
   def nk_widget_has_mouse_click_down(_0: Ptr[nk_context], _1: nk_buttons, down: nk_bool): nk_bool = extern
 
@@ -2830,12 +2866,6 @@ object functions:
   def nk_widget_is_hovered(_0: Ptr[nk_context]): nk_bool = extern
 
   def nk_widget_is_mouse_clicked(_0: Ptr[nk_context], _1: nk_buttons): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_widget_position(_0: Ptr[nk_context]): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_widget_size(_0: Ptr[nk_context]): nk_vec2 = extern
 
   def nk_widget_width(_0: Ptr[nk_context]): Float = extern
 
@@ -2847,34 +2877,13 @@ object functions:
 
   def nk_window_find(ctx: Ptr[nk_context], name: CString): Ptr[nk_window] = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_bounds(ctx: Ptr[nk_context]): nk_rect = extern
-
   def nk_window_get_canvas(_0: Ptr[nk_context]): Ptr[nk_command_buffer] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_content_region(_0: Ptr[nk_context]): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_content_region_max(_0: Ptr[nk_context]): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_content_region_min(_0: Ptr[nk_context]): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_content_region_size(_0: Ptr[nk_context]): nk_vec2 = extern
 
   def nk_window_get_height(_0: Ptr[nk_context]): Float = extern
 
   def nk_window_get_panel(_0: Ptr[nk_context]): Ptr[nk_panel] = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_position(ctx: Ptr[nk_context]): nk_vec2 = extern
-
   def nk_window_get_scroll(_0: Ptr[nk_context], offset_x: Ptr[nk_uint], offset_y: Ptr[nk_uint]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_size(_0: Ptr[nk_context]): nk_vec2 = extern
 
   def nk_window_get_width(_0: Ptr[nk_context]): Float = extern
 
@@ -2892,20 +2901,886 @@ object functions:
 
   def nk_window_is_hovered(_0: Ptr[nk_context]): nk_bool = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_set_bounds(_0: Ptr[nk_context], name: CString, bounds: nk_rect): Unit = extern
-
   def nk_window_set_focus(_0: Ptr[nk_context], name: CString): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_set_position(_0: Ptr[nk_context], name: CString, pos: nk_vec2): Unit = extern
-
   def nk_window_set_scroll(_0: Ptr[nk_context], offset_x: nk_uint, offset_y: nk_uint): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_set_size(_0: Ptr[nk_context], name: CString, _2: nk_vec2): Unit = extern
 
   def nk_window_show(_0: Ptr[nk_context], name: CString, _2: nk_show_states): Unit = extern
 
   def nk_window_show_if(_0: Ptr[nk_context], name: CString, _2: nk_show_states, cond: CInt): Unit = extern
+
+object functions: 
+  import types.*, extern_functions.*
+
+  export extern_functions.*
+
+  def nk_begin(ctx: Ptr[nk_context], title: CString, bounds: nk_rect, flags: nk_flags)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_rect](1)
+    __sn_wrap_nk_begin(ctx, title, _ptr_2, flags)
+
+  def nk_begin_titled(ctx: Ptr[nk_context], name: CString, title: CString, bounds: nk_rect, flags: nk_flags)(using Zone): nk_bool = 
+    val _ptr_3 = alloc[nk_rect](1)
+    __sn_wrap_nk_begin_titled(ctx, name, title, _ptr_3, flags)
+
+  def nk_button_color(_0: Ptr[nk_context], _1: nk_color)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_button_color(_0, _ptr_1)
+
+  def nk_button_image(_0: Ptr[nk_context], img: nk_image)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_button_image(_0, _ptr_1)
+
+  def nk_button_image_label(_0: Ptr[nk_context], img: nk_image, _2: CString, text_alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_button_image_label(_0, _ptr_1, _2, text_alignment)
+
+  def nk_button_image_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, text_alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_image](1)
+    __sn_wrap_nk_button_image_label_styled(_0, _1, _ptr_2, _3, text_alignment)
+
+  def nk_button_image_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_image](1)
+    __sn_wrap_nk_button_image_styled(_0, _1, _ptr_2)
+
+  def nk_button_image_text(_0: Ptr[nk_context], img: nk_image, _2: CString, _3: CInt, alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_button_image_text(_0, _ptr_1, _2, _3, alignment)
+
+  def nk_button_image_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, _4: CInt, alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_image](1)
+    __sn_wrap_nk_button_image_text_styled(_0, _1, _ptr_2, _3, _4, alignment)
+
+  def nk_chart_add_slot_colored(ctx: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, count: CInt, min_value: Float, max_value: Float)(using Zone): Unit = 
+    val _ptr_2 = alloc[nk_color](1)
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_chart_add_slot_colored(ctx, _1, _ptr_2, _ptr_3, count, min_value, max_value)
+
+  def nk_chart_begin_colored(_0: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, num: CInt, min: Float, max: Float)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_color](1)
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_chart_begin_colored(_0, _1, _ptr_2, _ptr_3, num, min, max)
+
+  def nk_color_cf(_0: nk_color)(using Zone): nk_colorf = 
+    val _ptr_0 = alloc[nk_color](1)
+    val _ptr_return = alloc[nk_colorf](1)
+    __sn_wrap_nk_color_cf(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def nk_color_d(r: Ptr[Double], g: Ptr[Double], b: Ptr[Double], a: Ptr[Double], _4: nk_color)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_color_d(r, g, b, a, _ptr_4)
+
+  def nk_color_dv(rgba_out: Ptr[Double], _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_dv(rgba_out, _ptr_1)
+
+  def nk_color_f(r: Ptr[Float], g: Ptr[Float], b: Ptr[Float], a: Ptr[Float], _4: nk_color)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_color_f(r, g, b, a, _ptr_4)
+
+  def nk_color_fv(rgba_out: Ptr[Float], _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_fv(rgba_out, _ptr_1)
+
+  def nk_color_hex_rgb(output: CString, _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hex_rgb(output, _ptr_1)
+
+  def nk_color_hex_rgba(output: CString, _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hex_rgba(output, _ptr_1)
+
+  def nk_color_hsv_b(out_h: Ptr[nk_byte], out_s: Ptr[nk_byte], out_v: Ptr[nk_byte], _3: nk_color)(using Zone): Unit = 
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsv_b(out_h, out_s, out_v, _ptr_3)
+
+  def nk_color_hsv_bv(hsv_out: Ptr[nk_byte], _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsv_bv(hsv_out, _ptr_1)
+
+  def nk_color_hsv_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], _3: nk_color)(using Zone): Unit = 
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsv_f(out_h, out_s, out_v, _ptr_3)
+
+  def nk_color_hsv_fv(hsv_out: Ptr[Float], _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsv_fv(hsv_out, _ptr_1)
+
+  def nk_color_hsv_i(out_h: Ptr[CInt], out_s: Ptr[CInt], out_v: Ptr[CInt], _3: nk_color)(using Zone): Unit = 
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsv_i(out_h, out_s, out_v, _ptr_3)
+
+  def nk_color_hsv_iv(hsv_out: Ptr[CInt], _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsv_iv(hsv_out, _ptr_1)
+
+  def nk_color_hsva_b(h: Ptr[nk_byte], s: Ptr[nk_byte], v: Ptr[nk_byte], a: Ptr[nk_byte], _4: nk_color)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsva_b(h, s, v, a, _ptr_4)
+
+  def nk_color_hsva_bv(hsva_out: Ptr[nk_byte], _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsva_bv(hsva_out, _ptr_1)
+
+  def nk_color_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], _4: nk_color)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsva_f(out_h, out_s, out_v, out_a, _ptr_4)
+
+  def nk_color_hsva_fv(hsva_out: Ptr[Float], _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsva_fv(hsva_out, _ptr_1)
+
+  def nk_color_hsva_i(h: Ptr[CInt], s: Ptr[CInt], v: Ptr[CInt], a: Ptr[CInt], _4: nk_color)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsva_i(h, s, v, a, _ptr_4)
+
+  def nk_color_hsva_iv(hsva_out: Ptr[CInt], _1: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_color](1)
+    __sn_wrap_nk_color_hsva_iv(hsva_out, _ptr_1)
+
+  def nk_color_picker(_0: Ptr[nk_context], _1: nk_colorf, _2: nk_color_format)(using Zone): nk_colorf = 
+    val _ptr_1 = alloc[nk_colorf](1)
+    val _ptr_return = alloc[nk_colorf](1)
+    __sn_wrap_nk_color_picker(_0, _ptr_1, _2, _ptr_return)
+    !_ptr_return
+
+  def nk_color_u32(_0: nk_color)(using Zone): nk_uint = 
+    val _ptr_0 = alloc[nk_color](1)
+    __sn_wrap_nk_color_u32(_ptr_0)
+
+  def nk_colorf_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], in: nk_colorf)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_colorf](1)
+    __sn_wrap_nk_colorf_hsva_f(out_h, out_s, out_v, out_a, _ptr_4)
+
+  def nk_colorf_hsva_fv(hsva: Ptr[Float], in: nk_colorf)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_colorf](1)
+    __sn_wrap_nk_colorf_hsva_fv(hsva, _ptr_1)
+
+  def nk_combo(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: CInt, item_height: CInt, size: nk_vec2)(using Zone): CInt = 
+    val _ptr_5 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo(_0, items, count, selected, item_height, _ptr_5)
+
+  def nk_combo_begin_color(_0: Ptr[nk_context], color: nk_color, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_color](1)
+    val _ptr_2 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_color(_0, _ptr_1, _ptr_2)
+
+  def nk_combo_begin_image(_0: Ptr[nk_context], img: nk_image, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    val _ptr_2 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_image(_0, _ptr_1, _ptr_2)
+
+  def nk_combo_begin_image_label(_0: Ptr[nk_context], selected: CString, _2: nk_image, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_image](1)
+    val _ptr_3 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_image_label(_0, selected, _ptr_2, _ptr_3)
+
+  def nk_combo_begin_image_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_image, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_3 = alloc[nk_image](1)
+    val _ptr_4 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_image_text(_0, selected, _2, _ptr_3, _ptr_4)
+
+  def nk_combo_begin_label(_0: Ptr[nk_context], selected: CString, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_label(_0, selected, _ptr_2)
+
+  def nk_combo_begin_symbol(_0: Ptr[nk_context], _1: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_symbol(_0, _1, _ptr_2)
+
+  def nk_combo_begin_symbol_label(_0: Ptr[nk_context], selected: CString, _2: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_3 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_symbol_label(_0, selected, _2, _ptr_3)
+
+  def nk_combo_begin_symbol_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_4 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_symbol_text(_0, selected, _2, _3, _ptr_4)
+
+  def nk_combo_begin_text(_0: Ptr[nk_context], selected: CString, _2: CInt, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_3 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_begin_text(_0, selected, _2, _ptr_3)
+
+  def nk_combo_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], userdata: Ptr[Byte], selected: CInt, count: CInt, item_height: CInt, size: nk_vec2)(using Zone): CInt = 
+    val _ptr_6 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_callback(_0, item_getter, userdata, selected, count, item_height, _ptr_6)
+
+  def nk_combo_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_combo_item_image_label(_0, _ptr_1, _2, alignment)
+
+  def nk_combo_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_combo_item_image_text(_0, _ptr_1, _2, _3, alignment)
+
+  def nk_combo_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2)(using Zone): CInt = 
+    val _ptr_6 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_separator(_0, items_separated_by_separator, separator, selected, count, item_height, _ptr_6)
+
+  def nk_combo_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2)(using Zone): CInt = 
+    val _ptr_5 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combo_string(_0, items_separated_by_zeros, selected, count, item_height, _ptr_5)
+
+  def nk_combobox(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: Ptr[CInt], item_height: CInt, size: nk_vec2)(using Zone): Unit = 
+    val _ptr_5 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combobox(_0, items, count, selected, item_height, _ptr_5)
+
+  def nk_combobox_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], _2: Ptr[Byte], selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2)(using Zone): Unit = 
+    val _ptr_6 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combobox_callback(_0, item_getter, _2, selected, count, item_height, _ptr_6)
+
+  def nk_combobox_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2)(using Zone): Unit = 
+    val _ptr_6 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combobox_separator(_0, items_separated_by_separator, separator, selected, count, item_height, _ptr_6)
+
+  def nk_combobox_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2)(using Zone): Unit = 
+    val _ptr_5 = alloc[nk_vec2](1)
+    __sn_wrap_nk_combobox_string(_0, items_separated_by_zeros, selected, count, item_height, _ptr_5)
+
+  def nk_contextual_begin(_0: Ptr[nk_context], _1: nk_flags, _2: nk_vec2, trigger_bounds: nk_rect)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_vec2](1)
+    val _ptr_3 = alloc[nk_rect](1)
+    __sn_wrap_nk_contextual_begin(_0, _1, _ptr_2, _ptr_3)
+
+  def nk_contextual_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_contextual_item_image_label(_0, _ptr_1, _2, alignment)
+
+  def nk_contextual_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_contextual_item_image_text(_0, _ptr_1, _2, len, alignment)
+
+  def nk_draw_image(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_image], _3: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_draw_image(_0, _ptr_1, _2, _ptr_3)
+
+  def nk_draw_nine_slice(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_nine_slice], _3: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_draw_nine_slice(_0, _ptr_1, _2, _ptr_3)
+
+  def nk_draw_text(_0: Ptr[nk_command_buffer], _1: nk_rect, text: CString, len: CInt, _4: Ptr[nk_user_font], _5: nk_color, _6: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_5 = alloc[nk_color](1)
+    val _ptr_6 = alloc[nk_color](1)
+    __sn_wrap_nk_draw_text(_0, _ptr_1, text, len, _4, _ptr_5, _ptr_6)
+
+  def nk_fill_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, _6: nk_color)(using Zone): Unit = 
+    val _ptr_6 = alloc[nk_color](1)
+    __sn_wrap_nk_fill_arc(_0, cx, cy, radius, a_min, a_max, _ptr_6)
+
+  def nk_fill_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_2 = alloc[nk_color](1)
+    __sn_wrap_nk_fill_circle(_0, _ptr_1, _ptr_2)
+
+  def nk_fill_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, _3: nk_color)(using Zone): Unit = 
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_fill_polygon(_0, _1, point_count, _ptr_3)
+
+  def nk_fill_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, _3: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_fill_rect(_0, _ptr_1, rounding, _ptr_3)
+
+  def nk_fill_rect_multi_color(_0: Ptr[nk_command_buffer], _1: nk_rect, left: nk_color, top: nk_color, right: nk_color, bottom: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_2 = alloc[nk_color](1)
+    val _ptr_3 = alloc[nk_color](1)
+    val _ptr_4 = alloc[nk_color](1)
+    val _ptr_5 = alloc[nk_color](1)
+    __sn_wrap_nk_fill_rect_multi_color(_0, _ptr_1, _ptr_2, _ptr_3, _ptr_4, _ptr_5)
+
+  def nk_fill_triangle(_0: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, _7: nk_color)(using Zone): Unit = 
+    val _ptr_7 = alloc[nk_color](1)
+    __sn_wrap_nk_fill_triangle(_0, x0, y0, x1, y1, x2, y2, _ptr_7)
+
+  def nk_get_null_rect()(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_get_null_rect(_ptr_return)
+    !_ptr_return
+
+  def nk_hsv(h: CInt, s: CInt, v: CInt)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsv(h, s, v, _ptr_return)
+    !_ptr_return
+
+  def nk_hsv_bv(hsv: Ptr[nk_byte])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsv_bv(hsv, _ptr_return)
+    !_ptr_return
+
+  def nk_hsv_f(h: Float, s: Float, v: Float)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsv_f(h, s, v, _ptr_return)
+    !_ptr_return
+
+  def nk_hsv_fv(hsv: Ptr[Float])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsv_fv(hsv, _ptr_return)
+    !_ptr_return
+
+  def nk_hsv_iv(hsv: Ptr[CInt])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsv_iv(hsv, _ptr_return)
+    !_ptr_return
+
+  def nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsva(h, s, v, a, _ptr_return)
+    !_ptr_return
+
+  def nk_hsva_bv(hsva: Ptr[nk_byte])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsva_bv(hsva, _ptr_return)
+    !_ptr_return
+
+  def nk_hsva_colorf(h: Float, s: Float, v: Float, a: Float)(using Zone): nk_colorf = 
+    val _ptr_return = alloc[nk_colorf](1)
+    __sn_wrap_nk_hsva_colorf(h, s, v, a, _ptr_return)
+    !_ptr_return
+
+  def nk_hsva_colorfv(c: Ptr[Float])(using Zone): nk_colorf = 
+    val _ptr_return = alloc[nk_colorf](1)
+    __sn_wrap_nk_hsva_colorfv(c, _ptr_return)
+    !_ptr_return
+
+  def nk_hsva_f(h: Float, s: Float, v: Float, a: Float)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsva_f(h, s, v, a, _ptr_return)
+    !_ptr_return
+
+  def nk_hsva_fv(hsva: Ptr[Float])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsva_fv(hsva, _ptr_return)
+    !_ptr_return
+
+  def nk_hsva_iv(hsva: Ptr[CInt])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_hsva_iv(hsva, _ptr_return)
+    !_ptr_return
+
+  def nk_image(_0: Ptr[nk_context], _1: nk_image)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_image(_0, _ptr_1)
+
+  def nk_image_color(_0: Ptr[nk_context], _1: nk_image, _2: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_image](1)
+    val _ptr_2 = alloc[nk_color](1)
+    __sn_wrap_nk_image_color(_0, _ptr_1, _ptr_2)
+
+  def nk_image_handle(_0: nk_handle)(using Zone): nk_image = 
+    val _ptr_return = alloc[nk_image](1)
+    __sn_wrap_nk_image_handle(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_image_id(_0: CInt)(using Zone): nk_image = 
+    val _ptr_return = alloc[nk_image](1)
+    __sn_wrap_nk_image_id(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_image_ptr(_0: Ptr[Byte])(using Zone): nk_image = 
+    val _ptr_return = alloc[nk_image](1)
+    __sn_wrap_nk_image_ptr(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_input_any_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_rect)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_rect](1)
+    __sn_wrap_nk_input_any_mouse_click_in_rect(_0, _ptr_1)
+
+  def nk_input_has_mouse_click_down_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect, down: nk_bool)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_rect](1)
+    __sn_wrap_nk_input_has_mouse_click_down_in_rect(_0, _1, _ptr_2, down)
+
+  def nk_input_has_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_rect](1)
+    __sn_wrap_nk_input_has_mouse_click_in_rect(_0, _1, _ptr_2)
+
+  def nk_input_is_mouse_click_down_in_rect(i: Ptr[nk_input], id: nk_buttons, b: nk_rect, down: nk_bool)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_rect](1)
+    __sn_wrap_nk_input_is_mouse_click_down_in_rect(i, id, _ptr_2, down)
+
+  def nk_input_is_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_rect](1)
+    __sn_wrap_nk_input_is_mouse_click_in_rect(_0, _1, _ptr_2)
+
+  def nk_input_is_mouse_hovering_rect(_0: Ptr[nk_input], _1: nk_rect)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_rect](1)
+    __sn_wrap_nk_input_is_mouse_hovering_rect(_0, _ptr_1)
+
+  def nk_input_is_mouse_prev_hovering_rect(_0: Ptr[nk_input], _1: nk_rect)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_rect](1)
+    __sn_wrap_nk_input_is_mouse_prev_hovering_rect(_0, _ptr_1)
+
+  def nk_input_mouse_clicked(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_rect](1)
+    __sn_wrap_nk_input_mouse_clicked(_0, _1, _ptr_2)
+
+  def nk_input_scroll(_0: Ptr[nk_context], `val`: nk_vec2)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_vec2](1)
+    __sn_wrap_nk_input_scroll(_0, _ptr_1)
+
+  def nk_label_colored(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_color)(using Zone): Unit = 
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_label_colored(_0, _1, align, _ptr_3)
+
+  def nk_label_colored_wrap(_0: Ptr[nk_context], _1: CString, _2: nk_color)(using Zone): Unit = 
+    val _ptr_2 = alloc[nk_color](1)
+    __sn_wrap_nk_label_colored_wrap(_0, _1, _ptr_2)
+
+  def nk_layout_space_bounds(_0: Ptr[nk_context])(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_layout_space_bounds(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_layout_space_push(_0: Ptr[nk_context], bounds: nk_rect)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    __sn_wrap_nk_layout_space_push(_0, _ptr_1)
+
+  def nk_layout_space_rect_to_local(_0: Ptr[nk_context], _1: nk_rect)(using Zone): nk_rect = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_layout_space_rect_to_local(_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def nk_layout_space_rect_to_screen(_0: Ptr[nk_context], _1: nk_rect)(using Zone): nk_rect = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_layout_space_rect_to_screen(_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def nk_layout_space_to_local(_0: Ptr[nk_context], _1: nk_vec2)(using Zone): nk_vec2 = 
+    val _ptr_1 = alloc[nk_vec2](1)
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_layout_space_to_local(_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def nk_layout_space_to_screen(_0: Ptr[nk_context], _1: nk_vec2)(using Zone): nk_vec2 = 
+    val _ptr_1 = alloc[nk_vec2](1)
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_layout_space_to_screen(_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def nk_layout_widget_bounds(_0: Ptr[nk_context])(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_layout_widget_bounds(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_menu_begin_image(_0: Ptr[nk_context], _1: CString, _2: nk_image, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_image](1)
+    val _ptr_3 = alloc[nk_vec2](1)
+    __sn_wrap_nk_menu_begin_image(_0, _1, _ptr_2, _ptr_3)
+
+  def nk_menu_begin_image_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_image, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_3 = alloc[nk_image](1)
+    val _ptr_4 = alloc[nk_vec2](1)
+    __sn_wrap_nk_menu_begin_image_label(_0, _1, align, _ptr_3, _ptr_4)
+
+  def nk_menu_begin_image_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_image, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_4 = alloc[nk_image](1)
+    val _ptr_5 = alloc[nk_vec2](1)
+    __sn_wrap_nk_menu_begin_image_text(_0, _1, _2, align, _ptr_4, _ptr_5)
+
+  def nk_menu_begin_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_3 = alloc[nk_vec2](1)
+    __sn_wrap_nk_menu_begin_label(_0, _1, align, _ptr_3)
+
+  def nk_menu_begin_symbol(_0: Ptr[nk_context], _1: CString, _2: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_3 = alloc[nk_vec2](1)
+    __sn_wrap_nk_menu_begin_symbol(_0, _1, _2, _ptr_3)
+
+  def nk_menu_begin_symbol_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_4 = alloc[nk_vec2](1)
+    __sn_wrap_nk_menu_begin_symbol_label(_0, _1, align, _3, _ptr_4)
+
+  def nk_menu_begin_symbol_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_5 = alloc[nk_vec2](1)
+    __sn_wrap_nk_menu_begin_symbol_text(_0, _1, _2, align, _4, _ptr_5)
+
+  def nk_menu_begin_text(_0: Ptr[nk_context], title: CString, title_len: CInt, align: nk_flags, size: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_4 = alloc[nk_vec2](1)
+    __sn_wrap_nk_menu_begin_text(_0, title, title_len, align, _ptr_4)
+
+  def nk_menu_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_menu_item_image_label(_0, _ptr_1, _2, alignment)
+
+  def nk_menu_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_menu_item_image_text(_0, _ptr_1, _2, len, alignment)
+
+  def nk_nine_slice_handle(_0: nk_handle, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
+    val _ptr_return = alloc[nk_nine_slice](1)
+    __sn_wrap_nk_nine_slice_handle(_0, l, t, r, b, _ptr_return)
+    !_ptr_return
+
+  def nk_nine_slice_id(_0: CInt, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
+    val _ptr_return = alloc[nk_nine_slice](1)
+    __sn_wrap_nk_nine_slice_id(_0, l, t, r, b, _ptr_return)
+    !_ptr_return
+
+  def nk_nine_slice_ptr(_0: Ptr[Byte], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
+    val _ptr_return = alloc[nk_nine_slice](1)
+    __sn_wrap_nk_nine_slice_ptr(_0, l, t, r, b, _ptr_return)
+    !_ptr_return
+
+  def nk_popup_begin(_0: Ptr[nk_context], _1: nk_popup_type, _2: CString, _3: nk_flags, bounds: nk_rect)(using Zone): nk_bool = 
+    val _ptr_4 = alloc[nk_rect](1)
+    __sn_wrap_nk_popup_begin(_0, _1, _2, _3, _ptr_4)
+
+  def nk_push_custom(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_command_custom_callback, usr: nk_handle)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    __sn_wrap_nk_push_custom(_0, _ptr_1, _2, usr)
+
+  def nk_push_scissor(_0: Ptr[nk_command_buffer], _1: nk_rect)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    __sn_wrap_nk_push_scissor(_0, _ptr_1)
+
+  def nk_rect(x: Float, y: Float, w: Float, h: Float)(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_rect(x, y, w, h, _ptr_return)
+    !_ptr_return
+
+  def nk_rect_pos(_0: nk_rect)(using Zone): nk_vec2 = 
+    val _ptr_0 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_rect_pos(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def nk_rect_size(_0: nk_rect)(using Zone): nk_vec2 = 
+    val _ptr_0 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_rect_size(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def nk_recta(pos: nk_vec2, size: nk_vec2)(using Zone): nk_rect = 
+    val _ptr_0 = alloc[nk_vec2](1)
+    val _ptr_1 = alloc[nk_vec2](1)
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_recta(_ptr_0, _ptr_1, _ptr_return)
+    !_ptr_return
+
+  def nk_recti(x: CInt, y: CInt, w: CInt, h: CInt)(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_recti(x, y, w, h, _ptr_return)
+    !_ptr_return
+
+  def nk_rectiv(xywh: Ptr[CInt])(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_rectiv(xywh, _ptr_return)
+    !_ptr_return
+
+  def nk_rectv(xywh: Ptr[Float])(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_rectv(xywh, _ptr_return)
+    !_ptr_return
+
+  def nk_rgb(r: CInt, g: CInt, b: CInt)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgb(r, g, b, _ptr_return)
+    !_ptr_return
+
+  def nk_rgb_bv(rgb: Ptr[nk_byte])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgb_bv(rgb, _ptr_return)
+    !_ptr_return
+
+  def nk_rgb_cf(c: nk_colorf)(using Zone): nk_color = 
+    val _ptr_0 = alloc[nk_colorf](1)
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgb_cf(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def nk_rgb_f(r: Float, g: Float, b: Float)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgb_f(r, g, b, _ptr_return)
+    !_ptr_return
+
+  def nk_rgb_fv(rgb: Ptr[Float])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgb_fv(rgb, _ptr_return)
+    !_ptr_return
+
+  def nk_rgb_hex(rgb: CString)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgb_hex(rgb, _ptr_return)
+    !_ptr_return
+
+  def nk_rgb_iv(rgb: Ptr[CInt])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgb_iv(rgb, _ptr_return)
+    !_ptr_return
+
+  def nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgba(r, g, b, a, _ptr_return)
+    !_ptr_return
+
+  def nk_rgba_bv(rgba: Ptr[nk_byte])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgba_bv(rgba, _ptr_return)
+    !_ptr_return
+
+  def nk_rgba_cf(c: nk_colorf)(using Zone): nk_color = 
+    val _ptr_0 = alloc[nk_colorf](1)
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgba_cf(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def nk_rgba_f(r: Float, g: Float, b: Float, a: Float)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgba_f(r, g, b, a, _ptr_return)
+    !_ptr_return
+
+  def nk_rgba_fv(rgba: Ptr[Float])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgba_fv(rgba, _ptr_return)
+    !_ptr_return
+
+  def nk_rgba_hex(rgb: CString)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgba_hex(rgb, _ptr_return)
+    !_ptr_return
+
+  def nk_rgba_iv(rgba: Ptr[CInt])(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgba_iv(rgba, _ptr_return)
+    !_ptr_return
+
+  def nk_rgba_u32(_0: nk_uint)(using Zone): nk_color = 
+    val _ptr_return = alloc[nk_color](1)
+    __sn_wrap_nk_rgba_u32(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_select_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: nk_bool)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_select_image_label(_0, _ptr_1, _2, align, value)
+
+  def nk_select_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: nk_bool)(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_select_image_text(_0, _ptr_1, _2, _3, align, value)
+
+  def nk_selectable_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: Ptr[nk_bool])(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_selectable_image_label(_0, _ptr_1, _2, align, value)
+
+  def nk_selectable_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool])(using Zone): nk_bool = 
+    val _ptr_1 = alloc[nk_image](1)
+    __sn_wrap_nk_selectable_image_text(_0, _ptr_1, _2, _3, align, value)
+
+  def nk_stroke_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, line_thickness: Float, _7: nk_color)(using Zone): Unit = 
+    val _ptr_7 = alloc[nk_color](1)
+    __sn_wrap_nk_stroke_arc(_0, cx, cy, radius, a_min, a_max, line_thickness, _ptr_7)
+
+  def nk_stroke_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, line_thickness: Float, _3: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_stroke_circle(_0, _ptr_1, line_thickness, _ptr_3)
+
+  def nk_stroke_curve(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, _7: Float, _8: Float, line_thickness: Float, _10: nk_color)(using Zone): Unit = 
+    val _ptr_10 = alloc[nk_color](1)
+    __sn_wrap_nk_stroke_curve(_0, _1, _2, _3, _4, _5, _6, _7, _8, line_thickness, _ptr_10)
+
+  def nk_stroke_line(b: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, line_thickness: Float, _6: nk_color)(using Zone): Unit = 
+    val _ptr_6 = alloc[nk_color](1)
+    __sn_wrap_nk_stroke_line(b, x0, y0, x1, y1, line_thickness, _ptr_6)
+
+  def nk_stroke_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, line_thickness: Float, _4: nk_color)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_stroke_polygon(_0, _1, point_count, line_thickness, _ptr_4)
+
+  def nk_stroke_polyline(_0: Ptr[nk_command_buffer], points: Ptr[Float], point_count: CInt, line_thickness: Float, col: nk_color)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_stroke_polyline(_0, points, point_count, line_thickness, _ptr_4)
+
+  def nk_stroke_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, line_thickness: Float, _4: nk_color)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_stroke_rect(_0, _ptr_1, rounding, line_thickness, _ptr_4)
+
+  def nk_stroke_triangle(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, line_thichness: Float, _8: nk_color)(using Zone): Unit = 
+    val _ptr_8 = alloc[nk_color](1)
+    __sn_wrap_nk_stroke_triangle(_0, _1, _2, _3, _4, _5, _6, line_thichness, _ptr_8)
+
+  def nk_style_item_color(_0: nk_color)(using Zone): nk_style_item = 
+    val _ptr_0 = alloc[nk_color](1)
+    val _ptr_return = alloc[nk_style_item](1)
+    __sn_wrap_nk_style_item_color(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def nk_style_item_hide()(using Zone): nk_style_item = 
+    val _ptr_return = alloc[nk_style_item](1)
+    __sn_wrap_nk_style_item_hide(_ptr_return)
+    !_ptr_return
+
+  def nk_style_item_image(img: nk_image)(using Zone): nk_style_item = 
+    val _ptr_0 = alloc[nk_image](1)
+    val _ptr_return = alloc[nk_style_item](1)
+    __sn_wrap_nk_style_item_image(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def nk_style_item_nine_slice(slice: nk_nine_slice)(using Zone): nk_style_item = 
+    val _ptr_0 = alloc[nk_nine_slice](1)
+    val _ptr_return = alloc[nk_style_item](1)
+    __sn_wrap_nk_style_item_nine_slice(_ptr_0, _ptr_return)
+    !_ptr_return
+
+  def nk_style_push_color(_0: Ptr[nk_context], _1: Ptr[nk_color], _2: nk_color)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_color](1)
+    __sn_wrap_nk_style_push_color(_0, _1, _ptr_2)
+
+  def nk_style_push_style_item(_0: Ptr[nk_context], _1: Ptr[nk_style_item], _2: nk_style_item)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_style_item](1)
+    __sn_wrap_nk_style_push_style_item(_0, _1, _ptr_2)
+
+  def nk_style_push_vec2(_0: Ptr[nk_context], _1: Ptr[nk_vec2], _2: nk_vec2)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_vec2](1)
+    __sn_wrap_nk_style_push_vec2(_0, _1, _ptr_2)
+
+  def nk_sub9slice_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
+    val _ptr_3 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_nine_slice](1)
+    __sn_wrap_nk_sub9slice_handle(_0, w, h, _ptr_3, l, t, r, b, _ptr_return)
+    !_ptr_return
+
+  def nk_sub9slice_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
+    val _ptr_3 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_nine_slice](1)
+    __sn_wrap_nk_sub9slice_id(_0, w, h, _ptr_3, l, t, r, b, _ptr_return)
+    !_ptr_return
+
+  def nk_sub9slice_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
+    val _ptr_3 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_nine_slice](1)
+    __sn_wrap_nk_sub9slice_ptr(_0, w, h, _ptr_3, l, t, r, b, _ptr_return)
+    !_ptr_return
+
+  def nk_subimage_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect)(using Zone): nk_image = 
+    val _ptr_3 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_image](1)
+    __sn_wrap_nk_subimage_handle(_0, w, h, _ptr_3, _ptr_return)
+    !_ptr_return
+
+  def nk_subimage_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect)(using Zone): nk_image = 
+    val _ptr_3 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_image](1)
+    __sn_wrap_nk_subimage_id(_0, w, h, _ptr_3, _ptr_return)
+    !_ptr_return
+
+  def nk_subimage_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: nk_rect)(using Zone): nk_image = 
+    val _ptr_3 = alloc[nk_rect](1)
+    val _ptr_return = alloc[nk_image](1)
+    __sn_wrap_nk_subimage_ptr(_0, w, h, _ptr_3, _ptr_return)
+    !_ptr_return
+
+  def nk_text_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags, _4: nk_color)(using Zone): Unit = 
+    val _ptr_4 = alloc[nk_color](1)
+    __sn_wrap_nk_text_colored(_0, _1, _2, _3, _ptr_4)
+
+  def nk_text_wrap_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_color)(using Zone): Unit = 
+    val _ptr_3 = alloc[nk_color](1)
+    __sn_wrap_nk_text_wrap_colored(_0, _1, _2, _ptr_3)
+
+  def nk_tree_element_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_image](1)
+    __sn_wrap_nk_tree_element_image_push_hashed(_0, _1, _ptr_2, title, initial_state, selected, hash, len, seed)
+
+  def nk_tree_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt)(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_image](1)
+    __sn_wrap_nk_tree_image_push_hashed(_0, _1, _ptr_2, title, initial_state, hash, len, seed)
+
+  def nk_tree_state_image_push(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, state: Ptr[nk_collapse_states])(using Zone): nk_bool = 
+    val _ptr_2 = alloc[nk_image](1)
+    __sn_wrap_nk_tree_state_image_push(_0, _1, _ptr_2, title, state)
+
+  def nk_triangle_from_direction(result: Ptr[nk_vec2], r: nk_rect, pad_x: Float, pad_y: Float, _4: nk_heading)(using Zone): Unit = 
+    val _ptr_1 = alloc[nk_rect](1)
+    __sn_wrap_nk_triangle_from_direction(result, _ptr_1, pad_x, pad_y, _4)
+
+  def nk_vec2(x: Float, y: Float)(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_vec2(x, y, _ptr_return)
+    !_ptr_return
+
+  def nk_vec2i(x: CInt, y: CInt)(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_vec2i(x, y, _ptr_return)
+    !_ptr_return
+
+  def nk_vec2iv(xy: Ptr[CInt])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_vec2iv(xy, _ptr_return)
+    !_ptr_return
+
+  def nk_vec2v(xy: Ptr[Float])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_vec2v(xy, _ptr_return)
+    !_ptr_return
+
+  def nk_widget_bounds(_0: Ptr[nk_context])(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_widget_bounds(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_widget_fitting(_0: Ptr[nk_rect], _1: Ptr[nk_context], _2: nk_vec2)(using Zone): nk_widget_layout_states = 
+    val _ptr_2 = alloc[nk_vec2](1)
+    __sn_wrap_nk_widget_fitting(_0, _1, _ptr_2)
+
+  def nk_widget_position(_0: Ptr[nk_context])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_widget_position(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_widget_size(_0: Ptr[nk_context])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_widget_size(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_window_get_bounds(ctx: Ptr[nk_context])(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_window_get_bounds(ctx, _ptr_return)
+    !_ptr_return
+
+  def nk_window_get_content_region(_0: Ptr[nk_context])(using Zone): nk_rect = 
+    val _ptr_return = alloc[nk_rect](1)
+    __sn_wrap_nk_window_get_content_region(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_window_get_content_region_max(_0: Ptr[nk_context])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_window_get_content_region_max(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_window_get_content_region_min(_0: Ptr[nk_context])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_window_get_content_region_min(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_window_get_content_region_size(_0: Ptr[nk_context])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_window_get_content_region_size(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_window_get_position(ctx: Ptr[nk_context])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_window_get_position(ctx, _ptr_return)
+    !_ptr_return
+
+  def nk_window_get_size(_0: Ptr[nk_context])(using Zone): nk_vec2 = 
+    val _ptr_return = alloc[nk_vec2](1)
+    __sn_wrap_nk_window_get_size(_0, _ptr_return)
+    !_ptr_return
+
+  def nk_window_set_bounds(_0: Ptr[nk_context], name: CString, bounds: nk_rect)(using Zone): Unit = 
+    val _ptr_2 = alloc[nk_rect](1)
+    __sn_wrap_nk_window_set_bounds(_0, name, _ptr_2)
+
+  def nk_window_set_position(_0: Ptr[nk_context], name: CString, pos: nk_vec2)(using Zone): Unit = 
+    val _ptr_2 = alloc[nk_vec2](1)
+    __sn_wrap_nk_window_set_position(_0, name, _ptr_2)
+
+  def nk_window_set_size(_0: Ptr[nk_context], name: CString, _2: nk_vec2)(using Zone): Unit = 
+    val _ptr_2 = alloc[nk_vec2](1)
+    __sn_wrap_nk_window_set_size(_0, name, _ptr_2)
+
 
