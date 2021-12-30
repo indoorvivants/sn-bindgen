@@ -1367,29 +1367,38 @@ object types:
     given _tag: Tag[CXCodeCompleteResults] = Tag.materializeCStruct2Tag[Ptr[CXCompletionResult], CUnsignedInt]
     extension (struct: CXCodeCompleteResults)
       def Results: Ptr[CXCompletionResult] = struct._1
+      def Results_=(value: Ptr[CXCompletionResult]): Unit = !struct.at1 = value
       def NumResults: CUnsignedInt = struct._2
+      def NumResults_=(value: CUnsignedInt): Unit = !struct.at2 = value
 
   opaque type CXCompletionResult = CStruct2[CXCursorKind, CXCompletionString]
   object CXCompletionResult:
     given _tag: Tag[CXCompletionResult] = Tag.materializeCStruct2Tag[CXCursorKind, CXCompletionString]
     extension (struct: CXCompletionResult)
       def CursorKind: CXCursorKind = struct._1
+      def CursorKind_=(value: CXCursorKind): Unit = !struct.at1 = value
       def CompletionString: CXCompletionString = struct._2
+      def CompletionString_=(value: CXCompletionString): Unit = !struct.at2 = value
 
   opaque type CXCursor = CStruct3[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
   object CXCursor:
     given _tag: Tag[CXCursor] = Tag.materializeCStruct3Tag[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
     extension (struct: CXCursor)
       def kind: CXCursorKind = struct._1
+      def kind_=(value: CXCursorKind): Unit = !struct.at1 = value
       def xdata: CInt = struct._2
+      def xdata_=(value: CInt): Unit = !struct.at2 = value
       def data: CArray[Ptr[Byte], Nat._3] = struct._3
+      def data_=(value: CArray[Ptr[Byte], Nat._3]): Unit = !struct.at3 = value
 
   opaque type CXCursorAndRangeVisitor = CStruct2[Ptr[Byte], Ptr[CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]]]
   object CXCursorAndRangeVisitor:
     given _tag: Tag[CXCursorAndRangeVisitor] = Tag.materializeCStruct2Tag[Ptr[Byte], Ptr[CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]]]
     extension (struct: CXCursorAndRangeVisitor)
       def context: Ptr[Byte] = struct._1
+      def context_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def visit: Ptr[CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]] = struct._2
+      def visit_=(value: Ptr[CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]]): Unit = !struct.at2 = value
 
   opaque type CXCursorSetImpl = CStruct0
   object CXCursorSetImpl:
@@ -1400,211 +1409,302 @@ object types:
     given _tag: Tag[CXFileUniqueID] = Tag.materializeCStruct1Tag[CArray[CUnsignedLongLong, Nat._3]]
     extension (struct: CXFileUniqueID)
       def data: CArray[CUnsignedLongLong, Nat._3] = struct._1
+      def data_=(value: CArray[CUnsignedLongLong, Nat._3]): Unit = !struct.at1 = value
 
   opaque type CXIdxAttrInfo = CStruct3[CXIdxAttrKind, CXCursor, CXIdxLoc]
   object CXIdxAttrInfo:
     given _tag: Tag[CXIdxAttrInfo] = Tag.materializeCStruct3Tag[CXIdxAttrKind, CXCursor, CXIdxLoc]
     extension (struct: CXIdxAttrInfo)
       def kind: CXIdxAttrKind = struct._1
+      def kind_=(value: CXIdxAttrKind): Unit = !struct.at1 = value
       def cursor: CXCursor = struct._2
+      def cursor_=(value: CXCursor): Unit = !struct.at2 = value
       def loc: CXIdxLoc = struct._3
+      def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
 
   opaque type CXIdxBaseClassInfo = CStruct3[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
   object CXIdxBaseClassInfo:
     given _tag: Tag[CXIdxBaseClassInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
     extension (struct: CXIdxBaseClassInfo)
       def base: Ptr[CXIdxEntityInfo] = struct._1
+      def base_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at1 = value
       def cursor: CXCursor = struct._2
+      def cursor_=(value: CXCursor): Unit = !struct.at2 = value
       def loc: CXIdxLoc = struct._3
+      def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
 
   opaque type CXIdxCXXClassDeclInfo = CStruct3[Ptr[CXIdxDeclInfo], Ptr[Ptr[CXIdxBaseClassInfo]], CUnsignedInt]
   object CXIdxCXXClassDeclInfo:
     given _tag: Tag[CXIdxCXXClassDeclInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxDeclInfo], Ptr[Ptr[CXIdxBaseClassInfo]], CUnsignedInt]
     extension (struct: CXIdxCXXClassDeclInfo)
       def declInfo: Ptr[CXIdxDeclInfo] = struct._1
+      def declInfo_=(value: Ptr[CXIdxDeclInfo]): Unit = !struct.at1 = value
       def bases: Ptr[Ptr[CXIdxBaseClassInfo]] = struct._2
+      def bases_=(value: Ptr[Ptr[CXIdxBaseClassInfo]]): Unit = !struct.at2 = value
       def numBases: CUnsignedInt = struct._3
+      def numBases_=(value: CUnsignedInt): Unit = !struct.at3 = value
 
   opaque type CXIdxContainerInfo = CStruct1[CXCursor]
   object CXIdxContainerInfo:
     given _tag: Tag[CXIdxContainerInfo] = Tag.materializeCStruct1Tag[CXCursor]
     extension (struct: CXIdxContainerInfo)
       def cursor: CXCursor = struct._1
+      def cursor_=(value: CXCursor): Unit = !struct.at1 = value
 
   opaque type CXIdxDeclInfo = CStruct13[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxContainerInfo], Ptr[CXIdxContainerInfo], CInt, CInt, CInt, Ptr[CXIdxContainerInfo], CInt, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt, CUnsignedInt]
   object CXIdxDeclInfo:
     given _tag: Tag[CXIdxDeclInfo] = Tag.materializeCStruct13Tag[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxContainerInfo], Ptr[CXIdxContainerInfo], CInt, CInt, CInt, Ptr[CXIdxContainerInfo], CInt, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt, CUnsignedInt]
     extension (struct: CXIdxDeclInfo)
       def entityInfo: Ptr[CXIdxEntityInfo] = struct._1
+      def entityInfo_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at1 = value
       def cursor: CXCursor = struct._2
+      def cursor_=(value: CXCursor): Unit = !struct.at2 = value
       def loc: CXIdxLoc = struct._3
+      def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
       def semanticContainer: Ptr[CXIdxContainerInfo] = struct._4
+      def semanticContainer_=(value: Ptr[CXIdxContainerInfo]): Unit = !struct.at4 = value
       def lexicalContainer: Ptr[CXIdxContainerInfo] = struct._5
+      def lexicalContainer_=(value: Ptr[CXIdxContainerInfo]): Unit = !struct.at5 = value
       def isRedeclaration: CInt = struct._6
+      def isRedeclaration_=(value: CInt): Unit = !struct.at6 = value
       def isDefinition: CInt = struct._7
+      def isDefinition_=(value: CInt): Unit = !struct.at7 = value
       def isContainer: CInt = struct._8
+      def isContainer_=(value: CInt): Unit = !struct.at8 = value
       def declAsContainer: Ptr[CXIdxContainerInfo] = struct._9
+      def declAsContainer_=(value: Ptr[CXIdxContainerInfo]): Unit = !struct.at9 = value
       def isImplicit: CInt = struct._10
+      def isImplicit_=(value: CInt): Unit = !struct.at10 = value
       def attributes: Ptr[Ptr[CXIdxAttrInfo]] = struct._11
+      def attributes_=(value: Ptr[Ptr[CXIdxAttrInfo]]): Unit = !struct.at11 = value
       def numAttributes: CUnsignedInt = struct._12
+      def numAttributes_=(value: CUnsignedInt): Unit = !struct.at12 = value
       def flags: CUnsignedInt = struct._13
+      def flags_=(value: CUnsignedInt): Unit = !struct.at13 = value
 
   opaque type CXIdxEntityInfo = CStruct8[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, CString, CString, CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
   object CXIdxEntityInfo:
     given _tag: Tag[CXIdxEntityInfo] = Tag.materializeCStruct8Tag[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, CString, CString, CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
     extension (struct: CXIdxEntityInfo)
       def kind: CXIdxEntityKind = struct._1
+      def kind_=(value: CXIdxEntityKind): Unit = !struct.at1 = value
       def templateKind: CXIdxEntityCXXTemplateKind = struct._2
+      def templateKind_=(value: CXIdxEntityCXXTemplateKind): Unit = !struct.at2 = value
       def lang: CXIdxEntityLanguage = struct._3
+      def lang_=(value: CXIdxEntityLanguage): Unit = !struct.at3 = value
       def name: CString = struct._4
+      def name_=(value: CString): Unit = !struct.at4 = value
       def USR: CString = struct._5
+      def USR_=(value: CString): Unit = !struct.at5 = value
       def cursor: CXCursor = struct._6
+      def cursor_=(value: CXCursor): Unit = !struct.at6 = value
       def attributes: Ptr[Ptr[CXIdxAttrInfo]] = struct._7
+      def attributes_=(value: Ptr[Ptr[CXIdxAttrInfo]]): Unit = !struct.at7 = value
       def numAttributes: CUnsignedInt = struct._8
+      def numAttributes_=(value: CUnsignedInt): Unit = !struct.at8 = value
 
   opaque type CXIdxEntityRefInfo = CStruct7[CXIdxEntityRefKind, CXCursor, CXIdxLoc, Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxContainerInfo], CXSymbolRole]
   object CXIdxEntityRefInfo:
     given _tag: Tag[CXIdxEntityRefInfo] = Tag.materializeCStruct7Tag[CXIdxEntityRefKind, CXCursor, CXIdxLoc, Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxContainerInfo], CXSymbolRole]
     extension (struct: CXIdxEntityRefInfo)
       def kind: CXIdxEntityRefKind = struct._1
+      def kind_=(value: CXIdxEntityRefKind): Unit = !struct.at1 = value
       def cursor: CXCursor = struct._2
+      def cursor_=(value: CXCursor): Unit = !struct.at2 = value
       def loc: CXIdxLoc = struct._3
+      def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
       def referencedEntity: Ptr[CXIdxEntityInfo] = struct._4
+      def referencedEntity_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at4 = value
       def parentEntity: Ptr[CXIdxEntityInfo] = struct._5
+      def parentEntity_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at5 = value
       def container: Ptr[CXIdxContainerInfo] = struct._6
+      def container_=(value: Ptr[CXIdxContainerInfo]): Unit = !struct.at6 = value
       def role: CXSymbolRole = struct._7
+      def role_=(value: CXSymbolRole): Unit = !struct.at7 = value
 
   opaque type CXIdxIBOutletCollectionAttrInfo = CStruct4[Ptr[CXIdxAttrInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
   object CXIdxIBOutletCollectionAttrInfo:
     given _tag: Tag[CXIdxIBOutletCollectionAttrInfo] = Tag.materializeCStruct4Tag[Ptr[CXIdxAttrInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
     extension (struct: CXIdxIBOutletCollectionAttrInfo)
       def attrInfo: Ptr[CXIdxAttrInfo] = struct._1
+      def attrInfo_=(value: Ptr[CXIdxAttrInfo]): Unit = !struct.at1 = value
       def objcClass: Ptr[CXIdxEntityInfo] = struct._2
+      def objcClass_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at2 = value
       def classCursor: CXCursor = struct._3
+      def classCursor_=(value: CXCursor): Unit = !struct.at3 = value
       def classLoc: CXIdxLoc = struct._4
+      def classLoc_=(value: CXIdxLoc): Unit = !struct.at4 = value
 
   opaque type CXIdxImportedASTFileInfo = CStruct4[CXFile, CXModule, CXIdxLoc, CInt]
   object CXIdxImportedASTFileInfo:
     given _tag: Tag[CXIdxImportedASTFileInfo] = Tag.materializeCStruct4Tag[CXFile, CXModule, CXIdxLoc, CInt]
     extension (struct: CXIdxImportedASTFileInfo)
       def file: CXFile = struct._1
+      def file_=(value: CXFile): Unit = !struct.at1 = value
       def module: CXModule = struct._2
+      def module_=(value: CXModule): Unit = !struct.at2 = value
       def loc: CXIdxLoc = struct._3
+      def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
       def isImplicit: CInt = struct._4
+      def isImplicit_=(value: CInt): Unit = !struct.at4 = value
 
   opaque type CXIdxIncludedFileInfo = CStruct6[CXIdxLoc, CString, CXFile, CInt, CInt, CInt]
   object CXIdxIncludedFileInfo:
     given _tag: Tag[CXIdxIncludedFileInfo] = Tag.materializeCStruct6Tag[CXIdxLoc, CString, CXFile, CInt, CInt, CInt]
     extension (struct: CXIdxIncludedFileInfo)
       def hashLoc: CXIdxLoc = struct._1
+      def hashLoc_=(value: CXIdxLoc): Unit = !struct.at1 = value
       def filename: CString = struct._2
+      def filename_=(value: CString): Unit = !struct.at2 = value
       def file: CXFile = struct._3
+      def file_=(value: CXFile): Unit = !struct.at3 = value
       def isImport: CInt = struct._4
+      def isImport_=(value: CInt): Unit = !struct.at4 = value
       def isAngled: CInt = struct._5
+      def isAngled_=(value: CInt): Unit = !struct.at5 = value
       def isModuleImport: CInt = struct._6
+      def isModuleImport_=(value: CInt): Unit = !struct.at6 = value
 
   opaque type CXIdxLoc = CStruct2[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
   object CXIdxLoc:
     given _tag: Tag[CXIdxLoc] = Tag.materializeCStruct2Tag[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
     extension (struct: CXIdxLoc)
       def ptr_data: CArray[Ptr[Byte], Nat._2] = struct._1
+      def ptr_data_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at1 = value
       def int_data: CUnsignedInt = struct._2
+      def int_data_=(value: CUnsignedInt): Unit = !struct.at2 = value
 
   opaque type CXIdxObjCCategoryDeclInfo = CStruct5[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxObjCProtocolRefListInfo]]
   object CXIdxObjCCategoryDeclInfo:
     given _tag: Tag[CXIdxObjCCategoryDeclInfo] = Tag.materializeCStruct5Tag[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxObjCProtocolRefListInfo]]
     extension (struct: CXIdxObjCCategoryDeclInfo)
       def containerInfo: Ptr[CXIdxObjCContainerDeclInfo] = struct._1
+      def containerInfo_=(value: Ptr[CXIdxObjCContainerDeclInfo]): Unit = !struct.at1 = value
       def objcClass: Ptr[CXIdxEntityInfo] = struct._2
+      def objcClass_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at2 = value
       def classCursor: CXCursor = struct._3
+      def classCursor_=(value: CXCursor): Unit = !struct.at3 = value
       def classLoc: CXIdxLoc = struct._4
+      def classLoc_=(value: CXIdxLoc): Unit = !struct.at4 = value
       def protocols: Ptr[CXIdxObjCProtocolRefListInfo] = struct._5
+      def protocols_=(value: Ptr[CXIdxObjCProtocolRefListInfo]): Unit = !struct.at5 = value
 
   opaque type CXIdxObjCContainerDeclInfo = CStruct2[Ptr[CXIdxDeclInfo], CXIdxObjCContainerKind]
   object CXIdxObjCContainerDeclInfo:
     given _tag: Tag[CXIdxObjCContainerDeclInfo] = Tag.materializeCStruct2Tag[Ptr[CXIdxDeclInfo], CXIdxObjCContainerKind]
     extension (struct: CXIdxObjCContainerDeclInfo)
       def declInfo: Ptr[CXIdxDeclInfo] = struct._1
+      def declInfo_=(value: Ptr[CXIdxDeclInfo]): Unit = !struct.at1 = value
       def kind: CXIdxObjCContainerKind = struct._2
+      def kind_=(value: CXIdxObjCContainerKind): Unit = !struct.at2 = value
 
   opaque type CXIdxObjCInterfaceDeclInfo = CStruct3[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxBaseClassInfo], Ptr[CXIdxObjCProtocolRefListInfo]]
   object CXIdxObjCInterfaceDeclInfo:
     given _tag: Tag[CXIdxObjCInterfaceDeclInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxBaseClassInfo], Ptr[CXIdxObjCProtocolRefListInfo]]
     extension (struct: CXIdxObjCInterfaceDeclInfo)
       def containerInfo: Ptr[CXIdxObjCContainerDeclInfo] = struct._1
+      def containerInfo_=(value: Ptr[CXIdxObjCContainerDeclInfo]): Unit = !struct.at1 = value
       def superInfo: Ptr[CXIdxBaseClassInfo] = struct._2
+      def superInfo_=(value: Ptr[CXIdxBaseClassInfo]): Unit = !struct.at2 = value
       def protocols: Ptr[CXIdxObjCProtocolRefListInfo] = struct._3
+      def protocols_=(value: Ptr[CXIdxObjCProtocolRefListInfo]): Unit = !struct.at3 = value
 
   opaque type CXIdxObjCPropertyDeclInfo = CStruct3[Ptr[CXIdxDeclInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo]]
   object CXIdxObjCPropertyDeclInfo:
     given _tag: Tag[CXIdxObjCPropertyDeclInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxDeclInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo]]
     extension (struct: CXIdxObjCPropertyDeclInfo)
       def declInfo: Ptr[CXIdxDeclInfo] = struct._1
+      def declInfo_=(value: Ptr[CXIdxDeclInfo]): Unit = !struct.at1 = value
       def getter: Ptr[CXIdxEntityInfo] = struct._2
+      def getter_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at2 = value
       def setter: Ptr[CXIdxEntityInfo] = struct._3
+      def setter_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at3 = value
 
   opaque type CXIdxObjCProtocolRefInfo = CStruct3[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
   object CXIdxObjCProtocolRefInfo:
     given _tag: Tag[CXIdxObjCProtocolRefInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
     extension (struct: CXIdxObjCProtocolRefInfo)
       def protocol: Ptr[CXIdxEntityInfo] = struct._1
+      def protocol_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at1 = value
       def cursor: CXCursor = struct._2
+      def cursor_=(value: CXCursor): Unit = !struct.at2 = value
       def loc: CXIdxLoc = struct._3
+      def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
 
   opaque type CXIdxObjCProtocolRefListInfo = CStruct2[Ptr[Ptr[CXIdxObjCProtocolRefInfo]], CUnsignedInt]
   object CXIdxObjCProtocolRefListInfo:
     given _tag: Tag[CXIdxObjCProtocolRefListInfo] = Tag.materializeCStruct2Tag[Ptr[Ptr[CXIdxObjCProtocolRefInfo]], CUnsignedInt]
     extension (struct: CXIdxObjCProtocolRefListInfo)
       def protocols: Ptr[Ptr[CXIdxObjCProtocolRefInfo]] = struct._1
+      def protocols_=(value: Ptr[Ptr[CXIdxObjCProtocolRefInfo]]): Unit = !struct.at1 = value
       def numProtocols: CUnsignedInt = struct._2
+      def numProtocols_=(value: CUnsignedInt): Unit = !struct.at2 = value
 
   opaque type CXPlatformAvailability = CStruct6[CInt, CXVersion, CXVersion, CXVersion, CInt, CInt]
   object CXPlatformAvailability:
     given _tag: Tag[CXPlatformAvailability] = Tag.materializeCStruct6Tag[CInt, CXVersion, CXVersion, CXVersion, CInt, CInt]
     extension (struct: CXPlatformAvailability)
       def Platform: CInt = struct._1
+      def Platform_=(value: CInt): Unit = !struct.at1 = value
       def Introduced: CXVersion = struct._2
+      def Introduced_=(value: CXVersion): Unit = !struct.at2 = value
       def Deprecated: CXVersion = struct._3
+      def Deprecated_=(value: CXVersion): Unit = !struct.at3 = value
       def Obsoleted: CXVersion = struct._4
+      def Obsoleted_=(value: CXVersion): Unit = !struct.at4 = value
       def Unavailable: CInt = struct._5
+      def Unavailable_=(value: CInt): Unit = !struct.at5 = value
       def Message: CInt = struct._6
+      def Message_=(value: CInt): Unit = !struct.at6 = value
 
   opaque type CXSourceLocation = CStruct2[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
   object CXSourceLocation:
     given _tag: Tag[CXSourceLocation] = Tag.materializeCStruct2Tag[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
     extension (struct: CXSourceLocation)
       def ptr_data: CArray[Ptr[Byte], Nat._2] = struct._1
+      def ptr_data_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at1 = value
       def int_data: CUnsignedInt = struct._2
+      def int_data_=(value: CUnsignedInt): Unit = !struct.at2 = value
 
   opaque type CXSourceRange = CStruct3[CArray[Ptr[Byte], Nat._2], CUnsignedInt, CUnsignedInt]
   object CXSourceRange:
     given _tag: Tag[CXSourceRange] = Tag.materializeCStruct3Tag[CArray[Ptr[Byte], Nat._2], CUnsignedInt, CUnsignedInt]
     extension (struct: CXSourceRange)
       def ptr_data: CArray[Ptr[Byte], Nat._2] = struct._1
+      def ptr_data_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at1 = value
       def begin_int_data: CUnsignedInt = struct._2
+      def begin_int_data_=(value: CUnsignedInt): Unit = !struct.at2 = value
       def end_int_data: CUnsignedInt = struct._3
+      def end_int_data_=(value: CUnsignedInt): Unit = !struct.at3 = value
 
   opaque type CXSourceRangeList = CStruct2[CUnsignedInt, Ptr[CXSourceRange]]
   object CXSourceRangeList:
     given _tag: Tag[CXSourceRangeList] = Tag.materializeCStruct2Tag[CUnsignedInt, Ptr[CXSourceRange]]
     extension (struct: CXSourceRangeList)
       def count: CUnsignedInt = struct._1
+      def count_=(value: CUnsignedInt): Unit = !struct.at1 = value
       def ranges: Ptr[CXSourceRange] = struct._2
+      def ranges_=(value: Ptr[CXSourceRange]): Unit = !struct.at2 = value
 
   opaque type CXTUResourceUsage = CStruct3[Ptr[Byte], CUnsignedInt, Ptr[CXTUResourceUsageEntry]]
   object CXTUResourceUsage:
     given _tag: Tag[CXTUResourceUsage] = Tag.materializeCStruct3Tag[Ptr[Byte], CUnsignedInt, Ptr[CXTUResourceUsageEntry]]
     extension (struct: CXTUResourceUsage)
       def data: Ptr[Byte] = struct._1
+      def data_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def numEntries: CUnsignedInt = struct._2
+      def numEntries_=(value: CUnsignedInt): Unit = !struct.at2 = value
       def entries: Ptr[CXTUResourceUsageEntry] = struct._3
+      def entries_=(value: Ptr[CXTUResourceUsageEntry]): Unit = !struct.at3 = value
 
   opaque type CXTUResourceUsageEntry = CStruct2[CXTUResourceUsageKind, CUnsignedLongInt]
   object CXTUResourceUsageEntry:
     given _tag: Tag[CXTUResourceUsageEntry] = Tag.materializeCStruct2Tag[CXTUResourceUsageKind, CUnsignedLongInt]
     extension (struct: CXTUResourceUsageEntry)
       def kind: CXTUResourceUsageKind = struct._1
+      def kind_=(value: CXTUResourceUsageKind): Unit = !struct.at1 = value
       def amount: CUnsignedLongInt = struct._2
+      def amount_=(value: CUnsignedLongInt): Unit = !struct.at2 = value
 
   opaque type CXTargetInfoImpl = CStruct0
   object CXTargetInfoImpl:
@@ -1615,7 +1715,9 @@ object types:
     given _tag: Tag[CXToken] = Tag.materializeCStruct2Tag[CArray[CUnsignedInt, Nat._4], Ptr[Byte]]
     extension (struct: CXToken)
       def int_data: CArray[CUnsignedInt, Nat._4] = struct._1
+      def int_data_=(value: CArray[CUnsignedInt, Nat._4]): Unit = !struct.at1 = value
       def ptr_data: Ptr[Byte] = struct._2
+      def ptr_data_=(value: Ptr[Byte]): Unit = !struct.at2 = value
 
   opaque type CXTranslationUnitImpl = CStruct0
   object CXTranslationUnitImpl:
@@ -1626,187 +1728,254 @@ object types:
     given _tag: Tag[CXType] = Tag.materializeCStruct2Tag[CXTypeKind, CArray[Ptr[Byte], Nat._2]]
     extension (struct: CXType)
       def kind: CXTypeKind = struct._1
+      def kind_=(value: CXTypeKind): Unit = !struct.at1 = value
       def data: CArray[Ptr[Byte], Nat._2] = struct._2
+      def data_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at2 = value
 
   opaque type CXUnsavedFile = CStruct3[CString, CString, CUnsignedLongInt]
   object CXUnsavedFile:
     given _tag: Tag[CXUnsavedFile] = Tag.materializeCStruct3Tag[CString, CString, CUnsignedLongInt]
     extension (struct: CXUnsavedFile)
       def Filename: CString = struct._1
+      def Filename_=(value: CString): Unit = !struct.at1 = value
       def Contents: CString = struct._2
+      def Contents_=(value: CString): Unit = !struct.at2 = value
       def Length: CUnsignedLongInt = struct._3
+      def Length_=(value: CUnsignedLongInt): Unit = !struct.at3 = value
 
   opaque type CXVersion = CStruct3[CInt, CInt, CInt]
   object CXVersion:
     given _tag: Tag[CXVersion] = Tag.materializeCStruct3Tag[CInt, CInt, CInt]
     extension (struct: CXVersion)
       def Major: CInt = struct._1
+      def Major_=(value: CInt): Unit = !struct.at1 = value
       def Minor: CInt = struct._2
+      def Minor_=(value: CInt): Unit = !struct.at2 = value
       def Subminor: CInt = struct._3
+      def Subminor_=(value: CInt): Unit = !struct.at3 = value
 
   opaque type IndexerCallbacks = CStruct8[Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]], Ptr[CFuncPtr3[CXClientData, CXDiagnosticSet, Ptr[Byte], Unit]], Ptr[CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxIncludedFileInfo], CXIdxClientFile]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxImportedASTFileInfo], CXIdxClientASTFile]], Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]]]
   object IndexerCallbacks:
     given _tag: Tag[IndexerCallbacks] = Tag.materializeCStruct8Tag[Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]], Ptr[CFuncPtr3[CXClientData, CXDiagnosticSet, Ptr[Byte], Unit]], Ptr[CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxIncludedFileInfo], CXIdxClientFile]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxImportedASTFileInfo], CXIdxClientASTFile]], Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]]]
     extension (struct: IndexerCallbacks)
       def abortQuery: Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]] = struct._1
+      def abortQuery_=(value: Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]]): Unit = !struct.at1 = value
       def diagnostic: Ptr[CFuncPtr3[CXClientData, CXDiagnosticSet, Ptr[Byte], Unit]] = struct._2
+      def diagnostic_=(value: Ptr[CFuncPtr3[CXClientData, CXDiagnosticSet, Ptr[Byte], Unit]]): Unit = !struct.at2 = value
       def enteredMainFile: Ptr[CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile]] = struct._3
+      def enteredMainFile_=(value: Ptr[CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile]]): Unit = !struct.at3 = value
       def ppIncludedFile: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxIncludedFileInfo], CXIdxClientFile]] = struct._4
+      def ppIncludedFile_=(value: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxIncludedFileInfo], CXIdxClientFile]]): Unit = !struct.at4 = value
       def importedASTFile: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxImportedASTFileInfo], CXIdxClientASTFile]] = struct._5
+      def importedASTFile_=(value: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxImportedASTFileInfo], CXIdxClientASTFile]]): Unit = !struct.at5 = value
       def startedTranslationUnit: Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer]] = struct._6
+      def startedTranslationUnit_=(value: Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer]]): Unit = !struct.at6 = value
       def indexDeclaration: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit]] = struct._7
+      def indexDeclaration_=(value: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit]]): Unit = !struct.at7 = value
       def indexEntityReference: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]] = struct._8
+      def indexEntityReference_=(value: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]]): Unit = !struct.at8 = value
 
   opaque type __darwin_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_attr_t:
     given _tag: Tag[__darwin_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: __darwin_pthread_attr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object __darwin_pthread_cond_t:
     given _tag: Tag[__darwin_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
     extension (struct: __darwin_pthread_cond_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_condattr_t:
     given _tag: Tag[__darwin_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_condattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_handler_rec = CStruct3[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
   object __darwin_pthread_handler_rec:
     given _tag: Tag[__darwin_pthread_handler_rec] = Tag.materializeCStruct3Tag[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
     extension (struct: __darwin_pthread_handler_rec)
       def __routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = struct._1
+      def __routine_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at1 = value
       def __arg: Ptr[Byte] = struct._2
+      def __arg_=(value: Ptr[Byte]): Unit = !struct.at2 = value
       def __next: Ptr[__darwin_pthread_handler_rec] = struct._3.asInstanceOf[Ptr[__darwin_pthread_handler_rec]]
+      def __next_=(value: Ptr[__darwin_pthread_handler_rec]): Unit = !struct.at3 = value.asInstanceOf[Ptr[Byte]]
 
   opaque type __darwin_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_mutex_t:
     given _tag: Tag[__darwin_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: __darwin_pthread_mutex_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_mutexattr_t:
     given _tag: Tag[__darwin_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_once_t:
     given _tag: Tag[__darwin_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_once_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object __darwin_pthread_rwlock_t:
     given _tag: Tag[__darwin_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
     extension (struct: __darwin_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object __darwin_pthread_rwlockattr_t:
     given _tag: Tag[__darwin_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: __darwin_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_attr_t:
     given _tag: Tag[_opaque_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: _opaque_pthread_attr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object _opaque_pthread_cond_t:
     given _tag: Tag[_opaque_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
     extension (struct: _opaque_pthread_cond_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_condattr_t:
     given _tag: Tag[_opaque_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_condattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_mutex_t:
     given _tag: Tag[_opaque_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: _opaque_pthread_mutex_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_mutexattr_t:
     given _tag: Tag[_opaque_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_once_t:
     given _tag: Tag[_opaque_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_once_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object _opaque_pthread_rwlock_t:
     given _tag: Tag[_opaque_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
     extension (struct: _opaque_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object _opaque_pthread_rwlockattr_t:
     given _tag: Tag[_opaque_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: _opaque_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_t = CStruct3[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
   object _opaque_pthread_t:
     given _tag: Tag[_opaque_pthread_t] = Tag.materializeCStruct3Tag[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
     extension (struct: _opaque_pthread_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __cleanup_stack: Ptr[__darwin_pthread_handler_rec] = struct._2
+      def __cleanup_stack_=(value: Ptr[__darwin_pthread_handler_rec]): Unit = !struct.at2 = value
       def __opaque: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]] = struct._3
+      def __opaque_=(value: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]): Unit = !struct.at3 = value
 
   opaque type timespec = CStruct2[__darwin_time_t, CLongInt]
   object timespec:
     given _tag: Tag[timespec] = Tag.materializeCStruct2Tag[__darwin_time_t, CLongInt]
     extension (struct: timespec)
       def tv_sec: __darwin_time_t = struct._1
+      def tv_sec_=(value: __darwin_time_t): Unit = !struct.at1 = value
       def tv_nsec: CLongInt = struct._2
+      def tv_nsec_=(value: CLongInt): Unit = !struct.at2 = value
 
   opaque type tm = CStruct11[CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CLongInt, CString]
   object tm:
     given _tag: Tag[tm] = Tag.materializeCStruct11Tag[CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CLongInt, CString]
     extension (struct: tm)
       def tm_sec: CInt = struct._1
+      def tm_sec_=(value: CInt): Unit = !struct.at1 = value
       def tm_min: CInt = struct._2
+      def tm_min_=(value: CInt): Unit = !struct.at2 = value
       def tm_hour: CInt = struct._3
+      def tm_hour_=(value: CInt): Unit = !struct.at3 = value
       def tm_mday: CInt = struct._4
+      def tm_mday_=(value: CInt): Unit = !struct.at4 = value
       def tm_mon: CInt = struct._5
+      def tm_mon_=(value: CInt): Unit = !struct.at5 = value
       def tm_year: CInt = struct._6
+      def tm_year_=(value: CInt): Unit = !struct.at6 = value
       def tm_wday: CInt = struct._7
+      def tm_wday_=(value: CInt): Unit = !struct.at7 = value
       def tm_yday: CInt = struct._8
+      def tm_yday_=(value: CInt): Unit = !struct.at8 = value
       def tm_isdst: CInt = struct._9
+      def tm_isdst_=(value: CInt): Unit = !struct.at9 = value
       def tm_gmtoff: CLongInt = struct._10
+      def tm_gmtoff_=(value: CLongInt): Unit = !struct.at10 = value
       def tm_zone: CString = struct._11
+      def tm_zone_=(value: CString): Unit = !struct.at11 = value
   opaque type __mbstate_t = CArray[Byte, Nat.Digit3[Nat._1, Nat._2, Nat._8]]
   object __mbstate_t:
     given _tag: Tag[__mbstate_t] = Tag.CArray[CChar, Nat.Digit3[Nat._1, Nat._2, Nat._8]](Tag.Byte, Tag.Digit3[Nat._1, Nat._2, Nat._8](Tag.Nat1, Tag.Nat2, Tag.Nat8))

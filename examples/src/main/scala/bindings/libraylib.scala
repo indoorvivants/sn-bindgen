@@ -441,310 +441,465 @@ object types:
     given _tag: Tag[AudioStream] = Tag.materializeCStruct4Tag[Ptr[rAudioBuffer], CUnsignedInt, CUnsignedInt, CUnsignedInt]
     extension (struct: AudioStream)
       def buffer: Ptr[rAudioBuffer] = struct._1
+      def buffer_=(value: Ptr[rAudioBuffer]): Unit = !struct.at1 = value
       def sampleRate: CUnsignedInt = struct._2
+      def sampleRate_=(value: CUnsignedInt): Unit = !struct.at2 = value
       def sampleSize: CUnsignedInt = struct._3
+      def sampleSize_=(value: CUnsignedInt): Unit = !struct.at3 = value
       def channels: CUnsignedInt = struct._4
+      def channels_=(value: CUnsignedInt): Unit = !struct.at4 = value
 
   opaque type BoneInfo = CStruct2[CArray[CChar, Nat.Digit2[Nat._3, Nat._2]], CInt]
   object BoneInfo:
     given _tag: Tag[BoneInfo] = Tag.materializeCStruct2Tag[CArray[CChar, Nat.Digit2[Nat._3, Nat._2]], CInt]
     extension (struct: BoneInfo)
       def name: CArray[CChar, Nat.Digit2[Nat._3, Nat._2]] = struct._1
+      def name_=(value: CArray[CChar, Nat.Digit2[Nat._3, Nat._2]]): Unit = !struct.at1 = value
       def parent: CInt = struct._2
+      def parent_=(value: CInt): Unit = !struct.at2 = value
 
   opaque type BoundingBox = CStruct2[Vector3, Vector3]
   object BoundingBox:
     given _tag: Tag[BoundingBox] = Tag.materializeCStruct2Tag[Vector3, Vector3]
     extension (struct: BoundingBox)
       def min: Vector3 = struct._1
+      def min_=(value: Vector3): Unit = !struct.at1 = value
       def max: Vector3 = struct._2
+      def max_=(value: Vector3): Unit = !struct.at2 = value
 
   opaque type Camera2D = CStruct4[Vector2, Vector2, Float, Float]
   object Camera2D:
     given _tag: Tag[Camera2D] = Tag.materializeCStruct4Tag[Vector2, Vector2, Float, Float]
     extension (struct: Camera2D)
       def offset: Vector2 = struct._1
+      def offset_=(value: Vector2): Unit = !struct.at1 = value
       def target: Vector2 = struct._2
+      def target_=(value: Vector2): Unit = !struct.at2 = value
       def rotation: Float = struct._3
+      def rotation_=(value: Float): Unit = !struct.at3 = value
       def zoom: Float = struct._4
+      def zoom_=(value: Float): Unit = !struct.at4 = value
 
   opaque type Camera3D = CStruct5[Vector3, Vector3, Vector3, Float, CInt]
   object Camera3D:
     given _tag: Tag[Camera3D] = Tag.materializeCStruct5Tag[Vector3, Vector3, Vector3, Float, CInt]
     extension (struct: Camera3D)
       def position: Vector3 = struct._1
+      def position_=(value: Vector3): Unit = !struct.at1 = value
       def target: Vector3 = struct._2
+      def target_=(value: Vector3): Unit = !struct.at2 = value
       def up: Vector3 = struct._3
+      def up_=(value: Vector3): Unit = !struct.at3 = value
       def fovy: Float = struct._4
+      def fovy_=(value: Float): Unit = !struct.at4 = value
       def projection: CInt = struct._5
+      def projection_=(value: CInt): Unit = !struct.at5 = value
 
   opaque type Color = CStruct4[CUnsignedChar, CUnsignedChar, CUnsignedChar, CUnsignedChar]
   object Color:
     given _tag: Tag[Color] = Tag.materializeCStruct4Tag[CUnsignedChar, CUnsignedChar, CUnsignedChar, CUnsignedChar]
     extension (struct: Color)
       def r: CUnsignedChar = struct._1
+      def r_=(value: CUnsignedChar): Unit = !struct.at1 = value
       def g: CUnsignedChar = struct._2
+      def g_=(value: CUnsignedChar): Unit = !struct.at2 = value
       def b: CUnsignedChar = struct._3
+      def b_=(value: CUnsignedChar): Unit = !struct.at3 = value
       def a: CUnsignedChar = struct._4
+      def a_=(value: CUnsignedChar): Unit = !struct.at4 = value
 
   opaque type Font = CStruct6[CInt, CInt, CInt, Texture2D, Ptr[Rectangle], Ptr[GlyphInfo]]
   object Font:
     given _tag: Tag[Font] = Tag.materializeCStruct6Tag[CInt, CInt, CInt, Texture2D, Ptr[Rectangle], Ptr[GlyphInfo]]
     extension (struct: Font)
       def baseSize: CInt = struct._1
+      def baseSize_=(value: CInt): Unit = !struct.at1 = value
       def glyphCount: CInt = struct._2
+      def glyphCount_=(value: CInt): Unit = !struct.at2 = value
       def glyphPadding: CInt = struct._3
+      def glyphPadding_=(value: CInt): Unit = !struct.at3 = value
       def texture: Texture2D = struct._4
+      def texture_=(value: Texture2D): Unit = !struct.at4 = value
       def recs: Ptr[Rectangle] = struct._5
+      def recs_=(value: Ptr[Rectangle]): Unit = !struct.at5 = value
       def glyphs: Ptr[GlyphInfo] = struct._6
+      def glyphs_=(value: Ptr[GlyphInfo]): Unit = !struct.at6 = value
 
   opaque type GlyphInfo = CStruct5[CInt, CInt, CInt, CInt, Image]
   object GlyphInfo:
     given _tag: Tag[GlyphInfo] = Tag.materializeCStruct5Tag[CInt, CInt, CInt, CInt, Image]
     extension (struct: GlyphInfo)
       def value: CInt = struct._1
+      def value_=(value: CInt): Unit = !struct.at1 = value
       def offsetX: CInt = struct._2
+      def offsetX_=(value: CInt): Unit = !struct.at2 = value
       def offsetY: CInt = struct._3
+      def offsetY_=(value: CInt): Unit = !struct.at3 = value
       def advanceX: CInt = struct._4
+      def advanceX_=(value: CInt): Unit = !struct.at4 = value
       def image: Image = struct._5
+      def image_=(value: Image): Unit = !struct.at5 = value
 
   opaque type Image = CStruct5[Ptr[Byte], CInt, CInt, CInt, CInt]
   object Image:
     given _tag: Tag[Image] = Tag.materializeCStruct5Tag[Ptr[Byte], CInt, CInt, CInt, CInt]
     extension (struct: Image)
       def data: Ptr[Byte] = struct._1
+      def data_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def width: CInt = struct._2
+      def width_=(value: CInt): Unit = !struct.at2 = value
       def height: CInt = struct._3
+      def height_=(value: CInt): Unit = !struct.at3 = value
       def mipmaps: CInt = struct._4
+      def mipmaps_=(value: CInt): Unit = !struct.at4 = value
       def format: CInt = struct._5
+      def format_=(value: CInt): Unit = !struct.at5 = value
 
   opaque type Material = CStruct3[Shader, Ptr[MaterialMap], CArray[Float, Nat._4]]
   object Material:
     given _tag: Tag[Material] = Tag.materializeCStruct3Tag[Shader, Ptr[MaterialMap], CArray[Float, Nat._4]]
     extension (struct: Material)
       def shader: Shader = struct._1
+      def shader_=(value: Shader): Unit = !struct.at1 = value
       def maps: Ptr[MaterialMap] = struct._2
+      def maps_=(value: Ptr[MaterialMap]): Unit = !struct.at2 = value
       def params: CArray[Float, Nat._4] = struct._3
+      def params_=(value: CArray[Float, Nat._4]): Unit = !struct.at3 = value
 
   opaque type MaterialMap = CStruct3[Texture2D, Color, Float]
   object MaterialMap:
     given _tag: Tag[MaterialMap] = Tag.materializeCStruct3Tag[Texture2D, Color, Float]
     extension (struct: MaterialMap)
       def texture: Texture2D = struct._1
+      def texture_=(value: Texture2D): Unit = !struct.at1 = value
       def color: Color = struct._2
+      def color_=(value: Color): Unit = !struct.at2 = value
       def value: Float = struct._3
+      def value_=(value: Float): Unit = !struct.at3 = value
 
   opaque type Matrix = CStruct16[Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float]
   object Matrix:
     given _tag: Tag[Matrix] = Tag.materializeCStruct16Tag[Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float, Float]
     extension (struct: Matrix)
       def m0: Float = struct._1
+      def m0_=(value: Float): Unit = !struct.at1 = value
       def m4: Float = struct._2
+      def m4_=(value: Float): Unit = !struct.at2 = value
       def m8: Float = struct._3
+      def m8_=(value: Float): Unit = !struct.at3 = value
       def m12: Float = struct._4
+      def m12_=(value: Float): Unit = !struct.at4 = value
       def m1: Float = struct._5
+      def m1_=(value: Float): Unit = !struct.at5 = value
       def m5: Float = struct._6
+      def m5_=(value: Float): Unit = !struct.at6 = value
       def m9: Float = struct._7
+      def m9_=(value: Float): Unit = !struct.at7 = value
       def m13: Float = struct._8
+      def m13_=(value: Float): Unit = !struct.at8 = value
       def m2: Float = struct._9
+      def m2_=(value: Float): Unit = !struct.at9 = value
       def m6: Float = struct._10
+      def m6_=(value: Float): Unit = !struct.at10 = value
       def m10: Float = struct._11
+      def m10_=(value: Float): Unit = !struct.at11 = value
       def m14: Float = struct._12
+      def m14_=(value: Float): Unit = !struct.at12 = value
       def m3: Float = struct._13
+      def m3_=(value: Float): Unit = !struct.at13 = value
       def m7: Float = struct._14
+      def m7_=(value: Float): Unit = !struct.at14 = value
       def m11: Float = struct._15
+      def m11_=(value: Float): Unit = !struct.at15 = value
       def m15: Float = struct._16
+      def m15_=(value: Float): Unit = !struct.at16 = value
 
   opaque type Mesh = CStruct15[CInt, CInt, Ptr[Float], Ptr[Float], Ptr[Float], Ptr[Float], Ptr[Float], Ptr[CUnsignedChar], Ptr[CUnsignedShort], Ptr[Float], Ptr[Float], Ptr[CUnsignedChar], Ptr[Float], CUnsignedInt, Ptr[CUnsignedInt]]
   object Mesh:
     given _tag: Tag[Mesh] = Tag.materializeCStruct15Tag[CInt, CInt, Ptr[Float], Ptr[Float], Ptr[Float], Ptr[Float], Ptr[Float], Ptr[CUnsignedChar], Ptr[CUnsignedShort], Ptr[Float], Ptr[Float], Ptr[CUnsignedChar], Ptr[Float], CUnsignedInt, Ptr[CUnsignedInt]]
     extension (struct: Mesh)
       def vertexCount: CInt = struct._1
+      def vertexCount_=(value: CInt): Unit = !struct.at1 = value
       def triangleCount: CInt = struct._2
+      def triangleCount_=(value: CInt): Unit = !struct.at2 = value
       def vertices: Ptr[Float] = struct._3
+      def vertices_=(value: Ptr[Float]): Unit = !struct.at3 = value
       def texcoords: Ptr[Float] = struct._4
+      def texcoords_=(value: Ptr[Float]): Unit = !struct.at4 = value
       def texcoords2: Ptr[Float] = struct._5
+      def texcoords2_=(value: Ptr[Float]): Unit = !struct.at5 = value
       def normals: Ptr[Float] = struct._6
+      def normals_=(value: Ptr[Float]): Unit = !struct.at6 = value
       def tangents: Ptr[Float] = struct._7
+      def tangents_=(value: Ptr[Float]): Unit = !struct.at7 = value
       def colors: Ptr[CUnsignedChar] = struct._8
+      def colors_=(value: Ptr[CUnsignedChar]): Unit = !struct.at8 = value
       def indices: Ptr[CUnsignedShort] = struct._9
+      def indices_=(value: Ptr[CUnsignedShort]): Unit = !struct.at9 = value
       def animVertices: Ptr[Float] = struct._10
+      def animVertices_=(value: Ptr[Float]): Unit = !struct.at10 = value
       def animNormals: Ptr[Float] = struct._11
+      def animNormals_=(value: Ptr[Float]): Unit = !struct.at11 = value
       def boneIds: Ptr[CUnsignedChar] = struct._12
+      def boneIds_=(value: Ptr[CUnsignedChar]): Unit = !struct.at12 = value
       def boneWeights: Ptr[Float] = struct._13
+      def boneWeights_=(value: Ptr[Float]): Unit = !struct.at13 = value
       def vaoId: CUnsignedInt = struct._14
+      def vaoId_=(value: CUnsignedInt): Unit = !struct.at14 = value
       def vboId: Ptr[CUnsignedInt] = struct._15
+      def vboId_=(value: Ptr[CUnsignedInt]): Unit = !struct.at15 = value
 
   opaque type Model = CStruct9[Matrix, CInt, CInt, Ptr[Mesh], Ptr[Material], Ptr[CInt], CInt, Ptr[BoneInfo], Ptr[Transform]]
   object Model:
     given _tag: Tag[Model] = Tag.materializeCStruct9Tag[Matrix, CInt, CInt, Ptr[Mesh], Ptr[Material], Ptr[CInt], CInt, Ptr[BoneInfo], Ptr[Transform]]
     extension (struct: Model)
       def transform: Matrix = struct._1
+      def transform_=(value: Matrix): Unit = !struct.at1 = value
       def meshCount: CInt = struct._2
+      def meshCount_=(value: CInt): Unit = !struct.at2 = value
       def materialCount: CInt = struct._3
+      def materialCount_=(value: CInt): Unit = !struct.at3 = value
       def meshes: Ptr[Mesh] = struct._4
+      def meshes_=(value: Ptr[Mesh]): Unit = !struct.at4 = value
       def materials: Ptr[Material] = struct._5
+      def materials_=(value: Ptr[Material]): Unit = !struct.at5 = value
       def meshMaterial: Ptr[CInt] = struct._6
+      def meshMaterial_=(value: Ptr[CInt]): Unit = !struct.at6 = value
       def boneCount: CInt = struct._7
+      def boneCount_=(value: CInt): Unit = !struct.at7 = value
       def bones: Ptr[BoneInfo] = struct._8
+      def bones_=(value: Ptr[BoneInfo]): Unit = !struct.at8 = value
       def bindPose: Ptr[Transform] = struct._9
+      def bindPose_=(value: Ptr[Transform]): Unit = !struct.at9 = value
 
   opaque type ModelAnimation = CStruct4[CInt, CInt, Ptr[BoneInfo], Ptr[Ptr[Transform]]]
   object ModelAnimation:
     given _tag: Tag[ModelAnimation] = Tag.materializeCStruct4Tag[CInt, CInt, Ptr[BoneInfo], Ptr[Ptr[Transform]]]
     extension (struct: ModelAnimation)
       def boneCount: CInt = struct._1
+      def boneCount_=(value: CInt): Unit = !struct.at1 = value
       def frameCount: CInt = struct._2
+      def frameCount_=(value: CInt): Unit = !struct.at2 = value
       def bones: Ptr[BoneInfo] = struct._3
+      def bones_=(value: Ptr[BoneInfo]): Unit = !struct.at3 = value
       def framePoses: Ptr[Ptr[Transform]] = struct._4
+      def framePoses_=(value: Ptr[Ptr[Transform]]): Unit = !struct.at4 = value
 
   opaque type Music = CStruct5[AudioStream, CUnsignedInt, CInt, CInt, Ptr[Byte]]
   object Music:
     given _tag: Tag[Music] = Tag.materializeCStruct5Tag[AudioStream, CUnsignedInt, CInt, CInt, Ptr[Byte]]
     extension (struct: Music)
       def stream: AudioStream = struct._1
+      def stream_=(value: AudioStream): Unit = !struct.at1 = value
       def frameCount: CUnsignedInt = struct._2
+      def frameCount_=(value: CUnsignedInt): Unit = !struct.at2 = value
       def looping: CInt = struct._3
+      def looping_=(value: CInt): Unit = !struct.at3 = value
       def ctxType: CInt = struct._4
+      def ctxType_=(value: CInt): Unit = !struct.at4 = value
       def ctxData: Ptr[Byte] = struct._5
+      def ctxData_=(value: Ptr[Byte]): Unit = !struct.at5 = value
 
   opaque type NPatchInfo = CStruct6[Rectangle, CInt, CInt, CInt, CInt, CInt]
   object NPatchInfo:
     given _tag: Tag[NPatchInfo] = Tag.materializeCStruct6Tag[Rectangle, CInt, CInt, CInt, CInt, CInt]
     extension (struct: NPatchInfo)
       def source: Rectangle = struct._1
+      def source_=(value: Rectangle): Unit = !struct.at1 = value
       def left: CInt = struct._2
+      def left_=(value: CInt): Unit = !struct.at2 = value
       def top: CInt = struct._3
+      def top_=(value: CInt): Unit = !struct.at3 = value
       def right: CInt = struct._4
+      def right_=(value: CInt): Unit = !struct.at4 = value
       def bottom: CInt = struct._5
+      def bottom_=(value: CInt): Unit = !struct.at5 = value
       def layout: CInt = struct._6
+      def layout_=(value: CInt): Unit = !struct.at6 = value
 
   opaque type Ray = CStruct2[Vector3, Vector3]
   object Ray:
     given _tag: Tag[Ray] = Tag.materializeCStruct2Tag[Vector3, Vector3]
     extension (struct: Ray)
       def position: Vector3 = struct._1
+      def position_=(value: Vector3): Unit = !struct.at1 = value
       def direction: Vector3 = struct._2
+      def direction_=(value: Vector3): Unit = !struct.at2 = value
 
   opaque type RayCollision = CStruct4[CInt, Float, Vector3, Vector3]
   object RayCollision:
     given _tag: Tag[RayCollision] = Tag.materializeCStruct4Tag[CInt, Float, Vector3, Vector3]
     extension (struct: RayCollision)
       def hit: CInt = struct._1
+      def hit_=(value: CInt): Unit = !struct.at1 = value
       def distance: Float = struct._2
+      def distance_=(value: Float): Unit = !struct.at2 = value
       def point: Vector3 = struct._3
+      def point_=(value: Vector3): Unit = !struct.at3 = value
       def normal: Vector3 = struct._4
+      def normal_=(value: Vector3): Unit = !struct.at4 = value
 
   opaque type Rectangle = CStruct4[Float, Float, Float, Float]
   object Rectangle:
     given _tag: Tag[Rectangle] = Tag.materializeCStruct4Tag[Float, Float, Float, Float]
     extension (struct: Rectangle)
       def x: Float = struct._1
+      def x_=(value: Float): Unit = !struct.at1 = value
       def y: Float = struct._2
+      def y_=(value: Float): Unit = !struct.at2 = value
       def width: Float = struct._3
+      def width_=(value: Float): Unit = !struct.at3 = value
       def height: Float = struct._4
+      def height_=(value: Float): Unit = !struct.at4 = value
 
   opaque type RenderTexture = CStruct3[CUnsignedInt, Texture, Texture]
   object RenderTexture:
     given _tag: Tag[RenderTexture] = Tag.materializeCStruct3Tag[CUnsignedInt, Texture, Texture]
     extension (struct: RenderTexture)
       def id: CUnsignedInt = struct._1
+      def id_=(value: CUnsignedInt): Unit = !struct.at1 = value
       def texture: Texture = struct._2
+      def texture_=(value: Texture): Unit = !struct.at2 = value
       def depth: Texture = struct._3
+      def depth_=(value: Texture): Unit = !struct.at3 = value
 
   opaque type Shader = CStruct2[CUnsignedInt, Ptr[CInt]]
   object Shader:
     given _tag: Tag[Shader] = Tag.materializeCStruct2Tag[CUnsignedInt, Ptr[CInt]]
     extension (struct: Shader)
       def id: CUnsignedInt = struct._1
+      def id_=(value: CUnsignedInt): Unit = !struct.at1 = value
       def locs: Ptr[CInt] = struct._2
+      def locs_=(value: Ptr[CInt]): Unit = !struct.at2 = value
 
   opaque type Sound = CStruct2[AudioStream, CUnsignedInt]
   object Sound:
     given _tag: Tag[Sound] = Tag.materializeCStruct2Tag[AudioStream, CUnsignedInt]
     extension (struct: Sound)
       def stream: AudioStream = struct._1
+      def stream_=(value: AudioStream): Unit = !struct.at1 = value
       def frameCount: CUnsignedInt = struct._2
+      def frameCount_=(value: CUnsignedInt): Unit = !struct.at2 = value
 
   opaque type Texture = CStruct5[CUnsignedInt, CInt, CInt, CInt, CInt]
   object Texture:
     given _tag: Tag[Texture] = Tag.materializeCStruct5Tag[CUnsignedInt, CInt, CInt, CInt, CInt]
     extension (struct: Texture)
       def id: CUnsignedInt = struct._1
+      def id_=(value: CUnsignedInt): Unit = !struct.at1 = value
       def width: CInt = struct._2
+      def width_=(value: CInt): Unit = !struct.at2 = value
       def height: CInt = struct._3
+      def height_=(value: CInt): Unit = !struct.at3 = value
       def mipmaps: CInt = struct._4
+      def mipmaps_=(value: CInt): Unit = !struct.at4 = value
       def format: CInt = struct._5
+      def format_=(value: CInt): Unit = !struct.at5 = value
 
   opaque type Transform = CStruct3[Vector3, Quaternion, Vector3]
   object Transform:
     given _tag: Tag[Transform] = Tag.materializeCStruct3Tag[Vector3, Quaternion, Vector3]
     extension (struct: Transform)
       def translation: Vector3 = struct._1
+      def translation_=(value: Vector3): Unit = !struct.at1 = value
       def rotation: Quaternion = struct._2
+      def rotation_=(value: Quaternion): Unit = !struct.at2 = value
       def scale: Vector3 = struct._3
+      def scale_=(value: Vector3): Unit = !struct.at3 = value
 
   opaque type Vector2 = CStruct2[Float, Float]
   object Vector2:
     given _tag: Tag[Vector2] = Tag.materializeCStruct2Tag[Float, Float]
     extension (struct: Vector2)
       def x: Float = struct._1
+      def x_=(value: Float): Unit = !struct.at1 = value
       def y: Float = struct._2
+      def y_=(value: Float): Unit = !struct.at2 = value
 
   opaque type Vector3 = CStruct3[Float, Float, Float]
   object Vector3:
     given _tag: Tag[Vector3] = Tag.materializeCStruct3Tag[Float, Float, Float]
     extension (struct: Vector3)
       def x: Float = struct._1
+      def x_=(value: Float): Unit = !struct.at1 = value
       def y: Float = struct._2
+      def y_=(value: Float): Unit = !struct.at2 = value
       def z: Float = struct._3
+      def z_=(value: Float): Unit = !struct.at3 = value
 
   opaque type Vector4 = CStruct4[Float, Float, Float, Float]
   object Vector4:
     given _tag: Tag[Vector4] = Tag.materializeCStruct4Tag[Float, Float, Float, Float]
     extension (struct: Vector4)
       def x: Float = struct._1
+      def x_=(value: Float): Unit = !struct.at1 = value
       def y: Float = struct._2
+      def y_=(value: Float): Unit = !struct.at2 = value
       def z: Float = struct._3
+      def z_=(value: Float): Unit = !struct.at3 = value
       def w: Float = struct._4
+      def w_=(value: Float): Unit = !struct.at4 = value
 
   opaque type VrDeviceInfo = CStruct10[CInt, CInt, Float, Float, Float, Float, Float, Float, CArray[Float, Nat._4], CArray[Float, Nat._4]]
   object VrDeviceInfo:
     given _tag: Tag[VrDeviceInfo] = Tag.materializeCStruct10Tag[CInt, CInt, Float, Float, Float, Float, Float, Float, CArray[Float, Nat._4], CArray[Float, Nat._4]]
     extension (struct: VrDeviceInfo)
       def hResolution: CInt = struct._1
+      def hResolution_=(value: CInt): Unit = !struct.at1 = value
       def vResolution: CInt = struct._2
+      def vResolution_=(value: CInt): Unit = !struct.at2 = value
       def hScreenSize: Float = struct._3
+      def hScreenSize_=(value: Float): Unit = !struct.at3 = value
       def vScreenSize: Float = struct._4
+      def vScreenSize_=(value: Float): Unit = !struct.at4 = value
       def vScreenCenter: Float = struct._5
+      def vScreenCenter_=(value: Float): Unit = !struct.at5 = value
       def eyeToScreenDistance: Float = struct._6
+      def eyeToScreenDistance_=(value: Float): Unit = !struct.at6 = value
       def lensSeparationDistance: Float = struct._7
+      def lensSeparationDistance_=(value: Float): Unit = !struct.at7 = value
       def interpupillaryDistance: Float = struct._8
+      def interpupillaryDistance_=(value: Float): Unit = !struct.at8 = value
       def lensDistortionValues: CArray[Float, Nat._4] = struct._9
+      def lensDistortionValues_=(value: CArray[Float, Nat._4]): Unit = !struct.at9 = value
       def chromaAbCorrection: CArray[Float, Nat._4] = struct._10
+      def chromaAbCorrection_=(value: CArray[Float, Nat._4]): Unit = !struct.at10 = value
 
   opaque type VrStereoConfig = CStruct8[CArray[Matrix, Nat._2], CArray[Matrix, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2]]
   object VrStereoConfig:
     given _tag: Tag[VrStereoConfig] = Tag.materializeCStruct8Tag[CArray[Matrix, Nat._2], CArray[Matrix, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2], CArray[Float, Nat._2]]
     extension (struct: VrStereoConfig)
       def projection: CArray[Matrix, Nat._2] = struct._1
+      def projection_=(value: CArray[Matrix, Nat._2]): Unit = !struct.at1 = value
       def viewOffset: CArray[Matrix, Nat._2] = struct._2
+      def viewOffset_=(value: CArray[Matrix, Nat._2]): Unit = !struct.at2 = value
       def leftLensCenter: CArray[Float, Nat._2] = struct._3
+      def leftLensCenter_=(value: CArray[Float, Nat._2]): Unit = !struct.at3 = value
       def rightLensCenter: CArray[Float, Nat._2] = struct._4
+      def rightLensCenter_=(value: CArray[Float, Nat._2]): Unit = !struct.at4 = value
       def leftScreenCenter: CArray[Float, Nat._2] = struct._5
+      def leftScreenCenter_=(value: CArray[Float, Nat._2]): Unit = !struct.at5 = value
       def rightScreenCenter: CArray[Float, Nat._2] = struct._6
+      def rightScreenCenter_=(value: CArray[Float, Nat._2]): Unit = !struct.at6 = value
       def scale: CArray[Float, Nat._2] = struct._7
+      def scale_=(value: CArray[Float, Nat._2]): Unit = !struct.at7 = value
       def scaleIn: CArray[Float, Nat._2] = struct._8
+      def scaleIn_=(value: CArray[Float, Nat._2]): Unit = !struct.at8 = value
 
   opaque type Wave = CStruct5[CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, Ptr[Byte]]
   object Wave:
     given _tag: Tag[Wave] = Tag.materializeCStruct5Tag[CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, Ptr[Byte]]
     extension (struct: Wave)
       def frameCount: CUnsignedInt = struct._1
+      def frameCount_=(value: CUnsignedInt): Unit = !struct.at1 = value
       def sampleRate: CUnsignedInt = struct._2
+      def sampleRate_=(value: CUnsignedInt): Unit = !struct.at2 = value
       def sampleSize: CUnsignedInt = struct._3
+      def sampleSize_=(value: CUnsignedInt): Unit = !struct.at3 = value
       def channels: CUnsignedInt = struct._4
+      def channels_=(value: CUnsignedInt): Unit = !struct.at4 = value
       def data: Ptr[Byte] = struct._5
+      def data_=(value: Ptr[Byte]): Unit = !struct.at5 = value
 
   opaque type rAudioBuffer = CStruct0
   object rAudioBuffer:

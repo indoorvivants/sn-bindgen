@@ -96,8 +96,12 @@ object render:
             struct.fields.zipWithIndex.foreach {
               case ((fieldName, fieldType), idx) =>
                 if !rewriteFields.contains(fieldName) then
+                  val typ = scalaType(fieldType)
                   line(
-                    s"def ${escape(fieldName)}: ${scalaType(fieldType)} = struct._${idx + 1}"
+                    s"def ${escape(fieldName)}: $typ = struct._${idx + 1}"
+                  )
+                  line(
+                    s"def ${escape(fieldName + "_=")}(value: $typ): Unit = !struct.at${idx + 1} = value"
                   )
                 else
                   val newType =
@@ -105,13 +109,20 @@ object render:
                   line(
                     s"def ${escape(fieldName)}: $newType = struct._${idx + 1}.asInstanceOf[$newType]"
                   )
+                  line(
+                    s"def ${escape(fieldName + "_=")}(value: $newType): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(fieldType)}]"
+                  )
                 end if
             }
           else
             struct.fields.zip(fieldOffsets).foreach {
               case ((fieldName, fieldType), fieldOffset) =>
+                val typ = scalaType(fieldType)
                 line(
-                  s"def ${escape(fieldName)}: ${scalaType(fieldType)} = !struct.at($fieldOffset).asInstanceOf[Ptr[${scalaType(fieldType)}]]"
+                  s"def ${escape(fieldName)}: $typ = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]]"
+                )
+                line(
+                  s"def ${escape(fieldName + "_=")}(value: $typ): Unit = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]] = value"
                 )
             }
           end if
@@ -468,38 +479,44 @@ object render:
     sb.append("object types:\n")
     render.nest {
       render.to(sb)("import predef.*")
-      binding.enums.toList.sortBy(_.name).filter(_.name.isDefined).zipWithIndex.foreach {
-        case (en, idx) =>
+      binding.enums.toList
+        .sortBy(_.name)
+        .filter(_.name.isDefined)
+        .zipWithIndex
+        .foreach { case (en, idx) =>
           try render.enumeration(
             en,
             render.to(sb)
           )
           catch exc => render.to(sb)(commentException(en, exc))
           if idx != binding.enums.size - 1 then sb.append("\n")
+        }
+      binding.aliases.toList.sortBy(_.name).zipWithIndex.foreach {
+        case (en, idx) =>
+          try render.alias(
+            en,
+            render.to(sb)
+          )
+          catch exc => render.to(sb)(commentException(en, exc))
+          if idx != binding.aliases.size - 1 then sb.append("\n")
       }
-      binding.aliases.toList.sortBy(_.name).zipWithIndex.foreach { case (en, idx) =>
-        try render.alias(
-          en,
-          render.to(sb)
-        )
-        catch exc => render.to(sb)(commentException(en, exc))
-        if idx != binding.aliases.size - 1 then sb.append("\n")
+      binding.structs.toList.sortBy(_.name).zipWithIndex.foreach {
+        case (en, idx) =>
+          try render.struct(
+            en,
+            render.to(sb)
+          )
+          catch exc => render.to(sb)(commentException(en, exc))
+          if idx != binding.structs.size - 1 then sb.append("\n")
       }
-      binding.structs.toList.sortBy(_.name).zipWithIndex.foreach { case (en, idx) =>
-        try render.struct(
-          en,
-          render.to(sb)
-        )
-        catch exc => render.to(sb)(commentException(en, exc))
-        if idx != binding.structs.size - 1 then sb.append("\n")
-      }
-      binding.unions.toList.sortBy(_.name).zipWithIndex.foreach { case (en, idx) =>
-        try render.union(
-          en,
-          render.to(sb)
-        )
-        catch exc => render.to(sb)(commentException(en, exc))
-        if idx != binding.unions.size - 1 then sb.append("\n")
+      binding.unions.toList.sortBy(_.name).zipWithIndex.foreach {
+        case (en, idx) =>
+          try render.union(
+            en,
+            render.to(sb)
+          )
+          catch exc => render.to(sb)(commentException(en, exc))
+          if idx != binding.unions.size - 1 then sb.append("\n")
       }
     }
 

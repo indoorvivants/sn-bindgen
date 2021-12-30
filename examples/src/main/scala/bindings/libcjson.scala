@@ -352,148 +352,196 @@ object types:
     given _tag: Tag[__darwin_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: __darwin_pthread_attr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object __darwin_pthread_cond_t:
     given _tag: Tag[__darwin_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
     extension (struct: __darwin_pthread_cond_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_condattr_t:
     given _tag: Tag[__darwin_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_condattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_handler_rec = CStruct3[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
   object __darwin_pthread_handler_rec:
     given _tag: Tag[__darwin_pthread_handler_rec] = Tag.materializeCStruct3Tag[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
     extension (struct: __darwin_pthread_handler_rec)
       def __routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = struct._1
+      def __routine_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at1 = value
       def __arg: Ptr[Byte] = struct._2
+      def __arg_=(value: Ptr[Byte]): Unit = !struct.at2 = value
       def __next: Ptr[__darwin_pthread_handler_rec] = struct._3.asInstanceOf[Ptr[__darwin_pthread_handler_rec]]
+      def __next_=(value: Ptr[__darwin_pthread_handler_rec]): Unit = !struct.at3 = value.asInstanceOf[Ptr[Byte]]
 
   opaque type __darwin_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_mutex_t:
     given _tag: Tag[__darwin_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: __darwin_pthread_mutex_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_mutexattr_t:
     given _tag: Tag[__darwin_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_once_t:
     given _tag: Tag[__darwin_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_once_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object __darwin_pthread_rwlock_t:
     given _tag: Tag[__darwin_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
     extension (struct: __darwin_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object __darwin_pthread_rwlockattr_t:
     given _tag: Tag[__darwin_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: __darwin_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_attr_t:
     given _tag: Tag[_opaque_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: _opaque_pthread_attr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object _opaque_pthread_cond_t:
     given _tag: Tag[_opaque_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
     extension (struct: _opaque_pthread_cond_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_condattr_t:
     given _tag: Tag[_opaque_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_condattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_mutex_t:
     given _tag: Tag[_opaque_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: _opaque_pthread_mutex_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_mutexattr_t:
     given _tag: Tag[_opaque_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_once_t:
     given _tag: Tag[_opaque_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_once_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object _opaque_pthread_rwlock_t:
     given _tag: Tag[_opaque_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
     extension (struct: _opaque_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object _opaque_pthread_rwlockattr_t:
     given _tag: Tag[_opaque_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: _opaque_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_t = CStruct3[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
   object _opaque_pthread_t:
     given _tag: Tag[_opaque_pthread_t] = Tag.materializeCStruct3Tag[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
     extension (struct: _opaque_pthread_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __cleanup_stack: Ptr[__darwin_pthread_handler_rec] = struct._2
+      def __cleanup_stack_=(value: Ptr[__darwin_pthread_handler_rec]): Unit = !struct.at2 = value
       def __opaque: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]] = struct._3
+      def __opaque_=(value: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]): Unit = !struct.at3 = value
 
   opaque type cJSON = CStruct8[Ptr[Byte], Ptr[Byte], Ptr[Byte], CInt, CString, CInt, Double, CString]
   object cJSON:
     given _tag: Tag[cJSON] = Tag.materializeCStruct8Tag[Ptr[Byte], Ptr[Byte], Ptr[Byte], CInt, CString, CInt, Double, CString]
     extension (struct: cJSON)
       def next: Ptr[cJSON] = struct._1.asInstanceOf[Ptr[cJSON]]
+      def next_=(value: Ptr[cJSON]): Unit = !struct.at1 = value.asInstanceOf[Ptr[Byte]]
       def prev: Ptr[cJSON] = struct._2.asInstanceOf[Ptr[cJSON]]
+      def prev_=(value: Ptr[cJSON]): Unit = !struct.at2 = value.asInstanceOf[Ptr[Byte]]
       def child: Ptr[cJSON] = struct._3.asInstanceOf[Ptr[cJSON]]
+      def child_=(value: Ptr[cJSON]): Unit = !struct.at3 = value.asInstanceOf[Ptr[Byte]]
       def `type`: CInt = struct._4
+      def type_=(value: CInt): Unit = !struct.at4 = value
       def valuestring: CString = struct._5
+      def valuestring_=(value: CString): Unit = !struct.at5 = value
       def valueint: CInt = struct._6
+      def valueint_=(value: CInt): Unit = !struct.at6 = value
       def valuedouble: Double = struct._7
+      def valuedouble_=(value: Double): Unit = !struct.at7 = value
       def string: CString = struct._8
+      def string_=(value: CString): Unit = !struct.at8 = value
 
   opaque type cJSON_Hooks = CStruct2[Ptr[CFuncPtr1[size_t, Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Unit]]]
   object cJSON_Hooks:
     given _tag: Tag[cJSON_Hooks] = Tag.materializeCStruct2Tag[Ptr[CFuncPtr1[size_t, Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Unit]]]
     extension (struct: cJSON_Hooks)
       def malloc_fn: Ptr[CFuncPtr1[size_t, Ptr[Byte]]] = struct._1
+      def malloc_fn_=(value: Ptr[CFuncPtr1[size_t, Ptr[Byte]]]): Unit = !struct.at1 = value
       def free_fn: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = struct._2
+      def free_fn_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at2 = value
   opaque type __mbstate_t = CArray[Byte, Nat.Digit3[Nat._1, Nat._2, Nat._8]]
   object __mbstate_t:
     given _tag: Tag[__mbstate_t] = Tag.CArray[CChar, Nat.Digit3[Nat._1, Nat._2, Nat._8]](Tag.Byte, Tag.Digit3[Nat._1, Nat._2, Nat._8](Tag.Nat1, Tag.Nat2, Tag.Nat8))
@@ -505,159 +553,159 @@ object types:
 object functions: 
   import types.*
 
-  def cJSON_SetNumberHelper(`object`: Ptr[cJSON], number: Double): Double = extern
+  def cJSON_CreateIntArray(numbers: Ptr[CInt], count: CInt): Ptr[cJSON] = extern
 
-  def cJSON_Print(item: Ptr[cJSON]): CString = extern
+  def cJSON_GetErrorPtr(): CString = extern
 
-  def cJSON_Delete(item: Ptr[cJSON]): Unit = extern
+  def cJSON_free(`object`: Ptr[Byte]): Unit = extern
 
-  def cJSON_AddNumberToObject(`object`: Ptr[cJSON], name: CString, number: Double): Ptr[cJSON] = extern
-
-  def cJSON_AddItemReferenceToArray(array: Ptr[cJSON], item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_GetArrayItem(array: Ptr[cJSON], index: CInt): Ptr[cJSON] = extern
-
-  def cJSON_CreateArray(): Ptr[cJSON] = extern
-
-  def cJSON_ReplaceItemViaPointer(parent: Ptr[cJSON], item: Ptr[cJSON], replacement: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_CreateNumber(num: Double): Ptr[cJSON] = extern
-
-  def cJSON_CreateString(string: CString): Ptr[cJSON] = extern
-
-  def cJSON_ParseWithOpts(value: CString, return_parse_end: Ptr[CString], require_null_terminated: cJSON_bool): Ptr[cJSON] = extern
-
-  def cJSON_IsTrue(item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_InsertItemInArray(array: Ptr[cJSON], which: CInt, newitem: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_DetachItemFromObject(`object`: Ptr[cJSON], string: CString): Ptr[cJSON] = extern
-
-  def cJSON_GetStringValue(item: Ptr[cJSON]): CString = extern
-
-  def cJSON_CreateFloatArray(numbers: Ptr[Float], count: CInt): Ptr[cJSON] = extern
-
-  def cJSON_IsFalse(item: Ptr[cJSON]): cJSON_bool = extern
+  def cJSON_ReplaceItemInArray(array: Ptr[cJSON], which: CInt, newitem: Ptr[cJSON]): cJSON_bool = extern
 
   def cJSON_AddItemReferenceToObject(`object`: Ptr[cJSON], string: CString, item: Ptr[cJSON]): cJSON_bool = extern
 
-  def cJSON_CreateObject(): Ptr[cJSON] = extern
+  def cJSON_IsTrue(item: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_AddStringToObject(`object`: Ptr[cJSON], name: CString, string: CString): Ptr[cJSON] = extern
+
+  def cJSON_DeleteItemFromArray(array: Ptr[cJSON], which: CInt): Unit = extern
+
+  def cJSON_GetStringValue(item: Ptr[cJSON]): CString = extern
+
+  def cJSON_ParseWithLengthOpts(value: CString, buffer_length: size_t, return_parse_end: Ptr[CString], require_null_terminated: cJSON_bool): Ptr[cJSON] = extern
+
+  def cJSON_AddTrueToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
+
+  def cJSON_AddNumberToObject(`object`: Ptr[cJSON], name: CString, number: Double): Ptr[cJSON] = extern
+
+  def cJSON_DetachItemFromObjectCaseSensitive(`object`: Ptr[cJSON], string: CString): Ptr[cJSON] = extern
+
+  def cJSON_AddItemToObject(`object`: Ptr[cJSON], string: CString, item: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_AddBoolToObject(`object`: Ptr[cJSON], name: CString, boolean: cJSON_bool): Ptr[cJSON] = extern
+
+  def cJSON_AddArrayToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
+
+  def cJSON_GetNumberValue(item: Ptr[cJSON]): Double = extern
+
+  def cJSON_CreateFalse(): Ptr[cJSON] = extern
+
+  def cJSON_ReplaceItemViaPointer(parent: Ptr[cJSON], item: Ptr[cJSON], replacement: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_DetachItemFromObject(`object`: Ptr[cJSON], string: CString): Ptr[cJSON] = extern
+
+  def cJSON_Duplicate(item: Ptr[cJSON], recurse: cJSON_bool): Ptr[cJSON] = extern
+
+  def cJSON_AddFalseToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
+
+  def cJSON_IsNumber(item: Ptr[cJSON]): cJSON_bool = extern
 
   def cJSON_malloc(size: size_t): Ptr[Byte] = extern
 
-  def cJSON_AddItemToObject(`object`: Ptr[cJSON], string: CString, item: Ptr[cJSON]): cJSON_bool = extern
+  def cJSON_CreateNumber(num: Double): Ptr[cJSON] = extern
+  def cJSON_ParseWithOpts(value: CString, return_parse_end: Ptr[CString], require_null_terminated: cJSON_bool): Ptr[cJSON] = extern
+
+  def cJSON_CreateNull(): Ptr[cJSON] = extern
+
+  def cJSON_DeleteItemFromObject(`object`: Ptr[cJSON], string: CString): Unit = extern
+
+  def cJSON_PrintBuffered(item: Ptr[cJSON], prebuffer: CInt, fmt: cJSON_bool): CString = extern
+
+  def cJSON_Minify(json: CString): Unit = extern
+
+  def cJSON_CreateArrayReference(child: Ptr[cJSON]): Ptr[cJSON] = extern
+
+  def cJSON_IsInvalid(item: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_IsObject(item: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_Version(): CString = extern
+
+  def cJSON_IsArray(item: Ptr[cJSON]): cJSON_bool = extern
 
   def cJSON_PrintPreallocated(item: Ptr[cJSON], buffer: CString, length: CInt, format: cJSON_bool): cJSON_bool = extern
 
   def cJSON_IsString(item: Ptr[cJSON]): cJSON_bool = extern
 
-  def cJSON_SetValuestring(`object`: Ptr[cJSON], valuestring: CString): CString = extern
-
-  def cJSON_PrintUnformatted(item: Ptr[cJSON]): CString = extern
-
-  def cJSON_CreateArrayReference(child: Ptr[cJSON]): Ptr[cJSON] = extern
-
-  def cJSON_IsBool(item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_Version(): CString = extern
-
-  def cJSON_ReplaceItemInArray(array: Ptr[cJSON], which: CInt, newitem: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_free(`object`: Ptr[Byte]): Unit = extern
-
-  def cJSON_CreateRaw(raw: CString): Ptr[cJSON] = extern
-
-  def cJSON_DeleteItemFromObject(`object`: Ptr[cJSON], string: CString): Unit = extern
-
-  def cJSON_CreateDoubleArray(numbers: Ptr[Double], count: CInt): Ptr[cJSON] = extern
-
-  def cJSON_IsNull(item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_GetNumberValue(item: Ptr[cJSON]): Double = extern
-
-  def cJSON_DeleteItemFromObjectCaseSensitive(`object`: Ptr[cJSON], string: CString): Unit = extern
-
-  def cJSON_CreateBool(boolean: cJSON_bool): Ptr[cJSON] = extern
-
-  def cJSON_ParseWithLengthOpts(value: CString, buffer_length: size_t, return_parse_end: Ptr[CString], require_null_terminated: cJSON_bool): Ptr[cJSON] = extern
-
-  def cJSON_AddNullToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
-
-  def cJSON_IsArray(item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_AddItemToObjectCS(`object`: Ptr[cJSON], string: CString, item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_IsInvalid(item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_AddTrueToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
-
-  def cJSON_Minify(json: CString): Unit = extern
-
-  def cJSON_CreateNull(): Ptr[cJSON] = extern
-
-  def cJSON_InitHooks(hooks: Ptr[cJSON_Hooks]): Unit = extern
-
-  def cJSON_AddFalseToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
-
-  def cJSON_ReplaceItemInObject(`object`: Ptr[cJSON], string: CString, newitem: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_Parse(value: CString): Ptr[cJSON] = extern
-
-  def cJSON_ReplaceItemInObjectCaseSensitive(`object`: Ptr[cJSON], string: CString, newitem: Ptr[cJSON]): cJSON_bool = extern
-
   def cJSON_HasObjectItem(`object`: Ptr[cJSON], string: CString): cJSON_bool = extern
-
-  def cJSON_AddRawToObject(`object`: Ptr[cJSON], name: CString, raw: CString): Ptr[cJSON] = extern
-
-  def cJSON_AddBoolToObject(`object`: Ptr[cJSON], name: CString, boolean: cJSON_bool): Ptr[cJSON] = extern
-
-  def cJSON_IsRaw(item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_ParseWithLength(value: CString, buffer_length: size_t): Ptr[cJSON] = extern
-  def cJSON_CreateStringReference(string: CString): Ptr[cJSON] = extern
-
-  def cJSON_PrintBuffered(item: Ptr[cJSON], prebuffer: CInt, fmt: cJSON_bool): CString = extern
-
-  def cJSON_GetArraySize(array: Ptr[cJSON]): CInt = extern
-
-  def cJSON_IsNumber(item: Ptr[cJSON]): cJSON_bool = extern
-
-  def cJSON_CreateStringArray(strings: Ptr[CString], count: CInt): Ptr[cJSON] = extern
-
-  def cJSON_DetachItemViaPointer(parent: Ptr[cJSON], item: Ptr[cJSON]): Ptr[cJSON] = extern
-
-  def cJSON_CreateTrue(): Ptr[cJSON] = extern
 
   def cJSON_AddItemToArray(array: Ptr[cJSON], item: Ptr[cJSON]): cJSON_bool = extern
 
-  def cJSON_AddObjectToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
+  def cJSON_InitHooks(hooks: Ptr[cJSON_Hooks]): Unit = extern
 
-  def cJSON_Compare(a: Ptr[cJSON], b: Ptr[cJSON], case_sensitive: cJSON_bool): cJSON_bool = extern
+  def cJSON_CreateStringArray(strings: Ptr[CString], count: CInt): Ptr[cJSON] = extern
 
-  def cJSON_CreateIntArray(numbers: Ptr[CInt], count: CInt): Ptr[cJSON] = extern
+  def cJSON_IsRaw(item: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_AddRawToObject(`object`: Ptr[cJSON], name: CString, raw: CString): Ptr[cJSON] = extern
+
+  def cJSON_InsertItemInArray(array: Ptr[cJSON], which: CInt, newitem: Ptr[cJSON]): cJSON_bool = extern
 
   def cJSON_GetObjectItemCaseSensitive(`object`: Ptr[cJSON], string: CString): Ptr[cJSON] = extern
 
-  def cJSON_DeleteItemFromArray(array: Ptr[cJSON], which: CInt): Unit = extern
+  def cJSON_Compare(a: Ptr[cJSON], b: Ptr[cJSON], case_sensitive: cJSON_bool): cJSON_bool = extern
 
-  def cJSON_IsObject(item: Ptr[cJSON]): cJSON_bool = extern
+  def cJSON_CreateArray(): Ptr[cJSON] = extern
 
-  def cJSON_GetErrorPtr(): CString = extern
+  def cJSON_DeleteItemFromObjectCaseSensitive(`object`: Ptr[cJSON], string: CString): Unit = extern
 
-  def cJSON_DetachItemFromObjectCaseSensitive(`object`: Ptr[cJSON], string: CString): Ptr[cJSON] = extern
+  def cJSON_IsBool(item: Ptr[cJSON]): cJSON_bool = extern
 
-  def cJSON_GetObjectItem(`object`: Ptr[cJSON], string: CString): Ptr[cJSON] = extern
+  def cJSON_CreateRaw(raw: CString): Ptr[cJSON] = extern
 
-  def cJSON_Duplicate(item: Ptr[cJSON], recurse: cJSON_bool): Ptr[cJSON] = extern
+  def cJSON_AddItemReferenceToArray(array: Ptr[cJSON], item: Ptr[cJSON]): cJSON_bool = extern
 
-  def cJSON_AddArrayToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
+  def cJSON_CreateStringReference(string: CString): Ptr[cJSON] = extern
 
-  def cJSON_AddStringToObject(`object`: Ptr[cJSON], name: CString, string: CString): Ptr[cJSON] = extern
+  def cJSON_SetNumberHelper(`object`: Ptr[cJSON], number: Double): Double = extern
 
-  def cJSON_CreateFalse(): Ptr[cJSON] = extern
+  def cJSON_CreateBool(boolean: cJSON_bool): Ptr[cJSON] = extern
+
+  def cJSON_CreateObject(): Ptr[cJSON] = extern
+
+  def cJSON_CreateString(string: CString): Ptr[cJSON] = extern
+
+  def cJSON_GetArrayItem(array: Ptr[cJSON], index: CInt): Ptr[cJSON] = extern
+
+  def cJSON_IsNull(item: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_AddObjectToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
+
+  def cJSON_CreateDoubleArray(numbers: Ptr[Double], count: CInt): Ptr[cJSON] = extern
+
+  def cJSON_Delete(item: Ptr[cJSON]): Unit = extern
+
+  def cJSON_ReplaceItemInObjectCaseSensitive(`object`: Ptr[cJSON], string: CString, newitem: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_AddNullToObject(`object`: Ptr[cJSON], name: CString): Ptr[cJSON] = extern
+
+  def cJSON_AddItemToObjectCS(`object`: Ptr[cJSON], string: CString, item: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_CreateFloatArray(numbers: Ptr[Float], count: CInt): Ptr[cJSON] = extern
+
+  def cJSON_DetachItemViaPointer(parent: Ptr[cJSON], item: Ptr[cJSON]): Ptr[cJSON] = extern
+
+  def cJSON_ParseWithLength(value: CString, buffer_length: size_t): Ptr[cJSON] = extern
 
   def cJSON_CreateObjectReference(child: Ptr[cJSON]): Ptr[cJSON] = extern
 
+  def cJSON_SetValuestring(`object`: Ptr[cJSON], valuestring: CString): CString = extern
+
   def cJSON_DetachItemFromArray(array: Ptr[cJSON], which: CInt): Ptr[cJSON] = extern
+
+  def cJSON_GetArraySize(array: Ptr[cJSON]): CInt = extern
+
+  def cJSON_Parse(value: CString): Ptr[cJSON] = extern
+
+  def cJSON_ReplaceItemInObject(`object`: Ptr[cJSON], string: CString, newitem: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_PrintUnformatted(item: Ptr[cJSON]): CString = extern
+
+  def cJSON_Print(item: Ptr[cJSON]): CString = extern
+
+  def cJSON_IsFalse(item: Ptr[cJSON]): cJSON_bool = extern
+
+  def cJSON_GetObjectItem(`object`: Ptr[cJSON], string: CString): Ptr[cJSON] = extern
+
+  def cJSON_CreateTrue(): Ptr[cJSON] = extern
 
 

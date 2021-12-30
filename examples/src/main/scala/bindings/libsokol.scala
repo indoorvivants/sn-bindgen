@@ -801,668 +801,1001 @@ object types:
     given _tag: Tag[__darwin_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: __darwin_pthread_attr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object __darwin_pthread_cond_t:
     given _tag: Tag[__darwin_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
     extension (struct: __darwin_pthread_cond_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_condattr_t:
     given _tag: Tag[__darwin_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_condattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_handler_rec = CStruct3[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
   object __darwin_pthread_handler_rec:
     given _tag: Tag[__darwin_pthread_handler_rec] = Tag.materializeCStruct3Tag[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
     extension (struct: __darwin_pthread_handler_rec)
       def __routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = struct._1
+      def __routine_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at1 = value
       def __arg: Ptr[Byte] = struct._2
+      def __arg_=(value: Ptr[Byte]): Unit = !struct.at2 = value
       def __next: Ptr[__darwin_pthread_handler_rec] = struct._3.asInstanceOf[Ptr[__darwin_pthread_handler_rec]]
+      def __next_=(value: Ptr[__darwin_pthread_handler_rec]): Unit = !struct.at3 = value.asInstanceOf[Ptr[Byte]]
 
   opaque type __darwin_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_mutex_t:
     given _tag: Tag[__darwin_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: __darwin_pthread_mutex_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_mutexattr_t:
     given _tag: Tag[__darwin_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_once_t:
     given _tag: Tag[__darwin_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: __darwin_pthread_once_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object __darwin_pthread_rwlock_t:
     given _tag: Tag[__darwin_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
     extension (struct: __darwin_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type __darwin_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object __darwin_pthread_rwlockattr_t:
     given _tag: Tag[__darwin_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: __darwin_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_attr_t:
     given _tag: Tag[_opaque_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: _opaque_pthread_attr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object _opaque_pthread_cond_t:
     given _tag: Tag[_opaque_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
     extension (struct: _opaque_pthread_cond_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_condattr_t:
     given _tag: Tag[_opaque_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_condattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_mutex_t:
     given _tag: Tag[_opaque_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
     extension (struct: _opaque_pthread_mutex_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_mutexattr_t:
     given _tag: Tag[_opaque_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_once_t:
     given _tag: Tag[_opaque_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
     extension (struct: _opaque_pthread_once_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat._8] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat._8]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object _opaque_pthread_rwlock_t:
     given _tag: Tag[_opaque_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
     extension (struct: _opaque_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object _opaque_pthread_rwlockattr_t:
     given _tag: Tag[_opaque_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: _opaque_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def __opaque_=(value: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type _opaque_pthread_t = CStruct3[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
   object _opaque_pthread_t:
     given _tag: Tag[_opaque_pthread_t] = Tag.materializeCStruct3Tag[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
     extension (struct: _opaque_pthread_t)
       def __sig: CLongInt = struct._1
+      def __sig_=(value: CLongInt): Unit = !struct.at1 = value
       def __cleanup_stack: Ptr[__darwin_pthread_handler_rec] = struct._2
+      def __cleanup_stack_=(value: Ptr[__darwin_pthread_handler_rec]): Unit = !struct.at2 = value
       def __opaque: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]] = struct._3
+      def __opaque_=(value: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]): Unit = !struct.at3 = value
 
   opaque type sg_bindings = CStruct8[uint32_t, CArray[sg_buffer, Nat._8], CArray[CInt, Nat._8], sg_buffer, CInt, CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], uint32_t]
   object sg_bindings:
     given _tag: Tag[sg_bindings] = Tag.materializeCStruct8Tag[uint32_t, CArray[sg_buffer, Nat._8], CArray[CInt, Nat._8], sg_buffer, CInt, CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], uint32_t]
     extension (struct: sg_bindings)
       def _start_canary: uint32_t = struct._1
+      def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
       def vertex_buffers: CArray[sg_buffer, Nat._8] = struct._2
+      def vertex_buffers_=(value: CArray[sg_buffer, Nat._8]): Unit = !struct.at2 = value
       def vertex_buffer_offsets: CArray[CInt, Nat._8] = struct._3
+      def vertex_buffer_offsets_=(value: CArray[CInt, Nat._8]): Unit = !struct.at3 = value
       def index_buffer: sg_buffer = struct._4
+      def index_buffer_=(value: sg_buffer): Unit = !struct.at4 = value
       def index_buffer_offset: CInt = struct._5
+      def index_buffer_offset_=(value: CInt): Unit = !struct.at5 = value
       def vs_images: CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]] = struct._6
+      def vs_images_=(value: CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]]): Unit = !struct.at6 = value
       def fs_images: CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]] = struct._7
+      def fs_images_=(value: CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]]): Unit = !struct.at7 = value
       def _end_canary: uint32_t = struct._8
+      def _end_canary_=(value: uint32_t): Unit = !struct.at8 = value
 
   opaque type sg_blend_state = CStruct7[CInt, sg_blend_factor, sg_blend_factor, sg_blend_op, sg_blend_factor, sg_blend_factor, sg_blend_op]
   object sg_blend_state:
     given _tag: Tag[sg_blend_state] = Tag.materializeCStruct7Tag[CInt, sg_blend_factor, sg_blend_factor, sg_blend_op, sg_blend_factor, sg_blend_factor, sg_blend_op]
     extension (struct: sg_blend_state)
       def enabled: CInt = struct._1
+      def enabled_=(value: CInt): Unit = !struct.at1 = value
       def src_factor_rgb: sg_blend_factor = struct._2
+      def src_factor_rgb_=(value: sg_blend_factor): Unit = !struct.at2 = value
       def dst_factor_rgb: sg_blend_factor = struct._3
+      def dst_factor_rgb_=(value: sg_blend_factor): Unit = !struct.at3 = value
       def op_rgb: sg_blend_op = struct._4
+      def op_rgb_=(value: sg_blend_op): Unit = !struct.at4 = value
       def src_factor_alpha: sg_blend_factor = struct._5
+      def src_factor_alpha_=(value: sg_blend_factor): Unit = !struct.at5 = value
       def dst_factor_alpha: sg_blend_factor = struct._6
+      def dst_factor_alpha_=(value: sg_blend_factor): Unit = !struct.at6 = value
       def op_alpha: sg_blend_op = struct._7
+      def op_alpha_=(value: sg_blend_op): Unit = !struct.at7 = value
 
   opaque type sg_buffer = CStruct1[uint32_t]
   object sg_buffer:
     given _tag: Tag[sg_buffer] = Tag.materializeCStruct1Tag[uint32_t]
     extension (struct: sg_buffer)
       def id: uint32_t = struct._1
+      def id_=(value: uint32_t): Unit = !struct.at1 = value
 
   opaque type sg_buffer_desc = CStruct11[uint32_t, size_t, sg_buffer_type, sg_usage, sg_range, CString, CArray[uint32_t, Nat._2], CArray[Ptr[Byte], Nat._2], Ptr[Byte], Ptr[Byte], uint32_t]
   object sg_buffer_desc:
     given _tag: Tag[sg_buffer_desc] = Tag.materializeCStruct11Tag[uint32_t, size_t, sg_buffer_type, sg_usage, sg_range, CString, CArray[uint32_t, Nat._2], CArray[Ptr[Byte], Nat._2], Ptr[Byte], Ptr[Byte], uint32_t]
     extension (struct: sg_buffer_desc)
       def _start_canary: uint32_t = struct._1
+      def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
       def size: size_t = struct._2
+      def size_=(value: size_t): Unit = !struct.at2 = value
       def `type`: sg_buffer_type = struct._3
+      def type_=(value: sg_buffer_type): Unit = !struct.at3 = value
       def usage: sg_usage = struct._4
+      def usage_=(value: sg_usage): Unit = !struct.at4 = value
       def data: sg_range = struct._5
+      def data_=(value: sg_range): Unit = !struct.at5 = value
       def label: CString = struct._6
+      def label_=(value: CString): Unit = !struct.at6 = value
       def gl_buffers: CArray[uint32_t, Nat._2] = struct._7
+      def gl_buffers_=(value: CArray[uint32_t, Nat._2]): Unit = !struct.at7 = value
       def mtl_buffers: CArray[Ptr[Byte], Nat._2] = struct._8
+      def mtl_buffers_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at8 = value
       def d3d11_buffer: Ptr[Byte] = struct._9
+      def d3d11_buffer_=(value: Ptr[Byte]): Unit = !struct.at9 = value
       def wgpu_buffer: Ptr[Byte] = struct._10
+      def wgpu_buffer_=(value: Ptr[Byte]): Unit = !struct.at10 = value
       def _end_canary: uint32_t = struct._11
+      def _end_canary_=(value: uint32_t): Unit = !struct.at11 = value
 
   opaque type sg_buffer_info = CStruct7[sg_slot_info, uint32_t, uint32_t, CInt, CInt, CInt, CInt]
   object sg_buffer_info:
     given _tag: Tag[sg_buffer_info] = Tag.materializeCStruct7Tag[sg_slot_info, uint32_t, uint32_t, CInt, CInt, CInt, CInt]
     extension (struct: sg_buffer_info)
       def slot: sg_slot_info = struct._1
+      def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
       def update_frame_index: uint32_t = struct._2
+      def update_frame_index_=(value: uint32_t): Unit = !struct.at2 = value
       def append_frame_index: uint32_t = struct._3
+      def append_frame_index_=(value: uint32_t): Unit = !struct.at3 = value
       def append_pos: CInt = struct._4
+      def append_pos_=(value: CInt): Unit = !struct.at4 = value
       def append_overflow: CInt = struct._5
+      def append_overflow_=(value: CInt): Unit = !struct.at5 = value
       def num_slots: CInt = struct._6
+      def num_slots_=(value: CInt): Unit = !struct.at6 = value
       def active_slot: CInt = struct._7
+      def active_slot_=(value: CInt): Unit = !struct.at7 = value
 
   opaque type sg_buffer_layout_desc = CStruct3[CInt, sg_vertex_step, CInt]
   object sg_buffer_layout_desc:
     given _tag: Tag[sg_buffer_layout_desc] = Tag.materializeCStruct3Tag[CInt, sg_vertex_step, CInt]
     extension (struct: sg_buffer_layout_desc)
       def stride: CInt = struct._1
+      def stride_=(value: CInt): Unit = !struct.at1 = value
       def step_func: sg_vertex_step = struct._2
+      def step_func_=(value: sg_vertex_step): Unit = !struct.at2 = value
       def step_rate: CInt = struct._3
+      def step_rate_=(value: CInt): Unit = !struct.at3 = value
 
   opaque type sg_color = CStruct4[Float, Float, Float, Float]
   object sg_color:
     given _tag: Tag[sg_color] = Tag.materializeCStruct4Tag[Float, Float, Float, Float]
     extension (struct: sg_color)
       def r: Float = struct._1
+      def r_=(value: Float): Unit = !struct.at1 = value
       def g: Float = struct._2
+      def g_=(value: Float): Unit = !struct.at2 = value
       def b: Float = struct._3
+      def b_=(value: Float): Unit = !struct.at3 = value
       def a: Float = struct._4
+      def a_=(value: Float): Unit = !struct.at4 = value
 
   opaque type sg_color_attachment_action = CStruct2[sg_action, sg_color]
   object sg_color_attachment_action:
     given _tag: Tag[sg_color_attachment_action] = Tag.materializeCStruct2Tag[sg_action, sg_color]
     extension (struct: sg_color_attachment_action)
       def action: sg_action = struct._1
+      def action_=(value: sg_action): Unit = !struct.at1 = value
       def value: sg_color = struct._2
+      def value_=(value: sg_color): Unit = !struct.at2 = value
 
   opaque type sg_color_state = CStruct3[sg_pixel_format, sg_color_mask, sg_blend_state]
   object sg_color_state:
     given _tag: Tag[sg_color_state] = Tag.materializeCStruct3Tag[sg_pixel_format, sg_color_mask, sg_blend_state]
     extension (struct: sg_color_state)
       def pixel_format: sg_pixel_format = struct._1
+      def pixel_format_=(value: sg_pixel_format): Unit = !struct.at1 = value
       def write_mask: sg_color_mask = struct._2
+      def write_mask_=(value: sg_color_mask): Unit = !struct.at2 = value
       def blend: sg_blend_state = struct._3
+      def blend_=(value: sg_blend_state): Unit = !struct.at3 = value
 
   opaque type sg_context = CStruct1[uint32_t]
   object sg_context:
     given _tag: Tag[sg_context] = Tag.materializeCStruct1Tag[uint32_t]
     extension (struct: sg_context)
       def id: uint32_t = struct._1
+      def id_=(value: uint32_t): Unit = !struct.at1 = value
 
   opaque type sg_context_desc = CStruct7[sg_pixel_format, sg_pixel_format, CInt, sg_gl_context_desc, sg_metal_context_desc, sg_d3d11_context_desc, sg_wgpu_context_desc]
   object sg_context_desc:
     given _tag: Tag[sg_context_desc] = Tag.materializeCStruct7Tag[sg_pixel_format, sg_pixel_format, CInt, sg_gl_context_desc, sg_metal_context_desc, sg_d3d11_context_desc, sg_wgpu_context_desc]
     extension (struct: sg_context_desc)
       def color_format: sg_pixel_format = struct._1
+      def color_format_=(value: sg_pixel_format): Unit = !struct.at1 = value
       def depth_format: sg_pixel_format = struct._2
+      def depth_format_=(value: sg_pixel_format): Unit = !struct.at2 = value
       def sample_count: CInt = struct._3
+      def sample_count_=(value: CInt): Unit = !struct.at3 = value
       def gl: sg_gl_context_desc = struct._4
+      def gl_=(value: sg_gl_context_desc): Unit = !struct.at4 = value
       def metal: sg_metal_context_desc = struct._5
+      def metal_=(value: sg_metal_context_desc): Unit = !struct.at5 = value
       def d3d11: sg_d3d11_context_desc = struct._6
+      def d3d11_=(value: sg_d3d11_context_desc): Unit = !struct.at6 = value
       def wgpu: sg_wgpu_context_desc = struct._7
+      def wgpu_=(value: sg_wgpu_context_desc): Unit = !struct.at7 = value
 
   opaque type sg_d3d11_context_desc = CStruct7[Ptr[Byte], Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
   object sg_d3d11_context_desc:
     given _tag: Tag[sg_d3d11_context_desc] = Tag.materializeCStruct7Tag[Ptr[Byte], Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
     extension (struct: sg_d3d11_context_desc)
       def device: Ptr[Byte] = struct._1
+      def device_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def device_context: Ptr[Byte] = struct._2
+      def device_context_=(value: Ptr[Byte]): Unit = !struct.at2 = value
       def render_target_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]] = struct._3
+      def render_target_view_cb_=(value: Ptr[CFuncPtr0[Ptr[Byte]]]): Unit = !struct.at3 = value
       def render_target_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]] = struct._4
+      def render_target_view_userdata_cb_=(value: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]]): Unit = !struct.at4 = value
       def depth_stencil_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]] = struct._5
+      def depth_stencil_view_cb_=(value: Ptr[CFuncPtr0[Ptr[Byte]]]): Unit = !struct.at5 = value
       def depth_stencil_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]] = struct._6
+      def depth_stencil_view_userdata_cb_=(value: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]]): Unit = !struct.at6 = value
       def user_data: Ptr[Byte] = struct._7
+      def user_data_=(value: Ptr[Byte]): Unit = !struct.at7 = value
 
   opaque type sg_depth_attachment_action = CStruct2[sg_action, Float]
   object sg_depth_attachment_action:
     given _tag: Tag[sg_depth_attachment_action] = Tag.materializeCStruct2Tag[sg_action, Float]
     extension (struct: sg_depth_attachment_action)
       def action: sg_action = struct._1
+      def action_=(value: sg_action): Unit = !struct.at1 = value
       def value: Float = struct._2
+      def value_=(value: Float): Unit = !struct.at2 = value
 
   opaque type sg_depth_state = CStruct6[sg_pixel_format, sg_compare_func, CInt, Float, Float, Float]
   object sg_depth_state:
     given _tag: Tag[sg_depth_state] = Tag.materializeCStruct6Tag[sg_pixel_format, sg_compare_func, CInt, Float, Float, Float]
     extension (struct: sg_depth_state)
       def pixel_format: sg_pixel_format = struct._1
+      def pixel_format_=(value: sg_pixel_format): Unit = !struct.at1 = value
       def compare: sg_compare_func = struct._2
+      def compare_=(value: sg_compare_func): Unit = !struct.at2 = value
       def write_enabled: CInt = struct._3
+      def write_enabled_=(value: CInt): Unit = !struct.at3 = value
       def bias: Float = struct._4
+      def bias_=(value: Float): Unit = !struct.at4 = value
       def bias_slope_scale: Float = struct._5
+      def bias_slope_scale_=(value: Float): Unit = !struct.at5 = value
       def bias_clamp: Float = struct._6
+      def bias_clamp_=(value: Float): Unit = !struct.at6 = value
 
   opaque type sg_desc = CStruct12[uint32_t, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, sg_context_desc, uint32_t]
   object sg_desc:
     given _tag: Tag[sg_desc] = Tag.materializeCStruct12Tag[uint32_t, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, sg_context_desc, uint32_t]
     extension (struct: sg_desc)
       def _start_canary: uint32_t = struct._1
+      def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
       def buffer_pool_size: CInt = struct._2
+      def buffer_pool_size_=(value: CInt): Unit = !struct.at2 = value
       def image_pool_size: CInt = struct._3
+      def image_pool_size_=(value: CInt): Unit = !struct.at3 = value
       def shader_pool_size: CInt = struct._4
+      def shader_pool_size_=(value: CInt): Unit = !struct.at4 = value
       def pipeline_pool_size: CInt = struct._5
+      def pipeline_pool_size_=(value: CInt): Unit = !struct.at5 = value
       def pass_pool_size: CInt = struct._6
+      def pass_pool_size_=(value: CInt): Unit = !struct.at6 = value
       def context_pool_size: CInt = struct._7
+      def context_pool_size_=(value: CInt): Unit = !struct.at7 = value
       def uniform_buffer_size: CInt = struct._8
+      def uniform_buffer_size_=(value: CInt): Unit = !struct.at8 = value
       def staging_buffer_size: CInt = struct._9
+      def staging_buffer_size_=(value: CInt): Unit = !struct.at9 = value
       def sampler_cache_size: CInt = struct._10
+      def sampler_cache_size_=(value: CInt): Unit = !struct.at10 = value
       def context: sg_context_desc = struct._11
+      def context_=(value: sg_context_desc): Unit = !struct.at11 = value
       def _end_canary: uint32_t = struct._12
+      def _end_canary_=(value: uint32_t): Unit = !struct.at12 = value
 
   opaque type sg_features = CStruct9[CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt]
   object sg_features:
     given _tag: Tag[sg_features] = Tag.materializeCStruct9Tag[CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt]
     extension (struct: sg_features)
       def instancing: CInt = struct._1
+      def instancing_=(value: CInt): Unit = !struct.at1 = value
       def origin_top_left: CInt = struct._2
+      def origin_top_left_=(value: CInt): Unit = !struct.at2 = value
       def multiple_render_targets: CInt = struct._3
+      def multiple_render_targets_=(value: CInt): Unit = !struct.at3 = value
       def msaa_render_targets: CInt = struct._4
+      def msaa_render_targets_=(value: CInt): Unit = !struct.at4 = value
       def imagetype_3d: CInt = struct._5
+      def imagetype_3d_=(value: CInt): Unit = !struct.at5 = value
       def imagetype_array: CInt = struct._6
+      def imagetype_array_=(value: CInt): Unit = !struct.at6 = value
       def image_clamp_to_border: CInt = struct._7
+      def image_clamp_to_border_=(value: CInt): Unit = !struct.at7 = value
       def mrt_independent_blend_state: CInt = struct._8
+      def mrt_independent_blend_state_=(value: CInt): Unit = !struct.at8 = value
       def mrt_independent_write_mask: CInt = struct._9
+      def mrt_independent_write_mask_=(value: CInt): Unit = !struct.at9 = value
 
   opaque type sg_gl_context_desc = CStruct1[CInt]
   object sg_gl_context_desc:
     given _tag: Tag[sg_gl_context_desc] = Tag.materializeCStruct1Tag[CInt]
     extension (struct: sg_gl_context_desc)
       def force_gles2: CInt = struct._1
+      def force_gles2_=(value: CInt): Unit = !struct.at1 = value
 
   opaque type sg_image = CStruct1[uint32_t]
   object sg_image:
     given _tag: Tag[sg_image] = Tag.materializeCStruct1Tag[uint32_t]
     extension (struct: sg_image)
       def id: uint32_t = struct._1
+      def id_=(value: uint32_t): Unit = !struct.at1 = value
 
   opaque type sg_image_data = CStruct1[CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6]]
   object sg_image_data:
     given _tag: Tag[sg_image_data] = Tag.materializeCStruct1Tag[CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6]]
     extension (struct: sg_image_data)
       def subimage: CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6] = struct._1
+      def subimage_=(value: CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6]): Unit = !struct.at1 = value
 
   opaque type sg_image_desc = CArray[Byte, Nat.Digit4[Nat._1, Nat._6, Nat._8, Nat._8]]
   object sg_image_desc:
     given _tag: Tag[sg_image_desc] = Tag.CArray[CChar, Nat.Digit4[Nat._1, Nat._6, Nat._8, Nat._8]](Tag.Byte, Tag.Digit4[Nat._1, Nat._6, Nat._8, Nat._8](Tag.Nat1, Tag.Nat6, Tag.Nat8, Tag.Nat8))
     extension (struct: sg_image_desc)
       def _start_canary: uint32_t = !struct.at(0).asInstanceOf[Ptr[uint32_t]]
+      def _start_canary_=(value: uint32_t): Unit = !struct.at(0).asInstanceOf[Ptr[uint32_t]] = value
       def `type`: sg_image_type = !struct.at(4).asInstanceOf[Ptr[sg_image_type]]
+      def type_=(value: sg_image_type): Unit = !struct.at(4).asInstanceOf[Ptr[sg_image_type]] = value
       def render_target: CInt = !struct.at(8).asInstanceOf[Ptr[CInt]]
+      def render_target_=(value: CInt): Unit = !struct.at(8).asInstanceOf[Ptr[CInt]] = value
       def width: CInt = !struct.at(12).asInstanceOf[Ptr[CInt]]
+      def width_=(value: CInt): Unit = !struct.at(12).asInstanceOf[Ptr[CInt]] = value
       def height: CInt = !struct.at(16).asInstanceOf[Ptr[CInt]]
+      def height_=(value: CInt): Unit = !struct.at(16).asInstanceOf[Ptr[CInt]] = value
       def num_slices: CInt = !struct.at(20).asInstanceOf[Ptr[CInt]]
+      def num_slices_=(value: CInt): Unit = !struct.at(20).asInstanceOf[Ptr[CInt]] = value
       def num_mipmaps: CInt = !struct.at(24).asInstanceOf[Ptr[CInt]]
+      def num_mipmaps_=(value: CInt): Unit = !struct.at(24).asInstanceOf[Ptr[CInt]] = value
       def usage: sg_usage = !struct.at(28).asInstanceOf[Ptr[sg_usage]]
+      def usage_=(value: sg_usage): Unit = !struct.at(28).asInstanceOf[Ptr[sg_usage]] = value
       def pixel_format: sg_pixel_format = !struct.at(32).asInstanceOf[Ptr[sg_pixel_format]]
+      def pixel_format_=(value: sg_pixel_format): Unit = !struct.at(32).asInstanceOf[Ptr[sg_pixel_format]] = value
       def sample_count: CInt = !struct.at(36).asInstanceOf[Ptr[CInt]]
+      def sample_count_=(value: CInt): Unit = !struct.at(36).asInstanceOf[Ptr[CInt]] = value
       def min_filter: sg_filter = !struct.at(40).asInstanceOf[Ptr[sg_filter]]
+      def min_filter_=(value: sg_filter): Unit = !struct.at(40).asInstanceOf[Ptr[sg_filter]] = value
       def mag_filter: sg_filter = !struct.at(44).asInstanceOf[Ptr[sg_filter]]
+      def mag_filter_=(value: sg_filter): Unit = !struct.at(44).asInstanceOf[Ptr[sg_filter]] = value
       def wrap_u: sg_wrap = !struct.at(48).asInstanceOf[Ptr[sg_wrap]]
+      def wrap_u_=(value: sg_wrap): Unit = !struct.at(48).asInstanceOf[Ptr[sg_wrap]] = value
       def wrap_v: sg_wrap = !struct.at(52).asInstanceOf[Ptr[sg_wrap]]
+      def wrap_v_=(value: sg_wrap): Unit = !struct.at(52).asInstanceOf[Ptr[sg_wrap]] = value
       def wrap_w: sg_wrap = !struct.at(56).asInstanceOf[Ptr[sg_wrap]]
+      def wrap_w_=(value: sg_wrap): Unit = !struct.at(56).asInstanceOf[Ptr[sg_wrap]] = value
       def border_color: sg_border_color = !struct.at(60).asInstanceOf[Ptr[sg_border_color]]
+      def border_color_=(value: sg_border_color): Unit = !struct.at(60).asInstanceOf[Ptr[sg_border_color]] = value
       def max_anisotropy: uint32_t = !struct.at(64).asInstanceOf[Ptr[uint32_t]]
+      def max_anisotropy_=(value: uint32_t): Unit = !struct.at(64).asInstanceOf[Ptr[uint32_t]] = value
       def min_lod: Float = !struct.at(68).asInstanceOf[Ptr[Float]]
+      def min_lod_=(value: Float): Unit = !struct.at(68).asInstanceOf[Ptr[Float]] = value
       def max_lod: Float = !struct.at(72).asInstanceOf[Ptr[Float]]
+      def max_lod_=(value: Float): Unit = !struct.at(72).asInstanceOf[Ptr[Float]] = value
       def data: sg_image_data = !struct.at(80).asInstanceOf[Ptr[sg_image_data]]
+      def data_=(value: sg_image_data): Unit = !struct.at(80).asInstanceOf[Ptr[sg_image_data]] = value
       def label: CString = !struct.at(1616).asInstanceOf[Ptr[CString]]
+      def label_=(value: CString): Unit = !struct.at(1616).asInstanceOf[Ptr[CString]] = value
       def gl_textures: CArray[uint32_t, Nat._2] = !struct.at(1624).asInstanceOf[Ptr[CArray[uint32_t, Nat._2]]]
+      def gl_textures_=(value: CArray[uint32_t, Nat._2]): Unit = !struct.at(1624).asInstanceOf[Ptr[CArray[uint32_t, Nat._2]]] = value
       def gl_texture_target: uint32_t = !struct.at(1632).asInstanceOf[Ptr[uint32_t]]
+      def gl_texture_target_=(value: uint32_t): Unit = !struct.at(1632).asInstanceOf[Ptr[uint32_t]] = value
       def mtl_textures: CArray[Ptr[Byte], Nat._2] = !struct.at(1640).asInstanceOf[Ptr[CArray[Ptr[Byte], Nat._2]]]
+      def mtl_textures_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at(1640).asInstanceOf[Ptr[CArray[Ptr[Byte], Nat._2]]] = value
       def d3d11_texture: Ptr[Byte] = !struct.at(1656).asInstanceOf[Ptr[Ptr[Byte]]]
+      def d3d11_texture_=(value: Ptr[Byte]): Unit = !struct.at(1656).asInstanceOf[Ptr[Ptr[Byte]]] = value
       def d3d11_shader_resource_view: Ptr[Byte] = !struct.at(1664).asInstanceOf[Ptr[Ptr[Byte]]]
+      def d3d11_shader_resource_view_=(value: Ptr[Byte]): Unit = !struct.at(1664).asInstanceOf[Ptr[Ptr[Byte]]] = value
       def wgpu_texture: Ptr[Byte] = !struct.at(1672).asInstanceOf[Ptr[Ptr[Byte]]]
+      def wgpu_texture_=(value: Ptr[Byte]): Unit = !struct.at(1672).asInstanceOf[Ptr[Ptr[Byte]]] = value
       def _end_canary: uint32_t = !struct.at(1680).asInstanceOf[Ptr[uint32_t]]
+      def _end_canary_=(value: uint32_t): Unit = !struct.at(1680).asInstanceOf[Ptr[uint32_t]] = value
 
   opaque type sg_image_info = CStruct6[sg_slot_info, uint32_t, CInt, CInt, CInt, CInt]
   object sg_image_info:
     given _tag: Tag[sg_image_info] = Tag.materializeCStruct6Tag[sg_slot_info, uint32_t, CInt, CInt, CInt, CInt]
     extension (struct: sg_image_info)
       def slot: sg_slot_info = struct._1
+      def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
       def upd_frame_index: uint32_t = struct._2
+      def upd_frame_index_=(value: uint32_t): Unit = !struct.at2 = value
       def num_slots: CInt = struct._3
+      def num_slots_=(value: CInt): Unit = !struct.at3 = value
       def active_slot: CInt = struct._4
+      def active_slot_=(value: CInt): Unit = !struct.at4 = value
       def width: CInt = struct._5
+      def width_=(value: CInt): Unit = !struct.at5 = value
       def height: CInt = struct._6
+      def height_=(value: CInt): Unit = !struct.at6 = value
 
   opaque type sg_layout_desc = CStruct2[CArray[sg_buffer_layout_desc, Nat._8], CArray[sg_vertex_attr_desc, Nat.Digit2[Nat._1, Nat._6]]]
   object sg_layout_desc:
     given _tag: Tag[sg_layout_desc] = Tag.materializeCStruct2Tag[CArray[sg_buffer_layout_desc, Nat._8], CArray[sg_vertex_attr_desc, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: sg_layout_desc)
       def buffers: CArray[sg_buffer_layout_desc, Nat._8] = struct._1
+      def buffers_=(value: CArray[sg_buffer_layout_desc, Nat._8]): Unit = !struct.at1 = value
       def attrs: CArray[sg_vertex_attr_desc, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def attrs_=(value: CArray[sg_vertex_attr_desc, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type sg_limits = CStruct7[CInt, CInt, CInt, CInt, CInt, CInt, CInt]
   object sg_limits:
     given _tag: Tag[sg_limits] = Tag.materializeCStruct7Tag[CInt, CInt, CInt, CInt, CInt, CInt, CInt]
     extension (struct: sg_limits)
       def max_image_size_2d: CInt = struct._1
+      def max_image_size_2d_=(value: CInt): Unit = !struct.at1 = value
       def max_image_size_cube: CInt = struct._2
+      def max_image_size_cube_=(value: CInt): Unit = !struct.at2 = value
       def max_image_size_3d: CInt = struct._3
+      def max_image_size_3d_=(value: CInt): Unit = !struct.at3 = value
       def max_image_size_array: CInt = struct._4
+      def max_image_size_array_=(value: CInt): Unit = !struct.at4 = value
       def max_image_array_layers: CInt = struct._5
+      def max_image_array_layers_=(value: CInt): Unit = !struct.at5 = value
       def max_vertex_attrs: CInt = struct._6
+      def max_vertex_attrs_=(value: CInt): Unit = !struct.at6 = value
       def gl_max_vertex_uniform_vectors: CInt = struct._7
+      def gl_max_vertex_uniform_vectors_=(value: CInt): Unit = !struct.at7 = value
 
   opaque type sg_metal_context_desc = CStruct6[Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
   object sg_metal_context_desc:
     given _tag: Tag[sg_metal_context_desc] = Tag.materializeCStruct6Tag[Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
     extension (struct: sg_metal_context_desc)
       def device: Ptr[Byte] = struct._1
+      def device_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def renderpass_descriptor_cb: Ptr[CFuncPtr0[Ptr[Byte]]] = struct._2
+      def renderpass_descriptor_cb_=(value: Ptr[CFuncPtr0[Ptr[Byte]]]): Unit = !struct.at2 = value
       def renderpass_descriptor_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]] = struct._3
+      def renderpass_descriptor_userdata_cb_=(value: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]]): Unit = !struct.at3 = value
       def drawable_cb: Ptr[CFuncPtr0[Ptr[Byte]]] = struct._4
+      def drawable_cb_=(value: Ptr[CFuncPtr0[Ptr[Byte]]]): Unit = !struct.at4 = value
       def drawable_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]] = struct._5
+      def drawable_userdata_cb_=(value: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]]): Unit = !struct.at5 = value
       def user_data: Ptr[Byte] = struct._6
+      def user_data_=(value: Ptr[Byte]): Unit = !struct.at6 = value
 
   opaque type sg_pass = CStruct1[uint32_t]
   object sg_pass:
     given _tag: Tag[sg_pass] = Tag.materializeCStruct1Tag[uint32_t]
     extension (struct: sg_pass)
       def id: uint32_t = struct._1
+      def id_=(value: uint32_t): Unit = !struct.at1 = value
 
   opaque type sg_pass_action = CStruct5[uint32_t, CArray[sg_color_attachment_action, Nat._4], sg_depth_attachment_action, sg_stencil_attachment_action, uint32_t]
   object sg_pass_action:
     given _tag: Tag[sg_pass_action] = Tag.materializeCStruct5Tag[uint32_t, CArray[sg_color_attachment_action, Nat._4], sg_depth_attachment_action, sg_stencil_attachment_action, uint32_t]
     extension (struct: sg_pass_action)
       def _start_canary: uint32_t = struct._1
+      def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
       def colors: CArray[sg_color_attachment_action, Nat._4] = struct._2
+      def colors_=(value: CArray[sg_color_attachment_action, Nat._4]): Unit = !struct.at2 = value
       def depth: sg_depth_attachment_action = struct._3
+      def depth_=(value: sg_depth_attachment_action): Unit = !struct.at3 = value
       def stencil: sg_stencil_attachment_action = struct._4
+      def stencil_=(value: sg_stencil_attachment_action): Unit = !struct.at4 = value
       def _end_canary: uint32_t = struct._5
+      def _end_canary_=(value: uint32_t): Unit = !struct.at5 = value
 
   opaque type sg_pass_attachment_desc = CStruct3[sg_image, CInt, CInt]
   object sg_pass_attachment_desc:
     given _tag: Tag[sg_pass_attachment_desc] = Tag.materializeCStruct3Tag[sg_image, CInt, CInt]
     extension (struct: sg_pass_attachment_desc)
       def image: sg_image = struct._1
+      def image_=(value: sg_image): Unit = !struct.at1 = value
       def mip_level: CInt = struct._2
+      def mip_level_=(value: CInt): Unit = !struct.at2 = value
       def slice: CInt = struct._3
+      def slice_=(value: CInt): Unit = !struct.at3 = value
 
   opaque type sg_pass_desc = CStruct5[uint32_t, CArray[sg_pass_attachment_desc, Nat._4], sg_pass_attachment_desc, CString, uint32_t]
   object sg_pass_desc:
     given _tag: Tag[sg_pass_desc] = Tag.materializeCStruct5Tag[uint32_t, CArray[sg_pass_attachment_desc, Nat._4], sg_pass_attachment_desc, CString, uint32_t]
     extension (struct: sg_pass_desc)
       def _start_canary: uint32_t = struct._1
+      def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
       def color_attachments: CArray[sg_pass_attachment_desc, Nat._4] = struct._2
+      def color_attachments_=(value: CArray[sg_pass_attachment_desc, Nat._4]): Unit = !struct.at2 = value
       def depth_stencil_attachment: sg_pass_attachment_desc = struct._3
+      def depth_stencil_attachment_=(value: sg_pass_attachment_desc): Unit = !struct.at3 = value
       def label: CString = struct._4
+      def label_=(value: CString): Unit = !struct.at4 = value
       def _end_canary: uint32_t = struct._5
+      def _end_canary_=(value: uint32_t): Unit = !struct.at5 = value
 
   opaque type sg_pass_info = CStruct1[sg_slot_info]
   object sg_pass_info:
     given _tag: Tag[sg_pass_info] = Tag.materializeCStruct1Tag[sg_slot_info]
     extension (struct: sg_pass_info)
       def slot: sg_slot_info = struct._1
+      def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
 
   opaque type sg_pipeline = CStruct1[uint32_t]
   object sg_pipeline:
     given _tag: Tag[sg_pipeline] = Tag.materializeCStruct1Tag[uint32_t]
     extension (struct: sg_pipeline)
       def id: uint32_t = struct._1
+      def id_=(value: uint32_t): Unit = !struct.at1 = value
 
   opaque type sg_pipeline_desc = CStruct16[uint32_t, sg_shader, sg_layout_desc, sg_depth_state, sg_stencil_state, CInt, CArray[sg_color_state, Nat._4], sg_primitive_type, sg_index_type, sg_cull_mode, sg_face_winding, CInt, sg_color, CInt, CString, uint32_t]
   object sg_pipeline_desc:
     given _tag: Tag[sg_pipeline_desc] = Tag.materializeCStruct16Tag[uint32_t, sg_shader, sg_layout_desc, sg_depth_state, sg_stencil_state, CInt, CArray[sg_color_state, Nat._4], sg_primitive_type, sg_index_type, sg_cull_mode, sg_face_winding, CInt, sg_color, CInt, CString, uint32_t]
     extension (struct: sg_pipeline_desc)
       def _start_canary: uint32_t = struct._1
+      def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
       def shader: sg_shader = struct._2
+      def shader_=(value: sg_shader): Unit = !struct.at2 = value
       def layout: sg_layout_desc = struct._3
+      def layout_=(value: sg_layout_desc): Unit = !struct.at3 = value
       def depth: sg_depth_state = struct._4
+      def depth_=(value: sg_depth_state): Unit = !struct.at4 = value
       def stencil: sg_stencil_state = struct._5
+      def stencil_=(value: sg_stencil_state): Unit = !struct.at5 = value
       def color_count: CInt = struct._6
+      def color_count_=(value: CInt): Unit = !struct.at6 = value
       def colors: CArray[sg_color_state, Nat._4] = struct._7
+      def colors_=(value: CArray[sg_color_state, Nat._4]): Unit = !struct.at7 = value
       def primitive_type: sg_primitive_type = struct._8
+      def primitive_type_=(value: sg_primitive_type): Unit = !struct.at8 = value
       def index_type: sg_index_type = struct._9
+      def index_type_=(value: sg_index_type): Unit = !struct.at9 = value
       def cull_mode: sg_cull_mode = struct._10
+      def cull_mode_=(value: sg_cull_mode): Unit = !struct.at10 = value
       def face_winding: sg_face_winding = struct._11
+      def face_winding_=(value: sg_face_winding): Unit = !struct.at11 = value
       def sample_count: CInt = struct._12
+      def sample_count_=(value: CInt): Unit = !struct.at12 = value
       def blend_color: sg_color = struct._13
+      def blend_color_=(value: sg_color): Unit = !struct.at13 = value
       def alpha_to_coverage_enabled: CInt = struct._14
+      def alpha_to_coverage_enabled_=(value: CInt): Unit = !struct.at14 = value
       def label: CString = struct._15
+      def label_=(value: CString): Unit = !struct.at15 = value
       def _end_canary: uint32_t = struct._16
+      def _end_canary_=(value: uint32_t): Unit = !struct.at16 = value
 
   opaque type sg_pipeline_info = CStruct1[sg_slot_info]
   object sg_pipeline_info:
     given _tag: Tag[sg_pipeline_info] = Tag.materializeCStruct1Tag[sg_slot_info]
     extension (struct: sg_pipeline_info)
       def slot: sg_slot_info = struct._1
+      def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
 
   opaque type sg_pixelformat_info = CStruct6[CInt, CInt, CInt, CInt, CInt, CInt]
   object sg_pixelformat_info:
     given _tag: Tag[sg_pixelformat_info] = Tag.materializeCStruct6Tag[CInt, CInt, CInt, CInt, CInt, CInt]
     extension (struct: sg_pixelformat_info)
       def sample: CInt = struct._1
+      def sample_=(value: CInt): Unit = !struct.at1 = value
       def filter: CInt = struct._2
+      def filter_=(value: CInt): Unit = !struct.at2 = value
       def render: CInt = struct._3
+      def render_=(value: CInt): Unit = !struct.at3 = value
       def blend: CInt = struct._4
+      def blend_=(value: CInt): Unit = !struct.at4 = value
       def msaa: CInt = struct._5
+      def msaa_=(value: CInt): Unit = !struct.at5 = value
       def depth: CInt = struct._6
+      def depth_=(value: CInt): Unit = !struct.at6 = value
 
   opaque type sg_range = CStruct2[Ptr[Byte], size_t]
   object sg_range:
     given _tag: Tag[sg_range] = Tag.materializeCStruct2Tag[Ptr[Byte], size_t]
     extension (struct: sg_range)
       def ptr: Ptr[Byte] = struct._1
+      def ptr_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def size: size_t = struct._2
+      def size_=(value: size_t): Unit = !struct.at2 = value
 
   opaque type sg_shader = CStruct1[uint32_t]
   object sg_shader:
     given _tag: Tag[sg_shader] = Tag.materializeCStruct1Tag[uint32_t]
     extension (struct: sg_shader)
       def id: uint32_t = struct._1
+      def id_=(value: uint32_t): Unit = !struct.at1 = value
 
   opaque type sg_shader_attr_desc = CStruct3[CString, CString, CInt]
   object sg_shader_attr_desc:
     given _tag: Tag[sg_shader_attr_desc] = Tag.materializeCStruct3Tag[CString, CString, CInt]
     extension (struct: sg_shader_attr_desc)
       def name: CString = struct._1
+      def name_=(value: CString): Unit = !struct.at1 = value
       def sem_name: CString = struct._2
+      def sem_name_=(value: CString): Unit = !struct.at2 = value
       def sem_index: CInt = struct._3
+      def sem_index_=(value: CInt): Unit = !struct.at3 = value
 
   opaque type sg_shader_desc = CStruct6[uint32_t, CArray[sg_shader_attr_desc, Nat.Digit2[Nat._1, Nat._6]], sg_shader_stage_desc, sg_shader_stage_desc, CString, uint32_t]
   object sg_shader_desc:
     given _tag: Tag[sg_shader_desc] = Tag.materializeCStruct6Tag[uint32_t, CArray[sg_shader_attr_desc, Nat.Digit2[Nat._1, Nat._6]], sg_shader_stage_desc, sg_shader_stage_desc, CString, uint32_t]
     extension (struct: sg_shader_desc)
       def _start_canary: uint32_t = struct._1
+      def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
       def attrs: CArray[sg_shader_attr_desc, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def attrs_=(value: CArray[sg_shader_attr_desc, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
       def vs: sg_shader_stage_desc = struct._3
+      def vs_=(value: sg_shader_stage_desc): Unit = !struct.at3 = value
       def fs: sg_shader_stage_desc = struct._4
+      def fs_=(value: sg_shader_stage_desc): Unit = !struct.at4 = value
       def label: CString = struct._5
+      def label_=(value: CString): Unit = !struct.at5 = value
       def _end_canary: uint32_t = struct._6
+      def _end_canary_=(value: uint32_t): Unit = !struct.at6 = value
 
   opaque type sg_shader_image_desc = CStruct3[CString, sg_image_type, sg_sampler_type]
   object sg_shader_image_desc:
     given _tag: Tag[sg_shader_image_desc] = Tag.materializeCStruct3Tag[CString, sg_image_type, sg_sampler_type]
     extension (struct: sg_shader_image_desc)
       def name: CString = struct._1
+      def name_=(value: CString): Unit = !struct.at1 = value
       def image_type: sg_image_type = struct._2
+      def image_type_=(value: sg_image_type): Unit = !struct.at2 = value
       def sampler_type: sg_sampler_type = struct._3
+      def sampler_type_=(value: sg_sampler_type): Unit = !struct.at3 = value
 
   opaque type sg_shader_info = CStruct1[sg_slot_info]
   object sg_shader_info:
     given _tag: Tag[sg_shader_info] = Tag.materializeCStruct1Tag[sg_slot_info]
     extension (struct: sg_shader_info)
       def slot: sg_slot_info = struct._1
+      def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
 
   opaque type sg_shader_stage_desc = CStruct6[CString, sg_range, CString, CString, CArray[sg_shader_uniform_block_desc, Nat._4], CArray[sg_shader_image_desc, Nat.Digit2[Nat._1, Nat._2]]]
   object sg_shader_stage_desc:
     given _tag: Tag[sg_shader_stage_desc] = Tag.materializeCStruct6Tag[CString, sg_range, CString, CString, CArray[sg_shader_uniform_block_desc, Nat._4], CArray[sg_shader_image_desc, Nat.Digit2[Nat._1, Nat._2]]]
     extension (struct: sg_shader_stage_desc)
       def source: CString = struct._1
+      def source_=(value: CString): Unit = !struct.at1 = value
       def bytecode: sg_range = struct._2
+      def bytecode_=(value: sg_range): Unit = !struct.at2 = value
       def entry: CString = struct._3
+      def entry_=(value: CString): Unit = !struct.at3 = value
       def d3d11_target: CString = struct._4
+      def d3d11_target_=(value: CString): Unit = !struct.at4 = value
       def uniform_blocks: CArray[sg_shader_uniform_block_desc, Nat._4] = struct._5
+      def uniform_blocks_=(value: CArray[sg_shader_uniform_block_desc, Nat._4]): Unit = !struct.at5 = value
       def images: CArray[sg_shader_image_desc, Nat.Digit2[Nat._1, Nat._2]] = struct._6
+      def images_=(value: CArray[sg_shader_image_desc, Nat.Digit2[Nat._1, Nat._2]]): Unit = !struct.at6 = value
 
   opaque type sg_shader_uniform_block_desc = CStruct2[size_t, CArray[sg_shader_uniform_desc, Nat.Digit2[Nat._1, Nat._6]]]
   object sg_shader_uniform_block_desc:
     given _tag: Tag[sg_shader_uniform_block_desc] = Tag.materializeCStruct2Tag[size_t, CArray[sg_shader_uniform_desc, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: sg_shader_uniform_block_desc)
       def size: size_t = struct._1
+      def size_=(value: size_t): Unit = !struct.at1 = value
       def uniforms: CArray[sg_shader_uniform_desc, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def uniforms_=(value: CArray[sg_shader_uniform_desc, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type sg_shader_uniform_desc = CStruct3[CString, sg_uniform_type, CInt]
   object sg_shader_uniform_desc:
     given _tag: Tag[sg_shader_uniform_desc] = Tag.materializeCStruct3Tag[CString, sg_uniform_type, CInt]
     extension (struct: sg_shader_uniform_desc)
       def name: CString = struct._1
+      def name_=(value: CString): Unit = !struct.at1 = value
       def `type`: sg_uniform_type = struct._2
+      def type_=(value: sg_uniform_type): Unit = !struct.at2 = value
       def array_count: CInt = struct._3
+      def array_count_=(value: CInt): Unit = !struct.at3 = value
 
   opaque type sg_slot_info = CStruct3[sg_resource_state, uint32_t, uint32_t]
   object sg_slot_info:
     given _tag: Tag[sg_slot_info] = Tag.materializeCStruct3Tag[sg_resource_state, uint32_t, uint32_t]
     extension (struct: sg_slot_info)
       def state: sg_resource_state = struct._1
+      def state_=(value: sg_resource_state): Unit = !struct.at1 = value
       def res_id: uint32_t = struct._2
+      def res_id_=(value: uint32_t): Unit = !struct.at2 = value
       def ctx_id: uint32_t = struct._3
+      def ctx_id_=(value: uint32_t): Unit = !struct.at3 = value
 
   opaque type sg_stencil_attachment_action = CStruct2[sg_action, uint8_t]
   object sg_stencil_attachment_action:
     given _tag: Tag[sg_stencil_attachment_action] = Tag.materializeCStruct2Tag[sg_action, uint8_t]
     extension (struct: sg_stencil_attachment_action)
       def action: sg_action = struct._1
+      def action_=(value: sg_action): Unit = !struct.at1 = value
       def value: uint8_t = struct._2
+      def value_=(value: uint8_t): Unit = !struct.at2 = value
 
   opaque type sg_stencil_face_state = CStruct4[sg_compare_func, sg_stencil_op, sg_stencil_op, sg_stencil_op]
   object sg_stencil_face_state:
     given _tag: Tag[sg_stencil_face_state] = Tag.materializeCStruct4Tag[sg_compare_func, sg_stencil_op, sg_stencil_op, sg_stencil_op]
     extension (struct: sg_stencil_face_state)
       def compare: sg_compare_func = struct._1
+      def compare_=(value: sg_compare_func): Unit = !struct.at1 = value
       def fail_op: sg_stencil_op = struct._2
+      def fail_op_=(value: sg_stencil_op): Unit = !struct.at2 = value
       def depth_fail_op: sg_stencil_op = struct._3
+      def depth_fail_op_=(value: sg_stencil_op): Unit = !struct.at3 = value
       def pass_op: sg_stencil_op = struct._4
+      def pass_op_=(value: sg_stencil_op): Unit = !struct.at4 = value
 
   opaque type sg_stencil_state = CStruct6[CInt, sg_stencil_face_state, sg_stencil_face_state, uint8_t, uint8_t, uint8_t]
   object sg_stencil_state:
     given _tag: Tag[sg_stencil_state] = Tag.materializeCStruct6Tag[CInt, sg_stencil_face_state, sg_stencil_face_state, uint8_t, uint8_t, uint8_t]
     extension (struct: sg_stencil_state)
       def enabled: CInt = struct._1
+      def enabled_=(value: CInt): Unit = !struct.at1 = value
       def front: sg_stencil_face_state = struct._2
+      def front_=(value: sg_stencil_face_state): Unit = !struct.at2 = value
       def back: sg_stencil_face_state = struct._3
+      def back_=(value: sg_stencil_face_state): Unit = !struct.at3 = value
       def read_mask: uint8_t = struct._4
+      def read_mask_=(value: uint8_t): Unit = !struct.at4 = value
       def write_mask: uint8_t = struct._5
+      def write_mask_=(value: uint8_t): Unit = !struct.at5 = value
       def ref: uint8_t = struct._6
+      def ref_=(value: uint8_t): Unit = !struct.at6 = value
 
   opaque type sg_trace_hooks = CArray[Byte, Nat.Digit3[Nat._4, Nat._8, Nat._8]]
   object sg_trace_hooks:
     given _tag: Tag[sg_trace_hooks] = Tag.CArray[CChar, Nat.Digit3[Nat._4, Nat._8, Nat._8]](Tag.Byte, Tag.Digit3[Nat._4, Nat._8, Nat._8](Tag.Nat4, Tag.Nat8, Tag.Nat8))
     extension (struct: sg_trace_hooks)
       def user_data: Ptr[Byte] = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]]
+      def user_data_=(value: Ptr[Byte]): Unit = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]] = value
       def reset_state_cache: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(8).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def reset_state_cache_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(8).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def make_buffer: Ptr[CFuncPtr3[Ptr[sg_buffer_desc], sg_buffer, Ptr[Byte], Unit]] = !struct.at(16).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_buffer_desc], sg_buffer, Ptr[Byte], Unit]]]]
+      def make_buffer_=(value: Ptr[CFuncPtr3[Ptr[sg_buffer_desc], sg_buffer, Ptr[Byte], Unit]]): Unit = !struct.at(16).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_buffer_desc], sg_buffer, Ptr[Byte], Unit]]]] = value
       def make_image: Ptr[CFuncPtr3[Ptr[sg_image_desc], sg_image, Ptr[Byte], Unit]] = !struct.at(24).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_image_desc], sg_image, Ptr[Byte], Unit]]]]
+      def make_image_=(value: Ptr[CFuncPtr3[Ptr[sg_image_desc], sg_image, Ptr[Byte], Unit]]): Unit = !struct.at(24).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_image_desc], sg_image, Ptr[Byte], Unit]]]] = value
       def make_shader: Ptr[CFuncPtr3[Ptr[sg_shader_desc], sg_shader, Ptr[Byte], Unit]] = !struct.at(32).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_shader_desc], sg_shader, Ptr[Byte], Unit]]]]
+      def make_shader_=(value: Ptr[CFuncPtr3[Ptr[sg_shader_desc], sg_shader, Ptr[Byte], Unit]]): Unit = !struct.at(32).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_shader_desc], sg_shader, Ptr[Byte], Unit]]]] = value
       def make_pipeline: Ptr[CFuncPtr3[Ptr[sg_pipeline_desc], sg_pipeline, Ptr[Byte], Unit]] = !struct.at(40).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_pipeline_desc], sg_pipeline, Ptr[Byte], Unit]]]]
+      def make_pipeline_=(value: Ptr[CFuncPtr3[Ptr[sg_pipeline_desc], sg_pipeline, Ptr[Byte], Unit]]): Unit = !struct.at(40).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_pipeline_desc], sg_pipeline, Ptr[Byte], Unit]]]] = value
       def make_pass: Ptr[CFuncPtr3[Ptr[sg_pass_desc], sg_pass, Ptr[Byte], Unit]] = !struct.at(48).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_pass_desc], sg_pass, Ptr[Byte], Unit]]]]
+      def make_pass_=(value: Ptr[CFuncPtr3[Ptr[sg_pass_desc], sg_pass, Ptr[Byte], Unit]]): Unit = !struct.at(48).asInstanceOf[Ptr[Ptr[CFuncPtr3[Ptr[sg_pass_desc], sg_pass, Ptr[Byte], Unit]]]] = value
       def destroy_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]] = !struct.at(56).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]]
+      def destroy_buffer_=(value: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]): Unit = !struct.at(56).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]] = value
       def destroy_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]] = !struct.at(64).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]]
+      def destroy_image_=(value: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]): Unit = !struct.at(64).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]] = value
       def destroy_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]] = !struct.at(72).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]]
+      def destroy_shader_=(value: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]): Unit = !struct.at(72).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]] = value
       def destroy_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]] = !struct.at(80).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]]
+      def destroy_pipeline_=(value: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]): Unit = !struct.at(80).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]] = value
       def destroy_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]] = !struct.at(88).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]]
+      def destroy_pass_=(value: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]): Unit = !struct.at(88).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]] = value
       def update_buffer: Ptr[CFuncPtr3[sg_buffer, Ptr[sg_range], Ptr[Byte], Unit]] = !struct.at(96).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_buffer, Ptr[sg_range], Ptr[Byte], Unit]]]]
+      def update_buffer_=(value: Ptr[CFuncPtr3[sg_buffer, Ptr[sg_range], Ptr[Byte], Unit]]): Unit = !struct.at(96).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_buffer, Ptr[sg_range], Ptr[Byte], Unit]]]] = value
       def update_image: Ptr[CFuncPtr3[sg_image, Ptr[sg_image_data], Ptr[Byte], Unit]] = !struct.at(104).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_image, Ptr[sg_image_data], Ptr[Byte], Unit]]]]
+      def update_image_=(value: Ptr[CFuncPtr3[sg_image, Ptr[sg_image_data], Ptr[Byte], Unit]]): Unit = !struct.at(104).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_image, Ptr[sg_image_data], Ptr[Byte], Unit]]]] = value
       def append_buffer: Ptr[CFuncPtr4[sg_buffer, Ptr[sg_range], CInt, Ptr[Byte], Unit]] = !struct.at(112).asInstanceOf[Ptr[Ptr[CFuncPtr4[sg_buffer, Ptr[sg_range], CInt, Ptr[Byte], Unit]]]]
+      def append_buffer_=(value: Ptr[CFuncPtr4[sg_buffer, Ptr[sg_range], CInt, Ptr[Byte], Unit]]): Unit = !struct.at(112).asInstanceOf[Ptr[Ptr[CFuncPtr4[sg_buffer, Ptr[sg_range], CInt, Ptr[Byte], Unit]]]] = value
       def begin_default_pass: Ptr[CFuncPtr4[Ptr[sg_pass_action], CInt, CInt, Ptr[Byte], Unit]] = !struct.at(120).asInstanceOf[Ptr[Ptr[CFuncPtr4[Ptr[sg_pass_action], CInt, CInt, Ptr[Byte], Unit]]]]
+      def begin_default_pass_=(value: Ptr[CFuncPtr4[Ptr[sg_pass_action], CInt, CInt, Ptr[Byte], Unit]]): Unit = !struct.at(120).asInstanceOf[Ptr[Ptr[CFuncPtr4[Ptr[sg_pass_action], CInt, CInt, Ptr[Byte], Unit]]]] = value
       def begin_pass: Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_action], Ptr[Byte], Unit]] = !struct.at(128).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_action], Ptr[Byte], Unit]]]]
+      def begin_pass_=(value: Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_action], Ptr[Byte], Unit]]): Unit = !struct.at(128).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_action], Ptr[Byte], Unit]]]] = value
       def apply_viewport: Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]] = !struct.at(136).asInstanceOf[Ptr[Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]]]]
+      def apply_viewport_=(value: Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]]): Unit = !struct.at(136).asInstanceOf[Ptr[Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]]]] = value
       def apply_scissor_rect: Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]] = !struct.at(144).asInstanceOf[Ptr[Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]]]]
+      def apply_scissor_rect_=(value: Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]]): Unit = !struct.at(144).asInstanceOf[Ptr[Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]]]] = value
       def apply_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]] = !struct.at(152).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]]
+      def apply_pipeline_=(value: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]): Unit = !struct.at(152).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]] = value
       def apply_bindings: Ptr[CFuncPtr2[Ptr[sg_bindings], Ptr[Byte], Unit]] = !struct.at(160).asInstanceOf[Ptr[Ptr[CFuncPtr2[Ptr[sg_bindings], Ptr[Byte], Unit]]]]
+      def apply_bindings_=(value: Ptr[CFuncPtr2[Ptr[sg_bindings], Ptr[Byte], Unit]]): Unit = !struct.at(160).asInstanceOf[Ptr[Ptr[CFuncPtr2[Ptr[sg_bindings], Ptr[Byte], Unit]]]] = value
       def apply_uniforms: Ptr[CFuncPtr4[sg_shader_stage, CInt, Ptr[sg_range], Ptr[Byte], Unit]] = !struct.at(168).asInstanceOf[Ptr[Ptr[CFuncPtr4[sg_shader_stage, CInt, Ptr[sg_range], Ptr[Byte], Unit]]]]
+      def apply_uniforms_=(value: Ptr[CFuncPtr4[sg_shader_stage, CInt, Ptr[sg_range], Ptr[Byte], Unit]]): Unit = !struct.at(168).asInstanceOf[Ptr[Ptr[CFuncPtr4[sg_shader_stage, CInt, Ptr[sg_range], Ptr[Byte], Unit]]]] = value
       def draw: Ptr[CFuncPtr4[CInt, CInt, CInt, Ptr[Byte], Unit]] = !struct.at(176).asInstanceOf[Ptr[Ptr[CFuncPtr4[CInt, CInt, CInt, Ptr[Byte], Unit]]]]
+      def draw_=(value: Ptr[CFuncPtr4[CInt, CInt, CInt, Ptr[Byte], Unit]]): Unit = !struct.at(176).asInstanceOf[Ptr[Ptr[CFuncPtr4[CInt, CInt, CInt, Ptr[Byte], Unit]]]] = value
       def end_pass: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(184).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def end_pass_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(184).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def commit: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(192).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def commit_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(192).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def alloc_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]] = !struct.at(200).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]]
+      def alloc_buffer_=(value: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]): Unit = !struct.at(200).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]] = value
       def alloc_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]] = !struct.at(208).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]]
+      def alloc_image_=(value: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]): Unit = !struct.at(208).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]] = value
       def alloc_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]] = !struct.at(216).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]]
+      def alloc_shader_=(value: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]): Unit = !struct.at(216).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]] = value
       def alloc_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]] = !struct.at(224).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]]
+      def alloc_pipeline_=(value: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]): Unit = !struct.at(224).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]] = value
       def alloc_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]] = !struct.at(232).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]]
+      def alloc_pass_=(value: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]): Unit = !struct.at(232).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]] = value
       def dealloc_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]] = !struct.at(240).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]]
+      def dealloc_buffer_=(value: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]): Unit = !struct.at(240).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]] = value
       def dealloc_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]] = !struct.at(248).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]]
+      def dealloc_image_=(value: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]): Unit = !struct.at(248).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]] = value
       def dealloc_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]] = !struct.at(256).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]]
+      def dealloc_shader_=(value: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]): Unit = !struct.at(256).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]] = value
       def dealloc_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]] = !struct.at(264).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]]
+      def dealloc_pipeline_=(value: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]): Unit = !struct.at(264).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]] = value
       def dealloc_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]] = !struct.at(272).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]]
+      def dealloc_pass_=(value: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]): Unit = !struct.at(272).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]] = value
       def init_buffer: Ptr[CFuncPtr3[sg_buffer, Ptr[sg_buffer_desc], Ptr[Byte], Unit]] = !struct.at(280).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_buffer, Ptr[sg_buffer_desc], Ptr[Byte], Unit]]]]
+      def init_buffer_=(value: Ptr[CFuncPtr3[sg_buffer, Ptr[sg_buffer_desc], Ptr[Byte], Unit]]): Unit = !struct.at(280).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_buffer, Ptr[sg_buffer_desc], Ptr[Byte], Unit]]]] = value
       def init_image: Ptr[CFuncPtr3[sg_image, Ptr[sg_image_desc], Ptr[Byte], Unit]] = !struct.at(288).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_image, Ptr[sg_image_desc], Ptr[Byte], Unit]]]]
+      def init_image_=(value: Ptr[CFuncPtr3[sg_image, Ptr[sg_image_desc], Ptr[Byte], Unit]]): Unit = !struct.at(288).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_image, Ptr[sg_image_desc], Ptr[Byte], Unit]]]] = value
       def init_shader: Ptr[CFuncPtr3[sg_shader, Ptr[sg_shader_desc], Ptr[Byte], Unit]] = !struct.at(296).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_shader, Ptr[sg_shader_desc], Ptr[Byte], Unit]]]]
+      def init_shader_=(value: Ptr[CFuncPtr3[sg_shader, Ptr[sg_shader_desc], Ptr[Byte], Unit]]): Unit = !struct.at(296).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_shader, Ptr[sg_shader_desc], Ptr[Byte], Unit]]]] = value
       def init_pipeline: Ptr[CFuncPtr3[sg_pipeline, Ptr[sg_pipeline_desc], Ptr[Byte], Unit]] = !struct.at(304).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_pipeline, Ptr[sg_pipeline_desc], Ptr[Byte], Unit]]]]
+      def init_pipeline_=(value: Ptr[CFuncPtr3[sg_pipeline, Ptr[sg_pipeline_desc], Ptr[Byte], Unit]]): Unit = !struct.at(304).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_pipeline, Ptr[sg_pipeline_desc], Ptr[Byte], Unit]]]] = value
       def init_pass: Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_desc], Ptr[Byte], Unit]] = !struct.at(312).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_desc], Ptr[Byte], Unit]]]]
+      def init_pass_=(value: Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_desc], Ptr[Byte], Unit]]): Unit = !struct.at(312).asInstanceOf[Ptr[Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_desc], Ptr[Byte], Unit]]]] = value
       def uninit_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]] = !struct.at(320).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]]
+      def uninit_buffer_=(value: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]): Unit = !struct.at(320).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]] = value
       def uninit_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]] = !struct.at(328).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]]
+      def uninit_image_=(value: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]): Unit = !struct.at(328).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]] = value
       def uninit_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]] = !struct.at(336).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]]
+      def uninit_shader_=(value: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]): Unit = !struct.at(336).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]] = value
       def uninit_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]] = !struct.at(344).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]]
+      def uninit_pipeline_=(value: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]): Unit = !struct.at(344).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]] = value
       def uninit_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]] = !struct.at(352).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]]
+      def uninit_pass_=(value: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]): Unit = !struct.at(352).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]] = value
       def fail_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]] = !struct.at(360).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]]
+      def fail_buffer_=(value: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]): Unit = !struct.at(360).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]]]] = value
       def fail_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]] = !struct.at(368).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]]
+      def fail_image_=(value: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]): Unit = !struct.at(368).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]]]] = value
       def fail_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]] = !struct.at(376).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]]
+      def fail_shader_=(value: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]): Unit = !struct.at(376).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]]]] = value
       def fail_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]] = !struct.at(384).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]]
+      def fail_pipeline_=(value: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]): Unit = !struct.at(384).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]]]] = value
       def fail_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]] = !struct.at(392).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]]
+      def fail_pass_=(value: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]): Unit = !struct.at(392).asInstanceOf[Ptr[Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]]]] = value
       def push_debug_group: Ptr[CFuncPtr2[CString, Ptr[Byte], Unit]] = !struct.at(400).asInstanceOf[Ptr[Ptr[CFuncPtr2[CString, Ptr[Byte], Unit]]]]
+      def push_debug_group_=(value: Ptr[CFuncPtr2[CString, Ptr[Byte], Unit]]): Unit = !struct.at(400).asInstanceOf[Ptr[Ptr[CFuncPtr2[CString, Ptr[Byte], Unit]]]] = value
       def pop_debug_group: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(408).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def pop_debug_group_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(408).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_buffer_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(416).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_buffer_pool_exhausted_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(416).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_image_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(424).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_image_pool_exhausted_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(424).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_shader_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(432).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_shader_pool_exhausted_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(432).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_pipeline_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(440).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_pipeline_pool_exhausted_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(440).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_pass_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(448).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_pass_pool_exhausted_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(448).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_context_mismatch: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(456).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_context_mismatch_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(456).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_pass_invalid: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(464).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_pass_invalid_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(464).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_draw_invalid: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(472).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_draw_invalid_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(472).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
       def err_bindings_invalid: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = !struct.at(480).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]]
+      def err_bindings_invalid_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at(480).asInstanceOf[Ptr[Ptr[CFuncPtr1[Ptr[Byte], Unit]]]] = value
 
   opaque type sg_vertex_attr_desc = CStruct3[CInt, CInt, sg_vertex_format]
   object sg_vertex_attr_desc:
     given _tag: Tag[sg_vertex_attr_desc] = Tag.materializeCStruct3Tag[CInt, CInt, sg_vertex_format]
     extension (struct: sg_vertex_attr_desc)
       def buffer_index: CInt = struct._1
+      def buffer_index_=(value: CInt): Unit = !struct.at1 = value
       def offset: CInt = struct._2
+      def offset_=(value: CInt): Unit = !struct.at2 = value
       def format: sg_vertex_format = struct._3
+      def format_=(value: sg_vertex_format): Unit = !struct.at3 = value
 
   opaque type sg_wgpu_context_desc = CStruct8[Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
   object sg_wgpu_context_desc:
     given _tag: Tag[sg_wgpu_context_desc] = Tag.materializeCStruct8Tag[Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
     extension (struct: sg_wgpu_context_desc)
       def device: Ptr[Byte] = struct._1
+      def device_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def render_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]] = struct._2
+      def render_view_cb_=(value: Ptr[CFuncPtr0[Ptr[Byte]]]): Unit = !struct.at2 = value
       def render_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]] = struct._3
+      def render_view_userdata_cb_=(value: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]]): Unit = !struct.at3 = value
       def resolve_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]] = struct._4
+      def resolve_view_cb_=(value: Ptr[CFuncPtr0[Ptr[Byte]]]): Unit = !struct.at4 = value
       def resolve_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]] = struct._5
+      def resolve_view_userdata_cb_=(value: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]]): Unit = !struct.at5 = value
       def depth_stencil_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]] = struct._6
+      def depth_stencil_view_cb_=(value: Ptr[CFuncPtr0[Ptr[Byte]]]): Unit = !struct.at6 = value
       def depth_stencil_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]] = struct._7
+      def depth_stencil_view_userdata_cb_=(value: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]]): Unit = !struct.at7 = value
       def user_data: Ptr[Byte] = struct._8
+      def user_data_=(value: Ptr[Byte]): Unit = !struct.at8 = value
   opaque type __mbstate_t = CArray[Byte, Nat.Digit3[Nat._1, Nat._2, Nat._8]]
   object __mbstate_t:
     given _tag: Tag[__mbstate_t] = Tag.CArray[CChar, Nat.Digit3[Nat._1, Nat._2, Nat._8]](Tag.Byte, Tag.Digit3[Nat._1, Nat._2, Nat._8](Tag.Nat1, Tag.Nat2, Tag.Nat8))

@@ -583,58 +583,86 @@ object types:
     given _tag: Tag[nk_buffer_marker] = Tag.materializeCStruct2Tag[nk_bool, nk_size]
     extension (struct: nk_buffer_marker)
       def active: nk_bool = struct._1
+      def active_=(value: nk_bool): Unit = !struct.at1 = value
       def offset: nk_size = struct._2
+      def offset_=(value: nk_size): Unit = !struct.at2 = value
 
   opaque type nk_chart = CStruct6[CInt, Float, Float, Float, Float, CArray[nk_chart_slot, Nat._4]]
   object nk_chart:
     given _tag: Tag[nk_chart] = Tag.materializeCStruct6Tag[CInt, Float, Float, Float, Float, CArray[nk_chart_slot, Nat._4]]
     extension (struct: nk_chart)
       def slot: CInt = struct._1
+      def slot_=(value: CInt): Unit = !struct.at1 = value
       def x: Float = struct._2
+      def x_=(value: Float): Unit = !struct.at2 = value
       def y: Float = struct._3
+      def y_=(value: Float): Unit = !struct.at3 = value
       def w: Float = struct._4
+      def w_=(value: Float): Unit = !struct.at4 = value
       def h: Float = struct._5
+      def h_=(value: Float): Unit = !struct.at5 = value
       def slots: CArray[nk_chart_slot, Nat._4] = struct._6
+      def slots_=(value: CArray[nk_chart_slot, Nat._4]): Unit = !struct.at6 = value
 
   opaque type nk_chart_slot = CStruct9[nk_chart_type, nk_color, nk_color, Float, Float, Float, CInt, nk_vec2, CInt]
   object nk_chart_slot:
     given _tag: Tag[nk_chart_slot] = Tag.materializeCStruct9Tag[nk_chart_type, nk_color, nk_color, Float, Float, Float, CInt, nk_vec2, CInt]
     extension (struct: nk_chart_slot)
       def `type`: nk_chart_type = struct._1
+      def type_=(value: nk_chart_type): Unit = !struct.at1 = value
       def color: nk_color = struct._2
+      def color_=(value: nk_color): Unit = !struct.at2 = value
       def highlight: nk_color = struct._3
+      def highlight_=(value: nk_color): Unit = !struct.at3 = value
       def min: Float = struct._4
+      def min_=(value: Float): Unit = !struct.at4 = value
       def max: Float = struct._5
+      def max_=(value: Float): Unit = !struct.at5 = value
       def range: Float = struct._6
+      def range_=(value: Float): Unit = !struct.at6 = value
       def count: CInt = struct._7
+      def count_=(value: CInt): Unit = !struct.at7 = value
       def last: nk_vec2 = struct._8
+      def last_=(value: nk_vec2): Unit = !struct.at8 = value
       def index: CInt = struct._9
+      def index_=(value: CInt): Unit = !struct.at9 = value
 
   opaque type nk_clipboard = CStruct3[nk_handle, nk_plugin_paste, nk_plugin_copy]
   object nk_clipboard:
     given _tag: Tag[nk_clipboard] = Tag.materializeCStruct3Tag[nk_handle, nk_plugin_paste, nk_plugin_copy]
     extension (struct: nk_clipboard)
       def userdata: nk_handle = struct._1
+      def userdata_=(value: nk_handle): Unit = !struct.at1 = value
       def paste: nk_plugin_paste = struct._2
+      def paste_=(value: nk_plugin_paste): Unit = !struct.at2 = value
       def copy: nk_plugin_copy = struct._3
+      def copy_=(value: nk_plugin_copy): Unit = !struct.at3 = value
 
   opaque type nk_color = CStruct4[nk_byte, nk_byte, nk_byte, nk_byte]
   object nk_color:
     given _tag: Tag[nk_color] = Tag.materializeCStruct4Tag[nk_byte, nk_byte, nk_byte, nk_byte]
     extension (struct: nk_color)
       def r: nk_byte = struct._1
+      def r_=(value: nk_byte): Unit = !struct.at1 = value
       def g: nk_byte = struct._2
+      def g_=(value: nk_byte): Unit = !struct.at2 = value
       def b: nk_byte = struct._3
+      def b_=(value: nk_byte): Unit = !struct.at3 = value
       def a: nk_byte = struct._4
+      def a_=(value: nk_byte): Unit = !struct.at4 = value
 
   opaque type nk_colorf = CStruct4[Float, Float, Float, Float]
   object nk_colorf:
     given _tag: Tag[nk_colorf] = Tag.materializeCStruct4Tag[Float, Float, Float, Float]
     extension (struct: nk_colorf)
       def r: Float = struct._1
+      def r_=(value: Float): Unit = !struct.at1 = value
       def g: Float = struct._2
+      def g_=(value: Float): Unit = !struct.at2 = value
       def b: Float = struct._3
+      def b_=(value: Float): Unit = !struct.at3 = value
       def a: Float = struct._4
+      def a_=(value: Float): Unit = !struct.at4 = value
 
   opaque type nk_command = CStruct0
   object nk_command:
@@ -645,23 +673,36 @@ object types:
     given _tag: Tag[nk_command_arc] = Tag.materializeCStruct7Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, CArray[Float, Nat._2], nk_color]
     extension (struct: nk_command_arc)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def cx: CShort = struct._2
+      def cx_=(value: CShort): Unit = !struct.at2 = value
       def cy: CShort = struct._3
+      def cy_=(value: CShort): Unit = !struct.at3 = value
       def r: CUnsignedShort = struct._4
+      def r_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def line_thickness: CUnsignedShort = struct._5
+      def line_thickness_=(value: CUnsignedShort): Unit = !struct.at5 = value
       def a: CArray[Float, Nat._2] = struct._6
+      def a_=(value: CArray[Float, Nat._2]): Unit = !struct.at6 = value
       def color: nk_color = struct._7
+      def color_=(value: nk_color): Unit = !struct.at7 = value
 
   opaque type nk_command_arc_filled = CStruct6[nk_command, CShort, CShort, CUnsignedShort, CArray[Float, Nat._2], nk_color]
   object nk_command_arc_filled:
     given _tag: Tag[nk_command_arc_filled] = Tag.materializeCStruct6Tag[nk_command, CShort, CShort, CUnsignedShort, CArray[Float, Nat._2], nk_color]
     extension (struct: nk_command_arc_filled)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def cx: CShort = struct._2
+      def cx_=(value: CShort): Unit = !struct.at2 = value
       def cy: CShort = struct._3
+      def cy_=(value: CShort): Unit = !struct.at3 = value
       def r: CUnsignedShort = struct._4
+      def r_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def a: CArray[Float, Nat._2] = struct._5
+      def a_=(value: CArray[Float, Nat._2]): Unit = !struct.at5 = value
       def color: nk_color = struct._6
+      def color_=(value: nk_color): Unit = !struct.at6 = value
 
   opaque type nk_command_buffer = CStruct0
   object nk_command_buffer:
@@ -672,293 +713,431 @@ object types:
     given _tag: Tag[nk_command_circle] = Tag.materializeCStruct7Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, CUnsignedShort, nk_color]
     extension (struct: nk_command_circle)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def x: CShort = struct._2
+      def x_=(value: CShort): Unit = !struct.at2 = value
       def y: CShort = struct._3
+      def y_=(value: CShort): Unit = !struct.at3 = value
       def line_thickness: CUnsignedShort = struct._4
+      def line_thickness_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def w: CUnsignedShort = struct._5
+      def w_=(value: CUnsignedShort): Unit = !struct.at5 = value
       def h: CUnsignedShort = struct._6
+      def h_=(value: CUnsignedShort): Unit = !struct.at6 = value
       def color: nk_color = struct._7
+      def color_=(value: nk_color): Unit = !struct.at7 = value
 
   opaque type nk_command_circle_filled = CStruct6[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
   object nk_command_circle_filled:
     given _tag: Tag[nk_command_circle_filled] = Tag.materializeCStruct6Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
     extension (struct: nk_command_circle_filled)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def x: CShort = struct._2
+      def x_=(value: CShort): Unit = !struct.at2 = value
       def y: CShort = struct._3
+      def y_=(value: CShort): Unit = !struct.at3 = value
       def w: CUnsignedShort = struct._4
+      def w_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def h: CUnsignedShort = struct._5
+      def h_=(value: CUnsignedShort): Unit = !struct.at5 = value
       def color: nk_color = struct._6
+      def color_=(value: nk_color): Unit = !struct.at6 = value
 
   opaque type nk_command_curve = CStruct6[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, CArray[nk_vec2i, Nat._2], nk_color]
   object nk_command_curve:
     given _tag: Tag[nk_command_curve] = Tag.materializeCStruct6Tag[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, CArray[nk_vec2i, Nat._2], nk_color]
     extension (struct: nk_command_curve)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def line_thickness: CUnsignedShort = struct._2
+      def line_thickness_=(value: CUnsignedShort): Unit = !struct.at2 = value
       def begin: nk_vec2i = struct._3
+      def begin_=(value: nk_vec2i): Unit = !struct.at3 = value
       def end: nk_vec2i = struct._4
+      def end_=(value: nk_vec2i): Unit = !struct.at4 = value
       def ctrl: CArray[nk_vec2i, Nat._2] = struct._5
+      def ctrl_=(value: CArray[nk_vec2i, Nat._2]): Unit = !struct.at5 = value
       def color: nk_color = struct._6
+      def color_=(value: nk_color): Unit = !struct.at6 = value
 
   opaque type nk_command_custom = CStruct7[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_handle, nk_command_custom_callback]
   object nk_command_custom:
     given _tag: Tag[nk_command_custom] = Tag.materializeCStruct7Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_handle, nk_command_custom_callback]
     extension (struct: nk_command_custom)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def x: CShort = struct._2
+      def x_=(value: CShort): Unit = !struct.at2 = value
       def y: CShort = struct._3
+      def y_=(value: CShort): Unit = !struct.at3 = value
       def w: CUnsignedShort = struct._4
+      def w_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def h: CUnsignedShort = struct._5
+      def h_=(value: CUnsignedShort): Unit = !struct.at5 = value
       def callback_data: nk_handle = struct._6
+      def callback_data_=(value: nk_handle): Unit = !struct.at6 = value
       def callback: nk_command_custom_callback = struct._7
+      def callback_=(value: nk_command_custom_callback): Unit = !struct.at7 = value
 
   opaque type nk_command_image = CStruct7[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_image, nk_color]
   object nk_command_image:
     given _tag: Tag[nk_command_image] = Tag.materializeCStruct7Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_image, nk_color]
     extension (struct: nk_command_image)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def x: CShort = struct._2
+      def x_=(value: CShort): Unit = !struct.at2 = value
       def y: CShort = struct._3
+      def y_=(value: CShort): Unit = !struct.at3 = value
       def w: CUnsignedShort = struct._4
+      def w_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def h: CUnsignedShort = struct._5
+      def h_=(value: CUnsignedShort): Unit = !struct.at5 = value
       def img: nk_image = struct._6
+      def img_=(value: nk_image): Unit = !struct.at6 = value
       def col: nk_color = struct._7
+      def col_=(value: nk_color): Unit = !struct.at7 = value
 
   opaque type nk_command_line = CStruct5[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, nk_color]
   object nk_command_line:
     given _tag: Tag[nk_command_line] = Tag.materializeCStruct5Tag[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, nk_color]
     extension (struct: nk_command_line)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def line_thickness: CUnsignedShort = struct._2
+      def line_thickness_=(value: CUnsignedShort): Unit = !struct.at2 = value
       def begin: nk_vec2i = struct._3
+      def begin_=(value: nk_vec2i): Unit = !struct.at3 = value
       def end: nk_vec2i = struct._4
+      def end_=(value: nk_vec2i): Unit = !struct.at4 = value
       def color: nk_color = struct._5
+      def color_=(value: nk_color): Unit = !struct.at5 = value
 
   opaque type nk_command_polygon = CStruct5[nk_command, nk_color, CUnsignedShort, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
   object nk_command_polygon:
     given _tag: Tag[nk_command_polygon] = Tag.materializeCStruct5Tag[nk_command, nk_color, CUnsignedShort, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
     extension (struct: nk_command_polygon)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def color: nk_color = struct._2
+      def color_=(value: nk_color): Unit = !struct.at2 = value
       def line_thickness: CUnsignedShort = struct._3
+      def line_thickness_=(value: CUnsignedShort): Unit = !struct.at3 = value
       def point_count: CUnsignedShort = struct._4
+      def point_count_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def points: CArray[nk_vec2i, Nat._1] = struct._5
+      def points_=(value: CArray[nk_vec2i, Nat._1]): Unit = !struct.at5 = value
 
   opaque type nk_command_polygon_filled = CStruct4[nk_command, nk_color, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
   object nk_command_polygon_filled:
     given _tag: Tag[nk_command_polygon_filled] = Tag.materializeCStruct4Tag[nk_command, nk_color, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
     extension (struct: nk_command_polygon_filled)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def color: nk_color = struct._2
+      def color_=(value: nk_color): Unit = !struct.at2 = value
       def point_count: CUnsignedShort = struct._3
+      def point_count_=(value: CUnsignedShort): Unit = !struct.at3 = value
       def points: CArray[nk_vec2i, Nat._1] = struct._4
+      def points_=(value: CArray[nk_vec2i, Nat._1]): Unit = !struct.at4 = value
 
   opaque type nk_command_polyline = CStruct5[nk_command, nk_color, CUnsignedShort, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
   object nk_command_polyline:
     given _tag: Tag[nk_command_polyline] = Tag.materializeCStruct5Tag[nk_command, nk_color, CUnsignedShort, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
     extension (struct: nk_command_polyline)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def color: nk_color = struct._2
+      def color_=(value: nk_color): Unit = !struct.at2 = value
       def line_thickness: CUnsignedShort = struct._3
+      def line_thickness_=(value: CUnsignedShort): Unit = !struct.at3 = value
       def point_count: CUnsignedShort = struct._4
+      def point_count_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def points: CArray[nk_vec2i, Nat._1] = struct._5
+      def points_=(value: CArray[nk_vec2i, Nat._1]): Unit = !struct.at5 = value
 
   opaque type nk_command_rect = CStruct8[nk_command, CUnsignedShort, CUnsignedShort, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
   object nk_command_rect:
     given _tag: Tag[nk_command_rect] = Tag.materializeCStruct8Tag[nk_command, CUnsignedShort, CUnsignedShort, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
     extension (struct: nk_command_rect)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def rounding: CUnsignedShort = struct._2
+      def rounding_=(value: CUnsignedShort): Unit = !struct.at2 = value
       def line_thickness: CUnsignedShort = struct._3
+      def line_thickness_=(value: CUnsignedShort): Unit = !struct.at3 = value
       def x: CShort = struct._4
+      def x_=(value: CShort): Unit = !struct.at4 = value
       def y: CShort = struct._5
+      def y_=(value: CShort): Unit = !struct.at5 = value
       def w: CUnsignedShort = struct._6
+      def w_=(value: CUnsignedShort): Unit = !struct.at6 = value
       def h: CUnsignedShort = struct._7
+      def h_=(value: CUnsignedShort): Unit = !struct.at7 = value
       def color: nk_color = struct._8
+      def color_=(value: nk_color): Unit = !struct.at8 = value
 
   opaque type nk_command_rect_filled = CStruct7[nk_command, CUnsignedShort, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
   object nk_command_rect_filled:
     given _tag: Tag[nk_command_rect_filled] = Tag.materializeCStruct7Tag[nk_command, CUnsignedShort, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
     extension (struct: nk_command_rect_filled)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def rounding: CUnsignedShort = struct._2
+      def rounding_=(value: CUnsignedShort): Unit = !struct.at2 = value
       def x: CShort = struct._3
+      def x_=(value: CShort): Unit = !struct.at3 = value
       def y: CShort = struct._4
+      def y_=(value: CShort): Unit = !struct.at4 = value
       def w: CUnsignedShort = struct._5
+      def w_=(value: CUnsignedShort): Unit = !struct.at5 = value
       def h: CUnsignedShort = struct._6
+      def h_=(value: CUnsignedShort): Unit = !struct.at6 = value
       def color: nk_color = struct._7
+      def color_=(value: nk_color): Unit = !struct.at7 = value
 
   opaque type nk_command_rect_multi_color = CStruct9[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color, nk_color, nk_color, nk_color]
   object nk_command_rect_multi_color:
     given _tag: Tag[nk_command_rect_multi_color] = Tag.materializeCStruct9Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color, nk_color, nk_color, nk_color]
     extension (struct: nk_command_rect_multi_color)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def x: CShort = struct._2
+      def x_=(value: CShort): Unit = !struct.at2 = value
       def y: CShort = struct._3
+      def y_=(value: CShort): Unit = !struct.at3 = value
       def w: CUnsignedShort = struct._4
+      def w_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def h: CUnsignedShort = struct._5
+      def h_=(value: CUnsignedShort): Unit = !struct.at5 = value
       def left: nk_color = struct._6
+      def left_=(value: nk_color): Unit = !struct.at6 = value
       def top: nk_color = struct._7
+      def top_=(value: nk_color): Unit = !struct.at7 = value
       def bottom: nk_color = struct._8
+      def bottom_=(value: nk_color): Unit = !struct.at8 = value
       def right: nk_color = struct._9
+      def right_=(value: nk_color): Unit = !struct.at9 = value
 
   opaque type nk_command_scissor = CStruct5[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort]
   object nk_command_scissor:
     given _tag: Tag[nk_command_scissor] = Tag.materializeCStruct5Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort]
     extension (struct: nk_command_scissor)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def x: CShort = struct._2
+      def x_=(value: CShort): Unit = !struct.at2 = value
       def y: CShort = struct._3
+      def y_=(value: CShort): Unit = !struct.at3 = value
       def w: CUnsignedShort = struct._4
+      def w_=(value: CUnsignedShort): Unit = !struct.at4 = value
       def h: CUnsignedShort = struct._5
+      def h_=(value: CUnsignedShort): Unit = !struct.at5 = value
 
   opaque type nk_command_text = CStruct11[nk_command, Ptr[nk_user_font], nk_color, nk_color, CShort, CShort, CUnsignedShort, CUnsignedShort, Float, CInt, CArray[CChar, Nat._1]]
   object nk_command_text:
     given _tag: Tag[nk_command_text] = Tag.materializeCStruct11Tag[nk_command, Ptr[nk_user_font], nk_color, nk_color, CShort, CShort, CUnsignedShort, CUnsignedShort, Float, CInt, CArray[CChar, Nat._1]]
     extension (struct: nk_command_text)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def font: Ptr[nk_user_font] = struct._2
+      def font_=(value: Ptr[nk_user_font]): Unit = !struct.at2 = value
       def background: nk_color = struct._3
+      def background_=(value: nk_color): Unit = !struct.at3 = value
       def foreground: nk_color = struct._4
+      def foreground_=(value: nk_color): Unit = !struct.at4 = value
       def x: CShort = struct._5
+      def x_=(value: CShort): Unit = !struct.at5 = value
       def y: CShort = struct._6
+      def y_=(value: CShort): Unit = !struct.at6 = value
       def w: CUnsignedShort = struct._7
+      def w_=(value: CUnsignedShort): Unit = !struct.at7 = value
       def h: CUnsignedShort = struct._8
+      def h_=(value: CUnsignedShort): Unit = !struct.at8 = value
       def height: Float = struct._9
+      def height_=(value: Float): Unit = !struct.at9 = value
       def length: CInt = struct._10
+      def length_=(value: CInt): Unit = !struct.at10 = value
       def string: CArray[CChar, Nat._1] = struct._11
+      def string_=(value: CArray[CChar, Nat._1]): Unit = !struct.at11 = value
 
   opaque type nk_command_triangle = CStruct6[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, nk_vec2i, nk_color]
   object nk_command_triangle:
     given _tag: Tag[nk_command_triangle] = Tag.materializeCStruct6Tag[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, nk_vec2i, nk_color]
     extension (struct: nk_command_triangle)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def line_thickness: CUnsignedShort = struct._2
+      def line_thickness_=(value: CUnsignedShort): Unit = !struct.at2 = value
       def a: nk_vec2i = struct._3
+      def a_=(value: nk_vec2i): Unit = !struct.at3 = value
       def b: nk_vec2i = struct._4
+      def b_=(value: nk_vec2i): Unit = !struct.at4 = value
       def c: nk_vec2i = struct._5
+      def c_=(value: nk_vec2i): Unit = !struct.at5 = value
       def color: nk_color = struct._6
+      def color_=(value: nk_color): Unit = !struct.at6 = value
 
   opaque type nk_command_triangle_filled = CStruct5[nk_command, nk_vec2i, nk_vec2i, nk_vec2i, nk_color]
   object nk_command_triangle_filled:
     given _tag: Tag[nk_command_triangle_filled] = Tag.materializeCStruct5Tag[nk_command, nk_vec2i, nk_vec2i, nk_vec2i, nk_color]
     extension (struct: nk_command_triangle_filled)
       def header: nk_command = struct._1
+      def header_=(value: nk_command): Unit = !struct.at1 = value
       def a: nk_vec2i = struct._2
+      def a_=(value: nk_vec2i): Unit = !struct.at2 = value
       def b: nk_vec2i = struct._3
+      def b_=(value: nk_vec2i): Unit = !struct.at3 = value
       def c: nk_vec2i = struct._4
+      def c_=(value: nk_vec2i): Unit = !struct.at4 = value
       def color: nk_color = struct._5
+      def color_=(value: nk_color): Unit = !struct.at5 = value
 
   opaque type nk_config_stack_button_behavior = CStruct2[CInt, CArray[nk_config_stack_button_behavior_element, Nat._8]]
   object nk_config_stack_button_behavior:
     given _tag: Tag[nk_config_stack_button_behavior] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_button_behavior_element, Nat._8]]
     extension (struct: nk_config_stack_button_behavior)
       def head: CInt = struct._1
+      def head_=(value: CInt): Unit = !struct.at1 = value
       def elements: CArray[nk_config_stack_button_behavior_element, Nat._8] = struct._2
+      def elements_=(value: CArray[nk_config_stack_button_behavior_element, Nat._8]): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_button_behavior_element = CStruct2[Ptr[nk_button_behavior], nk_button_behavior]
   object nk_config_stack_button_behavior_element:
     given _tag: Tag[nk_config_stack_button_behavior_element] = Tag.materializeCStruct2Tag[Ptr[nk_button_behavior], nk_button_behavior]
     extension (struct: nk_config_stack_button_behavior_element)
       def address: Ptr[nk_button_behavior] = struct._1
+      def address_=(value: Ptr[nk_button_behavior]): Unit = !struct.at1 = value
       def old_value: nk_button_behavior = struct._2
+      def old_value_=(value: nk_button_behavior): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_color = CStruct2[CInt, CArray[nk_config_stack_color_element, Nat.Digit2[Nat._3, Nat._2]]]
   object nk_config_stack_color:
     given _tag: Tag[nk_config_stack_color] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_color_element, Nat.Digit2[Nat._3, Nat._2]]]
     extension (struct: nk_config_stack_color)
       def head: CInt = struct._1
+      def head_=(value: CInt): Unit = !struct.at1 = value
       def elements: CArray[nk_config_stack_color_element, Nat.Digit2[Nat._3, Nat._2]] = struct._2
+      def elements_=(value: CArray[nk_config_stack_color_element, Nat.Digit2[Nat._3, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_color_element = CStruct2[Ptr[nk_color], nk_color]
   object nk_config_stack_color_element:
     given _tag: Tag[nk_config_stack_color_element] = Tag.materializeCStruct2Tag[Ptr[nk_color], nk_color]
     extension (struct: nk_config_stack_color_element)
       def address: Ptr[nk_color] = struct._1
+      def address_=(value: Ptr[nk_color]): Unit = !struct.at1 = value
       def old_value: nk_color = struct._2
+      def old_value_=(value: nk_color): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_flags = CStruct2[CInt, CArray[nk_config_stack_flags_element, Nat.Digit2[Nat._3, Nat._2]]]
   object nk_config_stack_flags:
     given _tag: Tag[nk_config_stack_flags] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_flags_element, Nat.Digit2[Nat._3, Nat._2]]]
     extension (struct: nk_config_stack_flags)
       def head: CInt = struct._1
+      def head_=(value: CInt): Unit = !struct.at1 = value
       def elements: CArray[nk_config_stack_flags_element, Nat.Digit2[Nat._3, Nat._2]] = struct._2
+      def elements_=(value: CArray[nk_config_stack_flags_element, Nat.Digit2[Nat._3, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_flags_element = CStruct2[Ptr[nk_flags], nk_flags]
   object nk_config_stack_flags_element:
     given _tag: Tag[nk_config_stack_flags_element] = Tag.materializeCStruct2Tag[Ptr[nk_flags], nk_flags]
     extension (struct: nk_config_stack_flags_element)
       def address: Ptr[nk_flags] = struct._1
+      def address_=(value: Ptr[nk_flags]): Unit = !struct.at1 = value
       def old_value: nk_flags = struct._2
+      def old_value_=(value: nk_flags): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_float = CStruct2[CInt, CArray[nk_config_stack_float_element, Nat.Digit2[Nat._3, Nat._2]]]
   object nk_config_stack_float:
     given _tag: Tag[nk_config_stack_float] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_float_element, Nat.Digit2[Nat._3, Nat._2]]]
     extension (struct: nk_config_stack_float)
       def head: CInt = struct._1
+      def head_=(value: CInt): Unit = !struct.at1 = value
       def elements: CArray[nk_config_stack_float_element, Nat.Digit2[Nat._3, Nat._2]] = struct._2
+      def elements_=(value: CArray[nk_config_stack_float_element, Nat.Digit2[Nat._3, Nat._2]]): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_float_element = CStruct2[Ptr[Float], Float]
   object nk_config_stack_float_element:
     given _tag: Tag[nk_config_stack_float_element] = Tag.materializeCStruct2Tag[Ptr[Float], Float]
     extension (struct: nk_config_stack_float_element)
       def address: Ptr[Float] = struct._1
+      def address_=(value: Ptr[Float]): Unit = !struct.at1 = value
       def old_value: Float = struct._2
+      def old_value_=(value: Float): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_style_item = CStruct2[CInt, CArray[nk_config_stack_style_item_element, Nat.Digit2[Nat._1, Nat._6]]]
   object nk_config_stack_style_item:
     given _tag: Tag[nk_config_stack_style_item] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_style_item_element, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: nk_config_stack_style_item)
       def head: CInt = struct._1
+      def head_=(value: CInt): Unit = !struct.at1 = value
       def elements: CArray[nk_config_stack_style_item_element, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def elements_=(value: CArray[nk_config_stack_style_item_element, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_style_item_element = CStruct2[Ptr[nk_style_item], nk_style_item]
   object nk_config_stack_style_item_element:
     given _tag: Tag[nk_config_stack_style_item_element] = Tag.materializeCStruct2Tag[Ptr[nk_style_item], nk_style_item]
     extension (struct: nk_config_stack_style_item_element)
       def address: Ptr[nk_style_item] = struct._1
+      def address_=(value: Ptr[nk_style_item]): Unit = !struct.at1 = value
       def old_value: nk_style_item = struct._2
+      def old_value_=(value: nk_style_item): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_user_font = CStruct2[CInt, CArray[nk_config_stack_user_font_element, Nat._8]]
   object nk_config_stack_user_font:
     given _tag: Tag[nk_config_stack_user_font] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_user_font_element, Nat._8]]
     extension (struct: nk_config_stack_user_font)
       def head: CInt = struct._1
+      def head_=(value: CInt): Unit = !struct.at1 = value
       def elements: CArray[nk_config_stack_user_font_element, Nat._8] = struct._2
+      def elements_=(value: CArray[nk_config_stack_user_font_element, Nat._8]): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_user_font_element = CStruct2[Ptr[Ptr[nk_user_font]], Ptr[nk_user_font]]
   object nk_config_stack_user_font_element:
     given _tag: Tag[nk_config_stack_user_font_element] = Tag.materializeCStruct2Tag[Ptr[Ptr[nk_user_font]], Ptr[nk_user_font]]
     extension (struct: nk_config_stack_user_font_element)
       def address: Ptr[Ptr[nk_user_font]] = struct._1
+      def address_=(value: Ptr[Ptr[nk_user_font]]): Unit = !struct.at1 = value
       def old_value: Ptr[nk_user_font] = struct._2
+      def old_value_=(value: Ptr[nk_user_font]): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_vec2 = CStruct2[CInt, CArray[nk_config_stack_vec2_element, Nat.Digit2[Nat._1, Nat._6]]]
   object nk_config_stack_vec2:
     given _tag: Tag[nk_config_stack_vec2] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_vec2_element, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: nk_config_stack_vec2)
       def head: CInt = struct._1
+      def head_=(value: CInt): Unit = !struct.at1 = value
       def elements: CArray[nk_config_stack_vec2_element, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def elements_=(value: CArray[nk_config_stack_vec2_element, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
 
   opaque type nk_config_stack_vec2_element = CStruct2[Ptr[nk_vec2], nk_vec2]
   object nk_config_stack_vec2_element:
     given _tag: Tag[nk_config_stack_vec2_element] = Tag.materializeCStruct2Tag[Ptr[nk_vec2], nk_vec2]
     extension (struct: nk_config_stack_vec2_element)
       def address: Ptr[nk_vec2] = struct._1
+      def address_=(value: Ptr[nk_vec2]): Unit = !struct.at1 = value
       def old_value: nk_vec2 = struct._2
+      def old_value_=(value: nk_vec2): Unit = !struct.at2 = value
 
   opaque type nk_configuration_stacks = CStruct7[nk_config_stack_style_item, nk_config_stack_float, nk_config_stack_vec2, nk_config_stack_flags, nk_config_stack_color, nk_config_stack_user_font, nk_config_stack_button_behavior]
   object nk_configuration_stacks:
     given _tag: Tag[nk_configuration_stacks] = Tag.materializeCStruct7Tag[nk_config_stack_style_item, nk_config_stack_float, nk_config_stack_vec2, nk_config_stack_flags, nk_config_stack_color, nk_config_stack_user_font, nk_config_stack_button_behavior]
     extension (struct: nk_configuration_stacks)
       def style_items: nk_config_stack_style_item = struct._1
+      def style_items_=(value: nk_config_stack_style_item): Unit = !struct.at1 = value
       def floats: nk_config_stack_float = struct._2
+      def floats_=(value: nk_config_stack_float): Unit = !struct.at2 = value
       def vectors: nk_config_stack_vec2 = struct._3
+      def vectors_=(value: nk_config_stack_vec2): Unit = !struct.at3 = value
       def flags: nk_config_stack_flags = struct._4
+      def flags_=(value: nk_config_stack_flags): Unit = !struct.at4 = value
       def colors: nk_config_stack_color = struct._5
+      def colors_=(value: nk_config_stack_color): Unit = !struct.at5 = value
       def fonts: nk_config_stack_user_font = struct._6
+      def fonts_=(value: nk_config_stack_user_font): Unit = !struct.at6 = value
       def button_behaviors: nk_config_stack_button_behavior = struct._7
+      def button_behaviors_=(value: nk_config_stack_button_behavior): Unit = !struct.at7 = value
 
   opaque type nk_context = CStruct0
   object nk_context:
@@ -973,8 +1152,11 @@ object types:
     given _tag: Tag[nk_cursor] = Tag.materializeCStruct3Tag[nk_image, nk_vec2, nk_vec2]
     extension (struct: nk_cursor)
       def img: nk_image = struct._1
+      def img_=(value: nk_image): Unit = !struct.at1 = value
       def size: nk_vec2 = struct._2
+      def size_=(value: nk_vec2): Unit = !struct.at2 = value
       def offset: nk_vec2 = struct._3
+      def offset_=(value: nk_vec2): Unit = !struct.at3 = value
 
   opaque type nk_draw_command = CStruct0
   object nk_draw_command:
@@ -989,7 +1171,9 @@ object types:
     given _tag: Tag[nk_draw_null_texture] = Tag.materializeCStruct2Tag[nk_handle, nk_vec2]
     extension (struct: nk_draw_null_texture)
       def texture: nk_handle = struct._1
+      def texture_=(value: nk_handle): Unit = !struct.at1 = value
       def uv: nk_vec2 = struct._2
+      def uv_=(value: nk_vec2): Unit = !struct.at2 = value
 
   opaque type nk_draw_vertex_layout_element = CStruct0
   object nk_draw_vertex_layout_element:
@@ -1000,134 +1184,198 @@ object types:
     given _tag: Tag[nk_edit_state] = Tag.materializeCStruct11Tag[nk_hash, CUnsignedInt, CUnsignedInt, CInt, CInt, CInt, CInt, CInt, nk_scroll, CUnsignedChar, CUnsignedChar]
     extension (struct: nk_edit_state)
       def name: nk_hash = struct._1
+      def name_=(value: nk_hash): Unit = !struct.at1 = value
       def seq: CUnsignedInt = struct._2
+      def seq_=(value: CUnsignedInt): Unit = !struct.at2 = value
       def old: CUnsignedInt = struct._3
+      def old_=(value: CUnsignedInt): Unit = !struct.at3 = value
       def active: CInt = struct._4
+      def active_=(value: CInt): Unit = !struct.at4 = value
       def prev: CInt = struct._5
+      def prev_=(value: CInt): Unit = !struct.at5 = value
       def cursor: CInt = struct._6
+      def cursor_=(value: CInt): Unit = !struct.at6 = value
       def sel_start: CInt = struct._7
+      def sel_start_=(value: CInt): Unit = !struct.at7 = value
       def sel_end: CInt = struct._8
+      def sel_end_=(value: CInt): Unit = !struct.at8 = value
       def scrollbar: nk_scroll = struct._9
+      def scrollbar_=(value: nk_scroll): Unit = !struct.at9 = value
       def mode: CUnsignedChar = struct._10
+      def mode_=(value: CUnsignedChar): Unit = !struct.at10 = value
       def single_line: CUnsignedChar = struct._11
+      def single_line_=(value: CUnsignedChar): Unit = !struct.at11 = value
 
   opaque type nk_image = CStruct4[nk_handle, nk_ushort, nk_ushort, CArray[nk_ushort, Nat._4]]
   object nk_image:
     given _tag: Tag[nk_image] = Tag.materializeCStruct4Tag[nk_handle, nk_ushort, nk_ushort, CArray[nk_ushort, Nat._4]]
     extension (struct: nk_image)
       def handle: nk_handle = struct._1
+      def handle_=(value: nk_handle): Unit = !struct.at1 = value
       def w: nk_ushort = struct._2
+      def w_=(value: nk_ushort): Unit = !struct.at2 = value
       def h: nk_ushort = struct._3
+      def h_=(value: nk_ushort): Unit = !struct.at3 = value
       def region: CArray[nk_ushort, Nat._4] = struct._4
+      def region_=(value: CArray[nk_ushort, Nat._4]): Unit = !struct.at4 = value
 
   opaque type nk_input = CStruct2[nk_keyboard, nk_mouse]
   object nk_input:
     given _tag: Tag[nk_input] = Tag.materializeCStruct2Tag[nk_keyboard, nk_mouse]
     extension (struct: nk_input)
       def keyboard: nk_keyboard = struct._1
+      def keyboard_=(value: nk_keyboard): Unit = !struct.at1 = value
       def mouse: nk_mouse = struct._2
+      def mouse_=(value: nk_mouse): Unit = !struct.at2 = value
 
   opaque type nk_key = CStruct2[nk_bool, CUnsignedInt]
   object nk_key:
     given _tag: Tag[nk_key] = Tag.materializeCStruct2Tag[nk_bool, CUnsignedInt]
     extension (struct: nk_key)
       def down: nk_bool = struct._1
+      def down_=(value: nk_bool): Unit = !struct.at1 = value
       def clicked: CUnsignedInt = struct._2
+      def clicked_=(value: CUnsignedInt): Unit = !struct.at2 = value
 
   opaque type nk_keyboard = CStruct3[CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]], CArray[CChar, Nat.Digit2[Nat._1, Nat._6]], CInt]
   object nk_keyboard:
     given _tag: Tag[nk_keyboard] = Tag.materializeCStruct3Tag[CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]], CArray[CChar, Nat.Digit2[Nat._1, Nat._6]], CInt]
     extension (struct: nk_keyboard)
       def keys: CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]] = struct._1
+      def keys_=(value: CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]]): Unit = !struct.at1 = value
       def text: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]] = struct._2
+      def text_=(value: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at2 = value
       def text_len: CInt = struct._3
+      def text_len_=(value: CInt): Unit = !struct.at3 = value
 
   opaque type nk_list_view = CStruct7[CInt, CInt, CInt, CInt, Ptr[nk_context], Ptr[nk_uint], nk_uint]
   object nk_list_view:
     given _tag: Tag[nk_list_view] = Tag.materializeCStruct7Tag[CInt, CInt, CInt, CInt, Ptr[nk_context], Ptr[nk_uint], nk_uint]
     extension (struct: nk_list_view)
       def begin: CInt = struct._1
+      def begin_=(value: CInt): Unit = !struct.at1 = value
       def end: CInt = struct._2
+      def end_=(value: CInt): Unit = !struct.at2 = value
       def count: CInt = struct._3
+      def count_=(value: CInt): Unit = !struct.at3 = value
       def total_height: CInt = struct._4
+      def total_height_=(value: CInt): Unit = !struct.at4 = value
       def ctx: Ptr[nk_context] = struct._5
+      def ctx_=(value: Ptr[nk_context]): Unit = !struct.at5 = value
       def scroll_pointer: Ptr[nk_uint] = struct._6
+      def scroll_pointer_=(value: Ptr[nk_uint]): Unit = !struct.at6 = value
       def scroll_value: nk_uint = struct._7
+      def scroll_value_=(value: nk_uint): Unit = !struct.at7 = value
 
   opaque type nk_memory = CStruct2[Ptr[Byte], nk_size]
   object nk_memory:
     given _tag: Tag[nk_memory] = Tag.materializeCStruct2Tag[Ptr[Byte], nk_size]
     extension (struct: nk_memory)
       def ptr: Ptr[Byte] = struct._1
+      def ptr_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def size: nk_size = struct._2
+      def size_=(value: nk_size): Unit = !struct.at2 = value
 
   opaque type nk_memory_status = CStruct6[Ptr[Byte], CUnsignedInt, nk_size, nk_size, nk_size, nk_size]
   object nk_memory_status:
     given _tag: Tag[nk_memory_status] = Tag.materializeCStruct6Tag[Ptr[Byte], CUnsignedInt, nk_size, nk_size, nk_size, nk_size]
     extension (struct: nk_memory_status)
       def memory: Ptr[Byte] = struct._1
+      def memory_=(value: Ptr[Byte]): Unit = !struct.at1 = value
       def `type`: CUnsignedInt = struct._2
+      def type_=(value: CUnsignedInt): Unit = !struct.at2 = value
       def size: nk_size = struct._3
+      def size_=(value: nk_size): Unit = !struct.at3 = value
       def allocated: nk_size = struct._4
+      def allocated_=(value: nk_size): Unit = !struct.at4 = value
       def needed: nk_size = struct._5
+      def needed_=(value: nk_size): Unit = !struct.at5 = value
       def calls: nk_size = struct._6
+      def calls_=(value: nk_size): Unit = !struct.at6 = value
 
   opaque type nk_menu_state = CStruct5[Float, Float, Float, Float, nk_scroll]
   object nk_menu_state:
     given _tag: Tag[nk_menu_state] = Tag.materializeCStruct5Tag[Float, Float, Float, Float, nk_scroll]
     extension (struct: nk_menu_state)
       def x: Float = struct._1
+      def x_=(value: Float): Unit = !struct.at1 = value
       def y: Float = struct._2
+      def y_=(value: Float): Unit = !struct.at2 = value
       def w: Float = struct._3
+      def w_=(value: Float): Unit = !struct.at3 = value
       def h: Float = struct._4
+      def h_=(value: Float): Unit = !struct.at4 = value
       def offset: nk_scroll = struct._5
+      def offset_=(value: nk_scroll): Unit = !struct.at5 = value
 
   opaque type nk_mouse = CStruct8[CArray[nk_mouse_button, Nat._4], nk_vec2, nk_vec2, nk_vec2, nk_vec2, CUnsignedChar, CUnsignedChar, CUnsignedChar]
   object nk_mouse:
     given _tag: Tag[nk_mouse] = Tag.materializeCStruct8Tag[CArray[nk_mouse_button, Nat._4], nk_vec2, nk_vec2, nk_vec2, nk_vec2, CUnsignedChar, CUnsignedChar, CUnsignedChar]
     extension (struct: nk_mouse)
       def buttons: CArray[nk_mouse_button, Nat._4] = struct._1
+      def buttons_=(value: CArray[nk_mouse_button, Nat._4]): Unit = !struct.at1 = value
       def pos: nk_vec2 = struct._2
+      def pos_=(value: nk_vec2): Unit = !struct.at2 = value
       def prev: nk_vec2 = struct._3
+      def prev_=(value: nk_vec2): Unit = !struct.at3 = value
       def delta: nk_vec2 = struct._4
+      def delta_=(value: nk_vec2): Unit = !struct.at4 = value
       def scroll_delta: nk_vec2 = struct._5
+      def scroll_delta_=(value: nk_vec2): Unit = !struct.at5 = value
       def grab: CUnsignedChar = struct._6
+      def grab_=(value: CUnsignedChar): Unit = !struct.at6 = value
       def grabbed: CUnsignedChar = struct._7
+      def grabbed_=(value: CUnsignedChar): Unit = !struct.at7 = value
       def ungrab: CUnsignedChar = struct._8
+      def ungrab_=(value: CUnsignedChar): Unit = !struct.at8 = value
 
   opaque type nk_mouse_button = CStruct3[nk_bool, CUnsignedInt, nk_vec2]
   object nk_mouse_button:
     given _tag: Tag[nk_mouse_button] = Tag.materializeCStruct3Tag[nk_bool, CUnsignedInt, nk_vec2]
     extension (struct: nk_mouse_button)
       def down: nk_bool = struct._1
+      def down_=(value: nk_bool): Unit = !struct.at1 = value
       def clicked: CUnsignedInt = struct._2
+      def clicked_=(value: CUnsignedInt): Unit = !struct.at2 = value
       def clicked_pos: nk_vec2 = struct._3
+      def clicked_pos_=(value: nk_vec2): Unit = !struct.at3 = value
 
   opaque type nk_nine_slice = CStruct5[nk_image, nk_ushort, nk_ushort, nk_ushort, nk_ushort]
   object nk_nine_slice:
     given _tag: Tag[nk_nine_slice] = Tag.materializeCStruct5Tag[nk_image, nk_ushort, nk_ushort, nk_ushort, nk_ushort]
     extension (struct: nk_nine_slice)
       def img: nk_image = struct._1
+      def img_=(value: nk_image): Unit = !struct.at1 = value
       def l: nk_ushort = struct._2
+      def l_=(value: nk_ushort): Unit = !struct.at2 = value
       def t: nk_ushort = struct._3
+      def t_=(value: nk_ushort): Unit = !struct.at3 = value
       def r: nk_ushort = struct._4
+      def r_=(value: nk_ushort): Unit = !struct.at4 = value
       def b: nk_ushort = struct._5
+      def b_=(value: nk_ushort): Unit = !struct.at5 = value
 
   opaque type nk_page = CStruct3[CUnsignedInt, Ptr[Byte], CArray[nk_page_element, Nat._1]]
   object nk_page:
     given _tag: Tag[nk_page] = Tag.materializeCStruct3Tag[CUnsignedInt, Ptr[Byte], CArray[nk_page_element, Nat._1]]
     extension (struct: nk_page)
       def size: CUnsignedInt = struct._1
+      def size_=(value: CUnsignedInt): Unit = !struct.at1 = value
       def next: Ptr[nk_page] = struct._2.asInstanceOf[Ptr[nk_page]]
+      def next_=(value: Ptr[nk_page]): Unit = !struct.at2 = value.asInstanceOf[Ptr[Byte]]
       def win: CArray[nk_page_element, Nat._1] = struct._3
+      def win_=(value: CArray[nk_page_element, Nat._1]): Unit = !struct.at3 = value
 
   opaque type nk_page_element = CStruct3[nk_page_data, Ptr[Byte], Ptr[Byte]]
   object nk_page_element:
     given _tag: Tag[nk_page_element] = Tag.materializeCStruct3Tag[nk_page_data, Ptr[Byte], Ptr[Byte]]
     extension (struct: nk_page_element)
       def data: nk_page_data = struct._1
+      def data_=(value: nk_page_data): Unit = !struct.at1 = value
       def next: Ptr[nk_page_element] = struct._2.asInstanceOf[Ptr[nk_page_element]]
+      def next_=(value: Ptr[nk_page_element]): Unit = !struct.at2 = value.asInstanceOf[Ptr[Byte]]
       def prev: Ptr[nk_page_element] = struct._3.asInstanceOf[Ptr[nk_page_element]]
+      def prev_=(value: Ptr[nk_page_element]): Unit = !struct.at3 = value.asInstanceOf[Ptr[Byte]]
 
   opaque type nk_panel = CStruct0
   object nk_panel:
@@ -1138,131 +1386,212 @@ object types:
     given _tag: Tag[nk_pool] = Tag.materializeCStruct8Tag[nk_allocator, nk_allocation_type, CUnsignedInt, Ptr[nk_page], Ptr[nk_page_element], CUnsignedInt, nk_size, nk_size]
     extension (struct: nk_pool)
       def alloc: nk_allocator = struct._1
+      def alloc_=(value: nk_allocator): Unit = !struct.at1 = value
       def `type`: nk_allocation_type = struct._2
+      def type_=(value: nk_allocation_type): Unit = !struct.at2 = value
       def page_count: CUnsignedInt = struct._3
+      def page_count_=(value: CUnsignedInt): Unit = !struct.at3 = value
       def pages: Ptr[nk_page] = struct._4
+      def pages_=(value: Ptr[nk_page]): Unit = !struct.at4 = value
       def freelist: Ptr[nk_page_element] = struct._5
+      def freelist_=(value: Ptr[nk_page_element]): Unit = !struct.at5 = value
       def capacity: CUnsignedInt = struct._6
+      def capacity_=(value: CUnsignedInt): Unit = !struct.at6 = value
       def size: nk_size = struct._7
+      def size_=(value: nk_size): Unit = !struct.at7 = value
       def cap: nk_size = struct._8
+      def cap_=(value: nk_size): Unit = !struct.at8 = value
 
   opaque type nk_popup_buffer = CStruct5[nk_size, nk_size, nk_size, nk_size, nk_bool]
   object nk_popup_buffer:
     given _tag: Tag[nk_popup_buffer] = Tag.materializeCStruct5Tag[nk_size, nk_size, nk_size, nk_size, nk_bool]
     extension (struct: nk_popup_buffer)
       def begin: nk_size = struct._1
+      def begin_=(value: nk_size): Unit = !struct.at1 = value
       def parent: nk_size = struct._2
+      def parent_=(value: nk_size): Unit = !struct.at2 = value
       def last: nk_size = struct._3
+      def last_=(value: nk_size): Unit = !struct.at3 = value
       def end: nk_size = struct._4
+      def end_=(value: nk_size): Unit = !struct.at4 = value
       def active: nk_bool = struct._5
+      def active_=(value: nk_bool): Unit = !struct.at5 = value
 
   opaque type nk_popup_state = CStruct10[Ptr[nk_window], nk_panel_type, nk_popup_buffer, nk_hash, nk_bool, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, nk_rect]
   object nk_popup_state:
     given _tag: Tag[nk_popup_state] = Tag.materializeCStruct10Tag[Ptr[nk_window], nk_panel_type, nk_popup_buffer, nk_hash, nk_bool, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, nk_rect]
     extension (struct: nk_popup_state)
       def win: Ptr[nk_window] = struct._1
+      def win_=(value: Ptr[nk_window]): Unit = !struct.at1 = value
       def `type`: nk_panel_type = struct._2
+      def type_=(value: nk_panel_type): Unit = !struct.at2 = value
       def buf: nk_popup_buffer = struct._3
+      def buf_=(value: nk_popup_buffer): Unit = !struct.at3 = value
       def name: nk_hash = struct._4
+      def name_=(value: nk_hash): Unit = !struct.at4 = value
       def active: nk_bool = struct._5
+      def active_=(value: nk_bool): Unit = !struct.at5 = value
       def combo_count: CUnsignedInt = struct._6
+      def combo_count_=(value: CUnsignedInt): Unit = !struct.at6 = value
       def con_count: CUnsignedInt = struct._7
+      def con_count_=(value: CUnsignedInt): Unit = !struct.at7 = value
       def con_old: CUnsignedInt = struct._8
+      def con_old_=(value: CUnsignedInt): Unit = !struct.at8 = value
       def active_con: CUnsignedInt = struct._9
+      def active_con_=(value: CUnsignedInt): Unit = !struct.at9 = value
       def header: nk_rect = struct._10
+      def header_=(value: nk_rect): Unit = !struct.at10 = value
 
   opaque type nk_property_state = CStruct11[CInt, CInt, CArray[CChar, Nat.Digit2[Nat._6, Nat._4]], CInt, CInt, CInt, CInt, nk_hash, CUnsignedInt, CUnsignedInt, CInt]
   object nk_property_state:
     given _tag: Tag[nk_property_state] = Tag.materializeCStruct11Tag[CInt, CInt, CArray[CChar, Nat.Digit2[Nat._6, Nat._4]], CInt, CInt, CInt, CInt, nk_hash, CUnsignedInt, CUnsignedInt, CInt]
     extension (struct: nk_property_state)
       def active: CInt = struct._1
+      def active_=(value: CInt): Unit = !struct.at1 = value
       def prev: CInt = struct._2
+      def prev_=(value: CInt): Unit = !struct.at2 = value
       def buffer: CArray[CChar, Nat.Digit2[Nat._6, Nat._4]] = struct._3
+      def buffer_=(value: CArray[CChar, Nat.Digit2[Nat._6, Nat._4]]): Unit = !struct.at3 = value
       def length: CInt = struct._4
+      def length_=(value: CInt): Unit = !struct.at4 = value
       def cursor: CInt = struct._5
+      def cursor_=(value: CInt): Unit = !struct.at5 = value
       def select_start: CInt = struct._6
+      def select_start_=(value: CInt): Unit = !struct.at6 = value
       def select_end: CInt = struct._7
+      def select_end_=(value: CInt): Unit = !struct.at7 = value
       def name: nk_hash = struct._8
+      def name_=(value: nk_hash): Unit = !struct.at8 = value
       def seq: CUnsignedInt = struct._9
+      def seq_=(value: CUnsignedInt): Unit = !struct.at9 = value
       def old: CUnsignedInt = struct._10
+      def old_=(value: CUnsignedInt): Unit = !struct.at10 = value
       def state: CInt = struct._11
+      def state_=(value: CInt): Unit = !struct.at11 = value
 
   opaque type nk_rect = CStruct4[Float, Float, Float, Float]
   object nk_rect:
     given _tag: Tag[nk_rect] = Tag.materializeCStruct4Tag[Float, Float, Float, Float]
     extension (struct: nk_rect)
       def x: Float = struct._1
+      def x_=(value: Float): Unit = !struct.at1 = value
       def y: Float = struct._2
+      def y_=(value: Float): Unit = !struct.at2 = value
       def w: Float = struct._3
+      def w_=(value: Float): Unit = !struct.at3 = value
       def h: Float = struct._4
+      def h_=(value: Float): Unit = !struct.at4 = value
 
   opaque type nk_recti = CStruct4[CShort, CShort, CShort, CShort]
   object nk_recti:
     given _tag: Tag[nk_recti] = Tag.materializeCStruct4Tag[CShort, CShort, CShort, CShort]
     extension (struct: nk_recti)
       def x: CShort = struct._1
+      def x_=(value: CShort): Unit = !struct.at1 = value
       def y: CShort = struct._2
+      def y_=(value: CShort): Unit = !struct.at2 = value
       def w: CShort = struct._3
+      def w_=(value: CShort): Unit = !struct.at3 = value
       def h: CShort = struct._4
+      def h_=(value: CShort): Unit = !struct.at4 = value
 
   opaque type nk_row_layout = CStruct13[nk_panel_row_layout_type, CInt, Float, Float, CInt, Ptr[Float], Float, Float, Float, Float, nk_rect, CInt, CArray[Float, Nat.Digit2[Nat._1, Nat._6]]]
   object nk_row_layout:
     given _tag: Tag[nk_row_layout] = Tag.materializeCStruct13Tag[nk_panel_row_layout_type, CInt, Float, Float, CInt, Ptr[Float], Float, Float, Float, Float, nk_rect, CInt, CArray[Float, Nat.Digit2[Nat._1, Nat._6]]]
     extension (struct: nk_row_layout)
       def `type`: nk_panel_row_layout_type = struct._1
+      def type_=(value: nk_panel_row_layout_type): Unit = !struct.at1 = value
       def index: CInt = struct._2
+      def index_=(value: CInt): Unit = !struct.at2 = value
       def height: Float = struct._3
+      def height_=(value: Float): Unit = !struct.at3 = value
       def min_height: Float = struct._4
+      def min_height_=(value: Float): Unit = !struct.at4 = value
       def columns: CInt = struct._5
+      def columns_=(value: CInt): Unit = !struct.at5 = value
       def ratio: Ptr[Float] = struct._6
+      def ratio_=(value: Ptr[Float]): Unit = !struct.at6 = value
       def item_width: Float = struct._7
+      def item_width_=(value: Float): Unit = !struct.at7 = value
       def item_height: Float = struct._8
+      def item_height_=(value: Float): Unit = !struct.at8 = value
       def item_offset: Float = struct._9
+      def item_offset_=(value: Float): Unit = !struct.at9 = value
       def filled: Float = struct._10
+      def filled_=(value: Float): Unit = !struct.at10 = value
       def item: nk_rect = struct._11
+      def item_=(value: nk_rect): Unit = !struct.at11 = value
       def tree_depth: CInt = struct._12
+      def tree_depth_=(value: CInt): Unit = !struct.at12 = value
       def templates: CArray[Float, Nat.Digit2[Nat._1, Nat._6]] = struct._13
+      def templates_=(value: CArray[Float, Nat.Digit2[Nat._1, Nat._6]]): Unit = !struct.at13 = value
 
   opaque type nk_scroll = CStruct2[nk_uint, nk_uint]
   object nk_scroll:
     given _tag: Tag[nk_scroll] = Tag.materializeCStruct2Tag[nk_uint, nk_uint]
     extension (struct: nk_scroll)
       def x: nk_uint = struct._1
+      def x_=(value: nk_uint): Unit = !struct.at1 = value
       def y: nk_uint = struct._2
+      def y_=(value: nk_uint): Unit = !struct.at2 = value
 
   opaque type nk_str = CStruct2[nk_buffer, CInt]
   object nk_str:
     given _tag: Tag[nk_str] = Tag.materializeCStruct2Tag[nk_buffer, CInt]
     extension (struct: nk_str)
       def buffer: nk_buffer = struct._1
+      def buffer_=(value: nk_buffer): Unit = !struct.at1 = value
       def len: CInt = struct._2
+      def len_=(value: CInt): Unit = !struct.at2 = value
 
   opaque type nk_style = CStruct22[Ptr[nk_user_font], CArray[Ptr[nk_cursor], Nat._7], Ptr[nk_cursor], Ptr[nk_cursor], CInt, nk_style_text, nk_style_button, nk_style_button, nk_style_button, nk_style_toggle, nk_style_toggle, nk_style_selectable, nk_style_slider, nk_style_progress, nk_style_property, nk_style_edit, nk_style_chart, nk_style_scrollbar, nk_style_scrollbar, nk_style_tab, nk_style_combo, nk_style_window]
   object nk_style:
     given _tag: Tag[nk_style] = Tag.materializeCStruct22Tag[Ptr[nk_user_font], CArray[Ptr[nk_cursor], Nat._7], Ptr[nk_cursor], Ptr[nk_cursor], CInt, nk_style_text, nk_style_button, nk_style_button, nk_style_button, nk_style_toggle, nk_style_toggle, nk_style_selectable, nk_style_slider, nk_style_progress, nk_style_property, nk_style_edit, nk_style_chart, nk_style_scrollbar, nk_style_scrollbar, nk_style_tab, nk_style_combo, nk_style_window]
     extension (struct: nk_style)
       def font: Ptr[nk_user_font] = struct._1
+      def font_=(value: Ptr[nk_user_font]): Unit = !struct.at1 = value
       def cursors: CArray[Ptr[nk_cursor], Nat._7] = struct._2
+      def cursors_=(value: CArray[Ptr[nk_cursor], Nat._7]): Unit = !struct.at2 = value
       def cursor_active: Ptr[nk_cursor] = struct._3
+      def cursor_active_=(value: Ptr[nk_cursor]): Unit = !struct.at3 = value
       def cursor_last: Ptr[nk_cursor] = struct._4
+      def cursor_last_=(value: Ptr[nk_cursor]): Unit = !struct.at4 = value
       def cursor_visible: CInt = struct._5
+      def cursor_visible_=(value: CInt): Unit = !struct.at5 = value
       def text: nk_style_text = struct._6
+      def text_=(value: nk_style_text): Unit = !struct.at6 = value
       def button: nk_style_button = struct._7
+      def button_=(value: nk_style_button): Unit = !struct.at7 = value
       def contextual_button: nk_style_button = struct._8
+      def contextual_button_=(value: nk_style_button): Unit = !struct.at8 = value
       def menu_button: nk_style_button = struct._9
+      def menu_button_=(value: nk_style_button): Unit = !struct.at9 = value
       def option: nk_style_toggle = struct._10
+      def option_=(value: nk_style_toggle): Unit = !struct.at10 = value
       def checkbox: nk_style_toggle = struct._11
+      def checkbox_=(value: nk_style_toggle): Unit = !struct.at11 = value
       def selectable: nk_style_selectable = struct._12
+      def selectable_=(value: nk_style_selectable): Unit = !struct.at12 = value
       def slider: nk_style_slider = struct._13
+      def slider_=(value: nk_style_slider): Unit = !struct.at13 = value
       def progress: nk_style_progress = struct._14
+      def progress_=(value: nk_style_progress): Unit = !struct.at14 = value
       def property: nk_style_property = struct._15
+      def property_=(value: nk_style_property): Unit = !struct.at15 = value
       def edit: nk_style_edit = struct._16
+      def edit_=(value: nk_style_edit): Unit = !struct.at16 = value
       def chart: nk_style_chart = struct._17
+      def chart_=(value: nk_style_chart): Unit = !struct.at17 = value
       def scrollh: nk_style_scrollbar = struct._18
+      def scrollh_=(value: nk_style_scrollbar): Unit = !struct.at18 = value
       def scrollv: nk_style_scrollbar = struct._19
+      def scrollv_=(value: nk_style_scrollbar): Unit = !struct.at19 = value
       def tab: nk_style_tab = struct._20
+      def tab_=(value: nk_style_tab): Unit = !struct.at20 = value
       def combo: nk_style_combo = struct._21
+      def combo_=(value: nk_style_combo): Unit = !struct.at21 = value
       def window: nk_style_window = struct._22
+      def window_=(value: nk_style_window): Unit = !struct.at22 = value
 
   opaque type nk_style_button = CStruct0
   object nk_style_button:
@@ -1309,30 +1638,55 @@ object types:
     given _tag: Tag[nk_style_slider] = Tag.CArray[CChar, Nat.Digit2[Nat._9, Nat._6]](Tag.Byte, Tag.Digit2[Nat._9, Nat._6](Tag.Nat9, Tag.Nat6))
     extension (struct: nk_style_slider)
       def normal: nk_style_item = !struct.at(0).asInstanceOf[Ptr[nk_style_item]]
+      def normal_=(value: nk_style_item): Unit = !struct.at(0).asInstanceOf[Ptr[nk_style_item]] = value
       def hover: nk_style_item = !struct.at(0).asInstanceOf[Ptr[nk_style_item]]
+      def hover_=(value: nk_style_item): Unit = !struct.at(0).asInstanceOf[Ptr[nk_style_item]] = value
       def active: nk_style_item = !struct.at(0).asInstanceOf[Ptr[nk_style_item]]
+      def active_=(value: nk_style_item): Unit = !struct.at(0).asInstanceOf[Ptr[nk_style_item]] = value
       def border_color: nk_color = !struct.at(0).asInstanceOf[Ptr[nk_color]]
+      def border_color_=(value: nk_color): Unit = !struct.at(0).asInstanceOf[Ptr[nk_color]] = value
       def bar_normal: nk_color = !struct.at(4).asInstanceOf[Ptr[nk_color]]
+      def bar_normal_=(value: nk_color): Unit = !struct.at(4).asInstanceOf[Ptr[nk_color]] = value
       def bar_hover: nk_color = !struct.at(8).asInstanceOf[Ptr[nk_color]]
+      def bar_hover_=(value: nk_color): Unit = !struct.at(8).asInstanceOf[Ptr[nk_color]] = value
       def bar_active: nk_color = !struct.at(12).asInstanceOf[Ptr[nk_color]]
+      def bar_active_=(value: nk_color): Unit = !struct.at(12).asInstanceOf[Ptr[nk_color]] = value
       def bar_filled: nk_color = !struct.at(16).asInstanceOf[Ptr[nk_color]]
+      def bar_filled_=(value: nk_color): Unit = !struct.at(16).asInstanceOf[Ptr[nk_color]] = value
       def cursor_normal: nk_style_item = !struct.at(20).asInstanceOf[Ptr[nk_style_item]]
+      def cursor_normal_=(value: nk_style_item): Unit = !struct.at(20).asInstanceOf[Ptr[nk_style_item]] = value
       def cursor_hover: nk_style_item = !struct.at(20).asInstanceOf[Ptr[nk_style_item]]
+      def cursor_hover_=(value: nk_style_item): Unit = !struct.at(20).asInstanceOf[Ptr[nk_style_item]] = value
       def cursor_active: nk_style_item = !struct.at(20).asInstanceOf[Ptr[nk_style_item]]
+      def cursor_active_=(value: nk_style_item): Unit = !struct.at(20).asInstanceOf[Ptr[nk_style_item]] = value
       def border: Float = !struct.at(20).asInstanceOf[Ptr[Float]]
+      def border_=(value: Float): Unit = !struct.at(20).asInstanceOf[Ptr[Float]] = value
       def rounding: Float = !struct.at(24).asInstanceOf[Ptr[Float]]
+      def rounding_=(value: Float): Unit = !struct.at(24).asInstanceOf[Ptr[Float]] = value
       def bar_height: Float = !struct.at(28).asInstanceOf[Ptr[Float]]
+      def bar_height_=(value: Float): Unit = !struct.at(28).asInstanceOf[Ptr[Float]] = value
       def padding: nk_vec2 = !struct.at(32).asInstanceOf[Ptr[nk_vec2]]
+      def padding_=(value: nk_vec2): Unit = !struct.at(32).asInstanceOf[Ptr[nk_vec2]] = value
       def spacing: nk_vec2 = !struct.at(40).asInstanceOf[Ptr[nk_vec2]]
+      def spacing_=(value: nk_vec2): Unit = !struct.at(40).asInstanceOf[Ptr[nk_vec2]] = value
       def cursor_size: nk_vec2 = !struct.at(48).asInstanceOf[Ptr[nk_vec2]]
+      def cursor_size_=(value: nk_vec2): Unit = !struct.at(48).asInstanceOf[Ptr[nk_vec2]] = value
       def show_buttons: CInt = !struct.at(56).asInstanceOf[Ptr[CInt]]
+      def show_buttons_=(value: CInt): Unit = !struct.at(56).asInstanceOf[Ptr[CInt]] = value
       def inc_button: nk_style_button = !struct.at(60).asInstanceOf[Ptr[nk_style_button]]
+      def inc_button_=(value: nk_style_button): Unit = !struct.at(60).asInstanceOf[Ptr[nk_style_button]] = value
       def dec_button: nk_style_button = !struct.at(60).asInstanceOf[Ptr[nk_style_button]]
+      def dec_button_=(value: nk_style_button): Unit = !struct.at(60).asInstanceOf[Ptr[nk_style_button]] = value
       def inc_symbol: nk_symbol_type = !struct.at(60).asInstanceOf[Ptr[nk_symbol_type]]
+      def inc_symbol_=(value: nk_symbol_type): Unit = !struct.at(60).asInstanceOf[Ptr[nk_symbol_type]] = value
       def dec_symbol: nk_symbol_type = !struct.at(64).asInstanceOf[Ptr[nk_symbol_type]]
+      def dec_symbol_=(value: nk_symbol_type): Unit = !struct.at(64).asInstanceOf[Ptr[nk_symbol_type]] = value
       def userdata: nk_handle = !struct.at(68).asInstanceOf[Ptr[nk_handle]]
+      def userdata_=(value: nk_handle): Unit = !struct.at(68).asInstanceOf[Ptr[nk_handle]] = value
       def draw_begin: Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]] = !struct.at(80).asInstanceOf[Ptr[Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]]]]
+      def draw_begin_=(value: Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]]): Unit = !struct.at(80).asInstanceOf[Ptr[Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]]]] = value
       def draw_end: Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]] = !struct.at(88).asInstanceOf[Ptr[Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]]]]
+      def draw_end_=(value: Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]]): Unit = !struct.at(88).asInstanceOf[Ptr[Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]]]] = value
 
   opaque type nk_style_tab = CStruct0
   object nk_style_tab:
@@ -1343,7 +1697,9 @@ object types:
     given _tag: Tag[nk_style_text] = Tag.materializeCStruct2Tag[nk_color, nk_vec2]
     extension (struct: nk_style_text)
       def color: nk_color = struct._1
+      def color_=(value: nk_color): Unit = !struct.at1 = value
       def padding: nk_vec2 = struct._2
+      def padding_=(value: nk_vec2): Unit = !struct.at2 = value
 
   opaque type nk_style_toggle = CStruct0
   object nk_style_toggle:
@@ -1370,20 +1726,30 @@ object types:
     given _tag: Tag[nk_text_undo_record] = Tag.materializeCStruct4Tag[CInt, CShort, CShort, CShort]
     extension (struct: nk_text_undo_record)
       def where: CInt = struct._1
+      def where_=(value: CInt): Unit = !struct.at1 = value
       def insert_length: CShort = struct._2
+      def insert_length_=(value: CShort): Unit = !struct.at2 = value
       def delete_length: CShort = struct._3
+      def delete_length_=(value: CShort): Unit = !struct.at3 = value
       def char_storage: CShort = struct._4
+      def char_storage_=(value: CShort): Unit = !struct.at4 = value
 
   opaque type nk_text_undo_state = CStruct6[CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]], CArray[nk_rune, Nat.Digit3[Nat._9, Nat._9, Nat._9]], CShort, CShort, CShort, CShort]
   object nk_text_undo_state:
     given _tag: Tag[nk_text_undo_state] = Tag.materializeCStruct6Tag[CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]], CArray[nk_rune, Nat.Digit3[Nat._9, Nat._9, Nat._9]], CShort, CShort, CShort, CShort]
     extension (struct: nk_text_undo_state)
       def undo_rec: CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]] = struct._1
+      def undo_rec_=(value: CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]]): Unit = !struct.at1 = value
       def undo_char: CArray[nk_rune, Nat.Digit3[Nat._9, Nat._9, Nat._9]] = struct._2
+      def undo_char_=(value: CArray[nk_rune, Nat.Digit3[Nat._9, Nat._9, Nat._9]]): Unit = !struct.at2 = value
       def undo_point: CShort = struct._3
+      def undo_point_=(value: CShort): Unit = !struct.at3 = value
       def redo_point: CShort = struct._4
+      def redo_point_=(value: CShort): Unit = !struct.at4 = value
       def undo_char_point: CShort = struct._5
+      def undo_char_point_=(value: CShort): Unit = !struct.at5 = value
       def redo_char_point: CShort = struct._6
+      def redo_char_point_=(value: CShort): Unit = !struct.at6 = value
 
   opaque type nk_user_font = CStruct0
   object nk_user_font:
@@ -1398,14 +1764,18 @@ object types:
     given _tag: Tag[nk_vec2] = Tag.materializeCStruct2Tag[Float, Float]
     extension (struct: nk_vec2)
       def x: Float = struct._1
+      def x_=(value: Float): Unit = !struct.at1 = value
       def y: Float = struct._2
+      def y_=(value: Float): Unit = !struct.at2 = value
 
   opaque type nk_vec2i = CStruct2[CShort, CShort]
   object nk_vec2i:
     given _tag: Tag[nk_vec2i] = Tag.materializeCStruct2Tag[CShort, CShort]
     extension (struct: nk_vec2i)
       def x: CShort = struct._1
+      def x_=(value: CShort): Unit = !struct.at1 = value
       def y: CShort = struct._2
+      def y_=(value: CShort): Unit = !struct.at2 = value
 
   opaque type nk_window = CStruct0
   object nk_window:
