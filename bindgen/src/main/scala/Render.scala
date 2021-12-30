@@ -2,6 +2,8 @@ package bindgen
 
 import bindgen.Def.Binding
 import scala.scalanative.unsafe.Tag
+import scala.runtime.AbstractFunction4
+import scala.scalanative.annotation.alwaysinline
 
 object render:
   private def escape(name: String) =
@@ -13,7 +15,8 @@ object render:
       case other    => other
 
   def enumeration(model: Def.Enum, line: Appender)(using
-      Config
+      Config,
+      AliasResolver
   ) =
     val values = List.newBuilder[(String, String)]
     val opaqueType = model.name.get
@@ -48,10 +51,35 @@ object render:
     }
   end enumeration
 
-  def struct(model: Def.Struct, line: Appender)(using Config) =
-    val (struct, rewriteFields) = deRecurse(model)
+  def union(model: Def.Union, line: Appender)(using Config, AliasResolver) =
+    val structName = model.name
+    val unionType: CType.Union = CType.Union(model.fields.map(_._2).toList)
+    val tpe = scalaType(unionType)
+    line(s"opaque type $structName = $tpe")
+    line(s"object $structName:")
+    nest {
+      val tag =
+        s"given Tag[$structName] = ${scalaTag(unionType)}"
+      line(tag)
+      if model.fields.nonEmpty then
+        line(s"extension (struct: $structName)")
+        nest {
+          model.fields.foreach {case (fieldName, fieldType) => 
+            val typ = scalaType(fieldType)
+            line(s"def ${escape(fieldName)}: $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]")
+          }
+        }
+      end if
+    }
+  end union
+
+  def struct(model: Def.Struct, line: Appender)(using Config, AliasResolver) =
+    val (struct, rewriteFields) =
+      if (model.fields.size > 22) then (model, Set.empty[String])
+      else deRecurse(model)
     val structName = struct.name
-    val structType = CType.Struct(struct.fields.map(_._2).toList)
+    val structType: CType.Struct = CType.Struct(struct.fields.map(_._2).toList)
+    val fieldOffsets = offsets(structType)
     val tpe = scalaType(structType)
     line(s"opaque type $structName = $tpe")
     line(s"object $structName:")
@@ -63,19 +91,29 @@ object render:
         line(tag)
         line(s"extension (struct: $structName)")
         nest {
-          struct.fields.zipWithIndex.foreach {
-            case ((fieldName, fieldType), idx) =>
-              if !rewriteFields.contains(fieldName) then
+          if struct.fields.size <= 22 then
+            struct.fields.zipWithIndex.foreach {
+              case ((fieldName, fieldType), idx) =>
+                if !rewriteFields.contains(fieldName) then
+                  line(
+                    s"def ${escape(fieldName)}: ${scalaType(fieldType)} = struct._${idx + 1}"
+                  )
+                else
+                  val newType =
+                    scalaType(CType.Pointer(CType.RecordRef(structName)))
+                  line(
+                    s"def ${escape(fieldName)}: $newType = struct._${idx + 1}.asInstanceOf[$newType]"
+                  )
+                end if
+            }
+          else
+            struct.fields.zip(fieldOffsets).foreach {
+              case ((fieldName, fieldType), fieldOffset) =>
                 line(
-                  s"def ${escape(fieldName)}: ${scalaType(fieldType)} = struct._${idx + 1}"
+                  s"def ${escape(fieldName)}: ${scalaType(fieldType)} = !struct.at($fieldOffset).asInstanceOf[Ptr[${scalaType(fieldType)}]]"
                 )
-              else
-                val newType = scalaType(CType.Pointer(CType.RecordRef(structName)))
-                line(
-                  s"def ${escape(fieldName)}: $newType = struct._${idx + 1}.asInstanceOf[$newType]"
-                )
-              end if
-          }
+            }
+          end if
         }
       else line(s"given Tag[$structName] = Tag.materializeCStruct0Tag")
       end if
@@ -91,16 +129,16 @@ object render:
     def referencesThis(typ: CType): Boolean =
       import CType.*
       typ match
-        case Pointer(Typedef(structName))   => true
-        case Pointer(RecordRef(structName)) => true
-        case _                              => false
+        case Pointer(Typedef(`structName`))   => true
+        case Pointer(RecordRef(`structName`)) => true
+        case _                                => false
 
     def selfReferential(typ: CType): Boolean =
       import CType.*
       typ match
-        case Typedef(structName)   => true
-        case RecordRef(structName) => true
-        case _                     => false
+        case Typedef(`structName`)   => true
+        case RecordRef(`structName`) => true
+        case _                       => false
 
     val isPointerRecursive: Boolean =
       struct.fields.map(_._2).exists(referencesThis)
@@ -129,7 +167,10 @@ object render:
     end if
   end deRecurse
 
-  def function(model: Def.Function, line: Appender)(using Config) =
+  def function(model: Def.Function, line: Appender)(using
+      AliasResolver,
+      Config
+  ) =
     import model.*
 
     val arglist = parameters
@@ -139,12 +180,18 @@ object render:
 
   end function
 
-  private def scalaTag(typ: CType): String =
+  private def scalaTag(typ: CType)(using AliasResolver): String =
     import CType.*
     typ match
-      case model: Struct =>
+      case model @ Struct(fields) if fields.size <= 22 =>
         val paramTypes = model.fields.map(scalaType).mkString(", ")
         s"Tag.materializeCStruct${model.fields.size}Tag[$paramTypes]"
+
+      case struct @ Struct(fields) =>
+        scalaTag(Arr(CType.Byte, Some(staticSize(struct).toInt)))
+
+      case union @ Union(fields) =>
+        scalaTag(Arr(CType.Byte, Some(staticSize(union).toInt)))
 
       case n: NumericIntegral =>
         import IntegralBase.*
@@ -162,13 +209,14 @@ object render:
         s"Tag.$sign$base"
       case Typedef(n) => s"Tag[$n]"
 
-      case RecordRef(n)                 => s"Tag[$n]"
-      case Builtin(BuiltinType.size_t)  => "Tag.ULong"
-      case Builtin(BuiltinType.ssize_t) => "Tag.Long"
+      case RecordRef(n) => s"Tag[$n]"
+      // case Builtin(BuiltinType.size_t)  => "Tag.ULong"
+      // case Builtin(BuiltinType.ssize_t) => "Tag.Long"
       case Function(ret, params) =>
         val paramTypes =
-          (params.map(_.of) ++ List(ret)).map(scalaType).mkString(", ")
-        s"Tag.materializeCFuncPtr${paramTypes.size - 1}Tag[$paramTypes]"
+          (params.map(_.of) ++ List(ret))
+        val paramTypesRendered = paramTypes.map(scalaType).mkString(", ")
+        s"Tag.materializeCFuncPtr${paramTypes.size - 1}[$paramTypesRendered]"
 
       case n: NumericReal =>
         n.base match
@@ -185,13 +233,13 @@ object render:
     end match
   end scalaTag
 
-  private def scalaType(typ: CType): String =
+  private def scalaType(typ: CType)(using AliasResolver): String =
     import CType.*
     typ match
-      case Typedef(name)                => name
-      case RecordRef(name)              => name
-      case Builtin(BuiltinType.size_t)  => "CSize"
-      case Builtin(BuiltinType.ssize_t) => "CSSize"
+      case Typedef(name)   => name
+      case RecordRef(name) => name
+      // case Builtin(BuiltinType.size_t)  => "CSize"
+      // case Builtin(BuiltinType.ssize_t) => "CSSize"
       case Pointer(to) =>
         to match
           case Void         => "Ptr[Byte]" // there's no void type on SN
@@ -226,11 +274,16 @@ object render:
             .mkString("[", ", ", "]")
         s"CFuncPtr$args$types"
 
-      case Struct(fields) if fields.size <= 22 =>
-        if fields.nonEmpty then
+      case at @ Struct(fields) =>
+        if fields.size > 22 then
+          s"CArray[Byte, ${natDigits(staticSize(at).toInt)}]"
+        else if fields.nonEmpty then
           val parameters = fields.map(scalaType).mkString("[", ", ", "]")
           s"CStruct${fields.size}$parameters"
         else "CStruct0"
+
+      case at @ Union(fields) =>
+        s"CArray[Byte, ${natDigits(staticSize(at).toInt)}]"
 
       case Arr(of, size) =>
         size match
@@ -243,7 +296,93 @@ object render:
     end match
   end scalaType
 
-  def alias(model: Def.Alias, line: Appender)(using Config) =
+  import scala.scalanative.unsafe.*
+  import scalanative.unsigned.*
+
+  @alwaysinline def align(
+      offset: CSize,
+      alignment: CSize
+  ) =
+    val alignmentMask = alignment - 1.toULong
+    val zeroUL = 0.toULong
+    val padding =
+      if (offset & alignmentMask) == zeroUL then zeroUL
+      else alignment - (offset & alignmentMask)
+    offset + padding
+  end align
+
+  def offsets(typ: CType.Struct)(using AliasResolver): List[ULong] =
+    def accumulate(fields: List[CType]) =
+      var res = 0.toULong
+      fields.dropRight(1).foreach { typ =>
+        res = align(res, alignment(typ)) + staticSize(typ)
+      }
+      align(res, alignment(fields.last))
+
+    typ.fields.zipWithIndex.map { case (fieldTyp, idx) =>
+      if idx == 0 then align(0.toULong, alignment(fieldTyp))
+      else accumulate(typ.fields.take(idx + 1))
+    }
+  end offsets
+
+  def alignment(typ: CType)(using AliasResolver): CSize =
+    import CType.*
+    typ match
+      case integral: NumericIntegral => staticSize(integral)
+      case real: NumericReal         => staticSize(real)
+      case Arr(of, Some(_))          => alignment(of)
+      case Pointer(_)                => staticSize(typ)
+      case Struct(fields) =>
+        fields.map(alignment).maxOption.getOrElse(1.toULong)
+      case Bool            => 1.toULong
+      case Typedef(name)   => alignment(aliasResolver(name))
+      case RecordRef(name) => alignment(aliasResolver(name))
+    // case b: Builtin      => staticSize(b)
+    end match
+  end alignment
+
+  def staticSize(typ: CType)(using AliasResolver): CSize =
+    import CType.*
+    typ match
+      case NumericIntegral(base, _) =>
+        base match
+          case IntegralBase.Char     => 1.toULong
+          case IntegralBase.Short    => 2.toULong
+          case IntegralBase.Int      => 4.toULong
+          case IntegralBase.Long     => 8.toULong
+          case IntegralBase.LongLong => 8.toULong
+
+      // case Builtin(BuiltinType.size_t) =>
+      //   staticSize(NumericIntegral(IntegralBase.Long, SignType.Unsigned))
+      // case Builtin(BuiltinType.ssize_t) =>
+      //   staticSize(NumericIntegral(IntegralBase.Long, SignType.Signed))
+
+      case NumericReal(base) =>
+        base match
+          case FloatingBase.Float      => 4.toULong
+          case FloatingBase.Double     => 8.toULong
+          case FloatingBase.LongDouble => 8.toULong
+      case Arr(of, Some(sz)) =>
+        sz.toULong * staticSize(of)
+      case Pointer(_)       => 8.toULong
+      case Enum(underlying) => staticSize(underlying)
+      case Struct(fields) =>
+        var res = 0.toULong
+        fields.foreach { typ =>
+          res = align(res, alignment(typ)) + staticSize(typ)
+        }
+
+        align(res, alignment(typ))
+      case Union(fields) =>
+        // TODO: are unions aligned on any boundary?
+        fields.map(staticSize).max
+      case Typedef(name)   => staticSize(aliasResolver(name))
+      case RecordRef(name) => staticSize(aliasResolver(name))
+
+    end match
+  end staticSize
+
+  def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
     val underlyingType = scalaType(model.underlying)
     import CType.*
     val isOpaque = model.underlying match
@@ -295,6 +434,31 @@ object render:
       }
       s"import ${filtered.map { sc => sc + ".*" }.mkString(", ")}"
 
+    given aliasResolver: render.AliasResolver =
+      s =>
+        val alias = binding.aliases.find(_.name == s).map(_.underlying)
+        val struct = binding.structs
+          .find(_.name == s)
+          .map(_.fields.map(_._2).toList)
+          .map(CType.Struct.apply)
+        val _enum = binding.enums.find(_.name.contains(s)).flatMap(_._3)
+
+        alias.orElse(struct).orElse(_enum) match
+          case Some(resolved) => resolved
+          case None => throw error(s"Failed to resolve aliased definition $s")
+
+    def commentException(element: Any, exc: Throwable) =
+      val stackTrace =
+        exc.getStackTrace.map("//    " + _.toString).mkString("\n")
+      s"""
+      |// Failed to render:
+      |//  $element
+      |// Error:
+      |//  $exc
+      |$stackTrace\n
+      """.stripMargin
+    end commentException
+
     sb.append("object types:\n")
     render.nest {
       render.to(sb)("import predef.*")
@@ -304,7 +468,7 @@ object render:
             en,
             render.to(sb)
           )
-          catch exc => System.err.println(s"Failed to render $en: $exc")
+          catch exc => render.to(sb)(commentException(en, exc))
           if idx != binding.enums.size - 1 then sb.append("\n")
       }
       binding.aliases.zipWithIndex.foreach { case (en, idx) =>
@@ -312,7 +476,7 @@ object render:
           en,
           render.to(sb)
         )
-        catch exc => System.err.println(s"Failed to render $en: $exc")
+        catch exc => render.to(sb)(commentException(en, exc))
         if idx != binding.aliases.size - 1 then sb.append("\n")
       }
       binding.structs.zipWithIndex.foreach { case (en, idx) =>
@@ -320,56 +484,18 @@ object render:
           en,
           render.to(sb)
         )
-        catch exc => System.err.println(s"Failed to render $en: $exc")
+        catch exc => render.to(sb)(commentException(en, exc))
         if idx != binding.structs.size - 1 then sb.append("\n")
       }
+      binding.unions.zipWithIndex.foreach { case (en, idx) =>
+        try render.union(
+          en,
+          render.to(sb)
+        )
+        catch exc => render.to(sb)(commentException(en, exc))
+        if idx != binding.unions.size - 1 then sb.append("\n")
+      }
     }
-
-    // if binding.enums.nonEmpty then
-    //   sb.append("object enumerations\n")
-    //   render.nest {
-    //     render.to(sb)("import predef.*")
-    //     binding.enums.filter(_.name.isDefined).zipWithIndex.foreach {
-    //       case (en, idx) =>
-    //         try render.enumeration(
-    //           en,
-    //           render.to(sb)
-    //         )
-    //         catch exc => System.err.println(s"Failed to render $en: $exc")
-    //         if idx != binding.enums.size - 1 then sb.append("\n")
-    //     }
-    //   }
-    // end if
-
-    // if binding.aliases.nonEmpty then
-    //   sb.append("object aliases:\n")
-    //   render.nest {
-    //     binding.aliases.zipWithIndex.foreach { case (en, idx) =>
-    //       try render.alias(
-    //         en,
-    //         render.to(sb)
-    //       )
-    //       catch exc => System.err.println(s"Failed to render $en: $exc")
-    //       if idx != binding.aliases.size - 1 then sb.append("\n")
-    //     }
-    //   }
-    // end if
-
-    // if binding.structs.nonEmpty then
-    //   sb.append("\nobject structs:\n")
-    //   render.nest {
-    //     render.to(sb)(imports("aliases", "structs", "enumerations"))
-
-    //     binding.structs.zipWithIndex.foreach { case (en, idx) =>
-    //       try render.struct(
-    //         en,
-    //         render.to(sb)
-    //       )
-    //       catch exc => System.err.println(s"Failed to render $en: $exc")
-    //       if idx != binding.structs.size - 1 then sb.append("\n")
-    //     }
-    //   }
-    // end if
 
     if binding.functions.nonEmpty then
       sb.append("\n@extern\nobject functions: \n")
@@ -398,8 +524,9 @@ object render:
     if i <= 9 then s"Tag.Nat$i"
     else
       val digits = i.toString.toIterator.toList
-      val rendered = digits.map("Nat._" + _).mkString(", ")
-      s"Tag.Digit${digits.size}[$rendered]"
+      val renderedTypes = digits.map("Nat._" + _).mkString(", ")
+      val renderedTags = digits.map("Tag.Nat" + _).mkString(", ")
+      s"Tag.Digit${digits.size}[$renderedTypes]($renderedTags)"
 
   private def indent(using c: Config): String =
     (" " * (c.indentSize * c.indents))
@@ -411,7 +538,11 @@ object render:
   private def to(sb: StringBuilder)(using config: Config): Appender =
     line => sb.append(indent(using config) + line + "\n")
 
+  private def aliasResolver(name: String)(using ar: AliasResolver): CType =
+    ar(name)
+
   type Appender = Config ?=> String => Unit
+  type AliasResolver = String => CType
 end render
 
 case class Config(indentSize: Int = 2, indents: Int = 0)

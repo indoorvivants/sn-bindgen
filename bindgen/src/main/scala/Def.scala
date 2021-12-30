@@ -7,6 +7,7 @@ object Def:
   case class Binding(
       var enums: mutable.Set[Enum],
       var structs: mutable.Set[Struct],
+      var unions: mutable.Set[Union],
       var functions: mutable.Set[Function],
       var aliases: mutable.Set[Alias]
   )
@@ -16,6 +17,7 @@ object Def:
       var intType: Option[CType.NumericIntegral]
   )
   case class Struct(var fields: ListBuffer[(String, CType)], var name: String)
+  case class Union(var fields: ListBuffer[(String, CType)], var name: String)
   case class Function(
       var name: String,
       var returnType: CType,
@@ -33,8 +35,8 @@ enum CType:
   case Pointer(of: CType)
   case Enum(underlying: NumericIntegral)
   case Struct(fields: List[CType])
+  case Union(fields: List[CType])
   case Function(returnType: CType, parameters: List[CType.Parameter])
-  case Union(constituents: List[CType.UnionPart])
 
   case Void
   case Bool
@@ -42,21 +44,19 @@ enum CType:
   case NumericIntegral(base: IntegralBase, sign: SignType)
   case NumericReal(base: FloatingBase)
   case NumericComplex(base: FloatingBase)
-  case Builtin(which: BuiltinType)
 
   case Typedef(name: String)
   case RecordRef(name: String)
-
-  extension (ct: CType)
-    def replace(f: CType => CType): CType =
-      ct match
-        case Arr(of, size) => f(Arr(f(of), size))
-        case Pointer(of)   => f(Pointer(f(of)))
-        case Struct(of)    => f(Struct(of.map(f)))
 end CType
 
-enum BuiltinType:
-  case size_t, ssize_t
+import CType.*
+// TODO: this will not work on a 32 architecture. Need to reference UWord somehow.
+object BuiltinType:
+  // case size_t, ssize_t
+  val size_t = NumericIntegral(IntegralBase.Long, SignType.Unsigned)
+  val ssize_t = NumericIntegral(IntegralBase.Long, SignType.Signed)
+  val uint32_t = NumericIntegral(IntegralBase.Int, SignType.Unsigned)
+  val uint8_t = NumericIntegral(IntegralBase.Char, SignType.Unsigned)
 
 enum SignType:
   case Signed, Unsigned
