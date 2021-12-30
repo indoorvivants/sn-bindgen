@@ -18,9 +18,9 @@ def visitStruct(cursor: CXCursor, name: String)(using Zone): Def.Struct =
         if cursor.kind == CXCursorKind.CXCursor_FieldDecl then
           val fieldName = clang_getCursorSpelling(cursor).string
           val builder = !d.unwrap[Def.Struct]
-          System.err.println(
-            s"$fieldName: ${constructType(clang_getCursorType(cursor))}"
-          )
+          // System.err.println(
+          //   s"$fieldName: ${constructType(clang_getCursorType(cursor))}"
+          // )
 
           builder.fields.addOne(
             fieldName -> constructType(clang_getCursorType(cursor))

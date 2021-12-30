@@ -33,16 +33,16 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
               .filter(_.nonEmpty)
               .getOrElse(s"_${builder.parameters.size}")
 
-            System.err.println(parameterName)
+            // System.err.println(parameterName)
 
             val parameterType = constructType(clang_getCursorType(cursor))
 
             builder.parameters.addOne(parameterName -> parameterType)
             CXChildVisitResult.CXChildVisit_Continue
           else
-            System.err.println(
-              s"Not a parmdecl, but ${clang_getCursorKindSpelling(cursor.kind).string}"
-            )
+            // System.err.println(
+            //   s"Not a parmdecl, but ${clang_getCursorKindSpelling(cursor.kind).string}"
+            // )
             CXChildVisitResult.CXChildVisit_Recurse
           end if
         }

@@ -59,7 +59,7 @@ object render:
     line(s"object $structName:")
     nest {
       val tag =
-        s"given Tag[$structName] = ${scalaTag(unionType)}"
+        s"given _tag: Tag[$structName] = ${scalaTag(unionType)}"
       line(tag)
       if model.fields.nonEmpty then
         line(s"extension (struct: $structName)")
@@ -89,7 +89,7 @@ object render:
       if model.fields.nonEmpty then
         val paramTypes = struct.fields.map(_._2).map(scalaType).mkString(", ")
         val tag =
-          s"given Tag[$structName] = ${scalaTag(structType)}"
+          s"given _tag: Tag[$structName] = ${scalaTag(structType)}"
         line(tag)
         line(s"extension (struct: $structName)")
         nest {
@@ -117,7 +117,7 @@ object render:
             }
           end if
         }
-      else line(s"given Tag[$structName] = Tag.materializeCStruct0Tag")
+      else line(s"given _tag: Tag[$structName] = Tag.materializeCStruct0Tag")
       end if
     }
   end struct
@@ -178,6 +178,14 @@ object render:
     val arglist = parameters
       .map((name, ctype) => s"${escape(name)}: ${scalaType(ctype)}")
       .mkString(", ")
+      if isIllegalFunction(
+          model.returnType,
+          model.parameters.toList.map(_._2)
+        )
+      then
+        line(
+          "// this function will not work on Scala Native as it has direct Struct parameter or returns a struct"
+        )
     line(s"def $name($arglist): ${scalaType(returnType)} = extern")
 
   end function
@@ -209,11 +217,9 @@ object render:
           case _        => ""
 
         s"Tag.$sign$base"
-      case Typedef(n) => s"Tag[$n]"
+      case Typedef(n) => s"$n._tag"
 
-      case RecordRef(n) => s"Tag[$n]"
-      // case Builtin(BuiltinType.size_t)  => "Tag.ULong"
-      // case Builtin(BuiltinType.ssize_t) => "Tag.Long"
+      case RecordRef(n) => s"$n._tag"
       case Function(ret, params) =>
         val paramTypes =
           (params.map(_.of) ++ List(ret))
@@ -240,8 +246,6 @@ object render:
     typ match
       case Typedef(name)   => name
       case RecordRef(name) => name
-      // case Builtin(BuiltinType.size_t)  => "CSize"
-      // case Builtin(BuiltinType.ssize_t) => "CSSize"
       case Pointer(to) =>
         to match
           case Void         => "Ptr[Byte]" // there's no void type on SN
@@ -354,12 +358,6 @@ object render:
           case IntegralBase.Int      => 4.toULong
           case IntegralBase.Long     => 8.toULong
           case IntegralBase.LongLong => 8.toULong
-
-      // case Builtin(BuiltinType.size_t) =>
-      //   staticSize(NumericIntegral(IntegralBase.Long, SignType.Unsigned))
-      // case Builtin(BuiltinType.ssize_t) =>
-      //   staticSize(NumericIntegral(IntegralBase.Long, SignType.Signed))
-
       case NumericReal(base) =>
         base match
           case FloatingBase.Float      => 4.toULong
@@ -397,7 +395,7 @@ object render:
     if isOpaque then
       line(s"object ${model.name}: ")
       nest {
-        line(s"given Tag[${model.name}] = ${scalaTag(model.underlying)}")
+        line(s"given _tag: Tag[${model.name}] = ${scalaTag(model.underlying)}")
         line(s"inline def apply(inline o: $underlyingType): ${model.name} = o")
       }
   end alias
@@ -519,6 +517,21 @@ object render:
       }
     end if
   end binding
+
+  private def isIllegalFunction(returnType: CType, parameters: List[CType])(
+      using AliasResolver
+  ) =
+    def isDirectStructAccess(typ: CType): Boolean =
+      import CType.*
+      typ match
+        case _: Struct       => true
+        case _: Pointer      => false
+        case Typedef(name)   => isDirectStructAccess(aliasResolver(name))
+        case RecordRef(name) => isDirectStructAccess(aliasResolver(name))
+        case _               => false
+
+    isDirectStructAccess(returnType) || parameters.exists(isDirectStructAccess)
+  end isIllegalFunction
 
   private def natDigits(i: Int): String =
     if i <= 9 then s"Nat._$i"
