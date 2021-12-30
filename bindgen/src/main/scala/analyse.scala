@@ -11,10 +11,10 @@ import scala.collection.mutable
 def addBuiltin(binding: Def.Binding): Def.Binding =
   binding.copy(aliases =
     binding.aliases
-      .addOne(Def.Alias("size_t", CType.Builtin(BuiltinType.size_t)))
-      .addOne(
-        Def.Alias("ssize_t", CType.Builtin(BuiltinType.ssize_t))
-      )
+      .addOne(Def.Alias("size_t", BuiltinType.size_t))
+      .addOne(Def.Alias("ssize_t", BuiltinType.ssize_t))
+      .addOne(Def.Alias("uint32_t", BuiltinType.uint32_t))
+      .addOne(Def.Alias("uint8_t", BuiltinType.uint8_t))
   )
 
 def analyse(file: String)(using Zone): Def.Binding =
@@ -36,6 +36,7 @@ def analyse(file: String)(using Zone): Def.Binding =
   !bindingMem = Def.Binding(
     enums = mutable.Set.empty,
     structs = mutable.Set.empty,
+    unions = mutable.Set.empty,
     functions = mutable.Set.empty,
     aliases = mutable.Set.empty
   )
@@ -63,8 +64,15 @@ def analyse(file: String)(using Zone): Def.Binding =
               if (referencedType.kind == CXTypeKind.CXType_Enum) then
                 binding.enums.add(visitEnum(typeDecl, true))
               else if (referencedType.kind == CXTypeKind.CXType_Record) then
-                binding.structs.add(visitStruct(typeDecl, name))
-              else binding.aliases.add(Def.Alias(name, constructType(typ)))
+                println(s"Type: ${clang_getTypeSpelling(typ).string}")
+                val struct = visitStruct(typeDecl, name)
+                if clang_getTypeSpelling(typ).string.startsWith("union ") then
+                  binding.unions.add(Def.Union(struct.fields, struct.name))
+                else
+                  binding.structs.add(visitStruct(typeDecl, name))
+              else 
+                // println(s"Something funky: $" + clang_getCursorKindSpelling(typeDecl.kind).string)
+                binding.aliases.add(Def.Alias(name, constructType(typ)))
               end if
             end if
 
@@ -81,6 +89,7 @@ def analyse(file: String)(using Zone): Def.Binding =
                 )
               )
             end if
+
 
             if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
               CXChildVisitResult.CXChildVisit_Continue

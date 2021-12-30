@@ -120,3 +120,11 @@ void wrap_getTypeDeclaration(CXType *tpe, CXCursor *declaration) {
   memcpy(declaration, &cs, sizeof(CXCursor));
 }
 
+void wrap_getCursorLocation(CXCursor *curs, CXSourceLocation *location) {
+  CXSourceLocation loc = clang_getCursorLocation(*curs);
+  memcpy(location, &loc, sizeof(CXSourceLocation));
+}
+
+unsigned wrap_Location_isFromMainFile(CXSourceLocation *location) {
+  return clang_Location_isFromMainFile(*location);
+}
