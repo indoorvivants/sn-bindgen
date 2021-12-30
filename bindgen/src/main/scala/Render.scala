@@ -64,9 +64,11 @@ object render:
       if model.fields.nonEmpty then
         line(s"extension (struct: $structName)")
         nest {
-          model.fields.foreach {case (fieldName, fieldType) => 
+          model.fields.foreach { case (fieldName, fieldType) =>
             val typ = scalaType(fieldType)
-            line(s"def ${escape(fieldName)}: $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]")
+            line(
+              s"def ${escape(fieldName)}: $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
+            )
           }
         }
       end if
@@ -337,7 +339,8 @@ object render:
       case Bool            => 1.toULong
       case Typedef(name)   => alignment(aliasResolver(name))
       case RecordRef(name) => alignment(aliasResolver(name))
-    // case b: Builtin      => staticSize(b)
+      case Union(fields) =>
+        1.toULong // TODO: are unions aligned at all?
     end match
   end alignment
 
@@ -441,9 +444,13 @@ object render:
           .find(_.name == s)
           .map(_.fields.map(_._2).toList)
           .map(CType.Struct.apply)
+        val union = binding.unions
+          .find(_.name == s)
+          .map(_.fields.map(_._2).toList)
+          .map(CType.Union.apply)
         val _enum = binding.enums.find(_.name.contains(s)).flatMap(_._3)
 
-        alias.orElse(struct).orElse(_enum) match
+        alias.orElse(struct).orElse(_enum).orElse(union) match
           case Some(resolved) => resolved
           case None => throw error(s"Failed to resolve aliased definition $s")
 

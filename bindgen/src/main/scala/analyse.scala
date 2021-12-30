@@ -64,7 +64,6 @@ def analyse(file: String)(using Zone): Def.Binding =
               if (referencedType.kind == CXTypeKind.CXType_Enum) then
                 binding.enums.add(visitEnum(typeDecl, true))
               else if (referencedType.kind == CXTypeKind.CXType_Record) then
-                println(s"Type: ${clang_getTypeSpelling(typ).string}")
                 val struct = visitStruct(typeDecl, name)
                 if clang_getTypeSpelling(typ).string.startsWith("union ") then
                   binding.unions.add(Def.Union(struct.fields, struct.name))
