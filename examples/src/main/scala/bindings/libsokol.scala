@@ -1808,144 +1808,177 @@ object functions:
   import types.*
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_buffer_state(buf: sg_buffer): sg_resource_state = extern
+  def sg_activate_context(ctx_id: sg_context): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_alloc_buffer(): sg_buffer = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_alloc_image(): sg_image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_alloc_pass(): sg_pass = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_alloc_pipeline(): sg_pipeline = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_image(img_id: sg_image): Unit = extern
+  def sg_alloc_shader(): sg_shader = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_pipeline(desc: Ptr[sg_pipeline_desc]): sg_pipeline = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_shader_info(shd: sg_shader): sg_shader_info = extern
-
-  def sg_apply_viewport(x: CInt, y: CInt, width: CInt, height: CInt, origin_top_left: CInt): Unit = extern
-
-  def sg_isvalid(): CInt = extern
+  def sg_append_buffer(buf: sg_buffer, data: Ptr[sg_range]): CInt = extern
 
   def sg_apply_bindings(bindings: Ptr[sg_bindings]): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_pass(desc: Ptr[sg_pass_desc]): sg_pass = extern
+  def sg_apply_pipeline(pip: sg_pipeline): Unit = extern
 
-  def sg_uninit_pass(): CInt = extern
+  def sg_apply_scissor_rect(x: CInt, y: CInt, width: CInt, height: CInt, origin_top_left: CInt): Unit = extern
 
-  def sg_uninit_shader(): CInt = extern
+  def sg_apply_scissor_rectf(x: Float, y: Float, width: Float, height: Float, origin_top_left: CInt): Unit = extern
+
+  def sg_apply_uniforms(stage: sg_shader_stage, ub_index: CInt, data: Ptr[sg_range]): Unit = extern
+
+  def sg_apply_viewport(x: CInt, y: CInt, width: CInt, height: CInt, origin_top_left: CInt): Unit = extern
+
+  def sg_apply_viewportf(x: Float, y: Float, width: Float, height: Float, origin_top_left: CInt): Unit = extern
+
+  def sg_begin_default_pass(pass_action: Ptr[sg_pass_action], width: CInt, height: CInt): Unit = extern
+
+  def sg_begin_default_passf(pass_action: Ptr[sg_pass_action], width: Float, height: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_begin_pass(pass: sg_pass, pass_action: Ptr[sg_pass_action]): Unit = extern
+
+  def sg_commit(): Unit = extern
+
+  def sg_d3d11_device(): Ptr[Byte] = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_dealloc_buffer(buf_id: sg_buffer): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_dealloc_image(img_id: sg_image): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_dealloc_pass(pass_id: sg_pass): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_dealloc_pipeline(pip_id: sg_pipeline): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_init_pipeline(pip_id: sg_pipeline, desc: Ptr[sg_pipeline_desc]): Unit = extern
+  def sg_dealloc_shader(shd_id: sg_shader): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pipeline_state(pip: sg_pipeline): sg_resource_state = extern
+  def sg_destroy_buffer(buf: sg_buffer): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_destroy_image(img: sg_image): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_destroy_pass(pass: sg_pass): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_destroy_pipeline(pip: sg_pipeline): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_destroy_shader(shd: sg_shader): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_discard_context(ctx_id: sg_context): Unit = extern
+
+  def sg_draw(base_element: CInt, num_elements: CInt, num_instances: CInt): Unit = extern
+
+  def sg_end_pass(): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_fail_buffer(buf_id: sg_buffer): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_activate_context(ctx_id: sg_context): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_update_image(img: sg_image, data: Ptr[sg_image_data]): Unit = extern
-
-  def sg_apply_uniforms(stage: sg_shader_stage, ub_index: CInt, data: Ptr[sg_range]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_shader(): sg_shader = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_desc(): sg_desc = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_install_trace_hooks(trace_hooks: Ptr[sg_trace_hooks]): sg_trace_hooks = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_buffer(desc: Ptr[sg_buffer_desc]): sg_buffer = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_image_info(img: sg_image): sg_image_info = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_buffer(buf: sg_buffer): Unit = extern
-
-  def sg_begin_default_pass(pass_action: Ptr[sg_pass_action], width: CInt, height: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_pipeline(pip: sg_pipeline): Unit = extern
-
-  def sg_apply_scissor_rect(x: CInt, y: CInt, width: CInt, height: CInt, origin_top_left: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_init_shader(shd_id: sg_shader, desc: Ptr[sg_shader_desc]): Unit = extern
-
-  def sg_shutdown(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pipeline_defaults(desc: Ptr[sg_pipeline_desc]): sg_pipeline_desc = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_image_defaults(desc: Ptr[sg_image_desc]): sg_image_desc = extern
-
-  def sg_mtl_render_command_encoder(): Ptr[Byte] = extern
+  def sg_fail_image(img_id: sg_image): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_fail_pass(pass_id: sg_pass): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_shader_state(shd: sg_shader): sg_resource_state = extern
-
-  def sg_reset_state_cache(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pixelformat(fmt: sg_pixel_format): sg_pixelformat_info = extern
-
-  def sg_mtl_device(): Ptr[Byte] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_image(desc: Ptr[sg_image_desc]): sg_image = extern
-
-  def sg_push_debug_group(name: CString): Unit = extern
+  def sg_fail_pipeline(pip_id: sg_pipeline): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_fail_shader(shd_id: sg_shader): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_apply_pipeline(pip: sg_pipeline): Unit = extern
-
-  def sg_commit(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_update_buffer(buf: sg_buffer, data: Ptr[sg_range]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_pass_state(pass: sg_pass): sg_resource_state = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_discard_context(ctx_id: sg_context): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_shader_defaults(desc: Ptr[sg_shader_desc]): sg_shader_desc = extern
+  def sg_init_buffer(buf_id: sg_buffer, desc: Ptr[sg_buffer_desc]): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_init_image(img_id: sg_image, desc: Ptr[sg_image_desc]): Unit = extern
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_image_state(img: sg_image): sg_resource_state = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_buffer_info(buf: sg_buffer): sg_buffer_info = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_init_pass(pass_id: sg_pass, desc: Ptr[sg_pass_desc]): Unit = extern
 
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_init_pipeline(pip_id: sg_pipeline, desc: Ptr[sg_pipeline_desc]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_init_shader(shd_id: sg_shader, desc: Ptr[sg_shader_desc]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_install_trace_hooks(trace_hooks: Ptr[sg_trace_hooks]): sg_trace_hooks = extern
+
+  def sg_isvalid(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_make_buffer(desc: Ptr[sg_buffer_desc]): sg_buffer = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_make_image(desc: Ptr[sg_image_desc]): sg_image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_make_pass(desc: Ptr[sg_pass_desc]): sg_pass = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_make_pipeline(desc: Ptr[sg_pipeline_desc]): sg_pipeline = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_make_shader(desc: Ptr[sg_shader_desc]): sg_shader = extern
+
+  def sg_mtl_device(): Ptr[Byte] = extern
+
+  def sg_mtl_render_command_encoder(): Ptr[Byte] = extern
+
+  def sg_pop_debug_group(): Unit = extern
+
+  def sg_push_debug_group(name: CString): Unit = extern
+
   def sg_query_backend(): sg_backend = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_image(img: sg_image): Unit = extern
+  def sg_query_buffer_defaults(desc: Ptr[sg_buffer_desc]): sg_buffer_desc = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_buffer_info(buf: sg_buffer): sg_buffer_info = extern
+
+  def sg_query_buffer_overflow(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_buffer_state(buf: sg_buffer): sg_resource_state = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_desc(): sg_desc = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_features(): sg_features = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_image_defaults(desc: Ptr[sg_image_desc]): sg_image_desc = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_image_info(img: sg_image): sg_image_info = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_image_state(img: sg_image): sg_resource_state = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_limits(): sg_limits = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_query_pass_defaults(desc: Ptr[sg_pass_desc]): sg_pass_desc = extern
@@ -1954,84 +1987,51 @@ object functions:
   def sg_query_pass_info(pass: sg_pass): sg_pass_info = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_pass(pass_id: sg_pass): Unit = extern
+  def sg_query_pass_state(pass: sg_pass): sg_resource_state = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_pass(pass: sg_pass): Unit = extern
-
-  def sg_d3d11_device(): Ptr[Byte] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_shader(shd_id: sg_shader): Unit = extern
+  def sg_query_pipeline_defaults(desc: Ptr[sg_pipeline_desc]): sg_pipeline_desc = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_query_pipeline_info(pip: sg_pipeline): sg_pipeline_info = extern
 
-  def sg_draw(base_element: CInt, num_elements: CInt, num_instances: CInt): Unit = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def sg_query_pipeline_state(pip: sg_pipeline): sg_resource_state = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_make_shader(desc: Ptr[sg_shader_desc]): sg_shader = extern
-
-  def sg_uninit_image(): CInt = extern
-
-  def sg_apply_viewportf(x: Float, y: Float, width: Float, height: Float, origin_top_left: CInt): Unit = extern
+  def sg_query_pixelformat(fmt: sg_pixel_format): sg_pixelformat_info = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_begin_pass(pass: sg_pass, pass_action: Ptr[sg_pass_action]): Unit = extern
+  def sg_query_shader_defaults(desc: Ptr[sg_shader_desc]): sg_shader_desc = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_init_buffer(buf_id: sg_buffer, desc: Ptr[sg_buffer_desc]): Unit = extern
-
-  def sg_begin_default_passf(pass_action: Ptr[sg_pass_action], width: Float, height: Float): Unit = extern
+  def sg_query_shader_info(shd: sg_shader): sg_shader_info = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_destroy_shader(shd: sg_shader): Unit = extern
+  def sg_query_shader_state(shd: sg_shader): sg_resource_state = extern
 
-  def sg_apply_scissor_rectf(x: Float, y: Float, width: Float, height: Float, origin_top_left: CInt): Unit = extern
-
-  def sg_uninit_pipeline(): CInt = extern
-
-  def sg_query_buffer_overflow(): CInt = extern
-
-  def sg_pop_debug_group(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_append_buffer(buf: sg_buffer, data: Ptr[sg_range]): CInt = extern
+  def sg_reset_state_cache(): Unit = extern
 
   def sg_setup(desc: Ptr[sg_desc]): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_dealloc_buffer(buf_id: sg_buffer): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_image(): sg_image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_features(): sg_features = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_buffer(): sg_buffer = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_fail_image(img_id: sg_image): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def sg_setup_context(): sg_context = extern
+
+  def sg_shutdown(): Unit = extern
 
   def sg_uninit_buffer(): CInt = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_limits(): sg_limits = extern
+  def sg_uninit_image(): CInt = extern
+
+  def sg_uninit_pass(): CInt = extern
+
+  def sg_uninit_pipeline(): CInt = extern
+
+  def sg_uninit_shader(): CInt = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_fail_pipeline(pip_id: sg_pipeline): Unit = extern
+  def sg_update_buffer(buf: sg_buffer, data: Ptr[sg_range]): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_alloc_pass(): sg_pass = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def sg_query_buffer_defaults(desc: Ptr[sg_buffer_desc]): sg_buffer_desc = extern
-
-  def sg_end_pass(): Unit = extern
-
+  def sg_update_image(img: sg_image, data: Ptr[sg_image_data]): Unit = extern
 

@@ -527,13 +527,14 @@ object render:
       sb.append("\n@extern\nobject functions: \n")
       render.nest {
         render.to(sb)("import types.*\n")
-        binding.functions.zipWithIndex.foreach { case (func, idx) =>
-          try render.function(
-            func,
-            render.to(sb)
-          )
-          catch exc => System.err.println(s"Failed to render $func: $exc")
-          if idx != binding.functions.size - 1 then sb.append("\n")
+        binding.functions.toList.sortBy(_.name).zipWithIndex.foreach {
+          case (func, idx) =>
+            try render.function(
+              func,
+              render.to(sb)
+            )
+            catch exc => System.err.println(s"Failed to render $func: $exc")
+            if idx != binding.functions.size - 1 then sb.append("\n")
         }
       }
     end if

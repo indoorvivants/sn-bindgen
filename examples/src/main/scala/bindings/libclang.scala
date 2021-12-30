@@ -1987,417 +1987,417 @@ object types:
 object functions: 
   import types.*
 
+  def asctime(_0: Ptr[tm]): CString = extern
+
   def asctime_r(_0: Ptr[tm], _1: CString): CString = extern
-
-  def clang_getTUResourceUsageName(): Ptr[CInt] = extern
-
-  def clock_settime(__clock_id: clockid_t, __tp: Ptr[timespec]): CInt = extern
-
-  def clang_isVolatileQualifiedType(): CInt = extern
-
-  def clang_Cursor_getTemplateArgumentValue(): CInt = extern
-
-  def clang_isCursorDefinition(): CInt = extern
-
-  def clang_CXXRecord_isAbstract(): CInt = extern
-
-  def clang_isConstQualifiedType(): CInt = extern
-
-  def clang_CXXMethod_isVirtual(): CInt = extern
-
-  def clang_getFileLocation(): CInt = extern
-
-  def clang_getNumOverloadedDecls(): CInt = extern
-
-  def timespec_get(ts: Ptr[timespec], base: CInt): CInt = extern
-
-  def clang_parseTranslationUnit2FullArgv(): CInt = extern
-
-  def clang_Location_isInSystemHeader(): CInt = extern
-
-  def clang_Cursor_isNull(): CInt = extern
-
-  def clang_getCursorExceptionSpecificationType(): CInt = extern
-
-  def clang_codeCompleteGetNumDiagnostics(): CInt = extern
-
-  def clang_saveTranslationUnit(): CInt = extern
-
-  def clang_getTemplateCursorKind(): CInt = extern
-
-  def clang_defaultCodeCompleteOptions(): CInt = extern
-
-  def clang_EvalResult_getAsLongLong(): CInt = extern
-
-  def clang_getCursorVisibility(): CInt = extern
-
-  def timelocal(_0: Ptr[tm]): time_t = extern
-
-  def clang_getInstantiationLocation(): CInt = extern
-
-  def clang_CXCursorSet_insert(): CInt = extern
-
-  def clang_Cursor_getObjCSelectorIndex(): CInt = extern
-
-  def clang_CXXMethod_isDefaulted(): CInt = extern
-
-  def clang_Type_visitFields(): CInt = extern
-
-  def clang_CXXMethod_isStatic(): CInt = extern
-
-  def clang_isUnexposed(): CInt = extern
-
-  def clang_Cursor_isBitField(): CInt = extern
-
-  def clang_Cursor_isMacroBuiltin(): CInt = extern
-
-  def clang_defaultSaveOptions(): CInt = extern
-
-  def clang_isStatement(): CInt = extern
-
-  def clang_Cursor_isFunctionInlined(): CInt = extern
-
-  def clang_equalCursors(): CInt = extern
-
-  def clang_CXXMethod_isConst(): CInt = extern
-
-  def clang_reparseTranslationUnit(): CInt = extern
-
-  def clang_createTranslationUnit2(): CInt = extern
-
-  def ctime_r(_0: Ptr[time_t], _1: CString): CString = extern
-
-  def tzsetwall(): Unit = extern
-
-  def clang_Cursor_isExternalSymbol(): CInt = extern
-
-  def clang_getFunctionTypeCallingConv(): CInt = extern
-
-  def clang_EvalResult_isUnsignedInt(): CInt = extern
-
-  def clang_visitChildren(): CInt = extern
-
-  def clang_getNumCompletionChunks(): CInt = extern
-
-  def clang_disposeCodeCompleteResults(): CInt = extern
-
-  def clang_getEnumConstantDeclValue(): CInt = extern
-
-  def clang_indexSourceFileFullArgv(): CInt = extern
-
-  def clang_PrintingPolicy_setProperty(): CInt = extern
-
-  def clang_disposeCXPlatformAvailability(): CInt = extern
-
-  def clang_isFileMultipleIncludeGuarded(): CInt = extern
-
-  def clang_isInvalidDeclaration(): CInt = extern
-
-  def clang_getCompletionAvailability(): CInt = extern
-
-  def clang_IndexAction_dispose(): CInt = extern
-
-  def clang_Cursor_getNumTemplateArguments(): CInt = extern
-  def clang_disposeIndex(): CInt = extern
-
-  def clang_Type_getNumTemplateArguments(): CInt = extern
-
-  def clang_Cursor_isAnonymousRecordDecl(): CInt = extern
-
-  def clang_Type_getSizeOf(): CInt = extern
-
-  def clang_getCursorLinkage(): CInt = extern
-
-  def clang_disposeTranslationUnit(): CInt = extern
-
-  def clang_getCompletionPriority(): CInt = extern
-
-  def clang_getDiagnosticSeverity(): CInt = extern
-
-  def clock(): clock_t = extern
-
-  def clang_EvalResult_getAsUnsigned(): CInt = extern
-
-  def clang_sortCodeCompletionResults(): CInt = extern
-
-  def strptime(_0: CString, _1: CString, _2: Ptr[tm]): CString = extern
-
-  def clang_Type_getOffsetOf(): CInt = extern
-
-  def clang_index_isEntityObjCContainerKind(): CInt = extern
-
-  def clang_index_setClientContainer(): CInt = extern
-
-  def clang_EvalResult_dispose(): CInt = extern
-
-  def clang_indexLoc_getFileLocation(): CInt = extern
-
-  def clang_getCXXAccessSpecifier(): CInt = extern
-
-  def clock_getres(__clock_id: clockid_t, __res: Ptr[timespec]): CInt = extern
-
-  def clang_disposeDiagnostic(): CInt = extern
-
-  def clang_Cursor_isObjCOptional(): CInt = extern
-
-  def clang_Cursor_hasVarDeclExternalStorage(): CInt = extern
-
-  def clang_isFunctionTypeVariadic(): CInt = extern
-
-  def clang_Cursor_getObjCPropertyAttributes(): CInt = extern
-
-  def clang_Cursor_isVariadic(): CInt = extern
-
-  def clang_Cursor_isDynamicCall(): CInt = extern
-
-  def clang_Cursor_isInlineNamespace(): CInt = extern
-
-  def clang_getCursorPlatformAvailability(): CInt = extern
-
-  def clang_isVirtualBase(): CInt = extern
-
-  def clang_CXXConstructor_isCopyConstructor(): CInt = extern
-
-  def clang_enableStackTraces(): CInt = extern
-
-  def clang_getNumDiagnostics(): CInt = extern
-
-  def clock_gettime_nsec_np(__clock_id: clockid_t): __uint64_t = extern
-
-  def clang_Type_getNullability(): CInt = extern
-
-  def tzset(): Unit = extern
-
-  def clang_getCursorKind(): CInt = extern
-
-  def clang_getCompletionNumAnnotations(): CInt = extern
-
-  def clang_Module_getNumTopLevelHeaders(): CInt = extern
-
-  def clang_toggleCrashRecovery(): CInt = extern
-
-  def clang_defaultDiagnosticDisplayOptions(): CInt = extern
-
-  def clang_equalTypes(): CInt = extern
-
-  def clang_getFileContents(): Ptr[CInt] = extern
-
-  def clang_CXXConstructor_isDefaultConstructor(): CInt = extern
-
-  def difftime(_0: time_t, _1: time_t): Double = extern
-
-  def time(_0: Ptr[time_t]): time_t = extern
-
-  def clang_getExpansionLocation(): CInt = extern
-
-  def clock_gettime(__clock_id: clockid_t, __tp: Ptr[timespec]): CInt = extern
-
-  def clang_getPresumedLocation(): CInt = extern
-
-  def ctime(_0: Ptr[time_t]): CString = extern
-
-  def clang_Range_isNull(): CInt = extern
-
-  def clang_remap_getFilenames(): CInt = extern
-
-  def clang_TargetInfo_getPointerWidth(): CInt = extern
-
-  def nanosleep(__rqtp: Ptr[timespec], __rmtp: Ptr[timespec]): CInt = extern
-
-  def clang_Cursor_getOffsetOfField(): CInt = extern
-
-  def clang_getExceptionSpecificationType(): CInt = extern
 
   def clang_CXCursorSet_contains(): CInt = extern
 
-  def clang_disposeCXCursorSet(): CInt = extern
+  def clang_CXCursorSet_insert(): CInt = extern
 
-  def clang_CXXField_isMutable(): CInt = extern
-
-  def clang_Type_getAlignOf(): CInt = extern
-
-  def clang_CXXMethod_isPureVirtual(): CInt = extern
-
-  def clang_index_setClientEntity(): CInt = extern
-
-  def clang_Cursor_hasVarDeclGlobalStorage(): CInt = extern
-
-  def clang_isReference(): CInt = extern
-
-  def clang_getCursorTLSKind(): CInt = extern
-
-  def localtime_r(_0: Ptr[time_t], _1: Ptr[tm]): Ptr[tm] = extern
-
-  def getdate(_0: CString): Ptr[tm] = extern
-
-  def clang_Cursor_isAnonymous(): CInt = extern
-
-  def clang_defaultReparseOptions(): CInt = extern
-
-  def clang_codeCompleteGetContexts(): CInt = extern
-
-  def clang_getDiagnosticNumFixIts(): CInt = extern
-
-  def clang_Module_isSystem(): CInt = extern
-
-  def clang_getSpellingLocation(): CInt = extern
-
-  def clang_equalRanges(): CInt = extern
-
-  def clang_getNumArgTypes(): CInt = extern
-
-  def clang_getCursorAvailability(): CInt = extern
-
-  def clang_suspendTranslationUnit(): CInt = extern
-
-  def clang_Type_isTransparentTagTypedef(): CInt = extern
-
-  def clang_Cursor_getStorageClass(): CInt = extern
-
-  def clang_isTranslationUnit(): CInt = extern
-
-  def clang_Cursor_isMacroFunctionLike(): CInt = extern
-
-  def clang_isExpression(): CInt = extern
-
-  def clang_isDeclaration(): CInt = extern
-
-  def clang_disposeCXTUResourceUsage(): CInt = extern
+  def clang_CXIndex_getGlobalOptions(): CInt = extern
 
   def clang_CXIndex_setGlobalOptions(): CInt = extern
 
-  def clang_isAttribute(): CInt = extern
-
-  def clang_PrintingPolicy_getProperty(): CInt = extern
-
-  def clang_getEnumConstantDeclUnsignedValue(): CInt = extern
-
-  def clang_getDefinitionSpellingAndExtent(): CInt = extern
-
-  def clang_PrintingPolicy_dispose(): CInt = extern
-
-  def clang_getFieldDeclBitWidth(): CInt = extern
-
-  def time2posix(_0: time_t): time_t = extern
-
-  def localtime(_0: Ptr[time_t]): Ptr[tm] = extern
-
-  def clang_getNumDiagnosticsInSet(): CInt = extern
-
-  def clang_indexSourceFile(): CInt = extern
-
-  def posix2time(_0: time_t): time_t = extern
-
-  def clang_EvalResult_getAsInt(): CInt = extern
-
-  def clang_visitChildrenWithBlock(): CInt = extern
-
-  def clang_getCursorLanguage(): CInt = extern
-
-  def clang_CXXConstructor_isMoveConstructor(): CInt = extern
-
-  def clang_disposeTokens(): CInt = extern
-
-  def clang_getFileUniqueID(): CInt = extern
-
-  def clang_equalLocations(): CInt = extern
-
-  def clang_getNumElements(): CInt = extern
-
-  def clang_getCompletionNumFixIts(): CInt = extern
-
-  def clang_Cursor_getNumArguments(): CInt = extern
-
-  def clang_Location_isFromMainFile(): CInt = extern
-
-  def clang_TargetInfo_dispose(): CInt = extern
-
-  def clang_Type_getNumObjCTypeArgs(): CInt = extern
-
-  def clang_Cursor_getObjCDeclQualifiers(): CInt = extern
-
-  def clang_getDiagnosticNumRanges(): CInt = extern
-
-  def clang_executeOnThread(): CInt = extern
-
-  def clang_isInvalid(): CInt = extern
+  def clang_CXIndex_setInvocationEmissionPathOption(): CInt = extern
 
   def clang_CXXConstructor_isConvertingConstructor(): CInt = extern
 
-  def clang_remap_dispose(): CInt = extern
+  def clang_CXXConstructor_isCopyConstructor(): CInt = extern
 
-  def clang_annotateTokens(): CInt = extern
+  def clang_CXXConstructor_isDefaultConstructor(): CInt = extern
+
+  def clang_CXXConstructor_isMoveConstructor(): CInt = extern
+
+  def clang_CXXField_isMutable(): CInt = extern
+
+  def clang_CXXMethod_isConst(): CInt = extern
+
+  def clang_CXXMethod_isDefaulted(): CInt = extern
+
+  def clang_CXXMethod_isPureVirtual(): CInt = extern
+
+  def clang_CXXMethod_isStatic(): CInt = extern
+
+  def clang_CXXMethod_isVirtual(): CInt = extern
+
+  def clang_CXXRecord_isAbstract(): CInt = extern
+
+  def clang_Cursor_getNumArguments(): CInt = extern
+
+  def clang_Cursor_getNumTemplateArguments(): CInt = extern
+
+  def clang_Cursor_getObjCDeclQualifiers(): CInt = extern
+
+  def clang_Cursor_getObjCPropertyAttributes(): CInt = extern
+
+  def clang_Cursor_getObjCSelectorIndex(): CInt = extern
+
+  def clang_Cursor_getOffsetOfField(): CInt = extern
+
+  def clang_Cursor_getStorageClass(): CInt = extern
 
   def clang_Cursor_getTemplateArgumentKind(): CInt = extern
 
-  def clang_getDiagnosticCategory(): CInt = extern
-
   def clang_Cursor_getTemplateArgumentUnsignedValue(): CInt = extern
 
-  def clang_EvalResult_getAsDouble(): CInt = extern
-
-  def clang_EnumDecl_isScoped(): CInt = extern
-
-  def clang_getArraySize(): CInt = extern
-
-  def clang_getAddressSpace(): CInt = extern
-
-  def timegm(_0: Ptr[tm]): time_t = extern
-
-  def clang_getOverriddenCursors(): CInt = extern
-
-  def clang_defaultEditingTranslationUnitOptions(): CInt = extern
-
-  def clang_indexTranslationUnit(): CInt = extern
-
-  def clang_disposeDiagnosticSet(): CInt = extern
-
-  def clang_isPreprocessing(): CInt = extern
-
-  def clang_parseTranslationUnit2(): CInt = extern
-
-  def clang_getCompletionChunkKind(): CInt = extern
-
-  def clang_File_isEqual(): CInt = extern
-
-  def clang_hashCursor(): CInt = extern
-
-  def clang_EvalResult_getAsStr(): Ptr[CInt] = extern
-
-  def mktime(_0: Ptr[tm]): time_t = extern
-
-  def clang_CXIndex_setInvocationEmissionPathOption(): CInt = extern
+  def clang_Cursor_getTemplateArgumentValue(): CInt = extern
 
   def clang_Cursor_hasAttrs(): CInt = extern
 
-  def clang_remap_getNumFiles(): CInt = extern
+  def clang_Cursor_hasVarDeclExternalStorage(): CInt = extern
+
+  def clang_Cursor_hasVarDeclGlobalStorage(): CInt = extern
+
+  def clang_Cursor_isAnonymous(): CInt = extern
+
+  def clang_Cursor_isAnonymousRecordDecl(): CInt = extern
+
+  def clang_Cursor_isBitField(): CInt = extern
+
+  def clang_Cursor_isDynamicCall(): CInt = extern
+
+  def clang_Cursor_isExternalSymbol(): CInt = extern
+
+  def clang_Cursor_isFunctionInlined(): CInt = extern
+
+  def clang_Cursor_isInlineNamespace(): CInt = extern
+
+  def clang_Cursor_isMacroBuiltin(): CInt = extern
+
+  def clang_Cursor_isMacroFunctionLike(): CInt = extern
+
+  def clang_Cursor_isNull(): CInt = extern
+
+  def clang_Cursor_isObjCOptional(): CInt = extern
+
+  def clang_Cursor_isVariadic(): CInt = extern
+
+  def clang_EnumDecl_isScoped(): CInt = extern
+
+  def clang_EvalResult_dispose(): CInt = extern
+
+  def clang_EvalResult_getAsDouble(): CInt = extern
+
+  def clang_EvalResult_getAsInt(): CInt = extern
+
+  def clang_EvalResult_getAsLongLong(): CInt = extern
+
+  def clang_EvalResult_getAsStr(): Ptr[CInt] = extern
+
+  def clang_EvalResult_getAsUnsigned(): CInt = extern
+
+  def clang_EvalResult_isUnsignedInt(): CInt = extern
+
+  def clang_File_isEqual(): CInt = extern
+
+  def clang_IndexAction_dispose(): CInt = extern
+
+  def clang_Location_isFromMainFile(): CInt = extern
+
+  def clang_Location_isInSystemHeader(): CInt = extern
+
+  def clang_Module_getNumTopLevelHeaders(): CInt = extern
+
+  def clang_Module_isSystem(): CInt = extern
+
+  def clang_PrintingPolicy_dispose(): CInt = extern
+
+  def clang_PrintingPolicy_getProperty(): CInt = extern
+
+  def clang_PrintingPolicy_setProperty(): CInt = extern
+
+  def clang_Range_isNull(): CInt = extern
+
+  def clang_TargetInfo_dispose(): CInt = extern
+
+  def clang_TargetInfo_getPointerWidth(): CInt = extern
+
+  def clang_Type_getAlignOf(): CInt = extern
+
+  def clang_Type_getCXXRefQualifier(): CInt = extern
+
+  def clang_Type_getNullability(): CInt = extern
+
+  def clang_Type_getNumObjCProtocolRefs(): CInt = extern
+
+  def clang_Type_getNumObjCTypeArgs(): CInt = extern
+
+  def clang_Type_getNumTemplateArguments(): CInt = extern
+
+  def clang_Type_getOffsetOf(): CInt = extern
+
+  def clang_Type_getSizeOf(): CInt = extern
+
+  def clang_Type_isTransparentTagTypedef(): CInt = extern
+
+  def clang_Type_visitFields(): CInt = extern
+
+  def clang_annotateTokens(): CInt = extern
+
+  def clang_codeCompleteGetContainerKind(): CInt = extern
+
+  def clang_codeCompleteGetContexts(): CInt = extern
+
+  def clang_codeCompleteGetNumDiagnostics(): CInt = extern
+
+  def clang_createTranslationUnit2(): CInt = extern
+
+  def clang_defaultCodeCompleteOptions(): CInt = extern
+
+  def clang_defaultDiagnosticDisplayOptions(): CInt = extern
+
+  def clang_defaultEditingTranslationUnitOptions(): CInt = extern
+
+  def clang_defaultReparseOptions(): CInt = extern
+
+  def clang_defaultSaveOptions(): CInt = extern
+
+  def clang_disposeCXCursorSet(): CInt = extern
+
+  def clang_disposeCXPlatformAvailability(): CInt = extern
+
+  def clang_disposeCXTUResourceUsage(): CInt = extern
+
+  def clang_disposeCodeCompleteResults(): CInt = extern
+
+  def clang_disposeDiagnostic(): CInt = extern
+
+  def clang_disposeDiagnosticSet(): CInt = extern
+
+  def clang_disposeIndex(): CInt = extern
 
   def clang_disposeOverriddenCursors(): CInt = extern
 
   def clang_disposeSourceRangeList(): CInt = extern
 
-  def gmtime_r(_0: Ptr[time_t], _1: Ptr[tm]): Ptr[tm] = extern
+  def clang_disposeTokens(): CInt = extern
 
-  def clang_CXIndex_getGlobalOptions(): CInt = extern
+  def clang_disposeTranslationUnit(): CInt = extern
 
-  def clang_tokenize(): CInt = extern
+  def clang_enableStackTraces(): CInt = extern
 
-  def clang_codeCompleteGetContainerKind(): CInt = extern
+  def clang_equalCursors(): CInt = extern
 
-  def clang_Type_getCXXRefQualifier(): CInt = extern
+  def clang_equalLocations(): CInt = extern
 
-  def gmtime(_0: Ptr[time_t]): Ptr[tm] = extern
+  def clang_equalRanges(): CInt = extern
 
-  def clang_Type_getNumObjCProtocolRefs(): CInt = extern
+  def clang_equalTypes(): CInt = extern
 
-  def strftime(_0: CString, _1: size_t, _2: CString, _3: Ptr[tm]): size_t = extern
+  def clang_executeOnThread(): CInt = extern
 
-  def clang_isPODType(): CInt = extern
+  def clang_getAddressSpace(): CInt = extern
 
-  def asctime(_0: Ptr[tm]): CString = extern
+  def clang_getArraySize(): CInt = extern
+
+  def clang_getCXXAccessSpecifier(): CInt = extern
+
+  def clang_getCompletionAvailability(): CInt = extern
+
+  def clang_getCompletionChunkKind(): CInt = extern
+
+  def clang_getCompletionNumAnnotations(): CInt = extern
+
+  def clang_getCompletionNumFixIts(): CInt = extern
+
+  def clang_getCompletionPriority(): CInt = extern
+
+  def clang_getCursorAvailability(): CInt = extern
+
+  def clang_getCursorExceptionSpecificationType(): CInt = extern
+
+  def clang_getCursorKind(): CInt = extern
+
+  def clang_getCursorLanguage(): CInt = extern
+
+  def clang_getCursorLinkage(): CInt = extern
+
+  def clang_getCursorPlatformAvailability(): CInt = extern
+
+  def clang_getCursorTLSKind(): CInt = extern
+
+  def clang_getCursorVisibility(): CInt = extern
+
+  def clang_getDefinitionSpellingAndExtent(): CInt = extern
+
+  def clang_getDiagnosticCategory(): CInt = extern
+
+  def clang_getDiagnosticNumFixIts(): CInt = extern
+
+  def clang_getDiagnosticNumRanges(): CInt = extern
+
+  def clang_getDiagnosticSeverity(): CInt = extern
+
+  def clang_getEnumConstantDeclUnsignedValue(): CInt = extern
+
+  def clang_getEnumConstantDeclValue(): CInt = extern
+
+  def clang_getExceptionSpecificationType(): CInt = extern
+
+  def clang_getExpansionLocation(): CInt = extern
+
+  def clang_getFieldDeclBitWidth(): CInt = extern
+
+  def clang_getFileContents(): Ptr[CInt] = extern
+
+  def clang_getFileLocation(): CInt = extern
+
+  def clang_getFileUniqueID(): CInt = extern
+
+  def clang_getFunctionTypeCallingConv(): CInt = extern
 
   def clang_getInclusions(): CInt = extern
 
+  def clang_getInstantiationLocation(): CInt = extern
+
+  def clang_getNumArgTypes(): CInt = extern
+
+  def clang_getNumCompletionChunks(): CInt = extern
+
+  def clang_getNumDiagnostics(): CInt = extern
+
+  def clang_getNumDiagnosticsInSet(): CInt = extern
+
+  def clang_getNumElements(): CInt = extern
+
+  def clang_getNumOverloadedDecls(): CInt = extern
+
+  def clang_getOverriddenCursors(): CInt = extern
+
+  def clang_getPresumedLocation(): CInt = extern
+
+  def clang_getSpellingLocation(): CInt = extern
+
+  def clang_getTUResourceUsageName(): Ptr[CInt] = extern
+
+  def clang_getTemplateCursorKind(): CInt = extern
+
+  def clang_hashCursor(): CInt = extern
+
+  def clang_indexLoc_getFileLocation(): CInt = extern
+
+  def clang_indexSourceFile(): CInt = extern
+
+  def clang_indexSourceFileFullArgv(): CInt = extern
+
+  def clang_indexTranslationUnit(): CInt = extern
+
+  def clang_index_isEntityObjCContainerKind(): CInt = extern
+
+  def clang_index_setClientContainer(): CInt = extern
+
+  def clang_index_setClientEntity(): CInt = extern
+
+  def clang_isAttribute(): CInt = extern
+
+  def clang_isConstQualifiedType(): CInt = extern
+
+  def clang_isCursorDefinition(): CInt = extern
+
+  def clang_isDeclaration(): CInt = extern
+
+  def clang_isExpression(): CInt = extern
+
+  def clang_isFileMultipleIncludeGuarded(): CInt = extern
+
+  def clang_isFunctionTypeVariadic(): CInt = extern
+
+  def clang_isInvalid(): CInt = extern
+
+  def clang_isInvalidDeclaration(): CInt = extern
+
+  def clang_isPODType(): CInt = extern
+
+  def clang_isPreprocessing(): CInt = extern
+
+  def clang_isReference(): CInt = extern
+
   def clang_isRestrictQualifiedType(): CInt = extern
 
+  def clang_isStatement(): CInt = extern
+
+  def clang_isTranslationUnit(): CInt = extern
+
+  def clang_isUnexposed(): CInt = extern
+
+  def clang_isVirtualBase(): CInt = extern
+
+  def clang_isVolatileQualifiedType(): CInt = extern
+
+  def clang_parseTranslationUnit2(): CInt = extern
+
+  def clang_parseTranslationUnit2FullArgv(): CInt = extern
+
+  def clang_remap_dispose(): CInt = extern
+
+  def clang_remap_getFilenames(): CInt = extern
+
+  def clang_remap_getNumFiles(): CInt = extern
+
+  def clang_reparseTranslationUnit(): CInt = extern
+
+  def clang_saveTranslationUnit(): CInt = extern
+
+  def clang_sortCodeCompletionResults(): CInt = extern
+
+  def clang_suspendTranslationUnit(): CInt = extern
+
+  def clang_toggleCrashRecovery(): CInt = extern
+
+  def clang_tokenize(): CInt = extern
+
+  def clang_visitChildren(): CInt = extern
+
+  def clang_visitChildrenWithBlock(): CInt = extern
+
+  def clock(): clock_t = extern
+
+  def clock_getres(__clock_id: clockid_t, __res: Ptr[timespec]): CInt = extern
+
+  def clock_gettime(__clock_id: clockid_t, __tp: Ptr[timespec]): CInt = extern
+
+  def clock_gettime_nsec_np(__clock_id: clockid_t): __uint64_t = extern
+
+  def clock_settime(__clock_id: clockid_t, __tp: Ptr[timespec]): CInt = extern
+
+  def ctime(_0: Ptr[time_t]): CString = extern
+
+  def ctime_r(_0: Ptr[time_t], _1: CString): CString = extern
+
+  def difftime(_0: time_t, _1: time_t): Double = extern
+
+  def getdate(_0: CString): Ptr[tm] = extern
+
+  def gmtime(_0: Ptr[time_t]): Ptr[tm] = extern
+
+  def gmtime_r(_0: Ptr[time_t], _1: Ptr[tm]): Ptr[tm] = extern
+
+  def localtime(_0: Ptr[time_t]): Ptr[tm] = extern
+
+  def localtime_r(_0: Ptr[time_t], _1: Ptr[tm]): Ptr[tm] = extern
+
+  def mktime(_0: Ptr[tm]): time_t = extern
+
+  def nanosleep(__rqtp: Ptr[timespec], __rmtp: Ptr[timespec]): CInt = extern
+
+  def posix2time(_0: time_t): time_t = extern
+
+  def strftime(_0: CString, _1: size_t, _2: CString, _3: Ptr[tm]): size_t = extern
+
+  def strptime(_0: CString, _1: CString, _2: Ptr[tm]): CString = extern
+
+  def time(_0: Ptr[time_t]): time_t = extern
+
+  def time2posix(_0: time_t): time_t = extern
+
+  def timegm(_0: Ptr[tm]): time_t = extern
+
+  def timelocal(_0: Ptr[tm]): time_t = extern
+
+  def timespec_get(ts: Ptr[timespec], base: CInt): CInt = extern
+
+  def tzset(): Unit = extern
+
+  def tzsetwall(): Unit = extern
 

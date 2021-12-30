@@ -1807,215 +1807,919 @@ object types:
 object functions: 
   import types.*
 
-  def nk_str_delete_runes(_0: Ptr[nk_str], pos: CInt, len: CInt): Unit = extern
+  def nk__begin(_0: Ptr[nk_context]): Ptr[nk_command] = extern
+
+  def nk__next(_0: Ptr[nk_context], _1: Ptr[nk_command]): Ptr[nk_command] = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
-
-  def nk_prog(_0: Ptr[nk_context], cur: nk_size, max: nk_size, modifyable: nk_bool): nk_size = extern
-
-  def nk_layout_row_static(ctx: Ptr[nk_context], height: Float, item_width: CInt, cols: CInt): Unit = extern
-
-  def nk_slider_float(_0: Ptr[nk_context], min: Float, `val`: Ptr[Float], max: Float, step: Float): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_nine_slice_ptr(_0: Ptr[Byte], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  def nk_button_symbol_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], _2: nk_symbol_type): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_draw_nine_slice(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_nine_slice], _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], _3: nk_color): Unit = extern
-
-  def nk_tooltip_end(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_str_len_char(_0: Ptr[nk_str]): CInt = extern
-
-  def nk_filter_float(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_colorf_hsva_fv(hsva: Ptr[Float], in: nk_colorf): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_nine_slice_id(_0: CInt, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  def nk_tree_state_pop(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_widget_has_mouse_click_down(_0: Ptr[nk_context], _1: nk_buttons, down: nk_bool): nk_bool = extern
-
-  def nk_clear(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_input_char(_0: Ptr[nk_context], _1: CChar): Unit = extern
-
-  def nk_window_is_collapsed(ctx: Ptr[nk_context], name: CString): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_triangle(_0: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, _7: nk_color): Unit = extern
-
-  def nk_spacing(_0: Ptr[nk_context], cols: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_picker(_0: Ptr[nk_context], _1: nk_colorf, _2: nk_color_format): nk_colorf = extern
-
-  def nk_style_default(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_label(_0: Ptr[nk_context], selected: CString, size: nk_vec2): nk_bool = extern
-
-  def nk_label(_0: Ptr[nk_context], _1: CString, align: nk_flags): Unit = extern
-
-  def nk_str_at_char_const(_0: Ptr[nk_str], pos: CInt): CString = extern
-
-  def nk_style_pop_style_item(_0: Ptr[nk_context]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_item_color(_0: nk_color): nk_style_item = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_f(r: Float, g: Float, b: Float): nk_color = extern
-
-  def nk_layout_row_template_push_dynamic(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_buffer_reset(_0: Ptr[nk_buffer], `type`: nk_buffer_allocation_type): Unit = extern
-
-  def nk_color_pick(_0: Ptr[nk_context], _1: Ptr[nk_colorf], _2: nk_color_format): nk_bool = extern
-
-  def nk_widget_height(_0: Ptr[nk_context]): Float = extern
-
-  def nk_input_is_key_pressed(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
-
-  def nk_selectable_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  def nk_buffer_free(_0: Ptr[nk_buffer]): Unit = extern
-
-  def nk_widget(_0: Ptr[nk_rect], _1: Ptr[nk_context]): nk_widget_layout_states = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_bounds(ctx: Ptr[nk_context]): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_hex(rgb: CString): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image): nk_bool = extern
-
-  def nk_combo_item_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
-
-  def nk_contextual_item_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags): nk_bool = extern
-
-  def nk_style_pop_float(_0: Ptr[nk_context]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], _4: nk_color): Unit = extern
-
-  def nk_window_get_height(_0: Ptr[nk_context]): Float = extern
-
-  def nk_button_set_behavior(_0: Ptr[nk_context], _1: nk_button_behavior): Unit = extern
-
-  def nk_slide_float(_0: Ptr[nk_context], min: Float, `val`: Float, max: Float, step: Float): Float = extern
-
-  def nk_filter_default(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
-
-  def nk_property_double(_0: Ptr[nk_context], name: CString, min: Double, `val`: Ptr[Double], max: Double, step: Double, inc_per_pixel: Float): Unit = extern
-
-  def nk_tree_element_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
-
-  def nk_check_flags_text(_0: Ptr[nk_context], _1: CString, _2: CInt, flags: CUnsignedInt, value: CUnsignedInt): CUnsignedInt = extern
+  def nk_begin(ctx: Ptr[nk_context], title: CString, bounds: nk_rect, flags: nk_flags): nk_bool = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_begin_titled(ctx: Ptr[nk_context], name: CString, title: CString, bounds: nk_rect, flags: nk_flags): nk_bool = extern
 
-  def nk_tree_element_pop(_0: Ptr[nk_context]): Unit = extern
+  def nk_buffer_clear(_0: Ptr[nk_buffer]): Unit = extern
 
-  def nk_filter_ascii(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+  def nk_buffer_free(_0: Ptr[nk_buffer]): Unit = extern
 
-  def nk_style_pop_font(_0: Ptr[nk_context]): nk_bool = extern
+  def nk_buffer_info(_0: Ptr[nk_memory_status], _1: Ptr[nk_buffer]): Unit = extern
+
+  def nk_buffer_init(_0: Ptr[nk_buffer], _1: Ptr[nk_allocator], size: nk_size): Unit = extern
+
+  def nk_buffer_init_fixed(_0: Ptr[nk_buffer], memory: Ptr[Byte], size: nk_size): Unit = extern
+
+  def nk_buffer_mark(_0: Ptr[nk_buffer], `type`: nk_buffer_allocation_type): Unit = extern
+
+  def nk_buffer_memory(_0: Ptr[nk_buffer]): Ptr[Byte] = extern
+
+  def nk_buffer_memory_const(_0: Ptr[nk_buffer]): Ptr[Byte] = extern
+
+  def nk_buffer_push(_0: Ptr[nk_buffer], `type`: nk_buffer_allocation_type, memory: Ptr[Byte], size: nk_size, align: nk_size): Unit = extern
+
+  def nk_buffer_reset(_0: Ptr[nk_buffer], `type`: nk_buffer_allocation_type): Unit = extern
+
+  def nk_buffer_total(_0: Ptr[nk_buffer]): nk_size = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_colorfv(c: Ptr[Float]): nk_colorf = extern
-
-  def nk_filter_decimal(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
-
-  def nk_chart_end(_0: Ptr[nk_context]): Unit = extern
+  def nk_button_color(_0: Ptr[nk_context], _1: nk_color): nk_bool = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
+  def nk_button_image(_0: Ptr[nk_context], img: nk_image): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_button_image_label(_0: Ptr[nk_context], img: nk_image, _2: CString, text_alignment: nk_flags): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_button_image_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, text_alignment: nk_flags): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_button_image_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_button_image_text(_0: Ptr[nk_context], img: nk_image, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_button_image_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, _4: CInt, alignment: nk_flags): nk_bool = extern
+
+  def nk_button_label(_0: Ptr[nk_context], title: CString): nk_bool = extern
+
+  def nk_button_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], title: CString): nk_bool = extern
+
+  def nk_button_pop_behavior(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_button_push_behavior(_0: Ptr[nk_context], _1: nk_button_behavior): nk_bool = extern
+
+  def nk_button_set_behavior(_0: Ptr[nk_context], _1: nk_button_behavior): Unit = extern
+
+  def nk_button_symbol(_0: Ptr[nk_context], _1: nk_symbol_type): nk_bool = extern
+
+  def nk_button_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, text_alignment: nk_flags): nk_bool = extern
+
+  def nk_button_symbol_label_styled(ctx: Ptr[nk_context], style: Ptr[nk_style_button], symbol: nk_symbol_type, title: CString, align: nk_flags): nk_bool = extern
+
+  def nk_button_symbol_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], _2: nk_symbol_type): nk_bool = extern
 
   def nk_button_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
 
-  def nk_layout_row_push(_0: Ptr[nk_context], value: Float): Unit = extern
+  def nk_button_symbol_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], _2: nk_symbol_type, _3: CString, _4: CInt, alignment: nk_flags): nk_bool = extern
+
+  def nk_button_text(_0: Ptr[nk_context], title: CString, len: CInt): nk_bool = extern
+
+  def nk_button_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], title: CString, len: CInt): nk_bool = extern
+
+  def nk_chart_add_slot(ctx: Ptr[nk_context], _1: nk_chart_type, count: CInt, min_value: Float, max_value: Float): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_label_colored(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_color): Unit = extern
+  def nk_chart_add_slot_colored(ctx: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, count: CInt, min_value: Float, max_value: Float): Unit = extern
 
-  def nk_menubar_begin(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_select_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, value: nk_bool): nk_bool = extern
+  def nk_chart_begin(_0: Ptr[nk_context], _1: nk_chart_type, num: CInt, min: Float, max: Float): nk_bool = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_contextual_begin(_0: Ptr[nk_context], _1: nk_flags, _2: nk_vec2, trigger_bounds: nk_rect): nk_bool = extern
+  def nk_chart_begin_colored(_0: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, num: CInt, min: Float, max: Float): nk_bool = extern
+
+  def nk_chart_end(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_chart_push(_0: Ptr[nk_context], _1: Float): nk_flags = extern
+
+  def nk_chart_push_slot(_0: Ptr[nk_context], _1: Float, _2: CInt): nk_flags = extern
+
+  def nk_check_flags_label(_0: Ptr[nk_context], _1: CString, flags: CUnsignedInt, value: CUnsignedInt): CUnsignedInt = extern
+
+  def nk_check_flags_text(_0: Ptr[nk_context], _1: CString, _2: CInt, flags: CUnsignedInt, value: CUnsignedInt): CUnsignedInt = extern
+
+  def nk_check_label(_0: Ptr[nk_context], _1: CString, active: nk_bool): nk_bool = extern
+
+  def nk_check_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: nk_bool): nk_bool = extern
+
+  def nk_checkbox_flags_label(_0: Ptr[nk_context], _1: CString, flags: Ptr[CUnsignedInt], value: CUnsignedInt): nk_bool = extern
+
+  def nk_checkbox_flags_text(_0: Ptr[nk_context], _1: CString, _2: CInt, flags: Ptr[CUnsignedInt], value: CUnsignedInt): nk_bool = extern
+
+  def nk_checkbox_label(_0: Ptr[nk_context], _1: CString, active: Ptr[nk_bool]): nk_bool = extern
+
+  def nk_checkbox_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: Ptr[nk_bool]): nk_bool = extern
+
+  def nk_clear(_0: Ptr[nk_context]): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_color_cf(_0: nk_color): nk_colorf = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_rect_to_local(_0: Ptr[nk_context], _1: nk_rect): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, line_thickness: Float, _7: nk_color): Unit = extern
-
-  def nk_checkbox_flags_label(_0: Ptr[nk_context], _1: CString, flags: Ptr[CUnsignedInt], value: CUnsignedInt): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_bounds(_0: Ptr[nk_context]): nk_rect = extern
-
-  def nk_layout_reset_min_row_height(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_hex(rgb: CString): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_selectable_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  def nk_radio_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: Ptr[nk_bool]): nk_bool = extern
-
-  def nk_layout_set_min_row_height(_0: Ptr[nk_context], height: Float): Unit = extern
-
-  def nk_propertyi(_0: Ptr[nk_context], name: CString, min: CInt, `val`: CInt, max: CInt, step: CInt, inc_per_pixel: Float): CInt = extern
-
-  def nk_input_motion(_0: Ptr[nk_context], x: CInt, y: CInt): Unit = extern
-
-  def nk_strmatch_fuzzy_text(txt: CString, txt_len: CInt, pattern: CString, out_score: Ptr[CInt]): CInt = extern
-
-  def nk_filter_hex(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
-
-  def nk_window_get_width(_0: Ptr[nk_context]): Float = extern
-
-  def nk_str_at_char(_0: Ptr[nk_str], pos: CInt): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_vec2i(x: CInt, y: CInt): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_iv(rgb: Ptr[CInt]): nk_color = extern
-
-  def nk_plot(_0: Ptr[nk_context], _1: nk_chart_type, values: Ptr[Float], count: CInt, offset: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_text(_0: Ptr[nk_context], title: CString, title_len: CInt, align: nk_flags, size: nk_vec2): nk_bool = extern
+  def nk_color_d(r: Ptr[Double], g: Ptr[Double], b: Ptr[Double], a: Ptr[Double], _4: nk_color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_color_dv(rgba_out: Ptr[Double], _1: nk_color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_f(r: Ptr[Float], g: Ptr[Float], b: Ptr[Float], a: Ptr[Float], _4: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_fv(rgba_out: Ptr[Float], _1: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hex_rgb(output: CString, _1: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hex_rgba(output: CString, _1: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsv_b(out_h: Ptr[nk_byte], out_s: Ptr[nk_byte], out_v: Ptr[nk_byte], _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsv_bv(hsv_out: Ptr[nk_byte], _1: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsv_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsv_fv(hsv_out: Ptr[Float], _1: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsv_i(out_h: Ptr[CInt], out_s: Ptr[CInt], out_v: Ptr[CInt], _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsv_iv(hsv_out: Ptr[CInt], _1: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsva_b(h: Ptr[nk_byte], s: Ptr[nk_byte], v: Ptr[nk_byte], a: Ptr[nk_byte], _4: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsva_bv(hsva_out: Ptr[nk_byte], _1: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], _4: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsva_fv(hsva_out: Ptr[Float], _1: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsva_i(h: Ptr[CInt], s: Ptr[CInt], v: Ptr[CInt], a: Ptr[CInt], _4: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_hsva_iv(hsva_out: Ptr[CInt], _1: nk_color): Unit = extern
+
+  def nk_color_pick(_0: Ptr[nk_context], _1: Ptr[nk_colorf], _2: nk_color_format): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_picker(_0: Ptr[nk_context], _1: nk_colorf, _2: nk_color_format): nk_colorf = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_color_u32(_0: nk_color): nk_uint = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_colorf_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], in: nk_colorf): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_colorf_hsva_fv(hsva: Ptr[Float], in: nk_colorf): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: CInt, item_height: CInt, size: nk_vec2): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_color(_0: Ptr[nk_context], color: nk_color, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_image(_0: Ptr[nk_context], img: nk_image, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_image_label(_0: Ptr[nk_context], selected: CString, _2: nk_image, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_image_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_image, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_label(_0: Ptr[nk_context], selected: CString, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_symbol(_0: Ptr[nk_context], _1: nk_symbol_type, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_symbol_label(_0: Ptr[nk_context], selected: CString, _2: nk_symbol_type, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_symbol_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_symbol_type, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_begin_text(_0: Ptr[nk_context], selected: CString, _2: CInt, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], userdata: Ptr[Byte], selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
+
+  def nk_combo_close(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_combo_end(_0: Ptr[nk_context]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  def nk_combo_item_label(_0: Ptr[nk_context], _1: CString, alignment: nk_flags): nk_bool = extern
+
+  def nk_combo_item_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, alignment: nk_flags): nk_bool = extern
+
+  def nk_combo_item_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  def nk_combo_item_text(_0: Ptr[nk_context], _1: CString, _2: CInt, alignment: nk_flags): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combo_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combobox(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: Ptr[CInt], item_height: CInt, size: nk_vec2): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combobox_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], _2: Ptr[Byte], selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combobox_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_combobox_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_contextual_begin(_0: Ptr[nk_context], _1: nk_flags, _2: nk_vec2, trigger_bounds: nk_rect): nk_bool = extern
+
+  def nk_contextual_close(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_contextual_end(_0: Ptr[nk_context]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_contextual_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_contextual_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
+
+  def nk_contextual_item_label(_0: Ptr[nk_context], _1: CString, align: nk_flags): nk_bool = extern
+
+  def nk_contextual_item_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, alignment: nk_flags): nk_bool = extern
+
+  def nk_contextual_item_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  def nk_contextual_item_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_draw_image(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_image], _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_draw_nine_slice(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_nine_slice], _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_draw_text(_0: Ptr[nk_command_buffer], _1: nk_rect, text: CString, len: CInt, _4: Ptr[nk_user_font], _5: nk_color, _6: nk_color): Unit = extern
+
+  def nk_edit_buffer(_0: Ptr[nk_context], _1: nk_flags, _2: Ptr[nk_text_edit], _3: nk_plugin_filter): nk_flags = extern
+
+  def nk_edit_focus(_0: Ptr[nk_context], flags: nk_flags): Unit = extern
+
+  def nk_edit_string(_0: Ptr[nk_context], _1: nk_flags, buffer: CString, len: Ptr[CInt], max: CInt, _5: nk_plugin_filter): nk_flags = extern
+
+  def nk_edit_string_zero_terminated(_0: Ptr[nk_context], _1: nk_flags, buffer: CString, max: CInt, _4: nk_plugin_filter): nk_flags = extern
+
+  def nk_edit_unfocus(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_end(ctx: Ptr[nk_context]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_fill_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, _6: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_fill_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_fill_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_fill_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_fill_rect_multi_color(_0: Ptr[nk_command_buffer], _1: nk_rect, left: nk_color, top: nk_color, right: nk_color, bottom: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_fill_triangle(_0: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, _7: nk_color): Unit = extern
+
+  def nk_filter_ascii(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+
+  def nk_filter_binary(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+
+  def nk_filter_decimal(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+
+  def nk_filter_default(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+
+  def nk_filter_float(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+
+  def nk_filter_hex(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+
+  def nk_filter_oct(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+
+  def nk_free(_0: Ptr[nk_context]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_get_null_rect(): nk_rect = extern
+
+  def nk_group_begin(_0: Ptr[nk_context], title: CString, _2: nk_flags): nk_bool = extern
+
+  def nk_group_begin_titled(_0: Ptr[nk_context], name: CString, title: CString, _3: nk_flags): nk_bool = extern
+
+  def nk_group_end(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_group_get_scroll(_0: Ptr[nk_context], id: CString, x_offset: Ptr[nk_uint], y_offset: Ptr[nk_uint]): Unit = extern
+
+  def nk_group_scrolled_begin(_0: Ptr[nk_context], off: Ptr[nk_scroll], title: CString, _3: nk_flags): nk_bool = extern
+
+  def nk_group_scrolled_end(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_group_scrolled_offset_begin(_0: Ptr[nk_context], x_offset: Ptr[nk_uint], y_offset: Ptr[nk_uint], title: CString, flags: nk_flags): nk_bool = extern
+
+  def nk_group_set_scroll(_0: Ptr[nk_context], id: CString, x_offset: nk_uint, y_offset: nk_uint): Unit = extern
+
+  def nk_handle_id(_0: CInt): nk_handle = extern
+
+  def nk_handle_ptr(_0: Ptr[Byte]): nk_handle = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsv(h: CInt, s: CInt, v: CInt): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsv_bv(hsv: Ptr[nk_byte]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsv_f(h: Float, s: Float, v: Float): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsv_fv(hsv: Ptr[Float]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsv_iv(hsv: Ptr[CInt]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_hsva_bv(hsva: Ptr[nk_byte]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsva_colorf(h: Float, s: Float, v: Float, a: Float): nk_colorf = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsva_colorfv(c: Ptr[Float]): nk_colorf = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsva_f(h: Float, s: Float, v: Float, a: Float): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_hsva_fv(hsva: Ptr[Float]): nk_color = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_hsva_iv(hsva: Ptr[CInt]): nk_color = extern
 
-  def nk_checkbox_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: Ptr[nk_bool]): nk_bool = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_image(_0: Ptr[nk_context], _1: nk_image): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_image_color(_0: Ptr[nk_context], _1: nk_image, _2: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_image_handle(_0: nk_handle): nk_image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_image_id(_0: CInt): nk_image = extern
+
+  def nk_image_is_subimage(img: Ptr[nk_image]): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_image_ptr(_0: Ptr[Byte]): nk_image = extern
+
+  def nk_init(_0: Ptr[nk_context], _1: Ptr[nk_allocator], _2: Ptr[nk_user_font]): nk_bool = extern
+
+  def nk_init_custom(_0: Ptr[nk_context], cmds: Ptr[nk_buffer], pool: Ptr[nk_buffer], _3: Ptr[nk_user_font]): nk_bool = extern
+
+  def nk_init_fixed(_0: Ptr[nk_context], memory: Ptr[Byte], size: nk_size, _3: Ptr[nk_user_font]): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_any_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
+
+  def nk_input_begin(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_input_button(_0: Ptr[nk_context], _1: nk_buttons, x: CInt, y: CInt, down: nk_bool): Unit = extern
+
+  def nk_input_char(_0: Ptr[nk_context], _1: CChar): Unit = extern
+
+  def nk_input_end(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_input_glyph(_0: Ptr[nk_context], _1: nk_glyph): Unit = extern
+
+  def nk_input_has_mouse_click(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_has_mouse_click_down_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect, down: nk_bool): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_has_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
+
+  def nk_input_is_key_down(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
+
+  def nk_input_is_key_pressed(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
+
+  def nk_input_is_key_released(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_is_mouse_click_down_in_rect(i: Ptr[nk_input], id: nk_buttons, b: nk_rect, down: nk_bool): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_is_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
+
+  def nk_input_is_mouse_down(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_is_mouse_hovering_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
+
+  def nk_input_is_mouse_pressed(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_is_mouse_prev_hovering_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
+
+  def nk_input_is_mouse_released(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
+
+  def nk_input_key(_0: Ptr[nk_context], _1: nk_keys, down: nk_bool): Unit = extern
+
+  def nk_input_motion(_0: Ptr[nk_context], x: CInt, y: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_mouse_clicked(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_input_scroll(_0: Ptr[nk_context], `val`: nk_vec2): Unit = extern
+
+  def nk_input_unicode(_0: Ptr[nk_context], _1: nk_rune): Unit = extern
+
+  def nk_item_is_any_active(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_label(_0: Ptr[nk_context], _1: CString, align: nk_flags): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_label_colored(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_label_colored_wrap(_0: Ptr[nk_context], _1: CString, _2: nk_color): Unit = extern
+
+  def nk_label_wrap(_0: Ptr[nk_context], _1: CString): Unit = extern
+
+  def nk_layout_ratio_from_pixel(_0: Ptr[nk_context], pixel_width: Float): Float = extern
+
+  def nk_layout_reset_min_row_height(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_layout_row(_0: Ptr[nk_context], _1: nk_layout_format, height: Float, cols: CInt, ratio: Ptr[Float]): Unit = extern
+
+  def nk_layout_row_begin(ctx: Ptr[nk_context], fmt: nk_layout_format, row_height: Float, cols: CInt): Unit = extern
+
+  def nk_layout_row_dynamic(ctx: Ptr[nk_context], height: Float, cols: CInt): Unit = extern
+
+  def nk_layout_row_end(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_layout_row_push(_0: Ptr[nk_context], value: Float): Unit = extern
+
+  def nk_layout_row_static(ctx: Ptr[nk_context], height: Float, item_width: CInt, cols: CInt): Unit = extern
+
+  def nk_layout_row_template_begin(_0: Ptr[nk_context], row_height: Float): Unit = extern
+
+  def nk_layout_row_template_end(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_layout_row_template_push_dynamic(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_layout_row_template_push_static(_0: Ptr[nk_context], width: Float): Unit = extern
+
+  def nk_layout_row_template_push_variable(_0: Ptr[nk_context], min_width: Float): Unit = extern
+
+  def nk_layout_set_min_row_height(_0: Ptr[nk_context], height: Float): Unit = extern
+
+  def nk_layout_space_begin(_0: Ptr[nk_context], _1: nk_layout_format, height: Float, widget_count: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_layout_space_bounds(_0: Ptr[nk_context]): nk_rect = extern
+
+  def nk_layout_space_end(_0: Ptr[nk_context]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_layout_space_push(_0: Ptr[nk_context], bounds: nk_rect): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_layout_space_rect_to_local(_0: Ptr[nk_context], _1: nk_rect): nk_rect = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_layout_space_rect_to_screen(_0: Ptr[nk_context], _1: nk_rect): nk_rect = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_layout_space_to_local(_0: Ptr[nk_context], _1: nk_vec2): nk_vec2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_layout_space_to_screen(_0: Ptr[nk_context], _1: nk_vec2): nk_vec2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_layout_widget_bounds(_0: Ptr[nk_context]): nk_rect = extern
+
+  def nk_list_view_begin(_0: Ptr[nk_context], out: Ptr[nk_list_view], id: CString, _3: nk_flags, row_height: CInt, row_count: CInt): nk_bool = extern
+
+  def nk_list_view_end(_0: Ptr[nk_list_view]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_begin_image(_0: Ptr[nk_context], _1: CString, _2: nk_image, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_begin_image_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_image, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_begin_image_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_image, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_begin_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_begin_symbol(_0: Ptr[nk_context], _1: CString, _2: nk_symbol_type, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_begin_symbol_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_symbol_type, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_begin_symbol_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_symbol_type, size: nk_vec2): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_begin_text(_0: Ptr[nk_context], title: CString, title_len: CInt, align: nk_flags, size: nk_vec2): nk_bool = extern
+
+  def nk_menu_close(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_menu_end(_0: Ptr[nk_context]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_menu_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
+
+  def nk_menu_item_label(_0: Ptr[nk_context], _1: CString, alignment: nk_flags): nk_bool = extern
+
+  def nk_menu_item_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, alignment: nk_flags): nk_bool = extern
+
+  def nk_menu_item_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  def nk_menu_item_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags): nk_bool = extern
+
+  def nk_menubar_begin(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_menubar_end(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_murmur_hash(key: Ptr[Byte], len: CInt, seed: nk_hash): nk_hash = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_nine_slice_handle(_0: nk_handle, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_nine_slice_id(_0: CInt, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
+
+  def nk_nine_slice_is_sub9slice(img: Ptr[nk_nine_slice]): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_nine_slice_ptr(_0: Ptr[Byte], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
+
+  def nk_option_label(_0: Ptr[nk_context], _1: CString, active: nk_bool): nk_bool = extern
+
+  def nk_option_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: nk_bool): nk_bool = extern
+
+  def nk_plot(_0: Ptr[nk_context], _1: nk_chart_type, values: Ptr[Float], count: CInt, offset: CInt): Unit = extern
+
+  def nk_plot_function(_0: Ptr[nk_context], _1: nk_chart_type, userdata: Ptr[Byte], value_getter: Ptr[CFuncPtr2[Ptr[Byte], CInt, Float]], count: CInt, offset: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_popup_begin(_0: Ptr[nk_context], _1: nk_popup_type, _2: CString, _3: nk_flags, bounds: nk_rect): nk_bool = extern
+
+  def nk_popup_close(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_popup_end(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_popup_get_scroll(_0: Ptr[nk_context], offset_x: Ptr[nk_uint], offset_y: Ptr[nk_uint]): Unit = extern
+
+  def nk_popup_set_scroll(_0: Ptr[nk_context], offset_x: nk_uint, offset_y: nk_uint): Unit = extern
+
+  def nk_prog(_0: Ptr[nk_context], cur: nk_size, max: nk_size, modifyable: nk_bool): nk_size = extern
+
+  def nk_progress(_0: Ptr[nk_context], cur: Ptr[nk_size], max: nk_size, modifyable: nk_bool): nk_bool = extern
+
+  def nk_property_double(_0: Ptr[nk_context], name: CString, min: Double, `val`: Ptr[Double], max: Double, step: Double, inc_per_pixel: Float): Unit = extern
+
+  def nk_property_float(_0: Ptr[nk_context], name: CString, min: Float, `val`: Ptr[Float], max: Float, step: Float, inc_per_pixel: Float): Unit = extern
+
+  def nk_property_int(_0: Ptr[nk_context], name: CString, min: CInt, `val`: Ptr[CInt], max: CInt, step: CInt, inc_per_pixel: Float): Unit = extern
+
+  def nk_propertyd(_0: Ptr[nk_context], name: CString, min: Double, `val`: Double, max: Double, step: Double, inc_per_pixel: Float): Double = extern
+
+  def nk_propertyf(_0: Ptr[nk_context], name: CString, min: Float, `val`: Float, max: Float, step: Float, inc_per_pixel: Float): Float = extern
+
+  def nk_propertyi(_0: Ptr[nk_context], name: CString, min: CInt, `val`: CInt, max: CInt, step: CInt, inc_per_pixel: Float): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_push_custom(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_command_custom_callback, usr: nk_handle): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_push_scissor(_0: Ptr[nk_command_buffer], _1: nk_rect): Unit = extern
+
+  def nk_radio_label(_0: Ptr[nk_context], _1: CString, active: Ptr[nk_bool]): nk_bool = extern
+
+  def nk_radio_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: Ptr[nk_bool]): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rect(x: Float, y: Float, w: Float, h: Float): nk_rect = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rect_pos(_0: nk_rect): nk_vec2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rect_size(_0: nk_rect): nk_vec2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_recta(pos: nk_vec2, size: nk_vec2): nk_rect = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_recti(x: CInt, y: CInt, w: CInt, h: CInt): nk_rect = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rectiv(xywh: Ptr[CInt]): nk_rect = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rectv(xywh: Ptr[Float]): nk_rect = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgb(r: CInt, g: CInt, b: CInt): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgb_bv(rgb: Ptr[nk_byte]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgb_cf(c: nk_colorf): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgb_f(r: Float, g: Float, b: Float): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgb_fv(rgb: Ptr[Float]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgb_hex(rgb: CString): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgb_iv(rgb: Ptr[CInt]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgba_bv(rgba: Ptr[nk_byte]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgba_cf(c: nk_colorf): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgba_f(r: Float, g: Float, b: Float, a: Float): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgba_fv(rgba: Ptr[Float]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgba_hex(rgb: CString): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgba_iv(rgba: Ptr[CInt]): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_rgba_u32(_0: nk_uint): nk_color = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_select_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_select_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  def nk_select_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  def nk_select_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  def nk_select_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  def nk_select_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_selectable_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_selectable_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  def nk_selectable_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  def nk_selectable_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  def nk_selectable_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  def nk_selectable_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  def nk_slide_float(_0: Ptr[nk_context], min: Float, `val`: Float, max: Float, step: Float): Float = extern
+
+  def nk_slide_int(_0: Ptr[nk_context], min: CInt, `val`: CInt, max: CInt, step: CInt): CInt = extern
+
+  def nk_slider_float(_0: Ptr[nk_context], min: Float, `val`: Ptr[Float], max: Float, step: Float): nk_bool = extern
+
+  def nk_slider_int(_0: Ptr[nk_context], min: CInt, `val`: Ptr[CInt], max: CInt, step: CInt): nk_bool = extern
+
+  def nk_spacer(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_spacing(_0: Ptr[nk_context], cols: CInt): Unit = extern
+
+  def nk_str_append_str_char(_0: Ptr[nk_str], _1: CString): CInt = extern
+
+  def nk_str_append_str_runes(_0: Ptr[nk_str], _1: Ptr[nk_rune]): CInt = extern
+
+  def nk_str_append_str_utf8(_0: Ptr[nk_str], _1: CString): CInt = extern
+
+  def nk_str_append_text_char(_0: Ptr[nk_str], _1: CString, _2: CInt): CInt = extern
+
+  def nk_str_append_text_runes(_0: Ptr[nk_str], _1: Ptr[nk_rune], _2: CInt): CInt = extern
+
+  def nk_str_append_text_utf8(_0: Ptr[nk_str], _1: CString, _2: CInt): CInt = extern
+
+  def nk_str_at_char(_0: Ptr[nk_str], pos: CInt): CString = extern
+
+  def nk_str_at_char_const(_0: Ptr[nk_str], pos: CInt): CString = extern
+
+  def nk_str_at_const(_0: Ptr[nk_str], pos: CInt, unicode: Ptr[nk_rune], len: Ptr[CInt]): CString = extern
+
+  def nk_str_at_rune(_0: Ptr[nk_str], pos: CInt, unicode: Ptr[nk_rune], len: Ptr[CInt]): CString = extern
+
+  def nk_str_clear(_0: Ptr[nk_str]): Unit = extern
+
+  def nk_str_delete_chars(_0: Ptr[nk_str], pos: CInt, len: CInt): Unit = extern
+
+  def nk_str_delete_runes(_0: Ptr[nk_str], pos: CInt, len: CInt): Unit = extern
+
+  def nk_str_free(_0: Ptr[nk_str]): Unit = extern
+
+  def nk_str_get(_0: Ptr[nk_str]): CString = extern
+
+  def nk_str_get_const(_0: Ptr[nk_str]): CString = extern
+
+  def nk_str_init(_0: Ptr[nk_str], _1: Ptr[nk_allocator], size: nk_size): Unit = extern
+
+  def nk_str_init_fixed(_0: Ptr[nk_str], memory: Ptr[Byte], size: nk_size): Unit = extern
+
+  def nk_str_insert_at_char(_0: Ptr[nk_str], pos: CInt, _2: CString, _3: CInt): CInt = extern
+
+  def nk_str_insert_at_rune(_0: Ptr[nk_str], pos: CInt, _2: CString, _3: CInt): CInt = extern
+
+  def nk_str_insert_str_char(_0: Ptr[nk_str], pos: CInt, _2: CString): CInt = extern
+
+  def nk_str_insert_str_runes(_0: Ptr[nk_str], pos: CInt, _2: Ptr[nk_rune]): CInt = extern
+
+  def nk_str_insert_str_utf8(_0: Ptr[nk_str], pos: CInt, _2: CString): CInt = extern
+
+  def nk_str_insert_text_char(_0: Ptr[nk_str], pos: CInt, _2: CString, _3: CInt): CInt = extern
+
+  def nk_str_insert_text_runes(_0: Ptr[nk_str], pos: CInt, _2: Ptr[nk_rune], _3: CInt): CInt = extern
+
+  def nk_str_insert_text_utf8(_0: Ptr[nk_str], pos: CInt, _2: CString, _3: CInt): CInt = extern
+
+  def nk_str_len(_0: Ptr[nk_str]): CInt = extern
+
+  def nk_str_len_char(_0: Ptr[nk_str]): CInt = extern
+
+  def nk_str_remove_chars(_0: Ptr[nk_str], len: CInt): Unit = extern
+
+  def nk_str_remove_runes(str: Ptr[nk_str], len: CInt): Unit = extern
+
+  def nk_str_rune_at(_0: Ptr[nk_str], pos: CInt): nk_rune = extern
+
+  def nk_strfilter(text: CString, regexp: CString): CInt = extern
+
+  def nk_stricmp(s1: CString, s2: CString): CInt = extern
+
+  def nk_stricmpn(s1: CString, s2: CString, n: CInt): CInt = extern
+
+  def nk_strlen(str: CString): CInt = extern
+
+  def nk_strmatch_fuzzy_string(str: CString, pattern: CString, out_score: Ptr[CInt]): CInt = extern
+
+  def nk_strmatch_fuzzy_text(txt: CString, txt_len: CInt, pattern: CString, out_score: Ptr[CInt]): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_stroke_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, line_thickness: Float, _7: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_stroke_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, line_thickness: Float, _3: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_stroke_curve(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, _7: Float, _8: Float, line_thickness: Float, _10: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_stroke_line(b: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, line_thickness: Float, _6: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_stroke_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, line_thickness: Float, _4: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_stroke_polyline(_0: Ptr[nk_command_buffer], points: Ptr[Float], point_count: CInt, line_thickness: Float, col: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_stroke_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, line_thickness: Float, _4: nk_color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_stroke_triangle(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, line_thichness: Float, _8: nk_color): Unit = extern
+
+  def nk_strtod(str: CString, endptr: Ptr[CString]): Double = extern
+
+  def nk_strtof(str: CString, endptr: Ptr[CString]): Float = extern
+
+  def nk_strtoi(str: CString, endptr: Ptr[CString]): CInt = extern
+
+  def nk_style_default(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_style_from_table(_0: Ptr[nk_context], _1: Ptr[nk_color]): Unit = extern
+
+  def nk_style_get_color_by_name(_0: nk_style_colors): CString = extern
+
+  def nk_style_hide_cursor(_0: Ptr[nk_context]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_style_item_color(_0: nk_color): nk_style_item = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_style_item_hide(): nk_style_item = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_style_item_image(img: nk_image): nk_style_item = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_style_item_nine_slice(slice: nk_nine_slice): nk_style_item = extern
+
+  def nk_style_load_all_cursors(_0: Ptr[nk_context], _1: Ptr[nk_cursor]): Unit = extern
+
+  def nk_style_load_cursor(_0: Ptr[nk_context], _1: nk_style_cursor, _2: Ptr[nk_cursor]): Unit = extern
+
+  def nk_style_pop_color(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_style_pop_flags(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_style_pop_float(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_style_pop_font(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_style_pop_style_item(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_style_pop_vec2(_0: Ptr[nk_context]): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_style_push_color(_0: Ptr[nk_context], _1: Ptr[nk_color], _2: nk_color): nk_bool = extern
+
+  def nk_style_push_flags(_0: Ptr[nk_context], _1: Ptr[nk_flags], _2: nk_flags): nk_bool = extern
+
+  def nk_style_push_float(_0: Ptr[nk_context], _1: Ptr[Float], _2: Float): nk_bool = extern
+
+  def nk_style_push_font(_0: Ptr[nk_context], _1: Ptr[nk_user_font]): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_style_push_style_item(_0: Ptr[nk_context], _1: Ptr[nk_style_item], _2: nk_style_item): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_style_push_vec2(_0: Ptr[nk_context], _1: Ptr[nk_vec2], _2: nk_vec2): nk_bool = extern
+
+  def nk_style_set_cursor(_0: Ptr[nk_context], _1: nk_style_cursor): nk_bool = extern
+
+  def nk_style_set_font(_0: Ptr[nk_context], _1: Ptr[nk_user_font]): Unit = extern
+
+  def nk_style_show_cursor(_0: Ptr[nk_context]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_sub9slice_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_sub9slice_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_sub9slice_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
@@ -2024,888 +2728,184 @@ object functions:
   def nk_subimage_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect): nk_image = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_is_mouse_click_down_in_rect(i: Ptr[nk_input], id: nk_buttons, b: nk_rect, down: nk_bool): nk_bool = extern
-
-  def nk_style_pop_color(_0: Ptr[nk_context]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_image(_0: Ptr[nk_context], _1: CString, _2: nk_image, size: nk_vec2): nk_bool = extern
-
-  def nk_contextual_item_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, alignment: nk_flags): nk_bool = extern
-
-  def nk_end(ctx: Ptr[nk_context]): Unit = extern
-
-  def nk_init_fixed(_0: Ptr[nk_context], memory: Ptr[Byte], size: nk_size, _3: Ptr[nk_user_font]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_text(_0: Ptr[nk_context], img: nk_image, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_to_local(_0: Ptr[nk_context], _1: nk_vec2): nk_vec2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_triangle_from_direction(result: Ptr[nk_vec2], r: nk_rect, pad_x: Float, pad_y: Float, _4: nk_heading): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_set_bounds(_0: Ptr[nk_context], name: CString, bounds: nk_rect): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_push_vec2(_0: Ptr[nk_context], _1: Ptr[nk_vec2], _2: nk_vec2): nk_bool = extern
-
-  def nk_init(_0: Ptr[nk_context], _1: Ptr[nk_allocator], _2: Ptr[nk_user_font]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_push_color(_0: Ptr[nk_context], _1: Ptr[nk_color], _2: nk_color): nk_bool = extern
-
-  def nk_group_scrolled_begin(_0: Ptr[nk_context], off: Ptr[nk_scroll], title: CString, _3: nk_flags): nk_bool = extern
-
-  def nk_edit_string(_0: Ptr[nk_context], _1: nk_flags, buffer: CString, len: Ptr[CInt], max: CInt, _5: nk_plugin_filter): nk_flags = extern
-
-  def nk_menubar_end(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_str_remove_runes(str: Ptr[nk_str], len: CInt): Unit = extern
-
-  def nk_textedit_undo(_0: Ptr[nk_text_edit]): Unit = extern
-
-  def nk_layout_space_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_nine_slice_handle(_0: nk_handle, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  def nk_str_append_str_utf8(_0: Ptr[nk_str], _1: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rect_pos(_0: nk_rect): nk_vec2 = extern
-
-  def nk_filter_binary(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
-
-  def nk_selectable_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  def nk_str_get(_0: Ptr[nk_str]): CString = extern
-
-  def nk_edit_unfocus(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_str_delete_chars(_0: Ptr[nk_str], pos: CInt, len: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combobox_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_iv(rgba: Ptr[CInt]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_widget_bounds(_0: Ptr[nk_context]): nk_rect = extern
-
-  def nk_window_show_if(_0: Ptr[nk_context], name: CString, _2: nk_show_states, cond: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_scroll(_0: Ptr[nk_context], `val`: nk_vec2): Unit = extern
-
-  def nk_strtoi(str: CString, endptr: Ptr[CString]): CInt = extern
-
-  def nk_input_begin(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_text_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags, _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_item_hide(): nk_style_item = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_tree_element_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_color(_0: Ptr[nk_context], _1: nk_color): nk_bool = extern
-
-  def nk_utf_at(buffer: CString, length: CInt, index: CInt, unicode: Ptr[nk_rune], len: Ptr[CInt]): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_label(_0: Ptr[nk_context], img: nk_image, _2: CString, text_alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combobox_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
-
-  def nk_textedit_init(_0: Ptr[nk_text_edit], _1: Ptr[nk_allocator], size: nk_size): Unit = extern
-
-  def nk_window_get_panel(_0: Ptr[nk_context]): Ptr[nk_panel] = extern
-
-  def nk_strmatch_fuzzy_string(str: CString, pattern: CString, out_score: Ptr[CInt]): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_d(r: Ptr[Double], g: Ptr[Double], b: Ptr[Double], a: Ptr[Double], _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb(r: CInt, g: CInt, b: CInt): nk_color = extern
-
-  def nk_chart_push_slot(_0: Ptr[nk_context], _1: Float, _2: CInt): nk_flags = extern
-
-  def nk_utf_encode(_0: nk_rune, _1: CString, _2: CInt): CInt = extern
-
-  def nk_window_is_any_hovered(_0: Ptr[nk_context]): nk_bool = extern
-
-  def nk_spacer(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_window_is_active(_0: Ptr[nk_context], _1: CString): nk_bool = extern
-
-  def nk_popup_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_chart_begin_colored(_0: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, num: CInt, min: Float, max: Float): nk_bool = extern
-
-  def nk_str_append_text_runes(_0: Ptr[nk_str], _1: Ptr[nk_rune], _2: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_selectable_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  def nk_window_get_scroll(_0: Ptr[nk_context], offset_x: Ptr[nk_uint], offset_y: Ptr[nk_uint]): Unit = extern
-
-  def nk_textedit_delete(_0: Ptr[nk_text_edit], where: CInt, len: CInt): Unit = extern
-
-  def nk_combo_item_text(_0: Ptr[nk_context], _1: CString, _2: CInt, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_contextual_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
-
-  def nk_textedit_redo(_0: Ptr[nk_text_edit]): Unit = extern
-
-  def nk_group_begin(_0: Ptr[nk_context], title: CString, _2: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_sub9slice_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  def nk_buffer_clear(_0: Ptr[nk_buffer]): Unit = extern
-  def nk_layout_row_template_push_static(_0: Ptr[nk_context], width: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_subimage_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect): nk_image = extern
-
-  def nk_str_insert_str_char(_0: Ptr[nk_str], pos: CInt, _2: CString): CInt = extern
-
-  def nk_group_set_scroll(_0: Ptr[nk_context], id: CString, x_offset: nk_uint, y_offset: nk_uint): Unit = extern
-
-  def nk_buffer_init_fixed(_0: Ptr[nk_buffer], memory: Ptr[Byte], size: nk_size): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_image_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_image, size: nk_vec2): nk_bool = extern
-
-  def nk_button_symbol_label_styled(ctx: Ptr[nk_context], style: Ptr[nk_style_button], symbol: nk_symbol_type, title: CString, align: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_symbol_label(_0: Ptr[nk_context], selected: CString, _2: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  def nk_check_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: nk_bool): nk_bool = extern
-
-  def nk_input_is_mouse_released(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_select_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: nk_bool): nk_bool = extern
-
-  def nk_group_begin_titled(_0: Ptr[nk_context], name: CString, title: CString, _3: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_widget_size(_0: Ptr[nk_context]): nk_vec2 = extern
-
-  def nk_textedit_text(_0: Ptr[nk_text_edit], _1: CString, total_len: CInt): Unit = extern
-
-  def nk_utf_decode(_0: CString, _1: Ptr[nk_rune], _2: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_polyline(_0: Ptr[nk_command_buffer], points: Ptr[Float], point_count: CInt, line_thickness: Float, col: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_text(_0: Ptr[nk_context], selected: CString, _2: CInt, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_push_scissor(_0: Ptr[nk_command_buffer], _1: nk_rect): Unit = extern
-
-  def nk_contextual_item_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
-
-  def nk_str_append_text_utf8(_0: Ptr[nk_str], _1: CString, _2: CInt): CInt = extern
-
-  def nk_group_get_scroll(_0: Ptr[nk_context], id: CString, x_offset: Ptr[nk_uint], y_offset: Ptr[nk_uint]): Unit = extern
-
-  def nk_contextual_item_label(_0: Ptr[nk_context], _1: CString, align: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_f(h: Float, s: Float, v: Float, a: Float): nk_color = extern
-
-  def nk_list_view_begin(_0: Ptr[nk_context], out: Ptr[nk_list_view], id: CString, _3: nk_flags, row_height: CInt, row_count: CInt): nk_bool = extern
-
-  def nk_button_text(_0: Ptr[nk_context], title: CString, len: CInt): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv(h: CInt, s: CInt, v: CInt): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_iv(hsva_out: Ptr[CInt], _1: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
-
-  def nk_str_remove_chars(_0: Ptr[nk_str], len: CInt): Unit = extern
-
-  def nk_style_get_color_by_name(_0: nk_style_colors): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_triangle(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, line_thichness: Float, _8: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], userdata: Ptr[Byte], selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
-
-  def nk_input_is_key_released(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rectiv(xywh: Ptr[CInt]): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_cf(c: nk_colorf): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_symbol_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combobox(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: Ptr[CInt], item_height: CInt, size: nk_vec2): Unit = extern
-
-  def nk_window_collapse_if(_0: Ptr[nk_context], name: CString, _2: nk_collapse_states, cond: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image_handle(_0: nk_handle): nk_image = extern
-
-  def nk_str_free(_0: Ptr[nk_str]): Unit = extern
-
-  def nk_style_load_all_cursors(_0: Ptr[nk_context], _1: Ptr[nk_cursor]): Unit = extern
-
-  def nk_str_insert_text_utf8(_0: Ptr[nk_str], pos: CInt, _2: CString, _3: CInt): CInt = extern
-
-  def nk_buffer_push(_0: Ptr[nk_buffer], `type`: nk_buffer_allocation_type, memory: Ptr[Byte], size: nk_size, align: nk_size): Unit = extern
-
-  def nk_style_pop_flags(_0: Ptr[nk_context]): nk_bool = extern
-
-  def nk_str_len(_0: Ptr[nk_str]): CInt = extern
-
-  def nk_edit_buffer(_0: Ptr[nk_context], _1: nk_flags, _2: Ptr[nk_text_edit], _3: nk_plugin_filter): nk_flags = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_bv(hsv_out: Ptr[nk_byte], _1: nk_color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_subimage_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: nk_rect): nk_image = extern
 
-  def nk_str_init(_0: Ptr[nk_str], _1: Ptr[nk_allocator], size: nk_size): Unit = extern
+  def nk_text(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_text_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags, _4: nk_color): Unit = extern
+
+  def nk_text_wrap(_0: Ptr[nk_context], _1: CString, _2: CInt): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_text_wrap_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_color): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_position(ctx: Ptr[nk_context]): nk_vec2 = extern
+  def nk_textedit_cut(_0: Ptr[nk_text_edit]): nk_bool = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_image_label(_0: Ptr[nk_context], selected: CString, _2: nk_image, size: nk_vec2): nk_bool = extern
-
-  def nk_slider_int(_0: Ptr[nk_context], min: CInt, `val`: Ptr[CInt], max: CInt, step: CInt): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rectv(xywh: Ptr[Float]): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_draw_image(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_image], _3: nk_color): Unit = extern
-
-  def nk_combo_item_label(_0: Ptr[nk_context], _1: CString, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_chart_add_slot_colored(ctx: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, count: CInt, min_value: Float, max_value: Float): Unit = extern
-
-  def nk_radio_label(_0: Ptr[nk_context], _1: CString, active: Ptr[nk_bool]): nk_bool = extern
-
-  def nk_menu_item_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv_fv(hsv: Ptr[Float]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv_iv(hsv: Ptr[CInt]): nk_color = extern
-
-  def nk_str_append_str_char(_0: Ptr[nk_str], _1: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_b(h: Ptr[nk_byte], s: Ptr[nk_byte], v: Ptr[nk_byte], a: Ptr[nk_byte], _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_recti(x: CInt, y: CInt, w: CInt, h: CInt): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_b(out_h: Ptr[nk_byte], out_s: Ptr[nk_byte], out_v: Ptr[nk_byte], _3: nk_color): Unit = extern
-
-  def nk_property_int(_0: Ptr[nk_context], name: CString, min: CInt, `val`: Ptr[CInt], max: CInt, step: CInt, inc_per_pixel: Float): Unit = extern
-
-  def nk_str_insert_text_runes(_0: Ptr[nk_str], pos: CInt, _2: Ptr[nk_rune], _3: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_push_custom(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_command_custom_callback, usr: nk_handle): Unit = extern
-
-  def nk_input_unicode(_0: Ptr[nk_context], _1: nk_rune): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_tree_state_image_push(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_bv(rgb: Ptr[nk_byte]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_cf(c: nk_colorf): nk_color = extern
-
-  def nk_input_glyph(_0: Ptr[nk_context], _1: nk_glyph): Unit = extern
+  def nk_textedit_delete(_0: Ptr[nk_text_edit], where: CInt, len: CInt): Unit = extern
 
   def nk_textedit_delete_selection(_0: Ptr[nk_text_edit]): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv_bv(hsv: Ptr[nk_byte]): nk_color = extern
-
-  def nk_str_get_const(_0: Ptr[nk_str]): CString = extern
-
-  def nk_window_set_scroll(_0: Ptr[nk_context], offset_x: nk_uint, offset_y: nk_uint): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, line_thickness: Float, _3: nk_color): Unit = extern
-
-  def nk__begin(_0: Ptr[nk_context]): Ptr[nk_command] = extern
-
-  def nk_strtod(str: CString, endptr: Ptr[CString]): Double = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_get_null_rect(): nk_rect = extern
-
-  def nk_tree_pop(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_vec2iv(xy: Ptr[CInt]): nk_vec2 = extern
-
-  def nk_str_append_text_char(_0: Ptr[nk_str], _1: CString, _2: CInt): CInt = extern
-
-  def nk_menu_close(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_buffer_mark(_0: Ptr[nk_buffer], `type`: nk_buffer_allocation_type): Unit = extern
-
-  def nk_selectable_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_item_nine_slice(slice: nk_nine_slice): nk_style_item = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_u32(_0: nk_uint): nk_color = extern
-
-  def nk_item_is_any_active(_0: Ptr[nk_context]): nk_bool = extern
-
-  def nk_utf_len(_0: CString, byte_len: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, line_thickness: Float, _4: nk_color): Unit = extern
-
-  def nk_str_clear(_0: Ptr[nk_str]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_draw_text(_0: Ptr[nk_command_buffer], _1: nk_rect, text: CString, len: CInt, _4: Ptr[nk_user_font], _5: nk_color, _6: nk_color): Unit = extern
-
-  def nk_style_set_font(_0: Ptr[nk_context], _1: Ptr[nk_user_font]): Unit = extern
-
-  def nk_murmur_hash(key: Ptr[Byte], len: CInt, seed: nk_hash): nk_hash = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_symbol(_0: Ptr[nk_context], _1: CString, _2: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  def nk_property_float(_0: Ptr[nk_context], name: CString, min: Float, `val`: Ptr[Float], max: Float, step: Float, inc_per_pixel: Float): Unit = extern
-
-  def nk_textedit_cut(_0: Ptr[nk_text_edit]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
-
-  def nk_contextual_close(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_rect_multi_color(_0: Ptr[nk_command_buffer], _1: nk_rect, left: nk_color, top: nk_color, right: nk_color, bottom: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_label_colored_wrap(_0: Ptr[nk_context], _1: CString, _2: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_image_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_image, size: nk_vec2): nk_bool = extern
-
-  def nk_progress(_0: Ptr[nk_context], cur: Ptr[nk_size], max: nk_size, modifyable: nk_bool): nk_bool = extern
-
-  def nk_chart_add_slot(ctx: Ptr[nk_context], _1: nk_chart_type, count: CInt, min_value: Float, max_value: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_color(_0: Ptr[nk_context], color: nk_color, size: nk_vec2): nk_bool = extern
-
-  def nk_str_insert_at_rune(_0: Ptr[nk_str], pos: CInt, _2: CString, _3: CInt): CInt = extern
-
-  def nk_button_symbol_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], _2: nk_symbol_type, _3: CString, _4: CInt, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt): nk_color = extern
-
-  def nk_str_rune_at(_0: Ptr[nk_str], pos: CInt): nk_rune = extern
-
-  def nk_layout_row_template_begin(_0: Ptr[nk_context], row_height: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_color): Unit = extern
-
-  def nk_combo_item_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_f(r: Float, g: Float, b: Float, a: Float): nk_color = extern
-
-  def nk_input_is_mouse_pressed(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: CInt, item_height: CInt, size: nk_vec2): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_widget_bounds(_0: Ptr[nk_context]): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_has_mouse_click_down_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect, down: nk_bool): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_vec2v(xy: Ptr[Float]): nk_vec2 = extern
-
-  def nk_style_push_flags(_0: Ptr[nk_context], _1: Ptr[nk_flags], _2: nk_flags): nk_bool = extern
-
-  def nk_style_show_cursor(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_layout_row_template_end(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_select_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, align: nk_flags, value: nk_bool): nk_bool = extern
-
-  def nk_input_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_sub9slice_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort): nk_nine_slice = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_u32(_0: nk_color): nk_uint = extern
-
-  def nk_window_is_hovered(_0: Ptr[nk_context]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_has_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
-
-  def nk_plot_function(_0: Ptr[nk_context], _1: nk_chart_type, userdata: Ptr[Byte], value_getter: Ptr[CFuncPtr2[Ptr[Byte], CInt, Float]], count: CInt, offset: CInt): Unit = extern
-
-  def nk_window_set_focus(_0: Ptr[nk_context], name: CString): Unit = extern
-
-  def nk_button_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, text_alignment: nk_flags): nk_bool = extern
-
-  def nk_strtof(str: CString, endptr: Ptr[CString]): Float = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2): CInt = extern
-
-  def nk_contextual_end(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_strfilter(text: CString, regexp: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image(_0: Ptr[nk_context], img: nk_image): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_content_region(_0: Ptr[nk_context]): nk_rect = extern
-
-  def nk_text_wrap(_0: Ptr[nk_context], _1: CString, _2: CInt): Unit = extern
-
-  def nk_slide_int(_0: Ptr[nk_context], min: CInt, `val`: CInt, max: CInt, step: CInt): CInt = extern
-
   def nk_textedit_free(_0: Ptr[nk_text_edit]): Unit = extern
 
-  def nk_option_text(_0: Ptr[nk_context], _1: CString, _2: CInt, active: nk_bool): nk_bool = extern
-
-  def nk_check_flags_label(_0: Ptr[nk_context], _1: CString, flags: CUnsignedInt, value: CUnsignedInt): CUnsignedInt = extern
-
-  def nk_style_hide_cursor(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_button_pop_behavior(_0: Ptr[nk_context]): nk_bool = extern
-
-  def nk_text(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags): Unit = extern
-
-  def nk_check_label(_0: Ptr[nk_context], _1: CString, active: nk_bool): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_bv(hsva_out: Ptr[nk_byte], _1: nk_color): Unit = extern
-
-  def nk_buffer_init(_0: Ptr[nk_buffer], _1: Ptr[nk_allocator], size: nk_size): Unit = extern
-
-  def nk_list_view_end(_0: Ptr[nk_list_view]): Unit = extern
-
-  def nk_input_button(_0: Ptr[nk_context], _1: nk_buttons, x: CInt, y: CInt, down: nk_bool): Unit = extern
-
-  def nk_button_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], title: CString, len: CInt): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_mouse_clicked(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
-
-  def nk_layout_row(_0: Ptr[nk_context], _1: nk_layout_format, height: Float, cols: CInt, ratio: Ptr[Float]): Unit = extern
-
-  def nk_combo_close(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_fv(hsva_out: Ptr[Float], _1: nk_color): Unit = extern
-
-  def nk_buffer_memory_const(_0: Ptr[nk_buffer]): Ptr[Byte] = extern
-
-  def nk_window_show(_0: Ptr[nk_context], name: CString, _2: nk_show_states): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_fv(rgba: Ptr[Float]): nk_color = extern
-
-  def nk_style_set_cursor(_0: Ptr[nk_context], _1: nk_style_cursor): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rect(x: Float, y: Float, w: Float, h: Float): nk_rect = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hex_rgba(output: CString, _1: nk_color): Unit = extern
-
-  def nk_strlen(str: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_vec2(x: Float, y: Float): nk_vec2 = extern
-
-  def nk_widget_is_mouse_clicked(_0: Ptr[nk_context], _1: nk_buttons): nk_bool = extern
-
-  def nk_menu_item_label(_0: Ptr[nk_context], _1: CString, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_popup_begin(_0: Ptr[nk_context], _1: nk_popup_type, _2: CString, _3: nk_flags, bounds: nk_rect): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_select_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_size(_0: Ptr[nk_context]): nk_vec2 = extern
-
-  def nk_init_custom(_0: Ptr[nk_context], cmds: Ptr[nk_buffer], pool: Ptr[nk_buffer], _3: Ptr[nk_user_font]): nk_bool = extern
-
-  def nk_window_find(ctx: Ptr[nk_context], name: CString): Ptr[nk_window] = extern
-
-  def nk_layout_row_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_is_mouse_hovering_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_fv(rgba_out: Ptr[Float], _1: nk_color): Unit = extern
-
-  def nk_handle_id(_0: CInt): nk_handle = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image_ptr(_0: Ptr[Byte]): nk_image = extern
-
-  def nk_str_append_str_runes(_0: Ptr[nk_str], _1: Ptr[nk_rune]): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_symbol_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_symbol(_0: Ptr[nk_context], _1: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  def nk_buffer_info(_0: Ptr[nk_memory_status], _1: Ptr[nk_buffer]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgb_fv(rgb: Ptr[Float]): nk_color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_is_mouse_prev_hovering_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
-
-  def nk_layout_ratio_from_pixel(_0: Ptr[nk_context], pixel_width: Float): Float = extern
-
-  def nk_textedit_select_all(_0: Ptr[nk_text_edit]): Unit = extern
-
-  def nk_buffer_total(_0: Ptr[nk_buffer]): nk_size = extern
-
-  def nk_propertyd(_0: Ptr[nk_context], name: CString, min: Double, `val`: Double, max: Double, step: Double, inc_per_pixel: Float): Double = extern
-
-  def nk_button_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], title: CString): nk_bool = extern
-
-  def nk_input_is_mouse_down(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_colorf(h: Float, s: Float, v: Float, a: Float): nk_colorf = extern
-
-  def nk_str_insert_text_char(_0: Ptr[nk_str], pos: CInt, _2: CString, _3: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsva_i(h: Ptr[CInt], s: Ptr[CInt], v: Ptr[CInt], a: Ptr[CInt], _4: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_set_size(_0: Ptr[nk_context], name: CString, _2: nk_vec2): Unit = extern
-
-  def nk_group_scrolled_offset_begin(_0: Ptr[nk_context], x_offset: Ptr[nk_uint], y_offset: Ptr[nk_uint], title: CString, flags: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_rect_to_screen(_0: Ptr[nk_context], _1: nk_rect): nk_rect = extern
-
-  def nk_str_at_const(_0: Ptr[nk_str], pos: CInt, unicode: Ptr[nk_rune], len: Ptr[CInt]): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_any_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_rect): nk_bool = extern
-
-  def nk_tree_state_push(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
-
-  def nk_textedit_paste(_0: Ptr[nk_text_edit], _1: CString, len: CInt): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_fv(hsv_out: Ptr[Float], _1: nk_color): Unit = extern
-
-  def nk_input_has_mouse_click(_0: Ptr[nk_input], _1: nk_buttons): nk_bool = extern
-
-  def nk_stricmp(s1: CString, s2: CString): CInt = extern
-
-  def nk_popup_set_scroll(_0: Ptr[nk_context], offset_x: nk_uint, offset_y: nk_uint): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_push_style_item(_0: Ptr[nk_context], _1: Ptr[nk_style_item], _2: nk_style_item): nk_bool = extern
-
-  def nk_chart_begin(_0: Ptr[nk_context], _1: nk_chart_type, num: CInt, min: Float, max: Float): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, _4: CInt, alignment: nk_flags): nk_bool = extern
-
-  def nk_widget_is_hovered(_0: Ptr[nk_context]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsv_f(h: Float, s: Float, v: Float): nk_color = extern
-
-  def nk_selectable_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  def nk_style_from_table(_0: Ptr[nk_context], _1: Ptr[nk_color]): Unit = extern
-
-  def nk_menu_item_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
-
-  def nk_tree_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt): nk_bool = extern
-
-  def nk_chart_push(_0: Ptr[nk_context], _1: Float): nk_flags = extern
-
-  def nk_input_key(_0: Ptr[nk_context], _1: nk_keys, down: nk_bool): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_colorf_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], in: nk_colorf): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combobox_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], _2: Ptr[Byte], selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2): Unit = extern
-
-  def nk_str_at_rune(_0: Ptr[nk_str], pos: CInt, unicode: Ptr[nk_rune], len: Ptr[CInt]): CString = extern
-
-  def nk_layout_row_template_push_variable(_0: Ptr[nk_context], min_width: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image_color(_0: Ptr[nk_context], _1: nk_image, _2: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_curve(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, _7: Float, _8: Float, line_thickness: Float, _10: nk_color): Unit = extern
-
-  def nk_checkbox_label(_0: Ptr[nk_context], _1: CString, active: Ptr[nk_bool]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_content_region_size(_0: Ptr[nk_context]): nk_vec2 = extern
-
-  def nk_str_insert_at_char(_0: Ptr[nk_str], pos: CInt, _2: CString, _3: CInt): CInt = extern
-
-  def nk_window_is_closed(_0: Ptr[nk_context], _1: CString): nk_bool = extern
-
-  def nk_style_push_float(_0: Ptr[nk_context], _1: Ptr[Float], _2: Float): nk_bool = extern
-
-  def nk_str_init_fixed(_0: Ptr[nk_str], memory: Ptr[Byte], size: nk_size): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_i(out_h: Ptr[CInt], out_s: Ptr[CInt], out_v: Ptr[CInt], _3: nk_color): Unit = extern
-
-  def nk_menu_end(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_input_is_key_down(_0: Ptr[nk_input], _1: nk_keys): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, _3: nk_color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rect_size(_0: nk_rect): nk_vec2 = extern
-
-  def nk_propertyf(_0: Ptr[nk_context], name: CString, min: Float, `val`: Float, max: Float, step: Float, inc_per_pixel: Float): Float = extern
-
-  def nk_layout_row_begin(ctx: Ptr[nk_context], fmt: nk_layout_format, row_height: Float, cols: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image(_0: Ptr[nk_context], _1: nk_image): Unit = extern
-
-  def nk_edit_string_zero_terminated(_0: Ptr[nk_context], _1: nk_flags, buffer: CString, max: CInt, _4: nk_plugin_filter): nk_flags = extern
-
-  def nk_window_is_hidden(_0: Ptr[nk_context], _1: CString): nk_bool = extern
-
-  def nk_style_pop_vec2(_0: Ptr[nk_context]): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_content_region_min(_0: Ptr[nk_context]): nk_vec2 = extern
-
-  def nk_tooltip_begin(_0: Ptr[nk_context], width: Float): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_fill_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, _6: nk_color): Unit = extern
-
-  def nk_stricmpn(s1: CString, s2: CString, n: CInt): CInt = extern
-
-  def nk_popup_close(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_contextual_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba_bv(rgba: Ptr[nk_byte]): nk_color = extern
-
-  def nk_str_insert_str_utf8(_0: Ptr[nk_str], pos: CInt, _2: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_hsva_fv(hsva: Ptr[Float]): nk_color = extern
-
-  def nk_str_insert_str_runes(_0: Ptr[nk_str], pos: CInt, _2: Ptr[nk_rune]): CInt = extern
-
-  def nk_tooltip(_0: Ptr[nk_context], _1: CString): Unit = extern
-
-  def nk_label_wrap(_0: Ptr[nk_context], _1: CString): Unit = extern
-
-  def nk_popup_get_scroll(_0: Ptr[nk_context], offset_x: Ptr[nk_uint], offset_y: Ptr[nk_uint]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hex_rgb(output: CString, _1: nk_color): Unit = extern
-
-  def nk_menu_item_symbol_label(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, alignment: nk_flags): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_input_is_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect): nk_bool = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_set_position(_0: Ptr[nk_context], name: CString, pos: nk_vec2): Unit = extern
-
-  def nk_select_symbol_text(_0: Ptr[nk_context], _1: nk_symbol_type, _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
-
-  def nk_nine_slice_is_sub9slice(img: Ptr[nk_nine_slice]): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_symbol_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_symbol_type, size: nk_vec2): nk_bool = extern
-
-  def nk_group_scrolled_end(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_window_get_canvas(_0: Ptr[nk_context]): Ptr[nk_command_buffer] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_image_id(_0: CInt): nk_image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_widget_fitting(_0: Ptr[nk_rect], _1: Ptr[nk_context], _2: nk_vec2): nk_widget_layout_states = extern
-
-  def nk_group_end(_0: Ptr[nk_context]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_menu_begin_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, size: nk_vec2): nk_bool = extern
-
-  def nk_widget_width(_0: Ptr[nk_context]): Float = extern
+  def nk_textedit_init(_0: Ptr[nk_text_edit], _1: Ptr[nk_allocator], size: nk_size): Unit = extern
 
   def nk_textedit_init_fixed(_0: Ptr[nk_text_edit], memory: Ptr[Byte], size: nk_size): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_hsv_iv(hsv_out: Ptr[CInt], _1: nk_color): Unit = extern
+  def nk_textedit_paste(_0: Ptr[nk_text_edit], _1: CString, len: CInt): nk_bool = extern
+
+  def nk_textedit_redo(_0: Ptr[nk_text_edit]): Unit = extern
+
+  def nk_textedit_select_all(_0: Ptr[nk_text_edit]): Unit = extern
+
+  def nk_textedit_text(_0: Ptr[nk_text_edit], _1: CString, total_len: CInt): Unit = extern
+
+  def nk_textedit_undo(_0: Ptr[nk_text_edit]): Unit = extern
+
+  def nk_tooltip(_0: Ptr[nk_context], _1: CString): Unit = extern
+
+  def nk_tooltip_begin(_0: Ptr[nk_context], width: Float): nk_bool = extern
+
+  def nk_tooltip_end(_0: Ptr[nk_context]): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_button_image_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, text_alignment: nk_flags): nk_bool = extern
+  def nk_tree_element_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
 
-  def nk_style_push_font(_0: Ptr[nk_context], _1: Ptr[nk_user_font]): nk_bool = extern
+  def nk_tree_element_pop(_0: Ptr[nk_context]): Unit = extern
 
-  def nk_checkbox_flags_text(_0: Ptr[nk_context], _1: CString, _2: CInt, flags: Ptr[CUnsignedInt], value: CUnsignedInt): nk_bool = extern
-
-  def nk_layout_space_begin(_0: Ptr[nk_context], _1: nk_layout_format, height: Float, widget_count: CInt): Unit = extern
-
-  def nk_buffer_memory(_0: Ptr[nk_buffer]): Ptr[Byte] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, line_thickness: Float, _4: nk_color): Unit = extern
-
-  def nk_combo_end(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_button_label(_0: Ptr[nk_context], title: CString): nk_bool = extern
+  def nk_tree_element_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_tree_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt): nk_bool = extern
 
-  def nk_select_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
+  def nk_tree_pop(_0: Ptr[nk_context]): Unit = extern
+
+  def nk_tree_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt): nk_bool = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_image_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_image, size: nk_vec2): nk_bool = extern
+  def nk_tree_state_image_push(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
 
-  def nk_edit_focus(_0: Ptr[nk_context], flags: nk_flags): Unit = extern
+  def nk_tree_state_pop(_0: Ptr[nk_context]): Unit = extern
 
-  def nk_free(_0: Ptr[nk_context]): Unit = extern
-
-  def nk_button_symbol(_0: Ptr[nk_context], _1: nk_symbol_type): nk_bool = extern
+  def nk_tree_state_push(_0: Ptr[nk_context], _1: nk_tree_type, title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_begin(ctx: Ptr[nk_context], title: CString, bounds: nk_rect, flags: nk_flags): nk_bool = extern
+  def nk_triangle_from_direction(result: Ptr[nk_vec2], r: nk_rect, pad_x: Float, pad_y: Float, _4: nk_heading): Unit = extern
+
+  def nk_utf_at(buffer: CString, length: CInt, index: CInt, unicode: Ptr[nk_rune], len: Ptr[CInt]): CString = extern
+
+  def nk_utf_decode(_0: CString, _1: Ptr[nk_rune], _2: CInt): CInt = extern
+
+  def nk_utf_encode(_0: nk_rune, _1: CString, _2: CInt): CInt = extern
+
+  def nk_utf_len(_0: CString, byte_len: CInt): CInt = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_combo_begin_image(_0: Ptr[nk_context], img: nk_image, size: nk_vec2): nk_bool = extern
+  def nk_vec2(x: Float, y: Float): nk_vec2 = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_push(_0: Ptr[nk_context], bounds: nk_rect): Unit = extern
+  def nk_vec2i(x: CInt, y: CInt): nk_vec2 = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_window_get_content_region_max(_0: Ptr[nk_context]): nk_vec2 = extern
-
-  def nk_layout_row_dynamic(ctx: Ptr[nk_context], height: Float, cols: CInt): Unit = extern
-
-  def nk__next(_0: Ptr[nk_context], _1: Ptr[nk_command]): Ptr[nk_command] = extern
+  def nk_vec2iv(xy: Ptr[CInt]): nk_vec2 = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_stroke_line(b: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, line_thickness: Float, _6: nk_color): Unit = extern
+  def nk_vec2v(xy: Ptr[Float]): nk_vec2 = extern
+
+  def nk_widget(_0: Ptr[nk_rect], _1: Ptr[nk_context]): nk_widget_layout_states = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_recta(pos: nk_vec2, size: nk_vec2): nk_rect = extern
-
-  def nk_window_collapse(_0: Ptr[nk_context], name: CString, state: nk_collapse_states): Unit = extern
-
-  def nk_window_has_focus(_0: Ptr[nk_context]): nk_bool = extern
+  def nk_widget_bounds(_0: Ptr[nk_context]): nk_rect = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_color_f(r: Ptr[Float], g: Ptr[Float], b: Ptr[Float], a: Ptr[Float], _4: nk_color): Unit = extern
+  def nk_widget_fitting(_0: Ptr[nk_rect], _1: Ptr[nk_context], _2: nk_vec2): nk_widget_layout_states = extern
 
-  def nk_handle_ptr(_0: Ptr[Byte]): nk_handle = extern
+  def nk_widget_has_mouse_click_down(_0: Ptr[nk_context], _1: nk_buttons, down: nk_bool): nk_bool = extern
+
+  def nk_widget_height(_0: Ptr[nk_context]): Float = extern
+
+  def nk_widget_is_hovered(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_widget_is_mouse_clicked(_0: Ptr[nk_context], _1: nk_buttons): nk_bool = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def nk_widget_position(_0: Ptr[nk_context]): nk_vec2 = extern
 
-  def nk_image_is_subimage(img: Ptr[nk_image]): nk_bool = extern
-
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_layout_space_to_screen(_0: Ptr[nk_context], _1: nk_vec2): nk_vec2 = extern
+  def nk_widget_size(_0: Ptr[nk_context]): nk_vec2 = extern
+
+  def nk_widget_width(_0: Ptr[nk_context]): Float = extern
 
   def nk_window_close(ctx: Ptr[nk_context], name: CString): Unit = extern
 
-  def nk_style_load_cursor(_0: Ptr[nk_context], _1: nk_style_cursor, _2: Ptr[nk_cursor]): Unit = extern
+  def nk_window_collapse(_0: Ptr[nk_context], name: CString, state: nk_collapse_states): Unit = extern
 
-  def nk_filter_oct(_0: Ptr[nk_text_edit], unicode: nk_rune): nk_bool = extern
+  def nk_window_collapse_if(_0: Ptr[nk_context], name: CString, _2: nk_collapse_states, cond: CInt): Unit = extern
 
-  def nk_option_label(_0: Ptr[nk_context], _1: CString, active: nk_bool): nk_bool = extern
-
-  def nk_button_push_behavior(_0: Ptr[nk_context], _1: nk_button_behavior): nk_bool = extern
+  def nk_window_find(ctx: Ptr[nk_context], name: CString): Ptr[nk_window] = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_style_item_image(img: nk_image): nk_style_item = extern
+  def nk_window_get_bounds(ctx: Ptr[nk_context]): nk_rect = extern
+
+  def nk_window_get_canvas(_0: Ptr[nk_context]): Ptr[nk_command_buffer] = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt): nk_color = extern
+  def nk_window_get_content_region(_0: Ptr[nk_context]): nk_rect = extern
 
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_window_get_content_region_max(_0: Ptr[nk_context]): nk_vec2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_window_get_content_region_min(_0: Ptr[nk_context]): nk_vec2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_window_get_content_region_size(_0: Ptr[nk_context]): nk_vec2 = extern
+
+  def nk_window_get_height(_0: Ptr[nk_context]): Float = extern
+
+  def nk_window_get_panel(_0: Ptr[nk_context]): Ptr[nk_panel] = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_window_get_position(ctx: Ptr[nk_context]): nk_vec2 = extern
+
+  def nk_window_get_scroll(_0: Ptr[nk_context], offset_x: Ptr[nk_uint], offset_y: Ptr[nk_uint]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_window_get_size(_0: Ptr[nk_context]): nk_vec2 = extern
+
+  def nk_window_get_width(_0: Ptr[nk_context]): Float = extern
+
+  def nk_window_has_focus(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_window_is_active(_0: Ptr[nk_context], _1: CString): nk_bool = extern
+
+  def nk_window_is_any_hovered(_0: Ptr[nk_context]): nk_bool = extern
+
+  def nk_window_is_closed(_0: Ptr[nk_context], _1: CString): nk_bool = extern
+
+  def nk_window_is_collapsed(ctx: Ptr[nk_context], name: CString): nk_bool = extern
+
+  def nk_window_is_hidden(_0: Ptr[nk_context], _1: CString): nk_bool = extern
+
+  def nk_window_is_hovered(_0: Ptr[nk_context]): nk_bool = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_window_set_bounds(_0: Ptr[nk_context], name: CString, bounds: nk_rect): Unit = extern
+
+  def nk_window_set_focus(_0: Ptr[nk_context], name: CString): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_window_set_position(_0: Ptr[nk_context], name: CString, pos: nk_vec2): Unit = extern
+
+  def nk_window_set_scroll(_0: Ptr[nk_context], offset_x: nk_uint, offset_y: nk_uint): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def nk_window_set_size(_0: Ptr[nk_context], name: CString, _2: nk_vec2): Unit = extern
+
+  def nk_window_show(_0: Ptr[nk_context], name: CString, _2: nk_show_states): Unit = extern
+
+  def nk_window_show_if(_0: Ptr[nk_context], name: CString, _2: nk_show_states, cond: CInt): Unit = extern
 

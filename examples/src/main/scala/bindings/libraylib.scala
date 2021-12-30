@@ -909,1003 +909,138 @@ object types:
 object functions: 
   import types.*
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPlane(centerPos: Vector3, size: Vector2, color: Color): Unit = extern
+  def BeginBlendMode(mode: CInt): Unit = extern
+
+  def BeginDrawing(): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureRec(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color): Unit = extern
-
-  def GetFileNameWithoutExt(filePath: CString): CString = extern
+  def BeginMode2D(camera: Camera2D): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadFont(fileName: CString): Font = extern
+  def BeginMode3D(camera: Camera3D): Unit = extern
 
-  def InitAudioDevice(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTexturePro(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadFontEx(fileName: CString, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt): Font = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawMesh(mesh: Mesh, material: Material, transform: Matrix): Unit = extern
-
-  def DecompressData(compData: Ptr[CUnsignedChar], compDataLength: CInt, dataLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
-
-  def ImageMipmaps(image: Ptr[Image]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageText(text: CString, fontSize: CInt, color: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ResumeAudioStream(stream: AudioStream): Unit = extern
-
-  def EncodeDataBase64(data: Ptr[CUnsignedChar], dataLength: CInt, outputLength: Ptr[CInt]): CString = extern
-
-  def DirectoryExists(): CInt = extern
-
-  def GetMonitorPhysicalHeight(monitor: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadMesh(mesh: Mesh): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetScreenToWorld2D(position: Vector2, camera: Camera2D): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGlyphAtlasRec(font: Font, codepoint: CInt): Rectangle = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionBox(ray: Ray, box: BoundingBox): RayCollision = extern
-
-  def UnloadCodepoints(codepoints: Ptr[CInt]): Unit = extern
-
-  def GetRenderHeight(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetAudioStreamPitch(stream: AudioStream, pitch: Float): Unit = extern
-
-  def IsGamepadAvailable(): CInt = extern
+  def BeginScissorMode(x: CInt, y: CInt, width: CInt, height: CInt): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def BeginShaderMode(shader: Shader): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PauseAudioStream(stream: AudioStream): Unit = extern
-
-  def SetMasterVolume(volume: Float): Unit = extern
-
-  def CheckCollisionPointLine(): CInt = extern
-
-  def ImageResizeNN(image: Ptr[Image], newWidth: CInt, newHeight: CInt): Unit = extern
-
-  def IsGamepadButtonDown(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureQuad(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPoly(center: Vector2, sides: CInt, radius: Float, rotation: Float, color: Color): Unit = extern
-
-  def GetMouseWheelMove(): Float = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawModel(model: Model, position: Vector3, scale: Float, tint: Color): Unit = extern
-
-  def GetFileName(filePath: CString): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadMusicStream(fileName: CString): Music = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawBillboard(camera: Camera, texture: Texture2D, position: Vector3, size: Float, tint: Color): Unit = extern
-
-  def LoadFileData(fileName: CString, bytesRead: Ptr[CUnsignedInt]): Ptr[CUnsignedChar] = extern
-
-  def SetGesturesEnabled(flags: CUnsignedInt): Unit = extern
-
-  def SetAudioStreamBufferSizeDefault(size: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetCollisionRec(rec1: Rectangle, rec2: Rectangle): Rectangle = extern
-
-  def GetRenderWidth(): CInt = extern
-
-  def SetRandomSeed(seed: CUnsignedInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ResumeSound(sound: Sound): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMusicTimeLength(music: Music): Float = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetPixelColor(dstPtr: Ptr[Byte], color: Color, format: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawMeshInstanced(mesh: Mesh, material: Material, transforms: Ptr[Matrix], instances: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadModel(fileName: CString): Model = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PlayAudioStream(stream: AudioStream): Unit = extern
-
-  def TextToLower(text: CString): CString = extern
-
-  def GetGestureDragAngle(): Float = extern
-
-  def SetExitKey(key: CInt): Unit = extern
-
-  def GetDirectoryPath(filePath: CString): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWorldToScreen2D(position: Vector2, camera: Camera2D): Vector2 = extern
-
-  def IsGamepadButtonReleased(): CInt = extern
-
-  def ImageAlphaPremultiply(image: Ptr[Image]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadModel(model: Model): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawCircle(dst: Ptr[Image], centerX: CInt, centerY: CInt, radius: CInt, color: Color): Unit = extern
-
-  def GenTextureMipmaps(texture: Ptr[Texture2D]): Unit = extern
-
-  def DrawGrid(slices: CInt, spacing: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawBillboardRec(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color): Unit = extern
-
-  def ExportWaveAsCode(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangle3D(v1: Vector3, v2: Vector3, v3: Vector3, color: Color): Unit = extern
-
-  def SetTraceLogLevel(logLevel: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetModelBoundingBox(model: Model): BoundingBox = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadVrStereoConfig(device: VrDeviceInfo): VrStereoConfig = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetShaderLocation(shader: Shader, uniformName: CString): CInt = extern
-
-  def LoadModelAnimations(fileName: CString, animCount: Ptr[CUnsignedInt]): Ptr[ModelAnimation] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshHemiSphere(radius: Float, rings: CInt, slices: CInt): Mesh = extern
-
-  def UnloadFontData(chars: Ptr[GlyphInfo], glyphCount: CInt): Unit = extern
-
-  def GetRandomValue(min: CInt, max: CInt): CInt = extern
-
-  def UnloadFileData(data: Ptr[CUnsignedChar]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshPlane(width: Float, length: Float, resX: CInt, resZ: CInt): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetCameraMode(camera: Camera, mode: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageWhiteNoise(width: CInt, height: CInt, factor: Float): Image = extern
-
-  def TextToPascal(text: CString): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadTexture(texture: Texture2D): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadSoundFromWave(wave: Wave): Sound = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetWindowIcon(image: Image): Unit = extern
-
-  def WaitTime(ms: Float): Unit = extern
-
-  def UnloadModelAnimations(animations: Ptr[ModelAnimation], count: CUnsignedInt): Unit = extern
-
-  def EnableCursor(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def StopMusicStream(music: Music): Unit = extern
-
-  def SetGamepadMappings(mappings: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def BeginMode3D(camera: Camera3D): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadShader(vsFileName: CString, fsFileName: CString): Shader = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawModelWires(model: Model, position: Vector3, scale: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadFontFromImage(image: Image, key: Color, firstChar: CInt): Font = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshTorus(radius: Float, size: Float, radSeg: CInt, sides: CInt): Mesh = extern
-
-  def SetLoadFileTextCallback(callback: LoadFileTextCallback): Unit = extern
-
-  def ImageFlipVertical(image: Ptr[Image]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMusicTimePlayed(music: Music): Float = extern
-
-  def TextToUpper(text: CString): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGestureDragVector(): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadModelFromMesh(mesh: Mesh): Model = extern
-
-  def TakeScreenshot(fileName: CString): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPolyLinesEx(center: Vector2, sides: CInt, radius: Float, rotation: Float, lineThick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircle3D(center: Vector3, radius: Float, rotationAxis: Vector3, rotationAngle: Float, color: Color): Unit = extern
-
-  def ExportMesh(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PlaySound(sound: Sound): Unit = extern
-
-  def IsMouseButtonReleased(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPixelV(position: Vector2, color: Color): Unit = extern
-
-  def SaveStorageValue(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShaderValueTexture(shader: Shader, locIndex: CInt, texture: Texture2D): Unit = extern
-
-  def SetCameraSmoothZoomControl(keySmoothZoom: CInt): Unit = extern
-
-  def CheckCollisionLines(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPoint3D(position: Vector3, color: Color): Unit = extern
-
-  def SaveFileData(): CInt = extern
-
-  def TextSubtext(text: CString, position: CInt, length: CInt): CString = extern
-
-  def GetGamepadName(gamepad: CInt): CString = extern
-
-  def GetGamepadAxisCount(gamepad: CInt): CInt = extern
-
-  def WaveCrop(wave: Ptr[Wave], initSample: CInt, finalSample: CInt): Unit = extern
-
-  def DecodeDataBase64(data: Ptr[CUnsignedChar], outputLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionModel(ray: Ray, model: Model): RayCollision = extern
-
-  def GetScreenWidth(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def StopSound(sound: Sound): Unit = extern
-
-  def ExportImageAsCode(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPixel(posX: CInt, posY: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadAudioStream(stream: AudioStream): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCylinderWiresEx(startPos: Vector3, endPos: Vector3, startRadius: Float, endRadius: Float, sides: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetMusicVolume(music: Music, volume: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleLines(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
-
-  def GetTouchY(): CInt = extern
-
-  def GetMouseY(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadMaterial(material: Material): Unit = extern
-
-  def LoadMaterials(fileName: CString, materialCount: Ptr[CInt]): Ptr[Material] = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRing(center: Vector2, innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
-
-  def ImageColorInvert(image: Ptr[Image]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWorldToScreenEx(position: Vector3, camera: Camera, width: CInt, height: CInt): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageFromScreen(): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangleFan(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawSphereWires(centerPos: Vector3, radius: Float, rings: CInt, slices: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangleStrip(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
-
-  def DisableCursor(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetTextureFilter(texture: Texture2D, filter: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: Float, scale: Vector3, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleLines(centerX: CInt, centerY: CInt, radius: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetMaterialTexture(material: Ptr[Material], mapType: CInt, texture: Texture2D): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadVrStereoConfig(config: VrStereoConfig): Unit = extern
-
-  def IsGamepadButtonPressed(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMeshBoundingBox(mesh: Mesh): BoundingBox = extern
-
-  def ShowCursor(): Unit = extern
-
-  def SetTraceLogCallback(callback: TraceLogCallback): Unit = extern
-
-  def ClearWindowState(flags: CUnsignedInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionSphere(ray: Ray, center: Vector3, radius: Float): RayCollision = extern
-
-  def EndVrStereoMode(): Unit = extern
-
-  def IsGestureDetected(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadWave(wave: Wave): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorFromNormalized(normalized: Vector4): Color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadImage(image: Image): Unit = extern
-
-  def CheckCollisionPointRec(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorToInt(color: Color): CInt = extern
-
-  def CheckCollisionCircles(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextCodepoint(font: Font, codepoint: CInt, position: Vector2, fontSize: Float, tint: Color): Unit = extern
-
-  def TextFindIndex(text: CString, find: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageTextEx(font: Font, text: CString, fontSize: Float, spacing: Float, tint: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadRenderTexture(target: RenderTexture2D): Unit = extern
-
-  def IsMouseButtonPressed(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawText(dst: Ptr[Image], text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShaderValue(shader: Shader, locIndex: CInt, value: Ptr[Byte], uniformType: CInt): Unit = extern
-
-  def GetMouseX(): CInt = extern
-
-  def SetMouseScale(scaleX: Float, scaleY: Float): Unit = extern
-
-  def GetDroppedFiles(count: Ptr[CInt]): Ptr[CString] = extern
-
-  def GetFileModTime(fileName: CString): CLongInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMonitorPosition(monitor: CInt): Vector2 = extern
-
-  def IsMusicStreamPlaying(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageColor(width: CInt, height: CInt, color: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTexture(texture: Texture2D, posX: CInt, posY: CInt, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadFontFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt): Font = extern
-
-  def GetMonitorWidth(monitor: CInt): CInt = extern
-
-  def GetClipboardText(): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangleStrip3D(points: Ptr[Vector3], pointCount: CInt, color: Color): Unit = extern
-
-  def SetSaveFileTextCallback(callback: SaveFileTextCallback): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadWaveFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt): Wave = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshSphere(radius: Float, rings: CInt, slices: CInt): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateSound(sound: Sound, data: Ptr[Byte], sampleCount: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTexturePoly(texture: Texture2D, center: Vector2, points: Ptr[Vector2], texcoords: Ptr[Vector2], pointCount: CInt, tint: Color): Unit = extern
-
-  def EndBlendMode(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateTexture(texture: Texture2D, pixels: Ptr[Byte]): Unit = extern
-
-  def HideCursor(): Unit = extern
-
-  def LoadStorageValue(position: CUnsignedInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshPoly(sides: CInt, radius: Float): Mesh = extern
-
-  def IsFileDropped(): CInt = extern
-
-  def SetWindowMonitor(monitor: CInt): Unit = extern
-
-  def BeginScissorMode(x: CInt, y: CInt, width: CInt, height: CInt): Unit = extern
-
-  def GetWorkingDirectory(): CString = extern
-
-  def UnloadImagePalette(colors: Ptr[Color]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageFontAtlas(chars: Ptr[GlyphInfo], recs: Ptr[Ptr[Rectangle]], glyphCount: CInt, fontSize: CInt, padding: CInt, packMethod: CInt): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadSound(fileName: CString): Sound = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshCube(width: Float, height: Float, length: Float): Mesh = extern
-
-  def ImageColorBrightness(image: Ptr[Image], brightness: CInt): Unit = extern
-
-  def GetMonitorRefreshRate(monitor: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshHeightmap(heightmap: Image, size: Vector3): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRingLines(center: Vector2, innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawBillboardPro(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision = extern
-
-  def GetGestureHoldDuration(): Float = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawBoundingBox(box: BoundingBox, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawPixelV(dst: Ptr[Image], position: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWorldToScreen(position: Vector3, camera: Camera): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorNormalize(color: Color): Vector4 = extern
-
-  def ImageDither(image: Ptr[Image], rBpp: CInt, gBpp: CInt, bBpp: CInt, aBpp: CInt): Unit = extern
-
-  def SetMouseOffset(offsetX: CInt, offsetY: CInt): Unit = extern
-
-  def TraceLog(logLevel: CInt, text: CString): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawPolyLines(center: Vector2, sides: CInt, radius: Float, rotation: Float, color: Color): Unit = extern
-
-  def TextToInteger(text: CString): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageChecked(width: CInt, height: CInt, checksX: CInt, checksY: CInt, col1: Color, col2: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleGradientH(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Color, color2: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawLine(dst: Ptr[Image], startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Color): Unit = extern
-
-  def ImageAlphaCrop(image: Ptr[Image], threshold: Float): Unit = extern
-
-  def CloseAudioDevice(): Unit = extern
-
-  def MemRealloc(ptr: Ptr[Byte], size: CInt): Ptr[Byte] = extern
-
-  def GetTouchPointCount(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageResizeCanvas(image: Ptr[Image], newWidth: CInt, newHeight: CInt, offsetX: CInt, offsetY: CInt, fill: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadModelAnimation(anim: ModelAnimation): Unit = extern
-
-  def CheckCollisionBoxes(): CInt = extern
-
-  def SetWindowPosition(x: CInt, y: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetMusicPitch(music: Music, pitch: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageColorTint(image: Ptr[Image], color: Color): Unit = extern
-
-  def GenMeshTangents(mesh: Ptr[Mesh]): Unit = extern
-
-  def ImageRotateCCW(image: Ptr[Image]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetImageColor(image: Image, x: CInt, y: CInt): Color = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCylinder(position: Vector3, radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWindowPosition(): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def Fade(color: Color, alpha: Float): Color = extern
-
-  def TextLength(text: CString): CUnsignedInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadWave(fileName: CString): Wave = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PlayMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGlyphIndex(font: Font, codepoint: CInt): CInt = extern
-
-  def ImageResize(image: Ptr[Image], newWidth: CInt, newHeight: CInt): Unit = extern
-
-  def CodepointToUTF8(codepoint: CInt, byteSize: Ptr[CInt]): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetSoundVolume(sound: Sound, volume: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureTiled(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: Float, scale: Float, tint: Color): Unit = extern
-
-  def TextInsert(text: CString, insert: CString, position: CInt): CString = extern
-
-  def ImageRotateCW(image: Ptr[Image]): Unit = extern
-
-  def DrawFPS(posX: CInt, posY: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageColorReplace(image: Ptr[Image], color: Color, replace: Color): Unit = extern
-
-  def SetModelMeshMaterial(model: Ptr[Model], meshId: CInt, materialId: CInt): Unit = extern
-
-  def CheckCollisionSpheres(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadSound(sound: Sound): Unit = extern
-
-  def SetCameraAltControl(keyAlt: CInt): Unit = extern
-
-  def GetCodepointCount(text: CString): CInt = extern
-
-  def StopSoundMulti(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetAudioStreamVolume(stream: AudioStream, volume: Float): Unit = extern
-
-  def IsAudioStreamPlaying(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageColors(image: Image): Ptr[Color] = extern
-
-  def CheckCollisionPointTriangle(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadFont(font: Font): Unit = extern
-
-  def CheckCollisionRecs(): CInt = extern
-
-  def SetWindowMinSize(width: CInt, height: CInt): Unit = extern
-
-  def GetFileExtension(fileName: CString): CString = extern
-
-  def ImageColorContrast(image: Ptr[Image], contrast: Float): Unit = extern
+  def BeginTextureMode(target: RenderTexture2D): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def BeginVrStereoMode(config: VrStereoConfig): Unit = extern
 
-  def IsWindowResized(): CInt = extern
+  def ChangeDirectory(): CInt = extern
+
+  def CheckCollisionBoxSphere(): CInt = extern
+
+  def CheckCollisionBoxes(): CInt = extern
+
+  def CheckCollisionCircleRec(): CInt = extern
+
+  def CheckCollisionCircles(): CInt = extern
+
+  def CheckCollisionLines(): CInt = extern
+
+  def CheckCollisionPointCircle(): CInt = extern
+
+  def CheckCollisionPointLine(): CInt = extern
+
+  def CheckCollisionPointRec(): CInt = extern
+
+  def CheckCollisionPointTriangle(): CInt = extern
+
+  def CheckCollisionRecs(): CInt = extern
+
+  def CheckCollisionSpheres(): CInt = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetSoundPitch(sound: Sound, pitch: Float): Unit = extern
+  def ClearBackground(color: Color): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleV(center: Vector2, radius: Float, color: Color): Unit = extern
+  def ClearDirectoryFiles(): Unit = extern
 
-  def TextIsEqual(): CInt = extern
+  def ClearDroppedFiles(): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageRaw(fileName: CString, width: CInt, height: CInt, format: CInt, headerSize: CInt): Image = extern
+  def ClearWindowState(flags: CUnsignedInt): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextPro(font: Font, text: CString, position: Vector2, origin: Vector2, rotation: Float, fontSize: Float, spacing: Float, tint: Color): Unit = extern
+  def CloseAudioDevice(): Unit = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageAlphaMask(image: Ptr[Image], alphaMask: Image): Unit = extern
+  def CloseWindow(): Unit = extern
 
-  def GetGamepadButtonPressed(): CInt = extern
-
-  def TextCodepointsToUTF8(codepoints: Ptr[CInt], length: CInt): CString = extern
-
-  def IsKeyUp(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawRectangleLines(dst: Ptr[Image], rec: Rectangle, thick: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineStrip(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionQuad(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): RayCollision = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: Float, tint: Color): Unit = extern
-
-  def GetFPS(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawPixel(dst: Ptr[Image], posX: CInt, posY: CInt, color: Color): Unit = extern
-
-  def WaveFormat(wave: Ptr[Wave], sampleRate: CInt, sampleSize: CInt, channels: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadTexture(fileName: CString): Texture2D = extern
-
-  def IsMouseButtonUp(): CInt = extern
-
-  def GetGesturePinchAngle(): Float = extern
-
-  def IsKeyDown(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawRectangleV(dst: Ptr[Image], position: Vector2, size: Vector2, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineV(startPos: Vector2, endPos: Vector2, color: Color): Unit = extern
-
-  def MeasureText(text: CString, fontSize: CInt): CInt = extern
+  def CodepointToUTF8(codepoint: CInt, byteSize: Ptr[CInt]): CString = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def ColorAlpha(color: Color, alpha: Float): Color = extern
 
-  def ImageColorGrayscale(image: Ptr[Image]): Unit = extern
-
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawLineV(dst: Ptr[Image], start: Vector2, end: Vector2, color: Color): Unit = extern
-
-  def GetTouchX(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangle(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
-
-  def BeginBlendMode(mode: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateTextureRec(texture: Texture2D, rec: Rectangle, pixels: Ptr[Byte]): Unit = extern
-
-  def SetCameraPanControl(keyPan: CInt): Unit = extern
-
-  def MemFree(ptr: Ptr[Byte]): Unit = extern
-
-  def LoadFileText(fileName: CString): CString = extern
-
-  def GetTouchPointId(index: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageCellular(width: CInt, height: CInt, tileSize: CInt): Image = extern
-
-  def TextReplace(text: CString, replace: CString, by: CString): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawRectangleRec(dst: Ptr[Image], rec: Rectangle, color: Color): Unit = extern
-
-  def GetScreenHeight(): CInt = extern
-
-  def EndScissorMode(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadMusicStream(music: Music): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadMusicStreamFromMemory(fileType: CString, data: Ptr[CUnsignedChar], dataSize: CInt): Music = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageFromTexture(texture: Texture2D): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshCone(radius: Float, height: Float, slices: CInt): Mesh = extern
-
-  def IsAudioDeviceReady(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLine(startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Color): Unit = extern
-
-  def SetWindowState(flags: CUnsignedInt): Unit = extern
-
-  def GetPrevDirectoryPath(dirPath: CString): CString = extern
-
-  def IsModelAnimationValid(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShapesTexture(texture: Texture2D, source: Rectangle): Unit = extern
-
-  def TextSplit(text: CString, delimiter: CChar, count: Ptr[CInt]): Ptr[CString] = extern
-
-  def GetCurrentMonitor(): CInt = extern
-
-  def SetTargetFPS(fps: CInt): Unit = extern
-
-  def GetCharPressed(): CInt = extern
-
-  def GetMonitorCount(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadMaterialDefault(): Material = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageGradientH(width: CInt, height: CInt, left: Color, right: Color): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def BeginTextureMode(target: RenderTexture2D): Unit = extern
-
-  def TextJoin(textList: Ptr[CString], count: CInt, delimiter: CString): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGlyphInfo(font: Font, codepoint: CInt): GlyphInfo = extern
-
-  def SetWindowOpacity(opacity: Float): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawEllipseLines(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Color): Unit = extern
-
-  def ExportImage(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCylinderEx(startPos: Vector3, endPos: Vector3, startRadius: Float, endRadius: Float, sides: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleGradientV(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Color, color2: Color): Unit = extern
-
-  def ClearDroppedFiles(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImagePalette(image: Image, maxPaletteSize: CInt, colorCount: Ptr[CInt]): Ptr[Color] = extern
-
-  def GetGestureDetected(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleGradient(centerX: CInt, centerY: CInt, radius: Float, color1: Color, color2: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateMeshBuffer(mesh: Mesh, index: CInt, data: Ptr[Byte], dataSize: CInt, offset: CInt): Unit = extern
-
-  def SetClipboardText(text: CString): Unit = extern
-
-  def IsSoundPlaying(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleLinesEx(rec: Rectangle, lineThick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawRectangle(dst: Ptr[Image], posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
-
-  def SaveFileText(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDraw(dst: Ptr[Image], src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color): Unit = extern
-
-  def GetPixelDataSize(width: CInt, height: CInt, format: CInt): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShaderValueMatrix(shader: Shader, locIndex: CInt, mat: Matrix): Unit = extern
-
-  def GetGamepadAxisMovement(gamepad: CInt, axis: CInt): Float = extern
-
-  def ImageFormat(image: Ptr[Image], newFormat: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color): Unit = extern
-
-  def UploadMesh(mesh: Ptr[Mesh], dynamic: bool): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetGesturePinchVector(): Vector2 = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadShaderFromMemory(vsCode: CString, fsCode: CString): Shader = extern
-
-  def EndMode3D(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCubeTexture(texture: Texture2D, position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawText(text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLineEx(startPos: Vector2, endPos: Vector2, thick: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageGradientRadial(width: CInt, height: CInt, density: Float, inner: Color, outer: Color): Image = extern
-
-  def UnloadFileText(text: CString): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetShaderValueV(shader: Shader, locIndex: CInt, value: Ptr[Byte], uniformType: CInt, count: CInt): Unit = extern
-
-  def ExportWave(): CInt = extern
-
-  def GetSoundsPlaying(): CInt = extern
-
-  def SetMousePosition(x: CInt, y: CInt): Unit = extern
-
-  def SetLoadFileDataCallback(callback: LoadFileDataCallback): Unit = extern
-
-  def IsWindowFullscreen(): CInt = extern
-
-  def IsWindowMaximized(): CInt = extern
-
-  def SetMouseCursor(cursor: CInt): Unit = extern
-
-  def SetWindowSize(width: CInt, height: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetImageAlphaBorder(image: Image, threshold: Float): Rectangle = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetPixelColor(srcPtr: Ptr[Byte], format: CInt): Color = extern
-
-  def IsCursorOnScreen(): CInt = extern
-
-  def CheckCollisionCircleRec(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetCameraMatrix(camera: Camera): Matrix = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCubeTextureRec(texture: Texture2D, source: Rectangle, position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawSphere(centerPos: Vector3, radius: Float, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageFromImage(image: Image, rec: Rectangle): Image = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UpdateAudioStream(stream: AudioStream, data: Ptr[Byte], frameCount: CInt): Unit = extern
-
-  def UpdateCamera(camera: Ptr[Camera]): Unit = extern
-
-  def ImageFlipHorizontal(image: Ptr[Image]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImage(fileName: CString): Image = extern
-
-  def GetFrameTime(): Float = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageCrop(image: Ptr[Image], crop: Rectangle): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshKnot(radius: Float, size: Float, radSeg: CInt, sides: CInt): Mesh = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadTextureFromImage(image: Image): Texture2D = extern
-
-  def IsKeyReleased(): CInt = extern
-
-  def GetTime(): Double = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleSectorLines(center: Vector2, radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
-
-  def GetKeyPressed(): CInt = extern
-
-  def RestoreWindow(): Unit = extern
-
-  def BeginDrawing(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ResumeMusicStream(music: Music): Unit = extern
-
-  def TextFormat(text: CString): CString = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircleSector(center: Vector2, radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SeekMusicStream(music: Music, position: Float): Unit = extern
-
-  def SetCameraMoveControls(keyFront: CInt, keyBack: CInt, keyRight: CInt, keyLeft: CInt, keyUp: CInt, keyDown: CInt): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextureEx(texture: Texture2D, position: Vector2, rotation: Float, scale: Float, tint: Color): Unit = extern
-
-  def GetMonitorPhysicalWidth(monitor: CInt): CInt = extern
-
-  def TextAppend(text: CString, append: CString, position: Ptr[CInt]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshCylinder(radius: Float, height: Float, slices: CInt): Mesh = extern
-
-  def MinimizeWindow(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadShader(shader: Shader): Unit = extern
-
-  def IsWindowReady(): CInt = extern
+  def ColorAlphaBlend(dst: Color, src: Color, tint: Color): Color = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def ColorFromHSV(hue: Float, saturation: Float, value: Float): Color = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def MeasureTextEx(font: Font, text: CString, fontSize: Float, spacing: Float): Vector2 = extern
+  def ColorFromNormalized(normalized: Vector4): Color = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadAudioStream(sampleRate: CUnsignedInt, sampleSize: CUnsignedInt, channels: CUnsignedInt): AudioStream = extern
+  def ColorNormalize(color: Color): Vector4 = extern
 
-  def IsMouseButtonDown(): CInt = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ColorToHSV(color: Color): Vector3 = extern
 
-  def OpenURL(url: CString): Unit = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ColorToInt(color: Color): CInt = extern
+
+  def CompressData(data: Ptr[CUnsignedChar], dataLength: CInt, compDataLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
+
+  def DecodeDataBase64(data: Ptr[CUnsignedChar], outputLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
+
+  def DecompressData(compData: Ptr[CUnsignedChar], compDataLength: CInt, dataLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
+
+  def DirectoryExists(): CInt = extern
+
+  def DisableCursor(): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawBillboard(camera: Camera, texture: Texture2D, position: Vector3, size: Float, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawBillboardPro(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: Float, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawBillboardRec(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawBoundingBox(box: BoundingBox, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCircle(centerX: CInt, centerY: CInt, radius: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCircle3D(center: Vector3, radius: Float, rotationAxis: Vector3, rotationAngle: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCircleGradient(centerX: CInt, centerY: CInt, radius: Float, color1: Color, color2: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCircleLines(centerX: CInt, centerY: CInt, radius: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCircleSector(center: Vector2, radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCircleSectorLines(center: Vector2, radius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCircleV(center: Vector2, radius: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCube(position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCubeTexture(texture: Texture2D, position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCubeTextureRec(texture: Texture2D, source: Rectangle, position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def DrawCubeV(position: Vector3, size: Vector3, color: Color): Unit = extern
@@ -1913,238 +1048,1103 @@ object functions:
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def DrawCubeWires(position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
 
-  def IsGamepadButtonUp(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorAlphaBlend(dst: Color, src: Color, tint: Color): Color = extern
-
-  def IsWindowFocused(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleGradientEx(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenImageGradientV(width: CInt, height: CInt, top: Color, bottom: Color): Image = extern
-  def GetDirectoryFiles(dirPath: CString, count: Ptr[CInt]): Ptr[CString] = extern
-
-  def SwapScreenBuffer(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ClearBackground(color: Color): Unit = extern
-
-  def IsAudioStreamProcessed(): CInt = extern
-
-  def PollInputEvents(): Unit = extern
-
-  def InitWindow(width: CInt, height: CInt, title: CString): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRay(ray: Ray, color: Color): Unit = extern
-
-  def WindowShouldClose(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageClearBackground(dst: Ptr[Image], color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadTextureCubemap(image: Image, layout: CInt): TextureCubemap = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawTextEx(font: Font, text: CString, position: Vector2, fontSize: Float, spacing: Float, tint: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetFontDefault(): Font = extern
-
-  def ChangeDirectory(): CInt = extern
-
-  def SetWindowTitle(title: CString): Unit = extern
-
-  def MaximizeWindow(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PlaySoundMulti(sound: Sound): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ColorToHSV(color: Color): Vector3 = extern
-
-  def IsWindowHidden(): CInt = extern
-
-  def EndDrawing(): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetRayCollisionMesh(ray: Ray, mesh: Mesh, transform: Matrix): RayCollision = extern
-
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def DrawCubeWiresV(position: Vector3, size: Vector3, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCylinder(position: Vector3, radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCylinderEx(startPos: Vector3, endPos: Vector3, startRadius: Float, endRadius: Float, sides: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCylinderWires(position: Vector3, radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawCylinderWiresEx(startPos: Vector3, endPos: Vector3, startRadius: Float, endRadius: Float, sides: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawEllipse(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawEllipseLines(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Color): Unit = extern
+
+  def DrawFPS(posX: CInt, posY: CInt): Unit = extern
+
+  def DrawGrid(slices: CInt, spacing: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawLine(startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawLine3D(startPos: Vector3, endPos: Vector3, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def DrawLineBezier(startPos: Vector2, endPos: Vector2, thick: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3): Mesh = extern
+  def DrawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCylinderWires(position: Vector3, radiusTop: Float, radiusBottom: Float, height: Float, slices: CInt, color: Color): Unit = extern
-
-  def SetConfigFlags(flags: CUnsignedInt): Unit = extern
+  def DrawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadRenderTexture(width: CInt, height: CInt): RenderTexture2D = extern
+  def DrawLineEx(startPos: Vector2, endPos: Vector2, thick: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageCopy(image: Image): Image = extern
+  def DrawLineStrip(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectanglePro(rec: Rectangle, origin: Vector2, rotation: Float, color: Color): Unit = extern
+  def DrawLineV(startPos: Vector2, endPos: Vector2, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCircle(centerX: CInt, centerY: CInt, radius: Float, color: Color): Unit = extern
+  def DrawMesh(mesh: Mesh, material: Material, transform: Matrix): Unit = extern
 
-  def CheckCollisionPointCircle(): CInt = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawMeshInstanced(mesh: Mesh, material: Material, transforms: Ptr[Matrix], instances: CInt): Unit = extern
 
-  def LoadFontData(fileData: Ptr[CUnsignedChar], dataSize: CInt, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt, `type`: CInt): Ptr[GlyphInfo] = extern
-
-  def TextCopy(dst: CString, src: CString): CInt = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawModel(model: Model, position: Vector3, scale: Float, tint: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: Float, scale: Vector3, tint: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetShaderLocationAttrib(shader: Shader, attribName: CString): CInt = extern
-
-  def IsWindowState(): CInt = extern
-
-  def SetSaveFileDataCallback(callback: CInt): Unit = extern
-
-  def GetWindowHandle(): Ptr[Byte] = extern
+  def DrawModelWires(model: Model, position: Vector3, scale: Float, tint: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawTextEx(dst: Ptr[Image], font: Font, text: CString, position: Vector2, fontSize: Float, spacing: Float, tint: Color): Unit = extern
-
-  def IsWindowMinimized(): CInt = extern
+  def DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: Float, scale: Vector3, tint: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawSphereEx(centerPos: Vector3, radius: Float, rings: CInt, slices: CInt, color: Color): Unit = extern
+  def DrawPixel(posX: CInt, posY: CInt, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetColor(hexValue: CUnsignedInt): Color = extern
+  def DrawPixelV(position: Vector2, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleV(position: Vector2, size: Vector2, color: Color): Unit = extern
-
-  def EndMode2D(): Unit = extern
+  def DrawPlane(centerPos: Vector3, size: Vector2, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageAlphaClear(image: Ptr[Image], color: Color, threshold: Float): Unit = extern
+  def DrawPoint3D(position: Vector3, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def UnloadModelKeepMeshes(model: Model): Unit = extern
-
-  def GenMeshBinormals(mesh: Ptr[Mesh]): Unit = extern
+  def DrawPoly(center: Vector2, sides: CInt, radius: Float, rotation: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetWindowScaleDPI(): Vector2 = extern
-
-  def ToggleFullscreen(): Unit = extern
+  def DrawPolyLines(center: Vector2, sides: CInt, radius: Float, rotation: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadWaveSamples(wave: Wave): Ptr[Float] = extern
+  def DrawPolyLinesEx(center: Vector2, sides: CInt, radius: Float, rotation: Float, lineThick: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def WaveCopy(wave: Wave): Wave = extern
+  def DrawRay(ray: Ray, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawLine3D(startPos: Vector3, endPos: Vector3, color: Color): Unit = extern
+  def DrawRectangle(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
 
-  def IsFileExtension(): CInt = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawRectangleGradientEx(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawRectangleGradientH(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Color, color2: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawRectangleGradientV(posX: CInt, posY: CInt, width: CInt, height: CInt, color1: Color, color2: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawRectangleLines(posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawRectangleLinesEx(rec: Rectangle, lineThick: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawRectanglePro(rec: Rectangle, origin: Vector2, rotation: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def DrawRectangleRec(rec: Rectangle, color: Color): Unit = extern
-
-  def UnloadImageColors(colors: Ptr[Color]): Unit = extern
-
-  def CloseWindow(): Unit = extern
-
-  def UnloadWaveSamples(samples: Ptr[Float]): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMouseRay(mousePosition: Vector2, camera: Camera): Ray = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageDrawCircleV(dst: Ptr[Image], center: Vector2, radius: CInt, color: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def ImageToPOT(image: Ptr[Image], fill: Color): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetTouchPosition(index: CInt): Vector2 = extern
-
-  def GetCodepoint(text: CString, bytesProcessed: Ptr[CInt]): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def BeginMode2D(camera: Camera2D): Unit = extern
-
-  def CompressData(data: Ptr[CUnsignedChar], dataLength: CInt, compDataLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
-
-  def IsCursorHidden(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def SetTextureWrap(texture: Texture2D, wrap: CInt): Unit = extern
-
-  def FileExists(): CInt = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PauseSound(sound: Sound): Unit = extern
-
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def StopAudioStream(stream: AudioStream): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def DrawRectangleRounded(rec: Rectangle, roundness: Float, segments: CInt, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def GetMousePosition(): Vector2 = extern
-
-  def EndShaderMode(): Unit = extern
+  def DrawRectangleRoundedLines(rec: Rectangle, roundness: Float, segments: CInt, lineThick: Float, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawCube(position: Vector3, width: Float, height: Float, length: Float, color: Color): Unit = extern
+  def DrawRectangleV(position: Vector2, size: Vector2, color: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def LoadImageAnim(fileName: CString, frames: Ptr[CInt]): Image = extern
+  def DrawRing(center: Vector2, innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
 
-  def MemAlloc(size: CInt): Ptr[Byte] = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawRingLines(center: Vector2, innerRadius: Float, outerRadius: Float, startAngle: Float, endAngle: Float, segments: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawSphere(centerPos: Vector3, radius: Float, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawSphereEx(centerPos: Vector3, radius: Float, rings: CInt, slices: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawSphereWires(centerPos: Vector3, radius: Float, rings: CInt, slices: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawText(text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTextCodepoint(font: Font, codepoint: CInt, position: Vector2, fontSize: Float, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTextEx(font: Font, text: CString, position: Vector2, fontSize: Float, spacing: Float, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTextPro(font: Font, text: CString, position: Vector2, origin: Vector2, rotation: Float, fontSize: Float, spacing: Float, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTexture(texture: Texture2D, posX: CInt, posY: CInt, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTextureEx(texture: Texture2D, position: Vector2, rotation: Float, scale: Float, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: Float, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTexturePoly(texture: Texture2D, center: Vector2, points: Ptr[Vector2], texcoords: Ptr[Vector2], pointCount: CInt, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTexturePro(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: Float, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTextureQuad(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTextureRec(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTextureTiled(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: Float, scale: Float, tint: Color): Unit = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def DrawTextureV(texture: Texture2D, position: Vector2, tint: Color): Unit = extern
 
-  def GetMonitorHeight(monitor: CInt): CInt = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTriangle3D(v1: Vector3, v2: Vector3, v3: Vector3, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTriangleFan(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTriangleStrip(points: Ptr[Vector2], pointCount: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def DrawTriangleStrip3D(points: Ptr[Vector3], pointCount: CInt, color: Color): Unit = extern
+
+  def EnableCursor(): Unit = extern
+
+  def EncodeDataBase64(data: Ptr[CUnsignedChar], dataLength: CInt, outputLength: Ptr[CInt]): CString = extern
+
+  def EndBlendMode(): Unit = extern
+
+  def EndDrawing(): Unit = extern
+
+  def EndMode2D(): Unit = extern
+
+  def EndMode3D(): Unit = extern
+
+  def EndScissorMode(): Unit = extern
+
+  def EndShaderMode(): Unit = extern
 
   def EndTextureMode(): Unit = extern
+
+  def EndVrStereoMode(): Unit = extern
+
+  def ExportImage(): CInt = extern
+
+  def ExportImageAsCode(): CInt = extern
+
+  def ExportMesh(): CInt = extern
+
+  def ExportWave(): CInt = extern
+
+  def ExportWaveAsCode(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def Fade(color: Color, alpha: Float): Color = extern
+
+  def FileExists(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenImageCellular(width: CInt, height: CInt, tileSize: CInt): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenImageChecked(width: CInt, height: CInt, checksX: CInt, checksY: CInt, col1: Color, col2: Color): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenImageColor(width: CInt, height: CInt, color: Color): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenImageFontAtlas(chars: Ptr[GlyphInfo], recs: Ptr[Ptr[Rectangle]], glyphCount: CInt, fontSize: CInt, padding: CInt, packMethod: CInt): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenImageGradientH(width: CInt, height: CInt, left: Color, right: Color): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenImageGradientRadial(width: CInt, height: CInt, density: Float, inner: Color, outer: Color): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenImageGradientV(width: CInt, height: CInt, top: Color, bottom: Color): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenImageWhiteNoise(width: CInt, height: CInt, factor: Float): Image = extern
+
+  def GenMeshBinormals(mesh: Ptr[Mesh]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshCone(radius: Float, height: Float, slices: CInt): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshCube(width: Float, height: Float, length: Float): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshCylinder(radius: Float, height: Float, slices: CInt): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshHeightmap(heightmap: Image, size: Vector3): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshHemiSphere(radius: Float, rings: CInt, slices: CInt): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshKnot(radius: Float, size: Float, radSeg: CInt, sides: CInt): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshPlane(width: Float, length: Float, resX: CInt, resZ: CInt): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshPoly(sides: CInt, radius: Float): Mesh = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshSphere(radius: Float, rings: CInt, slices: CInt): Mesh = extern
+
+  def GenMeshTangents(mesh: Ptr[Mesh]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GenMeshTorus(radius: Float, size: Float, radSeg: CInt, sides: CInt): Mesh = extern
+
+  def GenTextureMipmaps(texture: Ptr[Texture2D]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetCameraMatrix(camera: Camera): Matrix = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def GetCameraMatrix2D(camera: Camera2D): Matrix = extern
 
-  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def PauseMusicStream(music: Music): Unit = extern
+  def GetCharPressed(): CInt = extern
 
-  def IsKeyPressed(): CInt = extern
+  def GetClipboardText(): CString = extern
+
+  def GetCodepoint(text: CString, bytesProcessed: Ptr[CInt]): CInt = extern
+
+  def GetCodepointCount(text: CString): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetCollisionRec(rec1: Rectangle, rec2: Rectangle): Rectangle = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetColor(hexValue: CUnsignedInt): Color = extern
+
+  def GetCurrentMonitor(): CInt = extern
+
+  def GetDirectoryFiles(dirPath: CString, count: Ptr[CInt]): Ptr[CString] = extern
+
+  def GetDirectoryPath(filePath: CString): CString = extern
+
+  def GetDroppedFiles(count: Ptr[CInt]): Ptr[CString] = extern
+
+  def GetFPS(): CInt = extern
+
+  def GetFileExtension(fileName: CString): CString = extern
+
+  def GetFileModTime(fileName: CString): CLongInt = extern
+
+  def GetFileName(filePath: CString): CString = extern
+
+  def GetFileNameWithoutExt(filePath: CString): CString = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetFontDefault(): Font = extern
+
+  def GetFrameTime(): Float = extern
+
+  def GetGamepadAxisCount(gamepad: CInt): CInt = extern
+
+  def GetGamepadAxisMovement(gamepad: CInt, axis: CInt): Float = extern
+
+  def GetGamepadButtonPressed(): CInt = extern
+
+  def GetGamepadName(gamepad: CInt): CString = extern
+
+  def GetGestureDetected(): CInt = extern
+
+  def GetGestureDragAngle(): Float = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetGestureDragVector(): Vector2 = extern
+
+  def GetGestureHoldDuration(): Float = extern
+
+  def GetGesturePinchAngle(): Float = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetGesturePinchVector(): Vector2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetGlyphAtlasRec(font: Font, codepoint: CInt): Rectangle = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetGlyphIndex(font: Font, codepoint: CInt): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetGlyphInfo(font: Font, codepoint: CInt): GlyphInfo = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetImageAlphaBorder(image: Image, threshold: Float): Rectangle = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetImageColor(image: Image, x: CInt, y: CInt): Color = extern
+
+  def GetKeyPressed(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetMeshBoundingBox(mesh: Mesh): BoundingBox = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetModelBoundingBox(model: Model): BoundingBox = extern
+
+  def GetMonitorCount(): CInt = extern
+
+  def GetMonitorHeight(monitor: CInt): CInt = extern
 
   def GetMonitorName(monitor: CInt): CString = extern
+
+  def GetMonitorPhysicalHeight(monitor: CInt): CInt = extern
+
+  def GetMonitorPhysicalWidth(monitor: CInt): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetMonitorPosition(monitor: CInt): Vector2 = extern
+
+  def GetMonitorRefreshRate(monitor: CInt): CInt = extern
+
+  def GetMonitorWidth(monitor: CInt): CInt = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
   def GetMouseDelta(): Vector2 = extern
 
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawEllipse(centerX: CInt, centerY: CInt, radiusH: Float, radiusV: Float, color: Color): Unit = extern
+  def GetMousePosition(): Vector2 = extern
 
-  def CheckCollisionBoxSphere(): CInt = extern
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetMouseRay(mousePosition: Vector2, camera: Camera): Ray = extern
+
+  def GetMouseWheelMove(): Float = extern
+
+  def GetMouseX(): CInt = extern
+
+  def GetMouseY(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetMusicTimeLength(music: Music): Float = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetMusicTimePlayed(music: Music): Float = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetPixelColor(srcPtr: Ptr[Byte], format: CInt): Color = extern
+
+  def GetPixelDataSize(width: CInt, height: CInt, format: CInt): CInt = extern
+
+  def GetPrevDirectoryPath(dirPath: CString): CString = extern
+
+  def GetRandomValue(min: CInt, max: CInt): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetRayCollisionBox(ray: Ray, box: BoundingBox): RayCollision = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetRayCollisionMesh(ray: Ray, mesh: Mesh, transform: Matrix): RayCollision = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetRayCollisionModel(ray: Ray, model: Model): RayCollision = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetRayCollisionQuad(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3): RayCollision = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetRayCollisionSphere(ray: Ray, center: Vector3, radius: Float): RayCollision = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetRayCollisionTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayCollision = extern
+
+  def GetRenderHeight(): CInt = extern
+
+  def GetRenderWidth(): CInt = extern
+
+  def GetScreenHeight(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetScreenToWorld2D(position: Vector2, camera: Camera2D): Vector2 = extern
+
+  def GetScreenWidth(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetShaderLocation(shader: Shader, uniformName: CString): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetShaderLocationAttrib(shader: Shader, attribName: CString): CInt = extern
+
+  def GetSoundsPlaying(): CInt = extern
+
+  def GetTime(): Double = extern
+
+  def GetTouchPointCount(): CInt = extern
+
+  def GetTouchPointId(index: CInt): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetTouchPosition(index: CInt): Vector2 = extern
+
+  def GetTouchX(): CInt = extern
+
+  def GetTouchY(): CInt = extern
+
+  def GetWindowHandle(): Ptr[Byte] = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetWindowPosition(): Vector2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetWindowScaleDPI(): Vector2 = extern
+
+  def GetWorkingDirectory(): CString = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetWorldToScreen(position: Vector3, camera: Camera): Vector2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetWorldToScreen2D(position: Vector2, camera: Camera2D): Vector2 = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def GetWorldToScreenEx(position: Vector3, camera: Camera, width: CInt, height: CInt): Vector2 = extern
+
+  def HideCursor(): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageAlphaClear(image: Ptr[Image], color: Color, threshold: Float): Unit = extern
+
+  def ImageAlphaCrop(image: Ptr[Image], threshold: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageAlphaMask(image: Ptr[Image], alphaMask: Image): Unit = extern
+
+  def ImageAlphaPremultiply(image: Ptr[Image]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageClearBackground(dst: Ptr[Image], color: Color): Unit = extern
+
+  def ImageColorBrightness(image: Ptr[Image], brightness: CInt): Unit = extern
+
+  def ImageColorContrast(image: Ptr[Image], contrast: Float): Unit = extern
+
+  def ImageColorGrayscale(image: Ptr[Image]): Unit = extern
+
+  def ImageColorInvert(image: Ptr[Image]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageColorReplace(image: Ptr[Image], color: Color, replace: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageColorTint(image: Ptr[Image], color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageCopy(image: Image): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageCrop(image: Ptr[Image], crop: Rectangle): Unit = extern
+
+  def ImageDither(image: Ptr[Image], rBpp: CInt, gBpp: CInt, bBpp: CInt, aBpp: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDraw(dst: Ptr[Image], src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawCircle(dst: Ptr[Image], centerX: CInt, centerY: CInt, radius: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawCircleV(dst: Ptr[Image], center: Vector2, radius: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawLine(dst: Ptr[Image], startPosX: CInt, startPosY: CInt, endPosX: CInt, endPosY: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawLineV(dst: Ptr[Image], start: Vector2, end: Vector2, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawPixel(dst: Ptr[Image], posX: CInt, posY: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawPixelV(dst: Ptr[Image], position: Vector2, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawRectangle(dst: Ptr[Image], posX: CInt, posY: CInt, width: CInt, height: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawRectangleLines(dst: Ptr[Image], rec: Rectangle, thick: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawRectangleRec(dst: Ptr[Image], rec: Rectangle, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawRectangleV(dst: Ptr[Image], position: Vector2, size: Vector2, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawText(dst: Ptr[Image], text: CString, posX: CInt, posY: CInt, fontSize: CInt, color: Color): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageDrawTextEx(dst: Ptr[Image], font: Font, text: CString, position: Vector2, fontSize: Float, spacing: Float, tint: Color): Unit = extern
+
+  def ImageFlipHorizontal(image: Ptr[Image]): Unit = extern
+
+  def ImageFlipVertical(image: Ptr[Image]): Unit = extern
+
+  def ImageFormat(image: Ptr[Image], newFormat: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageFromImage(image: Image, rec: Rectangle): Image = extern
+
+  def ImageMipmaps(image: Ptr[Image]): Unit = extern
+
+  def ImageResize(image: Ptr[Image], newWidth: CInt, newHeight: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageResizeCanvas(image: Ptr[Image], newWidth: CInt, newHeight: CInt, offsetX: CInt, offsetY: CInt, fill: Color): Unit = extern
+
+  def ImageResizeNN(image: Ptr[Image], newWidth: CInt, newHeight: CInt): Unit = extern
+
+  def ImageRotateCCW(image: Ptr[Image]): Unit = extern
+
+  def ImageRotateCW(image: Ptr[Image]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageText(text: CString, fontSize: CInt, color: Color): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageTextEx(font: Font, text: CString, fontSize: Float, spacing: Float, tint: Color): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ImageToPOT(image: Ptr[Image], fill: Color): Unit = extern
+
+  def InitAudioDevice(): Unit = extern
+
+  def InitWindow(width: CInt, height: CInt, title: CString): Unit = extern
+
+  def IsAudioDeviceReady(): CInt = extern
+
+  def IsAudioStreamPlaying(): CInt = extern
+
+  def IsAudioStreamProcessed(): CInt = extern
+
+  def IsCursorHidden(): CInt = extern
+
+  def IsCursorOnScreen(): CInt = extern
+
+  def IsFileDropped(): CInt = extern
+
+  def IsFileExtension(): CInt = extern
+
+  def IsGamepadAvailable(): CInt = extern
+
+  def IsGamepadButtonDown(): CInt = extern
+
+  def IsGamepadButtonPressed(): CInt = extern
+
+  def IsGamepadButtonReleased(): CInt = extern
+
+  def IsGamepadButtonUp(): CInt = extern
+
+  def IsGestureDetected(): CInt = extern
+
+  def IsKeyDown(): CInt = extern
+
+  def IsKeyPressed(): CInt = extern
+
+  def IsKeyReleased(): CInt = extern
+
+  def IsKeyUp(): CInt = extern
+
+  def IsModelAnimationValid(): CInt = extern
+
+  def IsMouseButtonDown(): CInt = extern
+
+  def IsMouseButtonPressed(): CInt = extern
+
+  def IsMouseButtonReleased(): CInt = extern
+
+  def IsMouseButtonUp(): CInt = extern
+
+  def IsMusicStreamPlaying(): CInt = extern
+
+  def IsSoundPlaying(): CInt = extern
+
+  def IsWindowFocused(): CInt = extern
+
+  def IsWindowFullscreen(): CInt = extern
+
+  def IsWindowHidden(): CInt = extern
+
+  def IsWindowMaximized(): CInt = extern
+
+  def IsWindowMinimized(): CInt = extern
+
+  def IsWindowReady(): CInt = extern
+
+  def IsWindowResized(): CInt = extern
+
+  def IsWindowState(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadAudioStream(sampleRate: CUnsignedInt, sampleSize: CUnsignedInt, channels: CUnsignedInt): AudioStream = extern
 
   def LoadCodepoints(text: CString, count: Ptr[CInt]): Ptr[CInt] = extern
 
+  def LoadFileData(fileName: CString, bytesRead: Ptr[CUnsignedInt]): Ptr[CUnsignedChar] = extern
+
+  def LoadFileText(fileName: CString): CString = extern
+
   // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
-  def DrawRectangleRoundedLines(rec: Rectangle, roundness: Float, segments: CInt, lineThick: Float, color: Color): Unit = extern
+  def LoadFont(fileName: CString): Font = extern
 
-  def ClearDirectoryFiles(): Unit = extern
+  def LoadFontData(fileData: Ptr[CUnsignedChar], dataSize: CInt, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt, `type`: CInt): Ptr[GlyphInfo] = extern
 
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadFontEx(fileName: CString, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt): Font = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadFontFromImage(image: Image, key: Color, firstChar: CInt): Font = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadFontFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt, fontSize: CInt, fontChars: Ptr[CInt], glyphCount: CInt): Font = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadImage(fileName: CString): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadImageAnim(fileName: CString, frames: Ptr[CInt]): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadImageColors(image: Image): Ptr[Color] = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadImageFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadImageFromScreen(): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadImageFromTexture(texture: Texture2D): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadImagePalette(image: Image, maxPaletteSize: CInt, colorCount: Ptr[CInt]): Ptr[Color] = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadImageRaw(fileName: CString, width: CInt, height: CInt, format: CInt, headerSize: CInt): Image = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadMaterialDefault(): Material = extern
+
+  def LoadMaterials(fileName: CString, materialCount: Ptr[CInt]): Ptr[Material] = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadModel(fileName: CString): Model = extern
+
+  def LoadModelAnimations(fileName: CString, animCount: Ptr[CUnsignedInt]): Ptr[ModelAnimation] = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadModelFromMesh(mesh: Mesh): Model = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadMusicStream(fileName: CString): Music = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadMusicStreamFromMemory(fileType: CString, data: Ptr[CUnsignedChar], dataSize: CInt): Music = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadRenderTexture(width: CInt, height: CInt): RenderTexture2D = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadShader(vsFileName: CString, fsFileName: CString): Shader = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadShaderFromMemory(vsCode: CString, fsCode: CString): Shader = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadSound(fileName: CString): Sound = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadSoundFromWave(wave: Wave): Sound = extern
+
+  def LoadStorageValue(position: CUnsignedInt): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadTexture(fileName: CString): Texture2D = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadTextureCubemap(image: Image, layout: CInt): TextureCubemap = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadTextureFromImage(image: Image): Texture2D = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadVrStereoConfig(device: VrDeviceInfo): VrStereoConfig = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadWave(fileName: CString): Wave = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadWaveFromMemory(fileType: CString, fileData: Ptr[CUnsignedChar], dataSize: CInt): Wave = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def LoadWaveSamples(wave: Wave): Ptr[Float] = extern
+
+  def MaximizeWindow(): Unit = extern
+
+  def MeasureText(text: CString, fontSize: CInt): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def MeasureTextEx(font: Font, text: CString, fontSize: Float, spacing: Float): Vector2 = extern
+
+  def MemAlloc(size: CInt): Ptr[Byte] = extern
+
+  def MemFree(ptr: Ptr[Byte]): Unit = extern
+
+  def MemRealloc(ptr: Ptr[Byte], size: CInt): Ptr[Byte] = extern
+
+  def MinimizeWindow(): Unit = extern
+
+  def OpenURL(url: CString): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def PauseAudioStream(stream: AudioStream): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def PauseMusicStream(music: Music): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def PauseSound(sound: Sound): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def PlayAudioStream(stream: AudioStream): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def PlayMusicStream(music: Music): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def PlaySound(sound: Sound): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def PlaySoundMulti(sound: Sound): Unit = extern
+
+  def PollInputEvents(): Unit = extern
+
+  def RestoreWindow(): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ResumeAudioStream(stream: AudioStream): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ResumeMusicStream(music: Music): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def ResumeSound(sound: Sound): Unit = extern
+
+  def SaveFileData(): CInt = extern
+
+  def SaveFileText(): CInt = extern
+
+  def SaveStorageValue(): CInt = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SeekMusicStream(music: Music, position: Float): Unit = extern
+
+  def SetAudioStreamBufferSizeDefault(size: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetAudioStreamPitch(stream: AudioStream, pitch: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetAudioStreamVolume(stream: AudioStream, volume: Float): Unit = extern
+
+  def SetCameraAltControl(keyAlt: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetCameraMode(camera: Camera, mode: CInt): Unit = extern
+
+  def SetCameraMoveControls(keyFront: CInt, keyBack: CInt, keyRight: CInt, keyLeft: CInt, keyUp: CInt, keyDown: CInt): Unit = extern
+
+  def SetCameraPanControl(keyPan: CInt): Unit = extern
+
+  def SetCameraSmoothZoomControl(keySmoothZoom: CInt): Unit = extern
+
+  def SetClipboardText(text: CString): Unit = extern
+
+  def SetConfigFlags(flags: CUnsignedInt): Unit = extern
+
+  def SetExitKey(key: CInt): Unit = extern
+
+  def SetGamepadMappings(mappings: CString): CInt = extern
+
+  def SetGesturesEnabled(flags: CUnsignedInt): Unit = extern
+
+  def SetLoadFileDataCallback(callback: LoadFileDataCallback): Unit = extern
+
+  def SetLoadFileTextCallback(callback: LoadFileTextCallback): Unit = extern
+
+  def SetMasterVolume(volume: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetMaterialTexture(material: Ptr[Material], mapType: CInt, texture: Texture2D): Unit = extern
+
+  def SetModelMeshMaterial(model: Ptr[Model], meshId: CInt, materialId: CInt): Unit = extern
+
+  def SetMouseCursor(cursor: CInt): Unit = extern
+
+  def SetMouseOffset(offsetX: CInt, offsetY: CInt): Unit = extern
+
+  def SetMousePosition(x: CInt, y: CInt): Unit = extern
+
+  def SetMouseScale(scaleX: Float, scaleY: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetMusicPitch(music: Music, pitch: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetMusicVolume(music: Music, volume: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetPixelColor(dstPtr: Ptr[Byte], color: Color, format: CInt): Unit = extern
+
+  def SetRandomSeed(seed: CUnsignedInt): Unit = extern
+
+  def SetSaveFileDataCallback(callback: CInt): Unit = extern
+
+  def SetSaveFileTextCallback(callback: SaveFileTextCallback): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetShaderValue(shader: Shader, locIndex: CInt, value: Ptr[Byte], uniformType: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetShaderValueMatrix(shader: Shader, locIndex: CInt, mat: Matrix): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetShaderValueTexture(shader: Shader, locIndex: CInt, texture: Texture2D): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetShaderValueV(shader: Shader, locIndex: CInt, value: Ptr[Byte], uniformType: CInt, count: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetShapesTexture(texture: Texture2D, source: Rectangle): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetSoundPitch(sound: Sound, pitch: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetSoundVolume(sound: Sound, volume: Float): Unit = extern
+
+  def SetTargetFPS(fps: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetTextureFilter(texture: Texture2D, filter: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetTextureWrap(texture: Texture2D, wrap: CInt): Unit = extern
+
+  def SetTraceLogCallback(callback: TraceLogCallback): Unit = extern
+
+  def SetTraceLogLevel(logLevel: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def SetWindowIcon(image: Image): Unit = extern
+
+  def SetWindowMinSize(width: CInt, height: CInt): Unit = extern
+
+  def SetWindowMonitor(monitor: CInt): Unit = extern
+
+  def SetWindowOpacity(opacity: Float): Unit = extern
+
+  def SetWindowPosition(x: CInt, y: CInt): Unit = extern
+
+  def SetWindowSize(width: CInt, height: CInt): Unit = extern
+
+  def SetWindowState(flags: CUnsignedInt): Unit = extern
+
+  def SetWindowTitle(title: CString): Unit = extern
+
+  def ShowCursor(): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def StopAudioStream(stream: AudioStream): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def StopMusicStream(music: Music): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def StopSound(sound: Sound): Unit = extern
+
+  def StopSoundMulti(): Unit = extern
+
+  def SwapScreenBuffer(): Unit = extern
+
+  def TakeScreenshot(fileName: CString): Unit = extern
+
+  def TextAppend(text: CString, append: CString, position: Ptr[CInt]): Unit = extern
+
+  def TextCodepointsToUTF8(codepoints: Ptr[CInt], length: CInt): CString = extern
+
+  def TextCopy(dst: CString, src: CString): CInt = extern
+
+  def TextFindIndex(text: CString, find: CString): CInt = extern
+
+  def TextFormat(text: CString): CString = extern
+
+  def TextInsert(text: CString, insert: CString, position: CInt): CString = extern
+
+  def TextIsEqual(): CInt = extern
+
+  def TextJoin(textList: Ptr[CString], count: CInt, delimiter: CString): CString = extern
+
+  def TextLength(text: CString): CUnsignedInt = extern
+
+  def TextReplace(text: CString, replace: CString, by: CString): CString = extern
+
+  def TextSplit(text: CString, delimiter: CChar, count: Ptr[CInt]): Ptr[CString] = extern
+
+  def TextSubtext(text: CString, position: CInt, length: CInt): CString = extern
+
+  def TextToInteger(text: CString): CInt = extern
+
+  def TextToLower(text: CString): CString = extern
+
+  def TextToPascal(text: CString): CString = extern
+
+  def TextToUpper(text: CString): CString = extern
+
+  def ToggleFullscreen(): Unit = extern
+
+  def TraceLog(logLevel: CInt, text: CString): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadAudioStream(stream: AudioStream): Unit = extern
+
+  def UnloadCodepoints(codepoints: Ptr[CInt]): Unit = extern
+
+  def UnloadFileData(data: Ptr[CUnsignedChar]): Unit = extern
+
+  def UnloadFileText(text: CString): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadFont(font: Font): Unit = extern
+
+  def UnloadFontData(chars: Ptr[GlyphInfo], glyphCount: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadImage(image: Image): Unit = extern
+
+  def UnloadImageColors(colors: Ptr[Color]): Unit = extern
+
+  def UnloadImagePalette(colors: Ptr[Color]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadMaterial(material: Material): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadMesh(mesh: Mesh): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadModel(model: Model): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadModelAnimation(anim: ModelAnimation): Unit = extern
+
+  def UnloadModelAnimations(animations: Ptr[ModelAnimation], count: CUnsignedInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadModelKeepMeshes(model: Model): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadMusicStream(music: Music): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadRenderTexture(target: RenderTexture2D): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadShader(shader: Shader): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadSound(sound: Sound): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadTexture(texture: Texture2D): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadVrStereoConfig(config: VrStereoConfig): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UnloadWave(wave: Wave): Unit = extern
+
+  def UnloadWaveSamples(samples: Ptr[Float]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UpdateAudioStream(stream: AudioStream, data: Ptr[Byte], frameCount: CInt): Unit = extern
+
+  def UpdateCamera(camera: Ptr[Camera]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UpdateMeshBuffer(mesh: Mesh, index: CInt, data: Ptr[Byte], dataSize: CInt, offset: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UpdateMusicStream(music: Music): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UpdateSound(sound: Sound, data: Ptr[Byte], sampleCount: CInt): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UpdateTexture(texture: Texture2D, pixels: Ptr[Byte]): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def UpdateTextureRec(texture: Texture2D, rec: Rectangle, pixels: Ptr[Byte]): Unit = extern
+
+  def UploadMesh(mesh: Ptr[Mesh], dynamic: bool): Unit = extern
+
+  def WaitTime(ms: Float): Unit = extern
+
+  // this function will not work on Scala Native as it has direct Struct parameter or returns a struct
+  def WaveCopy(wave: Wave): Wave = extern
+
+  def WaveCrop(wave: Ptr[Wave], initSample: CInt, finalSample: CInt): Unit = extern
+
+  def WaveFormat(wave: Ptr[Wave], sampleRate: CInt, sampleSize: CInt, channels: CInt): Unit = extern
+
+  def WindowShouldClose(): CInt = extern
 
