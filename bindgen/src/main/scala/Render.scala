@@ -20,12 +20,11 @@ object render:
   ) =
     val values = List.newBuilder[(String, String)]
     val opaqueType = model.name.get
-    val finalizer = if model.values.nonEmpty then ":" else ""
     val numericType = model.intType.getOrElse(CType.Int)
     val enumSuffix = if numericType.sign == SignType.Unsigned then "U" else ""
     val underlyingTypeRender = scalaType(numericType)
     line(s"opaque type $opaqueType = $underlyingTypeRender")
-    line(s"object $opaqueType extends CEnum$enumSuffix[$opaqueType]$finalizer")
+    line(s"object $opaqueType extends CEnum$enumSuffix[$opaqueType]:")
 
     nest {
       if numericType.sign == SignType.Signed then
@@ -178,14 +177,14 @@ object render:
     val arglist = parameters
       .map((name, ctype) => s"${escape(name)}: ${scalaType(ctype)}")
       .mkString(", ")
-      if isIllegalFunction(
-          model.returnType,
-          model.parameters.toList.map(_._2)
-        )
-      then
-        line(
-          "// this function will not work on Scala Native as it has direct Struct parameter or returns a struct"
-        )
+    if isIllegalFunction(
+        model.returnType,
+        model.parameters.toList.map(_._2)
+      )
+    then
+      line(
+        "// this function will not work on Scala Native as it has direct Struct parameter or returns a struct"
+      )
     line(s"def $name($arglist): ${scalaType(returnType)} = extern")
 
   end function
@@ -238,6 +237,7 @@ object render:
 
       case Arr(tpe, Some(n)) =>
         s"Tag.CArray[${scalaType(tpe)}, ${natDigits(n)}](${scalaTag(tpe)}, ${natDigitsTag(n)})"
+      case Void => s"Tag.Unit"
     end match
   end scalaTag
 
@@ -248,9 +248,9 @@ object render:
       case RecordRef(name) => name
       case Pointer(to) =>
         to match
-          case Void         => "Ptr[Byte]" // there's no void type on SN
-          case UnsignedChar => "CString"
-          case other        => s"Ptr[${scalaType(other)}]"
+          case Void => "Ptr[Byte]" // there's no void type on SN
+          // case UnsignedChar => "CString"
+          case other => s"Ptr[${scalaType(other)}]"
       case NumericReal(base) =>
         base match
           case FloatingBase.Float      => "Float"
@@ -387,17 +387,18 @@ object render:
     val underlyingType = scalaType(model.underlying)
     import CType.*
     val isOpaque = model.underlying match
-      case _: Typedef | _: RecordRef | _: Function => false
-      case _                                       => true
+      case _: Typedef | _: RecordRef | _: Function | Void => false
+      case _                                              => true
 
     val modifier = if isOpaque then "opaque " else ""
     line(s"${modifier}type ${model.name} = $underlyingType")
-    if isOpaque then
-      line(s"object ${model.name}: ")
-      nest {
-        line(s"given _tag: Tag[${model.name}] = ${scalaTag(model.underlying)}")
+    line(s"object ${model.name}: ")
+    nest {
+      line(s"given _tag: Tag[${model.name}] = ${scalaTag(model.underlying)}")
+      if isOpaque then
         line(s"inline def apply(inline o: $underlyingType): ${model.name} = o")
-      }
+    }
+
   end alias
 
   def binding(packageName: String, binding: Def.Binding, sb: StringBuilder)(

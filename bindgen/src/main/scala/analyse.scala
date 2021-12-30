@@ -74,9 +74,9 @@ def analyse(file: String)(using Zone): Def.Binding =
               end if
             end if
 
-            errln(
-              s"Cursor (${clang_getCursorSpelling(cursor).string}): ${clang_getCursorKindSpelling(cursor.kind).string}"
-            )
+            // errln(
+            //   s"Cursor (${clang_getCursorSpelling(cursor).string}): ${clang_getCursorKindSpelling(cursor.kind).string}"
+            // )
 
             if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
               val name = clang_getCursorSpelling(cursor).string
@@ -87,7 +87,7 @@ def analyse(file: String)(using Zone): Def.Binding =
 
             if cursor.kind == CXCursorKind.CXCursor_StructDecl then
               val name = clang_getCursorSpelling(cursor).string
-              errln(s"Defined $name")
+              // errln(s"Defined $name")
               if name != "" && (!binding.structs.exists(_.name == name)) then
                 binding.structs.add(visitStruct(cursor, name))
 
