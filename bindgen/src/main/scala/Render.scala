@@ -248,9 +248,9 @@ object render:
       case RecordRef(name) => name
       case Pointer(to) =>
         to match
-          case Void => "Ptr[Byte]" // there's no void type on SN
-          // case UnsignedChar => "CString"
-          case other => s"Ptr[${scalaType(other)}]"
+          case Void       => "Ptr[Byte]" // there's no void type on SN
+          case CType.Byte => "CString"
+          case other      => s"Ptr[${scalaType(other)}]"
       case NumericReal(base) =>
         base match
           case FloatingBase.Float      => "Float"
@@ -401,8 +401,8 @@ object render:
 
   end alias
 
-  def binding(packageName: String, binding: Def.Binding, sb: StringBuilder)(
-      using Config
+  def binding(binding: Def.Binding, sb: StringBuilder)(using
+      Config
   ) =
     sb.append(s"package $packageName\n\n")
     sb.append("""
@@ -468,7 +468,7 @@ object render:
     sb.append("object types:\n")
     render.nest {
       render.to(sb)("import predef.*")
-      binding.enums.filter(_.name.isDefined).zipWithIndex.foreach {
+      binding.enums.toList.sortBy(_.name).filter(_.name.isDefined).zipWithIndex.foreach {
         case (en, idx) =>
           try render.enumeration(
             en,
@@ -477,7 +477,7 @@ object render:
           catch exc => render.to(sb)(commentException(en, exc))
           if idx != binding.enums.size - 1 then sb.append("\n")
       }
-      binding.aliases.zipWithIndex.foreach { case (en, idx) =>
+      binding.aliases.toList.sortBy(_.name).zipWithIndex.foreach { case (en, idx) =>
         try render.alias(
           en,
           render.to(sb)
@@ -485,7 +485,7 @@ object render:
         catch exc => render.to(sb)(commentException(en, exc))
         if idx != binding.aliases.size - 1 then sb.append("\n")
       }
-      binding.structs.zipWithIndex.foreach { case (en, idx) =>
+      binding.structs.toList.sortBy(_.name).zipWithIndex.foreach { case (en, idx) =>
         try render.struct(
           en,
           render.to(sb)
@@ -493,7 +493,7 @@ object render:
         catch exc => render.to(sb)(commentException(en, exc))
         if idx != binding.structs.size - 1 then sb.append("\n")
       }
-      binding.unions.zipWithIndex.foreach { case (en, idx) =>
+      binding.unions.toList.sortBy(_.name).zipWithIndex.foreach { case (en, idx) =>
         try render.union(
           en,
           render.to(sb)
@@ -504,6 +504,9 @@ object render:
     }
 
     if binding.functions.nonEmpty then
+      summon[Config].linkName.foreach { l =>
+        sb.append(s"""@link("$l")""")
+      }
       sb.append("\n@extern\nobject functions: \n")
       render.nest {
         render.to(sb)("import types.*\n")
@@ -552,9 +555,8 @@ object render:
   private def indent(using c: Config): String =
     (" " * (c.indentSize * c.indents))
 
-  private def nest(f: Config ?=> Unit)(using config: Config) = f(using
-    Config(config.indentSize, indents = config.indents + 1)
-  )
+  private def nest(f: Config ?=> Unit)(using config: Config) =
+    f(using config.copy(indents = config.indents + 1))
 
   private def to(sb: StringBuilder)(using config: Config): Appender =
     line => sb.append(indent(using config) + line + "\n")
@@ -562,8 +564,15 @@ object render:
   private def aliasResolver(name: String)(using ar: AliasResolver): CType =
     ar(name)
 
+  private def packageName(using conf: Config): String = conf.packageName
+
   type Appender = Config ?=> String => Unit
   type AliasResolver = String => CType
 end render
 
-case class Config(indentSize: Int = 2, indents: Int = 0)
+case class Config(
+    packageName: String,
+    linkName: Option[String],
+    indentSize: Int,
+    indents: Int = 0
+)

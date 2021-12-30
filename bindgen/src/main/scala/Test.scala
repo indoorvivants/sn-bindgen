@@ -12,11 +12,16 @@ import java.io.File
 
 inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
 
-@main def out(packageName: String, file: String) =
+@main def out(packageName: String, linkName: String, file: String) =
   zone {
     val binding = analyse(file)
     val sb = StringBuilder()
-    render.binding(packageName, binding, sb)(using Config(indentSize = 2))
+    given Config = Config(
+      indentSize = 2,
+      packageName = packageName,
+      linkName = Some(linkName)
+    )
+    render.binding(binding, sb)
 
     println(sb.result)
   }

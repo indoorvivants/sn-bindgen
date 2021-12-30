@@ -66,7 +66,7 @@ def constructType(typ: CXType)(using
     case CXType_Bool => CType.Bool
     case CXType_Void => CType.Void
     // integral types: signed
-    case CXType_SChar =>
+    case CXType_SChar | CXType_Char_S =>
       CType.NumericIntegral(IntegralBase.Char, SignType.Signed)
     case CXType_Int =>
       CType.NumericIntegral(IntegralBase.Int, SignType.Signed)
@@ -78,7 +78,7 @@ def constructType(typ: CXType)(using
       CType.NumericIntegral(IntegralBase.LongLong, SignType.Signed)
 
     // integral types: unsigned
-    case CXType_UChar | CXType_Char_S =>
+    case CXType_UChar | CXType_Char_U =>
       CType.NumericIntegral(IntegralBase.Char, SignType.Unsigned)
     case CXType_UInt =>
       CType.NumericIntegral(IntegralBase.Int, SignType.Unsigned)

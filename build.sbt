@@ -18,7 +18,12 @@ lazy val examples = project
   .settings(nativeCommon)
   .settings(
     regenerate := {
-      case class Binding(headerFile: File, packageName: String, scalaFile: File)
+      case class Binding(
+          headerFile: File,
+          packageName: String,
+          scalaFile: File,
+          linkName: String
+      )
       val binary = (bindgen / Compile / nativeLink).value
       val headerFilesBase = baseDirectory.value / "libraries"
       val destinationBase =
@@ -29,13 +34,13 @@ lazy val examples = project
         "raylib.h" -> "libraylib",
         "sokol_gfx.h" -> "libsokol",
         "Clang-Index.h" -> "libclang",
-        "nuklear.h" -> "libnuklear",
-        "test.h" -> "libtesting"
+        "nuklear.h" -> "libnuklear"
       ).map { case (headerFile, packageName) =>
         Binding(
           headerFilesBase / headerFile,
           packageName,
-          destinationBase / s"$packageName.scala"
+          destinationBase / s"$packageName.scala",
+          packageName.replace("lib", "")
         )
       }
 
@@ -43,6 +48,7 @@ lazy val examples = project
         val cmd = List(
           binary.toString,
           binding.packageName,
+          binding.linkName,
           binding.headerFile.toString
         )
         import scala.sys.process.Process

@@ -14,9 +14,9 @@ def addBuiltin(binding: Def.Binding): Def.Binding =
   binding.copy(aliases =
     binding.aliases
       .addOne(Def.Alias("__builtin_va_list", CType.Pointer(CType.Byte)))
-    //   .addOne(Def.Alias("ssize_t", BuiltinType.ssize_t))
-    //   .addOne(Def.Alias("uint32_t", BuiltinType.uint32_t))
-    //   .addOne(Def.Alias("uint8_t", BuiltinType.uint8_t))
+  //   .addOne(Def.Alias("ssize_t", BuiltinType.ssize_t))
+  //   .addOne(Def.Alias("uint32_t", BuiltinType.uint32_t))
+  //   .addOne(Def.Alias("uint8_t", BuiltinType.uint8_t))
   )
 
 def analyse(file: String)(using Zone): Def.Binding =
@@ -55,7 +55,7 @@ def analyse(file: String)(using Zone): Def.Binding =
           if isFromMainFile then
             if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
               val function = visitFunction(cursor)
-              binding.functions.add(function)
+              binding.functions.addOne(function)
             end if
 
             if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
@@ -64,13 +64,13 @@ def analyse(file: String)(using Zone): Def.Binding =
               val referencedType = clang_Type_getNamedType(typ)
               val typeDecl = clang_getTypeDeclaration(referencedType)
               if (referencedType.kind == CXTypeKind.CXType_Enum) then
-                binding.enums.add(visitEnum(typeDecl, true))
+                binding.enums.addOne(visitEnum(typeDecl, true))
               else if (referencedType.kind == CXTypeKind.CXType_Record) then
                 val struct = visitStruct(typeDecl, name)
                 if clang_getTypeSpelling(typ).string.startsWith("union ") then
-                  binding.unions.add(Def.Union(struct.fields, struct.name))
-                else binding.structs.add(visitStruct(typeDecl, name))
-              else binding.aliases.add(Def.Alias(name, constructType(typ)))
+                  binding.unions.addOne(Def.Union(struct.fields, struct.name))
+                else binding.structs.addOne(visitStruct(typeDecl, name))
+              else binding.aliases.addOne(Def.Alias(name, constructType(typ)))
               end if
             end if
 
@@ -83,19 +83,21 @@ def analyse(file: String)(using Zone): Def.Binding =
               if name != "" then
                 val struct = visitStruct(cursor, name)
 
-                binding.unions.add(Def.Union(struct.fields, struct.name))
+                binding.unions.addOne(Def.Union(struct.fields, struct.name))
 
             if cursor.kind == CXCursorKind.CXCursor_StructDecl then
               val name = clang_getCursorSpelling(cursor).string
               // errln(s"Defined $name")
               if name != "" && (!binding.structs.exists(_.name == name)) then
-                binding.structs.add(visitStruct(cursor, name))
+                binding.structs.addOne(visitStruct(cursor, name))
 
             if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
-              binding.enums.add(
+              binding.enums.addOne(
                 visitEnum(
                   cursor,
-                  clang_getCursorType(parent).kind == CXTypeKind.CXType_Typedef
+                  clang_getCursorType(
+                    parent
+                  ).kind == CXTypeKind.CXType_Typedef
                 )
               )
             end if
