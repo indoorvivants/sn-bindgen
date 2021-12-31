@@ -42,7 +42,8 @@ case class Config(
     linkName: Option[String],
     indentSize: Int,
     indents: Int = 0,
-    lang: Lang
+    lang: Lang,
+    cImports: List[String]
 )
 
 enum Lang:

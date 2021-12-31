@@ -21,20 +21,28 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
       returnType = constructType(returnType),
       parameters = ListBuffer.empty,
       tpe = CFunctionType.Extern,
-      originalCType = OriginalCType(constructType(returnType), clang_getTypeSpelling(returnType).string)
+      originalCType = OriginalCType(
+        constructType(returnType),
+        clang_getTypeSpelling(returnType).string
+      )
     )
+
+    println(!mem)
 
     clang_visitChildren(
       functionCursor,
       CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
         zone {
           val builder = (!d.unwrap[Def.Function])
+          def errln1(a: Any) = if builder.name == "IsKeyPressed" then errln(a)
+          errln1(cursor.kind)
+          // println(builder.name)
           if cursor.kind == CXCursorKind.CXCursor_ParmDecl then
             val parameterName = Option(clang_getCursorSpelling(cursor).string)
               .filter(_.nonEmpty)
               .getOrElse(s"_${builder.parameters.size}")
 
-            // System.err.println(parameterName)
+            // errln1(s"    $parameterName")
 
             val parameterType = constructType(clang_getCursorType(cursor))
             val parameterTypeRendered =
@@ -49,8 +57,8 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
             )
             CXChildVisitResult.CXChildVisit_Continue
           else
-            // System.err.println(
-            //   s"Not a parmdecl, but ${clang_getCursorKindSpelling(cursor.kind).string}"
+            // errln1(
+            //   s"    Not a parmdecl, but ${clang_getCursorKindSpelling(cursor.kind).string}"
             // )
             CXChildVisitResult.CXChildVisit_Recurse
           end if

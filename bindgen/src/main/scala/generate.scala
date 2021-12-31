@@ -15,8 +15,9 @@ inline def errln(inline a: Any) = System.err.println(a)
 
 inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
 
-@main def out(
+@main def generate(
     packageName: String,
+    cImports: String,
     linkName: String,
     file: String,
     lang: String
@@ -32,7 +33,8 @@ inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
       indentSize = 2,
       packageName = packageName,
       linkName = Some(linkName),
-      lang = language
+      lang = language,
+      cImports = cImports.split(",").toList
     )
     binding(b, scalaOutput, cOutput)
 

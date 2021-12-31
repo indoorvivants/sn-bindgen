@@ -1,39 +1,39 @@
-typedef struct {
-   const void *ptr_data[2];
-   unsigned int_data;
- } CXType;
+/* typedef struct { */
+/*    const void *ptr_data[2]; */
+/*    unsigned int_data; */
+/*  } CXType; */
  
-typedef enum CXIdxDeclInfoFlags { CXIdxDeclFlag_Skipped = 0x1 } CXIdxDeclInfoFlags;
-enum CXTLSKind { CXTLS_None = 0, CXTLS_Dynamic, CXTLS_Static };
+/* typedef enum CXIdxDeclInfoFlags { CXIdxDeclFlag_Skipped = 0x1 } CXIdxDeclInfoFlags; */
+/* enum CXTLSKind { CXTLS_None = 0, CXTLS_Dynamic, CXTLS_Static }; */
 
-typedef struct CXUnsavedFile {
+/* typedef struct CXUnsavedFile { */
    
-  const char *Filename;
+/*   const char *Filename; */
    
-  const char *Contents;
+/*   const char *Contents; */
   
-  unsigned long Length;
+/*   unsigned long Length; */
 
-  signed char hello;
-} CXUnsavedFile;
+/*   signed char hello; */
+/* } CXUnsavedFile; */
 
 
-enum {
-   X = 1,
-   Y = 2
-};
+/* enum { */
+/*    X = 1, */
+/*    Y = 2 */
+/* }; */
 
-typedef enum CXTypeKind {
-   bla = 1
-} CXTypeKind;
+/* typedef enum CXTypeKind { */
+/*    bla = 1 */
+/* } CXTypeKind; */
 
-typedef struct {
-  enum CXTypeKind kind;
-  void *data[2];
-  unsigned test;
-} CXCursor;
+/* typedef struct { */
+/*   enum CXTypeKind kind; */
+/*   void *data[2]; */
+/*   unsigned test; */
+/* } CXCursor; */
 
-typedef int Hello;
+/* typedef int Hello; */
 
 /* struct point { */
 /*     int x; */
@@ -80,7 +80,19 @@ typedef int Hello;
  /**
   * Retrieve the type of a CXCursor (if any).
   */
- CXType clang_getCursorType(size_t hel, CXCursor C, CXType *types[3], long double *idx);
- CXTypeKind clang_getCursorKing(size_t hel, CXCursor C, CXType *types[3], long double *idx);
+ /* CXType clang_getCursorType(size_t hel, CXCursor C, CXType *types[3], long double *idx); */
+ /* CXTypeKind clang_getCursorKing(size_t hel, CXCursor C, CXType *types[3], long double *idx); */
 
- CXTypeKind clang_getCursorKing(size_t hel, CXType *types[3], long double *idx);
+ /* CXTypeKind clang_getCursorKing(size_t hel, CXType *types[3], long double *idx); */
+// Boolean type
+#if defined(__STDC__) && __STDC_VERSION__ >= 199901L
+    #include <stdbool.h>
+#elif !defined(__cplusplus) && !defined(bool)
+    typedef enum bool { false, true } bool;
+    #define RL_BOOL_TYPE
+#endif
+bool IsKeyPressed(int key);                             // Check if a key has been pressed once
+bool IsKeyDown(int key);                                // Check if a key is being pressed
+bool IsKeyReleased(int key);                            // Check if a key has been released once
+bool IsKeyUp(int key);                                  // Check if a key is NOT being pressed
+void SetExitKey(int key);                               // Set a custom key to exit program (default is ESC)

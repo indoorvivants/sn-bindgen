@@ -29,7 +29,8 @@ lazy val examples = project
           packageName: String,
           scalaFile: File,
           cFile: File,
-          linkName: String
+          linkName: String,
+          cImports: List[String]
       )
       val binary = (bindgen / Compile / nativeLink).value
       val headerFilesBase = baseDirectory.value / "libraries"
@@ -38,35 +39,45 @@ lazy val examples = project
       val destinationCBase =
         baseDirectory.value / "src" / "main" / "resources" / "scala-native"
 
-      val mapping = Map(
-        "cJSON.h" -> "libcjson",
-        "raylib.h" -> "libraylib",
-        "sokol_gfx.h" -> "libsokol",
-        "Clang-Index.h" -> "libclang",
-        "nuklear.h" -> "libnuklear"
-      ).map { case (headerFile, packageName) =>
+      def define(
+          headerFile: String,
+          packageName: String,
+          linkName: String,
+          cImports: List[String]
+      ) =
         Binding(
-          headerFilesBase / headerFile,
-          packageName,
-          destinationScalaBase / s"$packageName.scala",
-          destinationCBase / s"$packageName.c",
-          packageName.replaceFirst("lib", "")
+          headerFile = headerFilesBase / headerFile,
+          packageName = packageName,
+          linkName = linkName,
+          cFile = destinationCBase / s"$packageName.c",
+          scalaFile = destinationScalaBase / s"$packageName.scala",
+          cImports = cImports
         )
-      }
+
+      val mapping = List(
+        define("cJSON.h", "libcjson", "cjson", List("cJSON.h")),
+        /* define("Clang-Index.h", "libclang", "clang", List("clang-c/Index.h")), */
+        define("raylib.h", "libraylib", "raylib", List("raylib.h")),
+        /* define("nuklear.h", "libnuklear", "nuklear", List("nuklear.h")), */
+        /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
+      )
 
       List("scala", "c").foreach { lang =>
         mapping.foreach { binding =>
           val cmd = List(
             binary.toString,
             binding.packageName,
+            binding.cImports.mkString(","),
             binding.linkName,
             binding.headerFile.toString,
             lang
           )
           import scala.sys.process.Process
 
+          val destination =
+            if (lang == "scala") binding.scalaFile else binding.cFile
 
-          val destination = if(lang == "scala") binding.scalaFile else binding.cFile
+          println(s"Executing ${cmd.mkString(" ")}")
 
           val result = (Process(cmd) #> file(destination.toString)) !
 

@@ -1,28 +1,519 @@
+Function(InitWindow,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(WindowShouldClose,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CloseWindow,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsWindowReady,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsWindowFullscreen,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsWindowHidden,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsWindowMinimized,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsWindowMaximized,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsWindowFocused,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsWindowResized,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsWindowState,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(SetWindowState,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ClearWindowState,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ToggleFullscreen,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(MaximizeWindow,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(MinimizeWindow,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(RestoreWindow,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetWindowIcon,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetWindowTitle,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetWindowPosition,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetWindowMonitor,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetWindowMinSize,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetWindowSize,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetWindowOpacity,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetWindowHandle,Pointer(Void),ListBuffer(),Extern,OriginalCType(Pointer(Void),void *))
+Function(GetScreenWidth,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetScreenHeight,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetRenderWidth,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetRenderHeight,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMonitorCount,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetCurrentMonitor,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMonitorPosition,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetMonitorWidth,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMonitorHeight,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMonitorPhysicalWidth,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMonitorPhysicalHeight,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMonitorRefreshRate,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetWindowPosition,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetWindowScaleDPI,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetMonitorName,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(SetClipboardText,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetClipboardText,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(SwapScreenBuffer,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(PollInputEvents,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(WaitTime,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ShowCursor,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(HideCursor,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsCursorHidden,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(EnableCursor,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DisableCursor,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsCursorOnScreen,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(ClearBackground,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(BeginDrawing,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(EndDrawing,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(BeginMode2D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(EndMode2D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(BeginMode3D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(EndMode3D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(BeginTextureMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(EndTextureMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(BeginShaderMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(EndShaderMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(BeginBlendMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(EndBlendMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(BeginScissorMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(EndScissorMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(BeginVrStereoMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(EndVrStereoMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadVrStereoConfig,Typedef(VrStereoConfig),ListBuffer(),Extern,OriginalCType(Typedef(VrStereoConfig),VrStereoConfig))
+Function(UnloadVrStereoConfig,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadShader,Typedef(Shader),ListBuffer(),Extern,OriginalCType(Typedef(Shader),Shader))
+Function(LoadShaderFromMemory,Typedef(Shader),ListBuffer(),Extern,OriginalCType(Typedef(Shader),Shader))
+Function(GetShaderLocation,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetShaderLocationAttrib,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(SetShaderValue,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetShaderValueV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetShaderValueMatrix,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetShaderValueTexture,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadShader,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetMouseRay,Typedef(Ray),ListBuffer(),Extern,OriginalCType(Typedef(Ray),Ray))
+Function(GetCameraMatrix,Typedef(Matrix),ListBuffer(),Extern,OriginalCType(Typedef(Matrix),Matrix))
+Function(GetCameraMatrix2D,Typedef(Matrix),ListBuffer(),Extern,OriginalCType(Typedef(Matrix),Matrix))
+Function(GetWorldToScreen,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetWorldToScreenEx,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetWorldToScreen2D,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetScreenToWorld2D,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(SetTargetFPS,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetFPS,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetFrameTime,NumericReal(Float),ListBuffer(),Extern,OriginalCType(NumericReal(Float),float))
+Function(GetTime,NumericReal(Double),ListBuffer(),Extern,OriginalCType(NumericReal(Double),double))
+Function(GetRandomValue,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(SetRandomSeed,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(TakeScreenshot,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetConfigFlags,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(TraceLog,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetTraceLogLevel,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(MemAlloc,Pointer(Void),ListBuffer(),Extern,OriginalCType(Pointer(Void),void *))
+Function(MemRealloc,Pointer(Void),ListBuffer(),Extern,OriginalCType(Pointer(Void),void *))
+Function(MemFree,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetTraceLogCallback,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetLoadFileDataCallback,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetSaveFileDataCallback,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetLoadFileTextCallback,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetSaveFileTextCallback,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadFileData,Pointer(NumericIntegral(Char,Unsigned)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Unsigned)),unsigned char *))
+Function(UnloadFileData,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SaveFileData,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(LoadFileText,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),char *))
+Function(UnloadFileText,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SaveFileText,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(FileExists,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(DirectoryExists,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsFileExtension,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetFileExtension,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(GetFileName,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(GetFileNameWithoutExt,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(GetDirectoryPath,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(GetPrevDirectoryPath,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(GetWorkingDirectory,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(GetDirectoryFiles,Pointer(Pointer(NumericIntegral(Char,Signed))),ListBuffer(),Extern,OriginalCType(Pointer(Pointer(NumericIntegral(Char,Signed))),char **))
+Function(ClearDirectoryFiles,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ChangeDirectory,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsFileDropped,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetDroppedFiles,Pointer(Pointer(NumericIntegral(Char,Signed))),ListBuffer(),Extern,OriginalCType(Pointer(Pointer(NumericIntegral(Char,Signed))),char **))
+Function(ClearDroppedFiles,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetFileModTime,NumericIntegral(Long,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Long,Signed),long))
+Function(CompressData,Pointer(NumericIntegral(Char,Unsigned)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Unsigned)),unsigned char *))
+Function(DecompressData,Pointer(NumericIntegral(Char,Unsigned)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Unsigned)),unsigned char *))
+Function(EncodeDataBase64,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),char *))
+Function(DecodeDataBase64,Pointer(NumericIntegral(Char,Unsigned)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Unsigned)),unsigned char *))
+Function(SaveStorageValue,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(LoadStorageValue,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(OpenURL,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsKeyPressed,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsKeyDown,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsKeyReleased,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsKeyUp,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(SetExitKey,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetKeyPressed,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetCharPressed,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsGamepadAvailable,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetGamepadName,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(IsGamepadButtonPressed,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsGamepadButtonDown,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsGamepadButtonReleased,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsGamepadButtonUp,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetGamepadButtonPressed,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetGamepadAxisCount,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetGamepadAxisMovement,NumericReal(Float),ListBuffer(),Extern,OriginalCType(NumericReal(Float),float))
+Function(SetGamepadMappings,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsMouseButtonPressed,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsMouseButtonDown,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsMouseButtonReleased,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsMouseButtonUp,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMouseX,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMouseY,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMousePosition,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetMouseDelta,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(SetMousePosition,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetMouseOffset,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetMouseScale,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetMouseWheelMove,NumericReal(Float),ListBuffer(),Extern,OriginalCType(NumericReal(Float),float))
+Function(SetMouseCursor,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetTouchX,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetTouchY,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetTouchPosition,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetTouchPointId,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetTouchPointCount,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(SetGesturesEnabled,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsGestureDetected,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetGestureDetected,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetGestureHoldDuration,NumericReal(Float),ListBuffer(),Extern,OriginalCType(NumericReal(Float),float))
+Function(GetGestureDragVector,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetGestureDragAngle,NumericReal(Float),ListBuffer(),Extern,OriginalCType(NumericReal(Float),float))
+Function(GetGesturePinchVector,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetGesturePinchAngle,NumericReal(Float),ListBuffer(),Extern,OriginalCType(NumericReal(Float),float))
+Function(SetCameraMode,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UpdateCamera,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetCameraPanControl,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetCameraAltControl,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetCameraSmoothZoomControl,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetCameraMoveControls,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetShapesTexture,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawPixel,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawPixelV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawLine,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawLineV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawLineEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawLineBezier,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawLineBezierQuad,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawLineBezierCubic,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawLineStrip,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCircle,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCircleSector,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCircleSectorLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCircleGradient,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCircleV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCircleLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawEllipse,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawEllipseLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRing,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRingLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangle,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleRec,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectanglePro,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleGradientV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleGradientH,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleGradientEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleLinesEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleRounded,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRectangleRoundedLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTriangle,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTriangleLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTriangleFan,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTriangleStrip,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawPoly,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawPolyLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawPolyLinesEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(CheckCollisionRecs,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionCircles,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionCircleRec,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionPointRec,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionPointCircle,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionPointTriangle,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionLines,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionPointLine,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetCollisionRec,Typedef(Rectangle),ListBuffer(),Extern,OriginalCType(Typedef(Rectangle),Rectangle))
+Function(LoadImage,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(LoadImageRaw,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(LoadImageAnim,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(LoadImageFromMemory,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(LoadImageFromTexture,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(LoadImageFromScreen,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(UnloadImage,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ExportImage,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(ExportImageAsCode,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GenImageColor,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(GenImageGradientV,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(GenImageGradientH,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(GenImageGradientRadial,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(GenImageChecked,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(GenImageWhiteNoise,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(GenImageCellular,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(ImageCopy,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(ImageFromImage,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(ImageText,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(ImageTextEx,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(ImageFormat,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageToPOT,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageCrop,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageAlphaCrop,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageAlphaClear,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageAlphaMask,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageAlphaPremultiply,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageResize,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageResizeNN,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageResizeCanvas,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageMipmaps,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDither,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageFlipVertical,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageFlipHorizontal,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageRotateCW,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageRotateCCW,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageColorTint,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageColorInvert,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageColorGrayscale,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageColorContrast,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageColorBrightness,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageColorReplace,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadImageColors,Pointer(Typedef(Color)),ListBuffer(),Extern,OriginalCType(Pointer(Typedef(Color)),Color *))
+Function(LoadImagePalette,Pointer(Typedef(Color)),ListBuffer(),Extern,OriginalCType(Pointer(Typedef(Color)),Color *))
+Function(UnloadImageColors,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadImagePalette,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetImageAlphaBorder,Typedef(Rectangle),ListBuffer(),Extern,OriginalCType(Typedef(Rectangle),Rectangle))
+Function(GetImageColor,Typedef(Color),ListBuffer(),Extern,OriginalCType(Typedef(Color),Color))
+Function(ImageClearBackground,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawPixel,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawPixelV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawLine,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawLineV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawCircle,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawCircleV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawRectangle,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawRectangleV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawRectangleRec,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawRectangleLines,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDraw,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawText,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ImageDrawTextEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadTexture,Typedef(Texture2D),ListBuffer(),Extern,OriginalCType(Typedef(Texture2D),Texture2D))
+Function(LoadTextureFromImage,Typedef(Texture2D),ListBuffer(),Extern,OriginalCType(Typedef(Texture2D),Texture2D))
+Function(LoadTextureCubemap,Typedef(TextureCubemap),ListBuffer(),Extern,OriginalCType(Typedef(TextureCubemap),TextureCubemap))
+Function(LoadRenderTexture,Typedef(RenderTexture2D),ListBuffer(),Extern,OriginalCType(Typedef(RenderTexture2D),RenderTexture2D))
+Function(UnloadTexture,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadRenderTexture,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UpdateTexture,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UpdateTextureRec,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GenTextureMipmaps,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetTextureFilter,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetTextureWrap,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTexture,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextureV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextureEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextureRec,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextureQuad,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextureTiled,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTexturePro,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextureNPatch,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTexturePoly,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(Fade,Typedef(Color),ListBuffer(),Extern,OriginalCType(Typedef(Color),Color))
+Function(ColorToInt,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(ColorNormalize,Typedef(Vector4),ListBuffer(),Extern,OriginalCType(Typedef(Vector4),Vector4))
+Function(ColorFromNormalized,Typedef(Color),ListBuffer(),Extern,OriginalCType(Typedef(Color),Color))
+Function(ColorToHSV,Typedef(Vector3),ListBuffer(),Extern,OriginalCType(Typedef(Vector3),Vector3))
+Function(ColorFromHSV,Typedef(Color),ListBuffer(),Extern,OriginalCType(Typedef(Color),Color))
+Function(ColorAlpha,Typedef(Color),ListBuffer(),Extern,OriginalCType(Typedef(Color),Color))
+Function(ColorAlphaBlend,Typedef(Color),ListBuffer(),Extern,OriginalCType(Typedef(Color),Color))
+Function(GetColor,Typedef(Color),ListBuffer(),Extern,OriginalCType(Typedef(Color),Color))
+Function(GetPixelColor,Typedef(Color),ListBuffer(),Extern,OriginalCType(Typedef(Color),Color))
+Function(SetPixelColor,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetPixelDataSize,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetFontDefault,Typedef(Font),ListBuffer(),Extern,OriginalCType(Typedef(Font),Font))
+Function(LoadFont,Typedef(Font),ListBuffer(),Extern,OriginalCType(Typedef(Font),Font))
+Function(LoadFontEx,Typedef(Font),ListBuffer(),Extern,OriginalCType(Typedef(Font),Font))
+Function(LoadFontFromImage,Typedef(Font),ListBuffer(),Extern,OriginalCType(Typedef(Font),Font))
+Function(LoadFontFromMemory,Typedef(Font),ListBuffer(),Extern,OriginalCType(Typedef(Font),Font))
+Function(LoadFontData,Pointer(Typedef(GlyphInfo)),ListBuffer(),Extern,OriginalCType(Pointer(Typedef(GlyphInfo)),GlyphInfo *))
+Function(GenImageFontAtlas,Typedef(Image),ListBuffer(),Extern,OriginalCType(Typedef(Image),Image))
+Function(UnloadFontData,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadFont,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawFPS,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawText,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextPro,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTextCodepoint,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(MeasureText,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(MeasureTextEx,Typedef(Vector2),ListBuffer(),Extern,OriginalCType(Typedef(Vector2),Vector2))
+Function(GetGlyphIndex,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetGlyphInfo,Typedef(GlyphInfo),ListBuffer(),Extern,OriginalCType(Typedef(GlyphInfo),GlyphInfo))
+Function(GetGlyphAtlasRec,Typedef(Rectangle),ListBuffer(),Extern,OriginalCType(Typedef(Rectangle),Rectangle))
+Function(LoadCodepoints,Pointer(NumericIntegral(Int,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Int,Signed)),int *))
+Function(UnloadCodepoints,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetCodepointCount,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetCodepoint,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CodepointToUTF8,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(TextCodepointsToUTF8,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),char *))
+Function(TextCopy,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(TextIsEqual,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(TextLength,NumericIntegral(Int,Unsigned),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Unsigned),unsigned int))
+Function(TextFormat,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(TextSubtext,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(TextReplace,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),char *))
+Function(TextInsert,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),char *))
+Function(TextJoin,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(TextSplit,Pointer(Pointer(NumericIntegral(Char,Signed))),ListBuffer(),Extern,OriginalCType(Pointer(Pointer(NumericIntegral(Char,Signed))),const char **))
+Function(TextAppend,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(TextFindIndex,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(TextToUpper,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(TextToLower,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(TextToPascal,Pointer(NumericIntegral(Char,Signed)),ListBuffer(),Extern,OriginalCType(Pointer(NumericIntegral(Char,Signed)),const char *))
+Function(TextToInteger,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(DrawLine3D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawPoint3D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCircle3D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTriangle3D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawTriangleStrip3D,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCube,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCubeV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCubeWires,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCubeWiresV,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCubeTexture,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCubeTextureRec,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawSphere,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawSphereEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawSphereWires,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCylinder,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCylinderEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCylinderWires,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawCylinderWiresEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawPlane,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawRay,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawGrid,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadModel,Typedef(Model),ListBuffer(),Extern,OriginalCType(Typedef(Model),Model))
+Function(LoadModelFromMesh,Typedef(Model),ListBuffer(),Extern,OriginalCType(Typedef(Model),Model))
+Function(UnloadModel,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadModelKeepMeshes,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetModelBoundingBox,Typedef(BoundingBox),ListBuffer(),Extern,OriginalCType(Typedef(BoundingBox),BoundingBox))
+Function(DrawModel,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawModelEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawModelWires,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawModelWiresEx,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawBoundingBox,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawBillboard,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawBillboardRec,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawBillboardPro,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UploadMesh,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UpdateMeshBuffer,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadMesh,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawMesh,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(DrawMeshInstanced,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ExportMesh,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetMeshBoundingBox,Typedef(BoundingBox),ListBuffer(),Extern,OriginalCType(Typedef(BoundingBox),BoundingBox))
+Function(GenMeshTangents,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GenMeshBinormals,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GenMeshPoly,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshPlane,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshCube,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshSphere,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshHemiSphere,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshCylinder,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshCone,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshTorus,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshKnot,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshHeightmap,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(GenMeshCubicmap,Typedef(Mesh),ListBuffer(),Extern,OriginalCType(Typedef(Mesh),Mesh))
+Function(LoadMaterials,Pointer(Typedef(Material)),ListBuffer(),Extern,OriginalCType(Pointer(Typedef(Material)),Material *))
+Function(LoadMaterialDefault,Typedef(Material),ListBuffer(),Extern,OriginalCType(Typedef(Material),Material))
+Function(UnloadMaterial,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetMaterialTexture,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetModelMeshMaterial,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadModelAnimations,Pointer(Typedef(ModelAnimation)),ListBuffer(),Extern,OriginalCType(Pointer(Typedef(ModelAnimation)),ModelAnimation *))
+Function(UpdateModelAnimation,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadModelAnimation,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadModelAnimations,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsModelAnimationValid,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionSpheres,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionBoxes,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(CheckCollisionBoxSphere,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(GetRayCollisionSphere,Typedef(RayCollision),ListBuffer(),Extern,OriginalCType(Typedef(RayCollision),RayCollision))
+Function(GetRayCollisionBox,Typedef(RayCollision),ListBuffer(),Extern,OriginalCType(Typedef(RayCollision),RayCollision))
+Function(GetRayCollisionModel,Typedef(RayCollision),ListBuffer(),Extern,OriginalCType(Typedef(RayCollision),RayCollision))
+Function(GetRayCollisionMesh,Typedef(RayCollision),ListBuffer(),Extern,OriginalCType(Typedef(RayCollision),RayCollision))
+Function(GetRayCollisionTriangle,Typedef(RayCollision),ListBuffer(),Extern,OriginalCType(Typedef(RayCollision),RayCollision))
+Function(GetRayCollisionQuad,Typedef(RayCollision),ListBuffer(),Extern,OriginalCType(Typedef(RayCollision),RayCollision))
+Function(InitAudioDevice,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(CloseAudioDevice,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsAudioDeviceReady,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(SetMasterVolume,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadWave,Typedef(Wave),ListBuffer(),Extern,OriginalCType(Typedef(Wave),Wave))
+Function(LoadWaveFromMemory,Typedef(Wave),ListBuffer(),Extern,OriginalCType(Typedef(Wave),Wave))
+Function(LoadSound,Typedef(Sound),ListBuffer(),Extern,OriginalCType(Typedef(Sound),Sound))
+Function(LoadSoundFromWave,Typedef(Sound),ListBuffer(),Extern,OriginalCType(Typedef(Sound),Sound))
+Function(UpdateSound,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadWave,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UnloadSound,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ExportWave,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(ExportWaveAsCode,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(PlaySound,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(StopSound,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(PauseSound,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ResumeSound,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(PlaySoundMulti,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(StopSoundMulti,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetSoundsPlaying,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(IsSoundPlaying,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(SetSoundVolume,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetSoundPitch,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(WaveFormat,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(WaveCopy,Typedef(Wave),ListBuffer(),Extern,OriginalCType(Typedef(Wave),Wave))
+Function(WaveCrop,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadWaveSamples,Pointer(NumericReal(Float)),ListBuffer(),Extern,OriginalCType(Pointer(NumericReal(Float)),float *))
+Function(UnloadWaveSamples,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(LoadMusicStream,Typedef(Music),ListBuffer(),Extern,OriginalCType(Typedef(Music),Music))
+Function(LoadMusicStreamFromMemory,Typedef(Music),ListBuffer(),Extern,OriginalCType(Typedef(Music),Music))
+Function(UnloadMusicStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(PlayMusicStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsMusicStreamPlaying,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(UpdateMusicStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(StopMusicStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(PauseMusicStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ResumeMusicStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SeekMusicStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetMusicVolume,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetMusicPitch,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(GetMusicTimeLength,NumericReal(Float),ListBuffer(),Extern,OriginalCType(NumericReal(Float),float))
+Function(GetMusicTimePlayed,NumericReal(Float),ListBuffer(),Extern,OriginalCType(NumericReal(Float),float))
+Function(LoadAudioStream,Typedef(AudioStream),ListBuffer(),Extern,OriginalCType(Typedef(AudioStream),AudioStream))
+Function(UnloadAudioStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(UpdateAudioStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsAudioStreamProcessed,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(PlayAudioStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(PauseAudioStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(ResumeAudioStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(IsAudioStreamPlaying,NumericIntegral(Int,Signed),ListBuffer(),Extern,OriginalCType(NumericIntegral(Int,Signed),int))
+Function(StopAudioStream,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetAudioStreamVolume,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetAudioStreamPitch,Void,ListBuffer(),Extern,OriginalCType(Void,void))
+Function(SetAudioStreamBufferSizeDefault,Void,ListBuffer(),Extern,OriginalCType(Void,void))
 #include <string.h>
-#include "raylib.h"
+#include <raylib.h>
+
 
 void __sn_wrap_BeginMode2D(Camera2D *camera) {
- return BeginMode2D(*camera);
+ BeginMode2D(*camera);
 };
 
 void __sn_wrap_BeginMode3D(Camera3D *camera) {
- return BeginMode3D(*camera);
+ BeginMode3D(*camera);
 };
 
 void __sn_wrap_BeginShaderMode(Shader *shader) {
- return BeginShaderMode(*shader);
+ BeginShaderMode(*shader);
 };
 
 void __sn_wrap_BeginTextureMode(RenderTexture2D *target) {
- return BeginTextureMode(*target);
+ BeginTextureMode(*target);
 };
 
 void __sn_wrap_BeginVrStereoMode(VrStereoConfig *config) {
- return BeginVrStereoMode(*config);
+ BeginVrStereoMode(*config);
 };
 
 void __sn_wrap_ClearBackground(Color *color) {
- return ClearBackground(*color);
+ ClearBackground(*color);
 };
 
 void __sn_wrap_ColorAlpha(Color *color, float alpha, Color *__return) {
@@ -60,323 +551,323 @@ int __sn_wrap_ColorToInt(Color *color) {
 };
 
 void __sn_wrap_DrawBillboard(Camera *camera, Texture2D *texture, Vector3 *position, float size, Color *tint) {
- return DrawBillboard(*camera, *texture, *position, size, *tint);
+ DrawBillboard(*camera, *texture, *position, size, *tint);
 };
 
 void __sn_wrap_DrawBillboardPro(Camera *camera, Texture2D *texture, Rectangle *source, Vector3 *position, Vector3 *up, Vector2 *size, Vector2 *origin, float rotation, Color *tint) {
- return DrawBillboardPro(*camera, *texture, *source, *position, *up, *size, *origin, rotation, *tint);
+ DrawBillboardPro(*camera, *texture, *source, *position, *up, *size, *origin, rotation, *tint);
 };
 
 void __sn_wrap_DrawBillboardRec(Camera *camera, Texture2D *texture, Rectangle *source, Vector3 *position, Vector2 *size, Color *tint) {
- return DrawBillboardRec(*camera, *texture, *source, *position, *size, *tint);
+ DrawBillboardRec(*camera, *texture, *source, *position, *size, *tint);
 };
 
 void __sn_wrap_DrawBoundingBox(BoundingBox *box, Color *color) {
- return DrawBoundingBox(*box, *color);
+ DrawBoundingBox(*box, *color);
 };
 
 void __sn_wrap_DrawCircle(int centerX, int centerY, float radius, Color *color) {
- return DrawCircle(centerX, centerY, radius, *color);
+ DrawCircle(centerX, centerY, radius, *color);
 };
 
 void __sn_wrap_DrawCircle3D(Vector3 *center, float radius, Vector3 *rotationAxis, float rotationAngle, Color *color) {
- return DrawCircle3D(*center, radius, *rotationAxis, rotationAngle, *color);
+ DrawCircle3D(*center, radius, *rotationAxis, rotationAngle, *color);
 };
 
 void __sn_wrap_DrawCircleGradient(int centerX, int centerY, float radius, Color *color1, Color *color2) {
- return DrawCircleGradient(centerX, centerY, radius, *color1, *color2);
+ DrawCircleGradient(centerX, centerY, radius, *color1, *color2);
 };
 
 void __sn_wrap_DrawCircleLines(int centerX, int centerY, float radius, Color *color) {
- return DrawCircleLines(centerX, centerY, radius, *color);
+ DrawCircleLines(centerX, centerY, radius, *color);
 };
 
 void __sn_wrap_DrawCircleSector(Vector2 *center, float radius, float startAngle, float endAngle, int segments, Color *color) {
- return DrawCircleSector(*center, radius, startAngle, endAngle, segments, *color);
+ DrawCircleSector(*center, radius, startAngle, endAngle, segments, *color);
 };
 
 void __sn_wrap_DrawCircleSectorLines(Vector2 *center, float radius, float startAngle, float endAngle, int segments, Color *color) {
- return DrawCircleSectorLines(*center, radius, startAngle, endAngle, segments, *color);
+ DrawCircleSectorLines(*center, radius, startAngle, endAngle, segments, *color);
 };
 
 void __sn_wrap_DrawCircleV(Vector2 *center, float radius, Color *color) {
- return DrawCircleV(*center, radius, *color);
+ DrawCircleV(*center, radius, *color);
 };
 
 void __sn_wrap_DrawCube(Vector3 *position, float width, float height, float length, Color *color) {
- return DrawCube(*position, width, height, length, *color);
+ DrawCube(*position, width, height, length, *color);
 };
 
 void __sn_wrap_DrawCubeTexture(Texture2D *texture, Vector3 *position, float width, float height, float length, Color *color) {
- return DrawCubeTexture(*texture, *position, width, height, length, *color);
+ DrawCubeTexture(*texture, *position, width, height, length, *color);
 };
 
 void __sn_wrap_DrawCubeTextureRec(Texture2D *texture, Rectangle *source, Vector3 *position, float width, float height, float length, Color *color) {
- return DrawCubeTextureRec(*texture, *source, *position, width, height, length, *color);
+ DrawCubeTextureRec(*texture, *source, *position, width, height, length, *color);
 };
 
 void __sn_wrap_DrawCubeV(Vector3 *position, Vector3 *size, Color *color) {
- return DrawCubeV(*position, *size, *color);
+ DrawCubeV(*position, *size, *color);
 };
 
 void __sn_wrap_DrawCubeWires(Vector3 *position, float width, float height, float length, Color *color) {
- return DrawCubeWires(*position, width, height, length, *color);
+ DrawCubeWires(*position, width, height, length, *color);
 };
 
 void __sn_wrap_DrawCubeWiresV(Vector3 *position, Vector3 *size, Color *color) {
- return DrawCubeWiresV(*position, *size, *color);
+ DrawCubeWiresV(*position, *size, *color);
 };
 
 void __sn_wrap_DrawCylinder(Vector3 *position, float radiusTop, float radiusBottom, float height, int slices, Color *color) {
- return DrawCylinder(*position, radiusTop, radiusBottom, height, slices, *color);
+ DrawCylinder(*position, radiusTop, radiusBottom, height, slices, *color);
 };
 
 void __sn_wrap_DrawCylinderEx(Vector3 *startPos, Vector3 *endPos, float startRadius, float endRadius, int sides, Color *color) {
- return DrawCylinderEx(*startPos, *endPos, startRadius, endRadius, sides, *color);
+ DrawCylinderEx(*startPos, *endPos, startRadius, endRadius, sides, *color);
 };
 
 void __sn_wrap_DrawCylinderWires(Vector3 *position, float radiusTop, float radiusBottom, float height, int slices, Color *color) {
- return DrawCylinderWires(*position, radiusTop, radiusBottom, height, slices, *color);
+ DrawCylinderWires(*position, radiusTop, radiusBottom, height, slices, *color);
 };
 
 void __sn_wrap_DrawCylinderWiresEx(Vector3 *startPos, Vector3 *endPos, float startRadius, float endRadius, int sides, Color *color) {
- return DrawCylinderWiresEx(*startPos, *endPos, startRadius, endRadius, sides, *color);
+ DrawCylinderWiresEx(*startPos, *endPos, startRadius, endRadius, sides, *color);
 };
 
 void __sn_wrap_DrawEllipse(int centerX, int centerY, float radiusH, float radiusV, Color *color) {
- return DrawEllipse(centerX, centerY, radiusH, radiusV, *color);
+ DrawEllipse(centerX, centerY, radiusH, radiusV, *color);
 };
 
 void __sn_wrap_DrawEllipseLines(int centerX, int centerY, float radiusH, float radiusV, Color *color) {
- return DrawEllipseLines(centerX, centerY, radiusH, radiusV, *color);
+ DrawEllipseLines(centerX, centerY, radiusH, radiusV, *color);
 };
 
 void __sn_wrap_DrawLine(int startPosX, int startPosY, int endPosX, int endPosY, Color *color) {
- return DrawLine(startPosX, startPosY, endPosX, endPosY, *color);
+ DrawLine(startPosX, startPosY, endPosX, endPosY, *color);
 };
 
 void __sn_wrap_DrawLine3D(Vector3 *startPos, Vector3 *endPos, Color *color) {
- return DrawLine3D(*startPos, *endPos, *color);
+ DrawLine3D(*startPos, *endPos, *color);
 };
 
 void __sn_wrap_DrawLineBezier(Vector2 *startPos, Vector2 *endPos, float thick, Color *color) {
- return DrawLineBezier(*startPos, *endPos, thick, *color);
+ DrawLineBezier(*startPos, *endPos, thick, *color);
 };
 
 void __sn_wrap_DrawLineBezierCubic(Vector2 *startPos, Vector2 *endPos, Vector2 *startControlPos, Vector2 *endControlPos, float thick, Color *color) {
- return DrawLineBezierCubic(*startPos, *endPos, *startControlPos, *endControlPos, thick, *color);
+ DrawLineBezierCubic(*startPos, *endPos, *startControlPos, *endControlPos, thick, *color);
 };
 
 void __sn_wrap_DrawLineBezierQuad(Vector2 *startPos, Vector2 *endPos, Vector2 *controlPos, float thick, Color *color) {
- return DrawLineBezierQuad(*startPos, *endPos, *controlPos, thick, *color);
+ DrawLineBezierQuad(*startPos, *endPos, *controlPos, thick, *color);
 };
 
 void __sn_wrap_DrawLineEx(Vector2 *startPos, Vector2 *endPos, float thick, Color *color) {
- return DrawLineEx(*startPos, *endPos, thick, *color);
+ DrawLineEx(*startPos, *endPos, thick, *color);
 };
 
 void __sn_wrap_DrawLineStrip(Vector2 * points, int pointCount, Color *color) {
- return DrawLineStrip(points, pointCount, *color);
+ DrawLineStrip(points, pointCount, *color);
 };
 
 void __sn_wrap_DrawLineV(Vector2 *startPos, Vector2 *endPos, Color *color) {
- return DrawLineV(*startPos, *endPos, *color);
+ DrawLineV(*startPos, *endPos, *color);
 };
 
 void __sn_wrap_DrawMesh(Mesh *mesh, Material *material, Matrix *transform) {
- return DrawMesh(*mesh, *material, *transform);
+ DrawMesh(*mesh, *material, *transform);
 };
 
 void __sn_wrap_DrawMeshInstanced(Mesh *mesh, Material *material, Matrix * transforms, int instances) {
- return DrawMeshInstanced(*mesh, *material, transforms, instances);
+ DrawMeshInstanced(*mesh, *material, transforms, instances);
 };
 
 void __sn_wrap_DrawModel(Model *model, Vector3 *position, float scale, Color *tint) {
- return DrawModel(*model, *position, scale, *tint);
+ DrawModel(*model, *position, scale, *tint);
 };
 
 void __sn_wrap_DrawModelEx(Model *model, Vector3 *position, Vector3 *rotationAxis, float rotationAngle, Vector3 *scale, Color *tint) {
- return DrawModelEx(*model, *position, *rotationAxis, rotationAngle, *scale, *tint);
+ DrawModelEx(*model, *position, *rotationAxis, rotationAngle, *scale, *tint);
 };
 
 void __sn_wrap_DrawModelWires(Model *model, Vector3 *position, float scale, Color *tint) {
- return DrawModelWires(*model, *position, scale, *tint);
+ DrawModelWires(*model, *position, scale, *tint);
 };
 
 void __sn_wrap_DrawModelWiresEx(Model *model, Vector3 *position, Vector3 *rotationAxis, float rotationAngle, Vector3 *scale, Color *tint) {
- return DrawModelWiresEx(*model, *position, *rotationAxis, rotationAngle, *scale, *tint);
+ DrawModelWiresEx(*model, *position, *rotationAxis, rotationAngle, *scale, *tint);
 };
 
 void __sn_wrap_DrawPixel(int posX, int posY, Color *color) {
- return DrawPixel(posX, posY, *color);
+ DrawPixel(posX, posY, *color);
 };
 
 void __sn_wrap_DrawPixelV(Vector2 *position, Color *color) {
- return DrawPixelV(*position, *color);
+ DrawPixelV(*position, *color);
 };
 
 void __sn_wrap_DrawPlane(Vector3 *centerPos, Vector2 *size, Color *color) {
- return DrawPlane(*centerPos, *size, *color);
+ DrawPlane(*centerPos, *size, *color);
 };
 
 void __sn_wrap_DrawPoint3D(Vector3 *position, Color *color) {
- return DrawPoint3D(*position, *color);
+ DrawPoint3D(*position, *color);
 };
 
 void __sn_wrap_DrawPoly(Vector2 *center, int sides, float radius, float rotation, Color *color) {
- return DrawPoly(*center, sides, radius, rotation, *color);
+ DrawPoly(*center, sides, radius, rotation, *color);
 };
 
 void __sn_wrap_DrawPolyLines(Vector2 *center, int sides, float radius, float rotation, Color *color) {
- return DrawPolyLines(*center, sides, radius, rotation, *color);
+ DrawPolyLines(*center, sides, radius, rotation, *color);
 };
 
 void __sn_wrap_DrawPolyLinesEx(Vector2 *center, int sides, float radius, float rotation, float lineThick, Color *color) {
- return DrawPolyLinesEx(*center, sides, radius, rotation, lineThick, *color);
+ DrawPolyLinesEx(*center, sides, radius, rotation, lineThick, *color);
 };
 
 void __sn_wrap_DrawRay(Ray *ray, Color *color) {
- return DrawRay(*ray, *color);
+ DrawRay(*ray, *color);
 };
 
 void __sn_wrap_DrawRectangle(int posX, int posY, int width, int height, Color *color) {
- return DrawRectangle(posX, posY, width, height, *color);
+ DrawRectangle(posX, posY, width, height, *color);
 };
 
 void __sn_wrap_DrawRectangleGradientEx(Rectangle *rec, Color *col1, Color *col2, Color *col3, Color *col4) {
- return DrawRectangleGradientEx(*rec, *col1, *col2, *col3, *col4);
+ DrawRectangleGradientEx(*rec, *col1, *col2, *col3, *col4);
 };
 
 void __sn_wrap_DrawRectangleGradientH(int posX, int posY, int width, int height, Color *color1, Color *color2) {
- return DrawRectangleGradientH(posX, posY, width, height, *color1, *color2);
+ DrawRectangleGradientH(posX, posY, width, height, *color1, *color2);
 };
 
 void __sn_wrap_DrawRectangleGradientV(int posX, int posY, int width, int height, Color *color1, Color *color2) {
- return DrawRectangleGradientV(posX, posY, width, height, *color1, *color2);
+ DrawRectangleGradientV(posX, posY, width, height, *color1, *color2);
 };
 
 void __sn_wrap_DrawRectangleLines(int posX, int posY, int width, int height, Color *color) {
- return DrawRectangleLines(posX, posY, width, height, *color);
+ DrawRectangleLines(posX, posY, width, height, *color);
 };
 
 void __sn_wrap_DrawRectangleLinesEx(Rectangle *rec, float lineThick, Color *color) {
- return DrawRectangleLinesEx(*rec, lineThick, *color);
+ DrawRectangleLinesEx(*rec, lineThick, *color);
 };
 
 void __sn_wrap_DrawRectanglePro(Rectangle *rec, Vector2 *origin, float rotation, Color *color) {
- return DrawRectanglePro(*rec, *origin, rotation, *color);
+ DrawRectanglePro(*rec, *origin, rotation, *color);
 };
 
 void __sn_wrap_DrawRectangleRec(Rectangle *rec, Color *color) {
- return DrawRectangleRec(*rec, *color);
+ DrawRectangleRec(*rec, *color);
 };
 
 void __sn_wrap_DrawRectangleRounded(Rectangle *rec, float roundness, int segments, Color *color) {
- return DrawRectangleRounded(*rec, roundness, segments, *color);
+ DrawRectangleRounded(*rec, roundness, segments, *color);
 };
 
 void __sn_wrap_DrawRectangleRoundedLines(Rectangle *rec, float roundness, int segments, float lineThick, Color *color) {
- return DrawRectangleRoundedLines(*rec, roundness, segments, lineThick, *color);
+ DrawRectangleRoundedLines(*rec, roundness, segments, lineThick, *color);
 };
 
 void __sn_wrap_DrawRectangleV(Vector2 *position, Vector2 *size, Color *color) {
- return DrawRectangleV(*position, *size, *color);
+ DrawRectangleV(*position, *size, *color);
 };
 
 void __sn_wrap_DrawRing(Vector2 *center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color *color) {
- return DrawRing(*center, innerRadius, outerRadius, startAngle, endAngle, segments, *color);
+ DrawRing(*center, innerRadius, outerRadius, startAngle, endAngle, segments, *color);
 };
 
 void __sn_wrap_DrawRingLines(Vector2 *center, float innerRadius, float outerRadius, float startAngle, float endAngle, int segments, Color *color) {
- return DrawRingLines(*center, innerRadius, outerRadius, startAngle, endAngle, segments, *color);
+ DrawRingLines(*center, innerRadius, outerRadius, startAngle, endAngle, segments, *color);
 };
 
 void __sn_wrap_DrawSphere(Vector3 *centerPos, float radius, Color *color) {
- return DrawSphere(*centerPos, radius, *color);
+ DrawSphere(*centerPos, radius, *color);
 };
 
 void __sn_wrap_DrawSphereEx(Vector3 *centerPos, float radius, int rings, int slices, Color *color) {
- return DrawSphereEx(*centerPos, radius, rings, slices, *color);
+ DrawSphereEx(*centerPos, radius, rings, slices, *color);
 };
 
 void __sn_wrap_DrawSphereWires(Vector3 *centerPos, float radius, int rings, int slices, Color *color) {
- return DrawSphereWires(*centerPos, radius, rings, slices, *color);
+ DrawSphereWires(*centerPos, radius, rings, slices, *color);
 };
 
 void __sn_wrap_DrawText(const char * text, int posX, int posY, int fontSize, Color *color) {
- return DrawText(text, posX, posY, fontSize, *color);
+ DrawText(text, posX, posY, fontSize, *color);
 };
 
 void __sn_wrap_DrawTextCodepoint(Font *font, int codepoint, Vector2 *position, float fontSize, Color *tint) {
- return DrawTextCodepoint(*font, codepoint, *position, fontSize, *tint);
+ DrawTextCodepoint(*font, codepoint, *position, fontSize, *tint);
 };
 
 void __sn_wrap_DrawTextEx(Font *font, const char * text, Vector2 *position, float fontSize, float spacing, Color *tint) {
- return DrawTextEx(*font, text, *position, fontSize, spacing, *tint);
+ DrawTextEx(*font, text, *position, fontSize, spacing, *tint);
 };
 
 void __sn_wrap_DrawTextPro(Font *font, const char * text, Vector2 *position, Vector2 *origin, float rotation, float fontSize, float spacing, Color *tint) {
- return DrawTextPro(*font, text, *position, *origin, rotation, fontSize, spacing, *tint);
+ DrawTextPro(*font, text, *position, *origin, rotation, fontSize, spacing, *tint);
 };
 
 void __sn_wrap_DrawTexture(Texture2D *texture, int posX, int posY, Color *tint) {
- return DrawTexture(*texture, posX, posY, *tint);
+ DrawTexture(*texture, posX, posY, *tint);
 };
 
 void __sn_wrap_DrawTextureEx(Texture2D *texture, Vector2 *position, float rotation, float scale, Color *tint) {
- return DrawTextureEx(*texture, *position, rotation, scale, *tint);
+ DrawTextureEx(*texture, *position, rotation, scale, *tint);
 };
 
 void __sn_wrap_DrawTextureNPatch(Texture2D *texture, NPatchInfo *nPatchInfo, Rectangle *dest, Vector2 *origin, float rotation, Color *tint) {
- return DrawTextureNPatch(*texture, *nPatchInfo, *dest, *origin, rotation, *tint);
+ DrawTextureNPatch(*texture, *nPatchInfo, *dest, *origin, rotation, *tint);
 };
 
 void __sn_wrap_DrawTexturePoly(Texture2D *texture, Vector2 *center, Vector2 * points, Vector2 * texcoords, int pointCount, Color *tint) {
- return DrawTexturePoly(*texture, *center, points, texcoords, pointCount, *tint);
+ DrawTexturePoly(*texture, *center, points, texcoords, pointCount, *tint);
 };
 
 void __sn_wrap_DrawTexturePro(Texture2D *texture, Rectangle *source, Rectangle *dest, Vector2 *origin, float rotation, Color *tint) {
- return DrawTexturePro(*texture, *source, *dest, *origin, rotation, *tint);
+ DrawTexturePro(*texture, *source, *dest, *origin, rotation, *tint);
 };
 
 void __sn_wrap_DrawTextureQuad(Texture2D *texture, Vector2 *tiling, Vector2 *offset, Rectangle *quad, Color *tint) {
- return DrawTextureQuad(*texture, *tiling, *offset, *quad, *tint);
+ DrawTextureQuad(*texture, *tiling, *offset, *quad, *tint);
 };
 
 void __sn_wrap_DrawTextureRec(Texture2D *texture, Rectangle *source, Vector2 *position, Color *tint) {
- return DrawTextureRec(*texture, *source, *position, *tint);
+ DrawTextureRec(*texture, *source, *position, *tint);
 };
 
 void __sn_wrap_DrawTextureTiled(Texture2D *texture, Rectangle *source, Rectangle *dest, Vector2 *origin, float rotation, float scale, Color *tint) {
- return DrawTextureTiled(*texture, *source, *dest, *origin, rotation, scale, *tint);
+ DrawTextureTiled(*texture, *source, *dest, *origin, rotation, scale, *tint);
 };
 
 void __sn_wrap_DrawTextureV(Texture2D *texture, Vector2 *position, Color *tint) {
- return DrawTextureV(*texture, *position, *tint);
+ DrawTextureV(*texture, *position, *tint);
 };
 
 void __sn_wrap_DrawTriangle(Vector2 *v1, Vector2 *v2, Vector2 *v3, Color *color) {
- return DrawTriangle(*v1, *v2, *v3, *color);
+ DrawTriangle(*v1, *v2, *v3, *color);
 };
 
 void __sn_wrap_DrawTriangle3D(Vector3 *v1, Vector3 *v2, Vector3 *v3, Color *color) {
- return DrawTriangle3D(*v1, *v2, *v3, *color);
+ DrawTriangle3D(*v1, *v2, *v3, *color);
 };
 
 void __sn_wrap_DrawTriangleFan(Vector2 * points, int pointCount, Color *color) {
- return DrawTriangleFan(points, pointCount, *color);
+ DrawTriangleFan(points, pointCount, *color);
 };
 
 void __sn_wrap_DrawTriangleLines(Vector2 *v1, Vector2 *v2, Vector2 *v3, Color *color) {
- return DrawTriangleLines(*v1, *v2, *v3, *color);
+ DrawTriangleLines(*v1, *v2, *v3, *color);
 };
 
 void __sn_wrap_DrawTriangleStrip(Vector2 * points, int pointCount, Color *color) {
- return DrawTriangleStrip(points, pointCount, *color);
+ DrawTriangleStrip(points, pointCount, *color);
 };
 
 void __sn_wrap_DrawTriangleStrip3D(Vector3 * points, int pointCount, Color *color) {
- return DrawTriangleStrip3D(points, pointCount, *color);
+ DrawTriangleStrip3D(points, pointCount, *color);
 };
 
 void __sn_wrap_Fade(Color *color, float alpha, Color *__return) {
@@ -655,23 +1146,23 @@ void __sn_wrap_GetWorldToScreenEx(Vector3 *position, Camera *camera, int width, 
 }
 
 void __sn_wrap_ImageAlphaClear(Image * image, Color *color, float threshold) {
- return ImageAlphaClear(image, *color, threshold);
+ ImageAlphaClear(image, *color, threshold);
 };
 
 void __sn_wrap_ImageAlphaMask(Image * image, Image *alphaMask) {
- return ImageAlphaMask(image, *alphaMask);
+ ImageAlphaMask(image, *alphaMask);
 };
 
 void __sn_wrap_ImageClearBackground(Image * dst, Color *color) {
- return ImageClearBackground(dst, *color);
+ ImageClearBackground(dst, *color);
 };
 
 void __sn_wrap_ImageColorReplace(Image * image, Color *color, Color *replace) {
- return ImageColorReplace(image, *color, *replace);
+ ImageColorReplace(image, *color, *replace);
 };
 
 void __sn_wrap_ImageColorTint(Image * image, Color *color) {
- return ImageColorTint(image, *color);
+ ImageColorTint(image, *color);
 };
 
 void __sn_wrap_ImageCopy(Image *image, Image *__return) {
@@ -680,59 +1171,59 @@ void __sn_wrap_ImageCopy(Image *image, Image *__return) {
 }
 
 void __sn_wrap_ImageCrop(Image * image, Rectangle *crop) {
- return ImageCrop(image, *crop);
+ ImageCrop(image, *crop);
 };
 
 void __sn_wrap_ImageDraw(Image * dst, Image *src, Rectangle *srcRec, Rectangle *dstRec, Color *tint) {
- return ImageDraw(dst, *src, *srcRec, *dstRec, *tint);
+ ImageDraw(dst, *src, *srcRec, *dstRec, *tint);
 };
 
 void __sn_wrap_ImageDrawCircle(Image * dst, int centerX, int centerY, int radius, Color *color) {
- return ImageDrawCircle(dst, centerX, centerY, radius, *color);
+ ImageDrawCircle(dst, centerX, centerY, radius, *color);
 };
 
 void __sn_wrap_ImageDrawCircleV(Image * dst, Vector2 *center, int radius, Color *color) {
- return ImageDrawCircleV(dst, *center, radius, *color);
+ ImageDrawCircleV(dst, *center, radius, *color);
 };
 
 void __sn_wrap_ImageDrawLine(Image * dst, int startPosX, int startPosY, int endPosX, int endPosY, Color *color) {
- return ImageDrawLine(dst, startPosX, startPosY, endPosX, endPosY, *color);
+ ImageDrawLine(dst, startPosX, startPosY, endPosX, endPosY, *color);
 };
 
 void __sn_wrap_ImageDrawLineV(Image * dst, Vector2 *start, Vector2 *end, Color *color) {
- return ImageDrawLineV(dst, *start, *end, *color);
+ ImageDrawLineV(dst, *start, *end, *color);
 };
 
 void __sn_wrap_ImageDrawPixel(Image * dst, int posX, int posY, Color *color) {
- return ImageDrawPixel(dst, posX, posY, *color);
+ ImageDrawPixel(dst, posX, posY, *color);
 };
 
 void __sn_wrap_ImageDrawPixelV(Image * dst, Vector2 *position, Color *color) {
- return ImageDrawPixelV(dst, *position, *color);
+ ImageDrawPixelV(dst, *position, *color);
 };
 
 void __sn_wrap_ImageDrawRectangle(Image * dst, int posX, int posY, int width, int height, Color *color) {
- return ImageDrawRectangle(dst, posX, posY, width, height, *color);
+ ImageDrawRectangle(dst, posX, posY, width, height, *color);
 };
 
 void __sn_wrap_ImageDrawRectangleLines(Image * dst, Rectangle *rec, int thick, Color *color) {
- return ImageDrawRectangleLines(dst, *rec, thick, *color);
+ ImageDrawRectangleLines(dst, *rec, thick, *color);
 };
 
 void __sn_wrap_ImageDrawRectangleRec(Image * dst, Rectangle *rec, Color *color) {
- return ImageDrawRectangleRec(dst, *rec, *color);
+ ImageDrawRectangleRec(dst, *rec, *color);
 };
 
 void __sn_wrap_ImageDrawRectangleV(Image * dst, Vector2 *position, Vector2 *size, Color *color) {
- return ImageDrawRectangleV(dst, *position, *size, *color);
+ ImageDrawRectangleV(dst, *position, *size, *color);
 };
 
 void __sn_wrap_ImageDrawText(Image * dst, const char * text, int posX, int posY, int fontSize, Color *color) {
- return ImageDrawText(dst, text, posX, posY, fontSize, *color);
+ ImageDrawText(dst, text, posX, posY, fontSize, *color);
 };
 
 void __sn_wrap_ImageDrawTextEx(Image * dst, Font *font, const char * text, Vector2 *position, float fontSize, float spacing, Color *tint) {
- return ImageDrawTextEx(dst, *font, text, *position, fontSize, spacing, *tint);
+ ImageDrawTextEx(dst, *font, text, *position, fontSize, spacing, *tint);
 };
 
 void __sn_wrap_ImageFromImage(Image *image, Rectangle *rec, Image *__return) {
@@ -741,7 +1232,7 @@ void __sn_wrap_ImageFromImage(Image *image, Rectangle *rec, Image *__return) {
 }
 
 void __sn_wrap_ImageResizeCanvas(Image * image, int newWidth, int newHeight, int offsetX, int offsetY, Color *fill) {
- return ImageResizeCanvas(image, newWidth, newHeight, offsetX, offsetY, *fill);
+ ImageResizeCanvas(image, newWidth, newHeight, offsetX, offsetY, *fill);
 };
 
 void __sn_wrap_ImageText(const char * text, int fontSize, Color *color, Image *__return) {
@@ -755,7 +1246,7 @@ void __sn_wrap_ImageTextEx(Font *font, const char * text, float fontSize, float 
 }
 
 void __sn_wrap_ImageToPOT(Image * image, Color *fill) {
- return ImageToPOT(image, *fill);
+ ImageToPOT(image, *fill);
 };
 
 void __sn_wrap_LoadAudioStream(unsigned int sampleRate, unsigned int sampleSize, unsigned int channels, AudioStream *__return) {
@@ -911,215 +1402,215 @@ void __sn_wrap_MeasureTextEx(Font *font, const char * text, float fontSize, floa
 }
 
 void __sn_wrap_PauseAudioStream(AudioStream *stream) {
- return PauseAudioStream(*stream);
+ PauseAudioStream(*stream);
 };
 
 void __sn_wrap_PauseMusicStream(Music *music) {
- return PauseMusicStream(*music);
+ PauseMusicStream(*music);
 };
 
 void __sn_wrap_PauseSound(Sound *sound) {
- return PauseSound(*sound);
+ PauseSound(*sound);
 };
 
 void __sn_wrap_PlayAudioStream(AudioStream *stream) {
- return PlayAudioStream(*stream);
+ PlayAudioStream(*stream);
 };
 
 void __sn_wrap_PlayMusicStream(Music *music) {
- return PlayMusicStream(*music);
+ PlayMusicStream(*music);
 };
 
 void __sn_wrap_PlaySound(Sound *sound) {
- return PlaySound(*sound);
+ PlaySound(*sound);
 };
 
 void __sn_wrap_PlaySoundMulti(Sound *sound) {
- return PlaySoundMulti(*sound);
+ PlaySoundMulti(*sound);
 };
 
 void __sn_wrap_ResumeAudioStream(AudioStream *stream) {
- return ResumeAudioStream(*stream);
+ ResumeAudioStream(*stream);
 };
 
 void __sn_wrap_ResumeMusicStream(Music *music) {
- return ResumeMusicStream(*music);
+ ResumeMusicStream(*music);
 };
 
 void __sn_wrap_ResumeSound(Sound *sound) {
- return ResumeSound(*sound);
+ ResumeSound(*sound);
 };
 
 void __sn_wrap_SeekMusicStream(Music *music, float position) {
- return SeekMusicStream(*music, position);
+ SeekMusicStream(*music, position);
 };
 
 void __sn_wrap_SetAudioStreamPitch(AudioStream *stream, float pitch) {
- return SetAudioStreamPitch(*stream, pitch);
+ SetAudioStreamPitch(*stream, pitch);
 };
 
 void __sn_wrap_SetAudioStreamVolume(AudioStream *stream, float volume) {
- return SetAudioStreamVolume(*stream, volume);
+ SetAudioStreamVolume(*stream, volume);
 };
 
 void __sn_wrap_SetCameraMode(Camera *camera, int mode) {
- return SetCameraMode(*camera, mode);
+ SetCameraMode(*camera, mode);
 };
 
 void __sn_wrap_SetMaterialTexture(Material * material, int mapType, Texture2D *texture) {
- return SetMaterialTexture(material, mapType, *texture);
+ SetMaterialTexture(material, mapType, *texture);
 };
 
 void __sn_wrap_SetMusicPitch(Music *music, float pitch) {
- return SetMusicPitch(*music, pitch);
+ SetMusicPitch(*music, pitch);
 };
 
 void __sn_wrap_SetMusicVolume(Music *music, float volume) {
- return SetMusicVolume(*music, volume);
+ SetMusicVolume(*music, volume);
 };
 
 void __sn_wrap_SetPixelColor(void * dstPtr, Color *color, int format) {
- return SetPixelColor(dstPtr, *color, format);
+ SetPixelColor(dstPtr, *color, format);
 };
 
 void __sn_wrap_SetShaderValue(Shader *shader, int locIndex, const void * value, int uniformType) {
- return SetShaderValue(*shader, locIndex, value, uniformType);
+ SetShaderValue(*shader, locIndex, value, uniformType);
 };
 
 void __sn_wrap_SetShaderValueMatrix(Shader *shader, int locIndex, Matrix *mat) {
- return SetShaderValueMatrix(*shader, locIndex, *mat);
+ SetShaderValueMatrix(*shader, locIndex, *mat);
 };
 
 void __sn_wrap_SetShaderValueTexture(Shader *shader, int locIndex, Texture2D *texture) {
- return SetShaderValueTexture(*shader, locIndex, *texture);
+ SetShaderValueTexture(*shader, locIndex, *texture);
 };
 
 void __sn_wrap_SetShaderValueV(Shader *shader, int locIndex, const void * value, int uniformType, int count) {
- return SetShaderValueV(*shader, locIndex, value, uniformType, count);
+ SetShaderValueV(*shader, locIndex, value, uniformType, count);
 };
 
 void __sn_wrap_SetShapesTexture(Texture2D *texture, Rectangle *source) {
- return SetShapesTexture(*texture, *source);
+ SetShapesTexture(*texture, *source);
 };
 
 void __sn_wrap_SetSoundPitch(Sound *sound, float pitch) {
- return SetSoundPitch(*sound, pitch);
+ SetSoundPitch(*sound, pitch);
 };
 
 void __sn_wrap_SetSoundVolume(Sound *sound, float volume) {
- return SetSoundVolume(*sound, volume);
+ SetSoundVolume(*sound, volume);
 };
 
 void __sn_wrap_SetTextureFilter(Texture2D *texture, int filter) {
- return SetTextureFilter(*texture, filter);
+ SetTextureFilter(*texture, filter);
 };
 
 void __sn_wrap_SetTextureWrap(Texture2D *texture, int wrap) {
- return SetTextureWrap(*texture, wrap);
+ SetTextureWrap(*texture, wrap);
 };
 
 void __sn_wrap_SetWindowIcon(Image *image) {
- return SetWindowIcon(*image);
+ SetWindowIcon(*image);
 };
 
 void __sn_wrap_StopAudioStream(AudioStream *stream) {
- return StopAudioStream(*stream);
+ StopAudioStream(*stream);
 };
 
 void __sn_wrap_StopMusicStream(Music *music) {
- return StopMusicStream(*music);
+ StopMusicStream(*music);
 };
 
 void __sn_wrap_StopSound(Sound *sound) {
- return StopSound(*sound);
+ StopSound(*sound);
 };
 
 void __sn_wrap_UnloadAudioStream(AudioStream *stream) {
- return UnloadAudioStream(*stream);
+ UnloadAudioStream(*stream);
 };
 
 void __sn_wrap_UnloadFont(Font *font) {
- return UnloadFont(*font);
+ UnloadFont(*font);
 };
 
 void __sn_wrap_UnloadImage(Image *image) {
- return UnloadImage(*image);
+ UnloadImage(*image);
 };
 
 void __sn_wrap_UnloadMaterial(Material *material) {
- return UnloadMaterial(*material);
+ UnloadMaterial(*material);
 };
 
 void __sn_wrap_UnloadMesh(Mesh *mesh) {
- return UnloadMesh(*mesh);
+ UnloadMesh(*mesh);
 };
 
 void __sn_wrap_UnloadModel(Model *model) {
- return UnloadModel(*model);
+ UnloadModel(*model);
 };
 
 void __sn_wrap_UnloadModelAnimation(ModelAnimation *anim) {
- return UnloadModelAnimation(*anim);
+ UnloadModelAnimation(*anim);
 };
 
 void __sn_wrap_UnloadModelKeepMeshes(Model *model) {
- return UnloadModelKeepMeshes(*model);
+ UnloadModelKeepMeshes(*model);
 };
 
 void __sn_wrap_UnloadMusicStream(Music *music) {
- return UnloadMusicStream(*music);
+ UnloadMusicStream(*music);
 };
 
 void __sn_wrap_UnloadRenderTexture(RenderTexture2D *target) {
- return UnloadRenderTexture(*target);
+ UnloadRenderTexture(*target);
 };
 
 void __sn_wrap_UnloadShader(Shader *shader) {
- return UnloadShader(*shader);
+ UnloadShader(*shader);
 };
 
 void __sn_wrap_UnloadSound(Sound *sound) {
- return UnloadSound(*sound);
+ UnloadSound(*sound);
 };
 
 void __sn_wrap_UnloadTexture(Texture2D *texture) {
- return UnloadTexture(*texture);
+ UnloadTexture(*texture);
 };
 
 void __sn_wrap_UnloadVrStereoConfig(VrStereoConfig *config) {
- return UnloadVrStereoConfig(*config);
+ UnloadVrStereoConfig(*config);
 };
 
 void __sn_wrap_UnloadWave(Wave *wave) {
- return UnloadWave(*wave);
+ UnloadWave(*wave);
 };
 
 void __sn_wrap_UpdateAudioStream(AudioStream *stream, const void * data, int frameCount) {
- return UpdateAudioStream(*stream, data, frameCount);
+ UpdateAudioStream(*stream, data, frameCount);
 };
 
 void __sn_wrap_UpdateMeshBuffer(Mesh *mesh, int index, void * data, int dataSize, int offset) {
- return UpdateMeshBuffer(*mesh, index, data, dataSize, offset);
+ UpdateMeshBuffer(*mesh, index, data, dataSize, offset);
 };
 
 void __sn_wrap_UpdateModelAnimation(Model *model, ModelAnimation *anim, int frame) {
- return UpdateModelAnimation(*model, *anim, frame);
+ UpdateModelAnimation(*model, *anim, frame);
 };
 
 void __sn_wrap_UpdateMusicStream(Music *music) {
- return UpdateMusicStream(*music);
+ UpdateMusicStream(*music);
 };
 
 void __sn_wrap_UpdateSound(Sound *sound, const void * data, int sampleCount) {
- return UpdateSound(*sound, data, sampleCount);
+ UpdateSound(*sound, data, sampleCount);
 };
 
 void __sn_wrap_UpdateTexture(Texture2D *texture, const void * pixels) {
- return UpdateTexture(*texture, pixels);
+ UpdateTexture(*texture, pixels);
 };
 
 void __sn_wrap_UpdateTextureRec(Texture2D *texture, Rectangle *rec, const void * pixels) {
- return UpdateTextureRec(*texture, *rec, pixels);
+ UpdateTextureRec(*texture, *rec, pixels);
 };
 
 void __sn_wrap_WaveCopy(Wave *wave, Wave *__return) {

@@ -38,7 +38,7 @@ end hello_cjson
 
     val ballPosition = Vector2(screenWidth / 2, screenHeight / 2)
 
-    SetTargetFPS(50)
+    SetTargetFPS(120)
 
     var i = 0
 

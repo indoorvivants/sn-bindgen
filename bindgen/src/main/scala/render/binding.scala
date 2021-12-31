@@ -154,72 +154,28 @@ def binding(
             to(scalaOutput)
           )
           catch exc => System.err.println(s"Failed to render $func: $exc")
-          if idx != externFunctions.size - 1 then scalaOutput.append("\n")
+          if idx != regularFunctions.size - 1 then scalaOutput.append("\n")
       }
     }
 
     val cFunctions =
       externFunctions
         .filter(_.tpe.isInstanceOf[CFunctionType.ExternRename])
-        .toList
-        .sortBy(_.name)
-    val line = to(cOutput)
-    if cFunctions.nonEmpty then line("#include <string.h>")
 
-    cFunctions.foreach {
-      case Def.Function(
-            name,
-            returnType,
-            parameters,
-            CFunctionType.ExternRename(_, _, original),
-            originalCType
-          ) =>
-        /* void scalanative_clang_getNullCursor(CXCursor *curs) { */
-        /*   CXCursor c = clang_getNullCursor(); */
-        /*   memcpy(curs, &c, sizeof(CXCursor)); */
-        /* } */
-        val arglist = parameters
-          .map { case a @ (n, typ, oct) =>
-            if isDirectStructAccess(oct.typ) then s"${oct.s} *$n"
-            else s"${oct.s} $n"
-          }
-          .mkString(", ")
+    if cFunctions.nonEmpty then
+      to(cOutput)("#include <string.h>")
+      summon[Config].cImports.foreach { s =>
+        to(cOutput)(s"#include <$s>")
+      }
+      to(cOutput)("\n")
 
-        val returnIsOkay = originalCType.typ == returnType
-
-        val delegateCallList = ListBuffer.empty[String]
-        parameters
-          .map { case a @ (n, typ, oct) =>
-            delegateCallList.addOne(
-              if isDirectStructAccess(oct.typ) then s"*$n"
-              else s"$n"
-            )
-          }
-
-        errln(
-          s"$name: Original type is ${originalCType} and rt is $returnType, $returnIsOkay"
-        )
-
-        if returnIsOkay then
-          line(
-            s"${originalCType.s} $name($arglist) {\n return $original(${delegateCallList.mkString(", ")});\n};\n"
-          )
-        else
-          val returnStructName = originalCType.typ match
-            case CType.RecordRef(name) => name
-            case CType.Typedef(name)   => name
-            case _ =>
-              throw error(
-                s"${originalCType.typ} should be a RecordRef or a TypeDef"
-              )
-          line(s"${originalCType.s} $name($arglist) {")
-          line(
-            s"  $returnStructName ____ret = $original(${delegateCallList.dropRight(1).mkString(", ")});"
-          )
-          line(s"  memcpy(__return, &____ret, sizeof($returnStructName));")
-          line("}\n")
-        end if
-
+    cFunctions.toList.sortBy(_.name).zipWithIndex.foreach { case (func, idx) =>
+      try cFunctionForwarder(
+        func,
+        to(cOutput)
+      )
+      catch exc => System.err.println(s"Failed to render $func: $exc")
+      if idx != cFunctions.size - 1 then scalaOutput.append("\n")
     }
 
   end if
