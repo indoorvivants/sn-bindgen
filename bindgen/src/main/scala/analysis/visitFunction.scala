@@ -27,8 +27,6 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
       )
     )
 
-    println(!mem)
-
     clang_visitChildren(
       functionCursor,
       CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
