@@ -24,7 +24,7 @@ jobs:
       - name: Setup Scala Native environment
         run: |
             sudo apt-get update
-            sudo apt install clang llvm
+            sudo apt install clang llvm llvm-dev
 
       - name: Tests
         run: sbt compile examples/regenerate examples/compile
