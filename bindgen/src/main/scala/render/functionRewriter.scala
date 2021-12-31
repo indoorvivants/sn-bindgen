@@ -1,8 +1,25 @@
-package bindgen
+package bindgen.rendering
 
-import render.*
+import bindgen.*
+
+// def isIllegalFunction(returnType: CType, parameters: List[CType])(using
+//     AliasResolver
+// ) =
+//   def isDirectStructAccess(typ: CType): Boolean =
+//     import CType.*
+//     typ match
+//       case _: Struct       => true
+//       case _: Pointer      => false
+//       case Typedef(name)   => isDirectStructAccess(aliasResolver(name))
+//       case RecordRef(name) => isDirectStructAccess(aliasResolver(name))
+//       case _               => false
+
+//   isDirectStructAccess(returnType) || parameters.exists(isDirectStructAccess)
+// end isIllegalFunction
+
 import scala.collection.mutable.ListBuffer
-def isDirectStructAccess(typ: CType)(using render.AliasResolver): Boolean =
+
+def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
   import CType.*
   typ match
     case _: Struct       => true
@@ -12,7 +29,7 @@ def isDirectStructAccess(typ: CType)(using render.AliasResolver): Boolean =
     case _               => false
 
 def functionRewriter(badFunction: Def.Function)(using
-    render.AliasResolver
+    AliasResolver
 ): Seq[Def.Function] =
   val isReturnTypeAStruct = isDirectStructAccess(badFunction.returnType)
   val anyParameterIsAStruct =
@@ -28,23 +45,32 @@ def functionRewriter(badFunction: Def.Function)(using
       val tail =
         if isReturnTypeAStruct then
           ListBuffer(
-            "__return" -> CType.Pointer(badFunction.returnType)
+            (
+              "__return",
+              CType.Pointer(badFunction.returnType),
+              badFunction.originalCType
+            )
           )
         else ListBuffer.empty
 
       Def.Function(
-        "impl",
+        externFuncName,
         returnType =
           if isReturnTypeAStruct then CType.Void else badFunction.returnType,
-        parameters = badFunction.parameters.map { case (name, typ) =>
-          if (isDirectStructAccess(typ)) then name -> CType.Pointer(typ)
-          else name -> typ
-          end if
-        } ++ tail,
+        parameters =
+          badFunction.parameters.map { case original @ (name, typ, ot) =>
+            if (isDirectStructAccess(typ)) then (name, CType.Pointer(typ), ot)
+            else original
+            end if
+          } ++ tail,
         tpe = CFunctionType.ExternRename(
           externFuncName,
-          internal = true
-        )
+          internal = true,
+          badFunction.name
+        ),
+        originalCType =
+          if isReturnTypeAStruct then OriginalCType(badFunction.returnType, "void")
+          else badFunction.originalCType
       )
     end externed
 
@@ -65,7 +91,8 @@ def functionRewriter(badFunction: Def.Function)(using
           rewriteArgumentIndices,
           isReturnTypeAStruct,
           externFuncName
-        )
+        ),
+        originalCType = badFunction.originalCType
       )
     end delegate
 

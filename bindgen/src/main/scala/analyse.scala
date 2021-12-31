@@ -8,8 +8,6 @@ import libclang.types.*
 import libclang.enumerations.*
 import scala.collection.mutable
 
-inline def errln(inline a: Any) = System.err.println(a)
-
 def addBuiltin(binding: Def.Binding): Def.Binding =
   binding.copy(aliases =
     binding.aliases

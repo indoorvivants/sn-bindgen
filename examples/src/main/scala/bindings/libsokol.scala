@@ -11,7 +11,7 @@ object predef:
   
   abstract class CEnumU[T](using eq: T =:= UInt):
     given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-        
+      
 object types:
   import predef.*
   opaque type sg_action = CUnsignedInt
@@ -799,6 +799,12 @@ object types:
   opaque type __darwin_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_attr_t:
     given _tag: Tag[__darwin_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_attr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_attr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[__darwin_pthread_attr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_attr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -808,6 +814,12 @@ object types:
   opaque type __darwin_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object __darwin_pthread_cond_t:
     given _tag: Tag[__darwin_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_cond_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_cond_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]])(using Zone): Ptr[__darwin_pthread_cond_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_cond_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -817,6 +829,12 @@ object types:
   opaque type __darwin_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_condattr_t:
     given _tag: Tag[__darwin_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_condattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_condattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_condattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_condattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -826,6 +844,13 @@ object types:
   opaque type __darwin_pthread_handler_rec = CStruct3[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
   object __darwin_pthread_handler_rec:
     given _tag: Tag[__darwin_pthread_handler_rec] = Tag.materializeCStruct3Tag[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
+    def apply()(using Zone): Ptr[__darwin_pthread_handler_rec] = scala.scalanative.unsafe.alloc[__darwin_pthread_handler_rec](1)
+    def apply(__routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]], __arg: Ptr[Byte], __next: Ptr[__darwin_pthread_handler_rec])(using Zone): Ptr[__darwin_pthread_handler_rec] = 
+      val ____ptr = apply()
+      (!____ptr).__routine = __routine
+      (!____ptr).__arg = __arg
+      (!____ptr).__next = __next
+      ____ptr
     extension (struct: __darwin_pthread_handler_rec)
       def __routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = struct._1
       def __routine_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at1 = value
@@ -837,6 +862,12 @@ object types:
   opaque type __darwin_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_mutex_t:
     given _tag: Tag[__darwin_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_mutex_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_mutex_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[__darwin_pthread_mutex_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_mutex_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -846,6 +877,12 @@ object types:
   opaque type __darwin_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_mutexattr_t:
     given _tag: Tag[__darwin_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_mutexattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_mutexattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_mutexattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -855,6 +892,12 @@ object types:
   opaque type __darwin_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_once_t:
     given _tag: Tag[__darwin_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_once_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_once_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_once_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_once_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -864,6 +907,12 @@ object types:
   opaque type __darwin_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object __darwin_pthread_rwlock_t:
     given _tag: Tag[__darwin_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_rwlock_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_rwlock_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]])(using Zone): Ptr[__darwin_pthread_rwlock_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -873,6 +922,12 @@ object types:
   opaque type __darwin_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object __darwin_pthread_rwlockattr_t:
     given _tag: Tag[__darwin_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_rwlockattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_rwlockattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[__darwin_pthread_rwlockattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -882,6 +937,12 @@ object types:
   opaque type _opaque_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_attr_t:
     given _tag: Tag[_opaque_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_attr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_attr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[_opaque_pthread_attr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_attr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -891,6 +952,12 @@ object types:
   opaque type _opaque_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object _opaque_pthread_cond_t:
     given _tag: Tag[_opaque_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_cond_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_cond_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]])(using Zone): Ptr[_opaque_pthread_cond_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_cond_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -900,6 +967,12 @@ object types:
   opaque type _opaque_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_condattr_t:
     given _tag: Tag[_opaque_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_condattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_condattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_condattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_condattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -909,6 +982,12 @@ object types:
   opaque type _opaque_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_mutex_t:
     given _tag: Tag[_opaque_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_mutex_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_mutex_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[_opaque_pthread_mutex_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_mutex_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -918,6 +997,12 @@ object types:
   opaque type _opaque_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_mutexattr_t:
     given _tag: Tag[_opaque_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_mutexattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_mutexattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_mutexattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -927,6 +1012,12 @@ object types:
   opaque type _opaque_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_once_t:
     given _tag: Tag[_opaque_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_once_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_once_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_once_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_once_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -936,6 +1027,12 @@ object types:
   opaque type _opaque_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object _opaque_pthread_rwlock_t:
     given _tag: Tag[_opaque_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_rwlock_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_rwlock_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]])(using Zone): Ptr[_opaque_pthread_rwlock_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -945,6 +1042,12 @@ object types:
   opaque type _opaque_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object _opaque_pthread_rwlockattr_t:
     given _tag: Tag[_opaque_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_rwlockattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_rwlockattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[_opaque_pthread_rwlockattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -954,6 +1057,13 @@ object types:
   opaque type _opaque_pthread_t = CStruct3[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
   object _opaque_pthread_t:
     given _tag: Tag[_opaque_pthread_t] = Tag.materializeCStruct3Tag[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_t](1)
+    def apply(__sig: CLongInt, __cleanup_stack: Ptr[__darwin_pthread_handler_rec], __opaque: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]])(using Zone): Ptr[_opaque_pthread_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__cleanup_stack = __cleanup_stack
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -965,6 +1075,18 @@ object types:
   opaque type sg_bindings = CStruct8[uint32_t, CArray[sg_buffer, Nat._8], CArray[CInt, Nat._8], sg_buffer, CInt, CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], uint32_t]
   object sg_bindings:
     given _tag: Tag[sg_bindings] = Tag.materializeCStruct8Tag[uint32_t, CArray[sg_buffer, Nat._8], CArray[CInt, Nat._8], sg_buffer, CInt, CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], uint32_t]
+    def apply()(using Zone): Ptr[sg_bindings] = scala.scalanative.unsafe.alloc[sg_bindings](1)
+    def apply(_start_canary: uint32_t, vertex_buffers: CArray[sg_buffer, Nat._8], vertex_buffer_offsets: CArray[CInt, Nat._8], index_buffer: sg_buffer, index_buffer_offset: CInt, vs_images: CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], fs_images: CArray[sg_image, Nat.Digit2[Nat._1, Nat._2]], _end_canary: uint32_t)(using Zone): Ptr[sg_bindings] = 
+      val ____ptr = apply()
+      (!____ptr)._start_canary = _start_canary
+      (!____ptr).vertex_buffers = vertex_buffers
+      (!____ptr).vertex_buffer_offsets = vertex_buffer_offsets
+      (!____ptr).index_buffer = index_buffer
+      (!____ptr).index_buffer_offset = index_buffer_offset
+      (!____ptr).vs_images = vs_images
+      (!____ptr).fs_images = fs_images
+      (!____ptr)._end_canary = _end_canary
+      ____ptr
     extension (struct: sg_bindings)
       def _start_canary: uint32_t = struct._1
       def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
@@ -986,6 +1108,17 @@ object types:
   opaque type sg_blend_state = CStruct7[CInt, sg_blend_factor, sg_blend_factor, sg_blend_op, sg_blend_factor, sg_blend_factor, sg_blend_op]
   object sg_blend_state:
     given _tag: Tag[sg_blend_state] = Tag.materializeCStruct7Tag[CInt, sg_blend_factor, sg_blend_factor, sg_blend_op, sg_blend_factor, sg_blend_factor, sg_blend_op]
+    def apply()(using Zone): Ptr[sg_blend_state] = scala.scalanative.unsafe.alloc[sg_blend_state](1)
+    def apply(enabled: CInt, src_factor_rgb: sg_blend_factor, dst_factor_rgb: sg_blend_factor, op_rgb: sg_blend_op, src_factor_alpha: sg_blend_factor, dst_factor_alpha: sg_blend_factor, op_alpha: sg_blend_op)(using Zone): Ptr[sg_blend_state] = 
+      val ____ptr = apply()
+      (!____ptr).enabled = enabled
+      (!____ptr).src_factor_rgb = src_factor_rgb
+      (!____ptr).dst_factor_rgb = dst_factor_rgb
+      (!____ptr).op_rgb = op_rgb
+      (!____ptr).src_factor_alpha = src_factor_alpha
+      (!____ptr).dst_factor_alpha = dst_factor_alpha
+      (!____ptr).op_alpha = op_alpha
+      ____ptr
     extension (struct: sg_blend_state)
       def enabled: CInt = struct._1
       def enabled_=(value: CInt): Unit = !struct.at1 = value
@@ -1005,6 +1138,11 @@ object types:
   opaque type sg_buffer = CStruct1[uint32_t]
   object sg_buffer:
     given _tag: Tag[sg_buffer] = Tag.materializeCStruct1Tag[uint32_t]
+    def apply()(using Zone): Ptr[sg_buffer] = scala.scalanative.unsafe.alloc[sg_buffer](1)
+    def apply(id: uint32_t)(using Zone): Ptr[sg_buffer] = 
+      val ____ptr = apply()
+      (!____ptr).id = id
+      ____ptr
     extension (struct: sg_buffer)
       def id: uint32_t = struct._1
       def id_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1012,6 +1150,21 @@ object types:
   opaque type sg_buffer_desc = CStruct11[uint32_t, size_t, sg_buffer_type, sg_usage, sg_range, CString, CArray[uint32_t, Nat._2], CArray[Ptr[Byte], Nat._2], Ptr[Byte], Ptr[Byte], uint32_t]
   object sg_buffer_desc:
     given _tag: Tag[sg_buffer_desc] = Tag.materializeCStruct11Tag[uint32_t, size_t, sg_buffer_type, sg_usage, sg_range, CString, CArray[uint32_t, Nat._2], CArray[Ptr[Byte], Nat._2], Ptr[Byte], Ptr[Byte], uint32_t]
+    def apply()(using Zone): Ptr[sg_buffer_desc] = scala.scalanative.unsafe.alloc[sg_buffer_desc](1)
+    def apply(_start_canary: uint32_t, size: size_t, `type`: sg_buffer_type, usage: sg_usage, data: sg_range, label: CString, gl_buffers: CArray[uint32_t, Nat._2], mtl_buffers: CArray[Ptr[Byte], Nat._2], d3d11_buffer: Ptr[Byte], wgpu_buffer: Ptr[Byte], _end_canary: uint32_t)(using Zone): Ptr[sg_buffer_desc] = 
+      val ____ptr = apply()
+      (!____ptr)._start_canary = _start_canary
+      (!____ptr).size = size
+      (!____ptr).`type` = `type`
+      (!____ptr).usage = usage
+      (!____ptr).data = data
+      (!____ptr).label = label
+      (!____ptr).gl_buffers = gl_buffers
+      (!____ptr).mtl_buffers = mtl_buffers
+      (!____ptr).d3d11_buffer = d3d11_buffer
+      (!____ptr).wgpu_buffer = wgpu_buffer
+      (!____ptr)._end_canary = _end_canary
+      ____ptr
     extension (struct: sg_buffer_desc)
       def _start_canary: uint32_t = struct._1
       def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1039,6 +1192,17 @@ object types:
   opaque type sg_buffer_info = CStruct7[sg_slot_info, uint32_t, uint32_t, CInt, CInt, CInt, CInt]
   object sg_buffer_info:
     given _tag: Tag[sg_buffer_info] = Tag.materializeCStruct7Tag[sg_slot_info, uint32_t, uint32_t, CInt, CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[sg_buffer_info] = scala.scalanative.unsafe.alloc[sg_buffer_info](1)
+    def apply(slot: sg_slot_info, update_frame_index: uint32_t, append_frame_index: uint32_t, append_pos: CInt, append_overflow: CInt, num_slots: CInt, active_slot: CInt)(using Zone): Ptr[sg_buffer_info] = 
+      val ____ptr = apply()
+      (!____ptr).slot = slot
+      (!____ptr).update_frame_index = update_frame_index
+      (!____ptr).append_frame_index = append_frame_index
+      (!____ptr).append_pos = append_pos
+      (!____ptr).append_overflow = append_overflow
+      (!____ptr).num_slots = num_slots
+      (!____ptr).active_slot = active_slot
+      ____ptr
     extension (struct: sg_buffer_info)
       def slot: sg_slot_info = struct._1
       def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
@@ -1058,6 +1222,13 @@ object types:
   opaque type sg_buffer_layout_desc = CStruct3[CInt, sg_vertex_step, CInt]
   object sg_buffer_layout_desc:
     given _tag: Tag[sg_buffer_layout_desc] = Tag.materializeCStruct3Tag[CInt, sg_vertex_step, CInt]
+    def apply()(using Zone): Ptr[sg_buffer_layout_desc] = scala.scalanative.unsafe.alloc[sg_buffer_layout_desc](1)
+    def apply(stride: CInt, step_func: sg_vertex_step, step_rate: CInt)(using Zone): Ptr[sg_buffer_layout_desc] = 
+      val ____ptr = apply()
+      (!____ptr).stride = stride
+      (!____ptr).step_func = step_func
+      (!____ptr).step_rate = step_rate
+      ____ptr
     extension (struct: sg_buffer_layout_desc)
       def stride: CInt = struct._1
       def stride_=(value: CInt): Unit = !struct.at1 = value
@@ -1069,6 +1240,14 @@ object types:
   opaque type sg_color = CStruct4[Float, Float, Float, Float]
   object sg_color:
     given _tag: Tag[sg_color] = Tag.materializeCStruct4Tag[Float, Float, Float, Float]
+    def apply()(using Zone): Ptr[sg_color] = scala.scalanative.unsafe.alloc[sg_color](1)
+    def apply(r: Float, g: Float, b: Float, a: Float)(using Zone): Ptr[sg_color] = 
+      val ____ptr = apply()
+      (!____ptr).r = r
+      (!____ptr).g = g
+      (!____ptr).b = b
+      (!____ptr).a = a
+      ____ptr
     extension (struct: sg_color)
       def r: Float = struct._1
       def r_=(value: Float): Unit = !struct.at1 = value
@@ -1082,6 +1261,12 @@ object types:
   opaque type sg_color_attachment_action = CStruct2[sg_action, sg_color]
   object sg_color_attachment_action:
     given _tag: Tag[sg_color_attachment_action] = Tag.materializeCStruct2Tag[sg_action, sg_color]
+    def apply()(using Zone): Ptr[sg_color_attachment_action] = scala.scalanative.unsafe.alloc[sg_color_attachment_action](1)
+    def apply(action: sg_action, value: sg_color)(using Zone): Ptr[sg_color_attachment_action] = 
+      val ____ptr = apply()
+      (!____ptr).action = action
+      (!____ptr).value = value
+      ____ptr
     extension (struct: sg_color_attachment_action)
       def action: sg_action = struct._1
       def action_=(value: sg_action): Unit = !struct.at1 = value
@@ -1091,6 +1276,13 @@ object types:
   opaque type sg_color_state = CStruct3[sg_pixel_format, sg_color_mask, sg_blend_state]
   object sg_color_state:
     given _tag: Tag[sg_color_state] = Tag.materializeCStruct3Tag[sg_pixel_format, sg_color_mask, sg_blend_state]
+    def apply()(using Zone): Ptr[sg_color_state] = scala.scalanative.unsafe.alloc[sg_color_state](1)
+    def apply(pixel_format: sg_pixel_format, write_mask: sg_color_mask, blend: sg_blend_state)(using Zone): Ptr[sg_color_state] = 
+      val ____ptr = apply()
+      (!____ptr).pixel_format = pixel_format
+      (!____ptr).write_mask = write_mask
+      (!____ptr).blend = blend
+      ____ptr
     extension (struct: sg_color_state)
       def pixel_format: sg_pixel_format = struct._1
       def pixel_format_=(value: sg_pixel_format): Unit = !struct.at1 = value
@@ -1102,6 +1294,11 @@ object types:
   opaque type sg_context = CStruct1[uint32_t]
   object sg_context:
     given _tag: Tag[sg_context] = Tag.materializeCStruct1Tag[uint32_t]
+    def apply()(using Zone): Ptr[sg_context] = scala.scalanative.unsafe.alloc[sg_context](1)
+    def apply(id: uint32_t)(using Zone): Ptr[sg_context] = 
+      val ____ptr = apply()
+      (!____ptr).id = id
+      ____ptr
     extension (struct: sg_context)
       def id: uint32_t = struct._1
       def id_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1109,6 +1306,17 @@ object types:
   opaque type sg_context_desc = CStruct7[sg_pixel_format, sg_pixel_format, CInt, sg_gl_context_desc, sg_metal_context_desc, sg_d3d11_context_desc, sg_wgpu_context_desc]
   object sg_context_desc:
     given _tag: Tag[sg_context_desc] = Tag.materializeCStruct7Tag[sg_pixel_format, sg_pixel_format, CInt, sg_gl_context_desc, sg_metal_context_desc, sg_d3d11_context_desc, sg_wgpu_context_desc]
+    def apply()(using Zone): Ptr[sg_context_desc] = scala.scalanative.unsafe.alloc[sg_context_desc](1)
+    def apply(color_format: sg_pixel_format, depth_format: sg_pixel_format, sample_count: CInt, gl: sg_gl_context_desc, metal: sg_metal_context_desc, d3d11: sg_d3d11_context_desc, wgpu: sg_wgpu_context_desc)(using Zone): Ptr[sg_context_desc] = 
+      val ____ptr = apply()
+      (!____ptr).color_format = color_format
+      (!____ptr).depth_format = depth_format
+      (!____ptr).sample_count = sample_count
+      (!____ptr).gl = gl
+      (!____ptr).metal = metal
+      (!____ptr).d3d11 = d3d11
+      (!____ptr).wgpu = wgpu
+      ____ptr
     extension (struct: sg_context_desc)
       def color_format: sg_pixel_format = struct._1
       def color_format_=(value: sg_pixel_format): Unit = !struct.at1 = value
@@ -1128,6 +1336,17 @@ object types:
   opaque type sg_d3d11_context_desc = CStruct7[Ptr[Byte], Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
   object sg_d3d11_context_desc:
     given _tag: Tag[sg_d3d11_context_desc] = Tag.materializeCStruct7Tag[Ptr[Byte], Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
+    def apply()(using Zone): Ptr[sg_d3d11_context_desc] = scala.scalanative.unsafe.alloc[sg_d3d11_context_desc](1)
+    def apply(device: Ptr[Byte], device_context: Ptr[Byte], render_target_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]], render_target_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], depth_stencil_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]], depth_stencil_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], user_data: Ptr[Byte])(using Zone): Ptr[sg_d3d11_context_desc] = 
+      val ____ptr = apply()
+      (!____ptr).device = device
+      (!____ptr).device_context = device_context
+      (!____ptr).render_target_view_cb = render_target_view_cb
+      (!____ptr).render_target_view_userdata_cb = render_target_view_userdata_cb
+      (!____ptr).depth_stencil_view_cb = depth_stencil_view_cb
+      (!____ptr).depth_stencil_view_userdata_cb = depth_stencil_view_userdata_cb
+      (!____ptr).user_data = user_data
+      ____ptr
     extension (struct: sg_d3d11_context_desc)
       def device: Ptr[Byte] = struct._1
       def device_=(value: Ptr[Byte]): Unit = !struct.at1 = value
@@ -1147,6 +1366,12 @@ object types:
   opaque type sg_depth_attachment_action = CStruct2[sg_action, Float]
   object sg_depth_attachment_action:
     given _tag: Tag[sg_depth_attachment_action] = Tag.materializeCStruct2Tag[sg_action, Float]
+    def apply()(using Zone): Ptr[sg_depth_attachment_action] = scala.scalanative.unsafe.alloc[sg_depth_attachment_action](1)
+    def apply(action: sg_action, value: Float)(using Zone): Ptr[sg_depth_attachment_action] = 
+      val ____ptr = apply()
+      (!____ptr).action = action
+      (!____ptr).value = value
+      ____ptr
     extension (struct: sg_depth_attachment_action)
       def action: sg_action = struct._1
       def action_=(value: sg_action): Unit = !struct.at1 = value
@@ -1156,6 +1381,16 @@ object types:
   opaque type sg_depth_state = CStruct6[sg_pixel_format, sg_compare_func, CInt, Float, Float, Float]
   object sg_depth_state:
     given _tag: Tag[sg_depth_state] = Tag.materializeCStruct6Tag[sg_pixel_format, sg_compare_func, CInt, Float, Float, Float]
+    def apply()(using Zone): Ptr[sg_depth_state] = scala.scalanative.unsafe.alloc[sg_depth_state](1)
+    def apply(pixel_format: sg_pixel_format, compare: sg_compare_func, write_enabled: CInt, bias: Float, bias_slope_scale: Float, bias_clamp: Float)(using Zone): Ptr[sg_depth_state] = 
+      val ____ptr = apply()
+      (!____ptr).pixel_format = pixel_format
+      (!____ptr).compare = compare
+      (!____ptr).write_enabled = write_enabled
+      (!____ptr).bias = bias
+      (!____ptr).bias_slope_scale = bias_slope_scale
+      (!____ptr).bias_clamp = bias_clamp
+      ____ptr
     extension (struct: sg_depth_state)
       def pixel_format: sg_pixel_format = struct._1
       def pixel_format_=(value: sg_pixel_format): Unit = !struct.at1 = value
@@ -1173,6 +1408,22 @@ object types:
   opaque type sg_desc = CStruct12[uint32_t, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, sg_context_desc, uint32_t]
   object sg_desc:
     given _tag: Tag[sg_desc] = Tag.materializeCStruct12Tag[uint32_t, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, sg_context_desc, uint32_t]
+    def apply()(using Zone): Ptr[sg_desc] = scala.scalanative.unsafe.alloc[sg_desc](1)
+    def apply(_start_canary: uint32_t, buffer_pool_size: CInt, image_pool_size: CInt, shader_pool_size: CInt, pipeline_pool_size: CInt, pass_pool_size: CInt, context_pool_size: CInt, uniform_buffer_size: CInt, staging_buffer_size: CInt, sampler_cache_size: CInt, context: sg_context_desc, _end_canary: uint32_t)(using Zone): Ptr[sg_desc] = 
+      val ____ptr = apply()
+      (!____ptr)._start_canary = _start_canary
+      (!____ptr).buffer_pool_size = buffer_pool_size
+      (!____ptr).image_pool_size = image_pool_size
+      (!____ptr).shader_pool_size = shader_pool_size
+      (!____ptr).pipeline_pool_size = pipeline_pool_size
+      (!____ptr).pass_pool_size = pass_pool_size
+      (!____ptr).context_pool_size = context_pool_size
+      (!____ptr).uniform_buffer_size = uniform_buffer_size
+      (!____ptr).staging_buffer_size = staging_buffer_size
+      (!____ptr).sampler_cache_size = sampler_cache_size
+      (!____ptr).context = context
+      (!____ptr)._end_canary = _end_canary
+      ____ptr
     extension (struct: sg_desc)
       def _start_canary: uint32_t = struct._1
       def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1202,6 +1453,19 @@ object types:
   opaque type sg_features = CStruct9[CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt]
   object sg_features:
     given _tag: Tag[sg_features] = Tag.materializeCStruct9Tag[CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[sg_features] = scala.scalanative.unsafe.alloc[sg_features](1)
+    def apply(instancing: CInt, origin_top_left: CInt, multiple_render_targets: CInt, msaa_render_targets: CInt, imagetype_3d: CInt, imagetype_array: CInt, image_clamp_to_border: CInt, mrt_independent_blend_state: CInt, mrt_independent_write_mask: CInt)(using Zone): Ptr[sg_features] = 
+      val ____ptr = apply()
+      (!____ptr).instancing = instancing
+      (!____ptr).origin_top_left = origin_top_left
+      (!____ptr).multiple_render_targets = multiple_render_targets
+      (!____ptr).msaa_render_targets = msaa_render_targets
+      (!____ptr).imagetype_3d = imagetype_3d
+      (!____ptr).imagetype_array = imagetype_array
+      (!____ptr).image_clamp_to_border = image_clamp_to_border
+      (!____ptr).mrt_independent_blend_state = mrt_independent_blend_state
+      (!____ptr).mrt_independent_write_mask = mrt_independent_write_mask
+      ____ptr
     extension (struct: sg_features)
       def instancing: CInt = struct._1
       def instancing_=(value: CInt): Unit = !struct.at1 = value
@@ -1225,6 +1489,11 @@ object types:
   opaque type sg_gl_context_desc = CStruct1[CInt]
   object sg_gl_context_desc:
     given _tag: Tag[sg_gl_context_desc] = Tag.materializeCStruct1Tag[CInt]
+    def apply()(using Zone): Ptr[sg_gl_context_desc] = scala.scalanative.unsafe.alloc[sg_gl_context_desc](1)
+    def apply(force_gles2: CInt)(using Zone): Ptr[sg_gl_context_desc] = 
+      val ____ptr = apply()
+      (!____ptr).force_gles2 = force_gles2
+      ____ptr
     extension (struct: sg_gl_context_desc)
       def force_gles2: CInt = struct._1
       def force_gles2_=(value: CInt): Unit = !struct.at1 = value
@@ -1232,6 +1501,11 @@ object types:
   opaque type sg_image = CStruct1[uint32_t]
   object sg_image:
     given _tag: Tag[sg_image] = Tag.materializeCStruct1Tag[uint32_t]
+    def apply()(using Zone): Ptr[sg_image] = scala.scalanative.unsafe.alloc[sg_image](1)
+    def apply(id: uint32_t)(using Zone): Ptr[sg_image] = 
+      val ____ptr = apply()
+      (!____ptr).id = id
+      ____ptr
     extension (struct: sg_image)
       def id: uint32_t = struct._1
       def id_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1239,6 +1513,11 @@ object types:
   opaque type sg_image_data = CStruct1[CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6]]
   object sg_image_data:
     given _tag: Tag[sg_image_data] = Tag.materializeCStruct1Tag[CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6]]
+    def apply()(using Zone): Ptr[sg_image_data] = scala.scalanative.unsafe.alloc[sg_image_data](1)
+    def apply(subimage: CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6])(using Zone): Ptr[sg_image_data] = 
+      val ____ptr = apply()
+      (!____ptr).subimage = subimage
+      ____ptr
     extension (struct: sg_image_data)
       def subimage: CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6] = struct._1
       def subimage_=(value: CArray[CArray[sg_range, Nat.Digit2[Nat._1, Nat._6]], Nat._6]): Unit = !struct.at1 = value
@@ -1246,6 +1525,38 @@ object types:
   opaque type sg_image_desc = CArray[Byte, Nat.Digit4[Nat._1, Nat._6, Nat._8, Nat._8]]
   object sg_image_desc:
     given _tag: Tag[sg_image_desc] = Tag.CArray[CChar, Nat.Digit4[Nat._1, Nat._6, Nat._8, Nat._8]](Tag.Byte, Tag.Digit4[Nat._1, Nat._6, Nat._8, Nat._8](Tag.Nat1, Tag.Nat6, Tag.Nat8, Tag.Nat8))
+    def apply()(using Zone): Ptr[sg_image_desc] = scala.scalanative.unsafe.alloc[sg_image_desc](1)
+    def apply(_start_canary: uint32_t, `type`: sg_image_type, render_target: CInt, width: CInt, height: CInt, num_slices: CInt, num_mipmaps: CInt, usage: sg_usage, pixel_format: sg_pixel_format, sample_count: CInt, min_filter: sg_filter, mag_filter: sg_filter, wrap_u: sg_wrap, wrap_v: sg_wrap, wrap_w: sg_wrap, border_color: sg_border_color, max_anisotropy: uint32_t, min_lod: Float, max_lod: Float, data: sg_image_data, label: CString, gl_textures: CArray[uint32_t, Nat._2], gl_texture_target: uint32_t, mtl_textures: CArray[Ptr[Byte], Nat._2], d3d11_texture: Ptr[Byte], d3d11_shader_resource_view: Ptr[Byte], wgpu_texture: Ptr[Byte], _end_canary: uint32_t)(using Zone): Ptr[sg_image_desc] = 
+      val ____ptr = apply()
+      (!____ptr)._start_canary = _start_canary
+      (!____ptr).`type` = `type`
+      (!____ptr).render_target = render_target
+      (!____ptr).width = width
+      (!____ptr).height = height
+      (!____ptr).num_slices = num_slices
+      (!____ptr).num_mipmaps = num_mipmaps
+      (!____ptr).usage = usage
+      (!____ptr).pixel_format = pixel_format
+      (!____ptr).sample_count = sample_count
+      (!____ptr).min_filter = min_filter
+      (!____ptr).mag_filter = mag_filter
+      (!____ptr).wrap_u = wrap_u
+      (!____ptr).wrap_v = wrap_v
+      (!____ptr).wrap_w = wrap_w
+      (!____ptr).border_color = border_color
+      (!____ptr).max_anisotropy = max_anisotropy
+      (!____ptr).min_lod = min_lod
+      (!____ptr).max_lod = max_lod
+      (!____ptr).data = data
+      (!____ptr).label = label
+      (!____ptr).gl_textures = gl_textures
+      (!____ptr).gl_texture_target = gl_texture_target
+      (!____ptr).mtl_textures = mtl_textures
+      (!____ptr).d3d11_texture = d3d11_texture
+      (!____ptr).d3d11_shader_resource_view = d3d11_shader_resource_view
+      (!____ptr).wgpu_texture = wgpu_texture
+      (!____ptr)._end_canary = _end_canary
+      ____ptr
     extension (struct: sg_image_desc)
       def _start_canary: uint32_t = !struct.at(0).asInstanceOf[Ptr[uint32_t]]
       def _start_canary_=(value: uint32_t): Unit = !struct.at(0).asInstanceOf[Ptr[uint32_t]] = value
@@ -1307,6 +1618,16 @@ object types:
   opaque type sg_image_info = CStruct6[sg_slot_info, uint32_t, CInt, CInt, CInt, CInt]
   object sg_image_info:
     given _tag: Tag[sg_image_info] = Tag.materializeCStruct6Tag[sg_slot_info, uint32_t, CInt, CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[sg_image_info] = scala.scalanative.unsafe.alloc[sg_image_info](1)
+    def apply(slot: sg_slot_info, upd_frame_index: uint32_t, num_slots: CInt, active_slot: CInt, width: CInt, height: CInt)(using Zone): Ptr[sg_image_info] = 
+      val ____ptr = apply()
+      (!____ptr).slot = slot
+      (!____ptr).upd_frame_index = upd_frame_index
+      (!____ptr).num_slots = num_slots
+      (!____ptr).active_slot = active_slot
+      (!____ptr).width = width
+      (!____ptr).height = height
+      ____ptr
     extension (struct: sg_image_info)
       def slot: sg_slot_info = struct._1
       def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
@@ -1324,6 +1645,12 @@ object types:
   opaque type sg_layout_desc = CStruct2[CArray[sg_buffer_layout_desc, Nat._8], CArray[sg_vertex_attr_desc, Nat.Digit2[Nat._1, Nat._6]]]
   object sg_layout_desc:
     given _tag: Tag[sg_layout_desc] = Tag.materializeCStruct2Tag[CArray[sg_buffer_layout_desc, Nat._8], CArray[sg_vertex_attr_desc, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[sg_layout_desc] = scala.scalanative.unsafe.alloc[sg_layout_desc](1)
+    def apply(buffers: CArray[sg_buffer_layout_desc, Nat._8], attrs: CArray[sg_vertex_attr_desc, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[sg_layout_desc] = 
+      val ____ptr = apply()
+      (!____ptr).buffers = buffers
+      (!____ptr).attrs = attrs
+      ____ptr
     extension (struct: sg_layout_desc)
       def buffers: CArray[sg_buffer_layout_desc, Nat._8] = struct._1
       def buffers_=(value: CArray[sg_buffer_layout_desc, Nat._8]): Unit = !struct.at1 = value
@@ -1333,6 +1660,17 @@ object types:
   opaque type sg_limits = CStruct7[CInt, CInt, CInt, CInt, CInt, CInt, CInt]
   object sg_limits:
     given _tag: Tag[sg_limits] = Tag.materializeCStruct7Tag[CInt, CInt, CInt, CInt, CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[sg_limits] = scala.scalanative.unsafe.alloc[sg_limits](1)
+    def apply(max_image_size_2d: CInt, max_image_size_cube: CInt, max_image_size_3d: CInt, max_image_size_array: CInt, max_image_array_layers: CInt, max_vertex_attrs: CInt, gl_max_vertex_uniform_vectors: CInt)(using Zone): Ptr[sg_limits] = 
+      val ____ptr = apply()
+      (!____ptr).max_image_size_2d = max_image_size_2d
+      (!____ptr).max_image_size_cube = max_image_size_cube
+      (!____ptr).max_image_size_3d = max_image_size_3d
+      (!____ptr).max_image_size_array = max_image_size_array
+      (!____ptr).max_image_array_layers = max_image_array_layers
+      (!____ptr).max_vertex_attrs = max_vertex_attrs
+      (!____ptr).gl_max_vertex_uniform_vectors = gl_max_vertex_uniform_vectors
+      ____ptr
     extension (struct: sg_limits)
       def max_image_size_2d: CInt = struct._1
       def max_image_size_2d_=(value: CInt): Unit = !struct.at1 = value
@@ -1352,6 +1690,16 @@ object types:
   opaque type sg_metal_context_desc = CStruct6[Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
   object sg_metal_context_desc:
     given _tag: Tag[sg_metal_context_desc] = Tag.materializeCStruct6Tag[Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
+    def apply()(using Zone): Ptr[sg_metal_context_desc] = scala.scalanative.unsafe.alloc[sg_metal_context_desc](1)
+    def apply(device: Ptr[Byte], renderpass_descriptor_cb: Ptr[CFuncPtr0[Ptr[Byte]]], renderpass_descriptor_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], drawable_cb: Ptr[CFuncPtr0[Ptr[Byte]]], drawable_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], user_data: Ptr[Byte])(using Zone): Ptr[sg_metal_context_desc] = 
+      val ____ptr = apply()
+      (!____ptr).device = device
+      (!____ptr).renderpass_descriptor_cb = renderpass_descriptor_cb
+      (!____ptr).renderpass_descriptor_userdata_cb = renderpass_descriptor_userdata_cb
+      (!____ptr).drawable_cb = drawable_cb
+      (!____ptr).drawable_userdata_cb = drawable_userdata_cb
+      (!____ptr).user_data = user_data
+      ____ptr
     extension (struct: sg_metal_context_desc)
       def device: Ptr[Byte] = struct._1
       def device_=(value: Ptr[Byte]): Unit = !struct.at1 = value
@@ -1369,6 +1717,11 @@ object types:
   opaque type sg_pass = CStruct1[uint32_t]
   object sg_pass:
     given _tag: Tag[sg_pass] = Tag.materializeCStruct1Tag[uint32_t]
+    def apply()(using Zone): Ptr[sg_pass] = scala.scalanative.unsafe.alloc[sg_pass](1)
+    def apply(id: uint32_t)(using Zone): Ptr[sg_pass] = 
+      val ____ptr = apply()
+      (!____ptr).id = id
+      ____ptr
     extension (struct: sg_pass)
       def id: uint32_t = struct._1
       def id_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1376,6 +1729,15 @@ object types:
   opaque type sg_pass_action = CStruct5[uint32_t, CArray[sg_color_attachment_action, Nat._4], sg_depth_attachment_action, sg_stencil_attachment_action, uint32_t]
   object sg_pass_action:
     given _tag: Tag[sg_pass_action] = Tag.materializeCStruct5Tag[uint32_t, CArray[sg_color_attachment_action, Nat._4], sg_depth_attachment_action, sg_stencil_attachment_action, uint32_t]
+    def apply()(using Zone): Ptr[sg_pass_action] = scala.scalanative.unsafe.alloc[sg_pass_action](1)
+    def apply(_start_canary: uint32_t, colors: CArray[sg_color_attachment_action, Nat._4], depth: sg_depth_attachment_action, stencil: sg_stencil_attachment_action, _end_canary: uint32_t)(using Zone): Ptr[sg_pass_action] = 
+      val ____ptr = apply()
+      (!____ptr)._start_canary = _start_canary
+      (!____ptr).colors = colors
+      (!____ptr).depth = depth
+      (!____ptr).stencil = stencil
+      (!____ptr)._end_canary = _end_canary
+      ____ptr
     extension (struct: sg_pass_action)
       def _start_canary: uint32_t = struct._1
       def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1391,6 +1753,13 @@ object types:
   opaque type sg_pass_attachment_desc = CStruct3[sg_image, CInt, CInt]
   object sg_pass_attachment_desc:
     given _tag: Tag[sg_pass_attachment_desc] = Tag.materializeCStruct3Tag[sg_image, CInt, CInt]
+    def apply()(using Zone): Ptr[sg_pass_attachment_desc] = scala.scalanative.unsafe.alloc[sg_pass_attachment_desc](1)
+    def apply(image: sg_image, mip_level: CInt, slice: CInt)(using Zone): Ptr[sg_pass_attachment_desc] = 
+      val ____ptr = apply()
+      (!____ptr).image = image
+      (!____ptr).mip_level = mip_level
+      (!____ptr).slice = slice
+      ____ptr
     extension (struct: sg_pass_attachment_desc)
       def image: sg_image = struct._1
       def image_=(value: sg_image): Unit = !struct.at1 = value
@@ -1402,6 +1771,15 @@ object types:
   opaque type sg_pass_desc = CStruct5[uint32_t, CArray[sg_pass_attachment_desc, Nat._4], sg_pass_attachment_desc, CString, uint32_t]
   object sg_pass_desc:
     given _tag: Tag[sg_pass_desc] = Tag.materializeCStruct5Tag[uint32_t, CArray[sg_pass_attachment_desc, Nat._4], sg_pass_attachment_desc, CString, uint32_t]
+    def apply()(using Zone): Ptr[sg_pass_desc] = scala.scalanative.unsafe.alloc[sg_pass_desc](1)
+    def apply(_start_canary: uint32_t, color_attachments: CArray[sg_pass_attachment_desc, Nat._4], depth_stencil_attachment: sg_pass_attachment_desc, label: CString, _end_canary: uint32_t)(using Zone): Ptr[sg_pass_desc] = 
+      val ____ptr = apply()
+      (!____ptr)._start_canary = _start_canary
+      (!____ptr).color_attachments = color_attachments
+      (!____ptr).depth_stencil_attachment = depth_stencil_attachment
+      (!____ptr).label = label
+      (!____ptr)._end_canary = _end_canary
+      ____ptr
     extension (struct: sg_pass_desc)
       def _start_canary: uint32_t = struct._1
       def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1417,6 +1795,11 @@ object types:
   opaque type sg_pass_info = CStruct1[sg_slot_info]
   object sg_pass_info:
     given _tag: Tag[sg_pass_info] = Tag.materializeCStruct1Tag[sg_slot_info]
+    def apply()(using Zone): Ptr[sg_pass_info] = scala.scalanative.unsafe.alloc[sg_pass_info](1)
+    def apply(slot: sg_slot_info)(using Zone): Ptr[sg_pass_info] = 
+      val ____ptr = apply()
+      (!____ptr).slot = slot
+      ____ptr
     extension (struct: sg_pass_info)
       def slot: sg_slot_info = struct._1
       def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
@@ -1424,6 +1807,11 @@ object types:
   opaque type sg_pipeline = CStruct1[uint32_t]
   object sg_pipeline:
     given _tag: Tag[sg_pipeline] = Tag.materializeCStruct1Tag[uint32_t]
+    def apply()(using Zone): Ptr[sg_pipeline] = scala.scalanative.unsafe.alloc[sg_pipeline](1)
+    def apply(id: uint32_t)(using Zone): Ptr[sg_pipeline] = 
+      val ____ptr = apply()
+      (!____ptr).id = id
+      ____ptr
     extension (struct: sg_pipeline)
       def id: uint32_t = struct._1
       def id_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1431,6 +1819,26 @@ object types:
   opaque type sg_pipeline_desc = CStruct16[uint32_t, sg_shader, sg_layout_desc, sg_depth_state, sg_stencil_state, CInt, CArray[sg_color_state, Nat._4], sg_primitive_type, sg_index_type, sg_cull_mode, sg_face_winding, CInt, sg_color, CInt, CString, uint32_t]
   object sg_pipeline_desc:
     given _tag: Tag[sg_pipeline_desc] = Tag.materializeCStruct16Tag[uint32_t, sg_shader, sg_layout_desc, sg_depth_state, sg_stencil_state, CInt, CArray[sg_color_state, Nat._4], sg_primitive_type, sg_index_type, sg_cull_mode, sg_face_winding, CInt, sg_color, CInt, CString, uint32_t]
+    def apply()(using Zone): Ptr[sg_pipeline_desc] = scala.scalanative.unsafe.alloc[sg_pipeline_desc](1)
+    def apply(_start_canary: uint32_t, shader: sg_shader, layout: sg_layout_desc, depth: sg_depth_state, stencil: sg_stencil_state, color_count: CInt, colors: CArray[sg_color_state, Nat._4], primitive_type: sg_primitive_type, index_type: sg_index_type, cull_mode: sg_cull_mode, face_winding: sg_face_winding, sample_count: CInt, blend_color: sg_color, alpha_to_coverage_enabled: CInt, label: CString, _end_canary: uint32_t)(using Zone): Ptr[sg_pipeline_desc] = 
+      val ____ptr = apply()
+      (!____ptr)._start_canary = _start_canary
+      (!____ptr).shader = shader
+      (!____ptr).layout = layout
+      (!____ptr).depth = depth
+      (!____ptr).stencil = stencil
+      (!____ptr).color_count = color_count
+      (!____ptr).colors = colors
+      (!____ptr).primitive_type = primitive_type
+      (!____ptr).index_type = index_type
+      (!____ptr).cull_mode = cull_mode
+      (!____ptr).face_winding = face_winding
+      (!____ptr).sample_count = sample_count
+      (!____ptr).blend_color = blend_color
+      (!____ptr).alpha_to_coverage_enabled = alpha_to_coverage_enabled
+      (!____ptr).label = label
+      (!____ptr)._end_canary = _end_canary
+      ____ptr
     extension (struct: sg_pipeline_desc)
       def _start_canary: uint32_t = struct._1
       def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1468,6 +1876,11 @@ object types:
   opaque type sg_pipeline_info = CStruct1[sg_slot_info]
   object sg_pipeline_info:
     given _tag: Tag[sg_pipeline_info] = Tag.materializeCStruct1Tag[sg_slot_info]
+    def apply()(using Zone): Ptr[sg_pipeline_info] = scala.scalanative.unsafe.alloc[sg_pipeline_info](1)
+    def apply(slot: sg_slot_info)(using Zone): Ptr[sg_pipeline_info] = 
+      val ____ptr = apply()
+      (!____ptr).slot = slot
+      ____ptr
     extension (struct: sg_pipeline_info)
       def slot: sg_slot_info = struct._1
       def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
@@ -1475,6 +1888,16 @@ object types:
   opaque type sg_pixelformat_info = CStruct6[CInt, CInt, CInt, CInt, CInt, CInt]
   object sg_pixelformat_info:
     given _tag: Tag[sg_pixelformat_info] = Tag.materializeCStruct6Tag[CInt, CInt, CInt, CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[sg_pixelformat_info] = scala.scalanative.unsafe.alloc[sg_pixelformat_info](1)
+    def apply(sample: CInt, filter: CInt, render: CInt, blend: CInt, msaa: CInt, depth: CInt)(using Zone): Ptr[sg_pixelformat_info] = 
+      val ____ptr = apply()
+      (!____ptr).sample = sample
+      (!____ptr).filter = filter
+      (!____ptr).render = render
+      (!____ptr).blend = blend
+      (!____ptr).msaa = msaa
+      (!____ptr).depth = depth
+      ____ptr
     extension (struct: sg_pixelformat_info)
       def sample: CInt = struct._1
       def sample_=(value: CInt): Unit = !struct.at1 = value
@@ -1492,6 +1915,12 @@ object types:
   opaque type sg_range = CStruct2[Ptr[Byte], size_t]
   object sg_range:
     given _tag: Tag[sg_range] = Tag.materializeCStruct2Tag[Ptr[Byte], size_t]
+    def apply()(using Zone): Ptr[sg_range] = scala.scalanative.unsafe.alloc[sg_range](1)
+    def apply(ptr: Ptr[Byte], size: size_t)(using Zone): Ptr[sg_range] = 
+      val ____ptr = apply()
+      (!____ptr).ptr = ptr
+      (!____ptr).size = size
+      ____ptr
     extension (struct: sg_range)
       def ptr: Ptr[Byte] = struct._1
       def ptr_=(value: Ptr[Byte]): Unit = !struct.at1 = value
@@ -1501,6 +1930,11 @@ object types:
   opaque type sg_shader = CStruct1[uint32_t]
   object sg_shader:
     given _tag: Tag[sg_shader] = Tag.materializeCStruct1Tag[uint32_t]
+    def apply()(using Zone): Ptr[sg_shader] = scala.scalanative.unsafe.alloc[sg_shader](1)
+    def apply(id: uint32_t)(using Zone): Ptr[sg_shader] = 
+      val ____ptr = apply()
+      (!____ptr).id = id
+      ____ptr
     extension (struct: sg_shader)
       def id: uint32_t = struct._1
       def id_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1508,6 +1942,13 @@ object types:
   opaque type sg_shader_attr_desc = CStruct3[CString, CString, CInt]
   object sg_shader_attr_desc:
     given _tag: Tag[sg_shader_attr_desc] = Tag.materializeCStruct3Tag[CString, CString, CInt]
+    def apply()(using Zone): Ptr[sg_shader_attr_desc] = scala.scalanative.unsafe.alloc[sg_shader_attr_desc](1)
+    def apply(name: CString, sem_name: CString, sem_index: CInt)(using Zone): Ptr[sg_shader_attr_desc] = 
+      val ____ptr = apply()
+      (!____ptr).name = name
+      (!____ptr).sem_name = sem_name
+      (!____ptr).sem_index = sem_index
+      ____ptr
     extension (struct: sg_shader_attr_desc)
       def name: CString = struct._1
       def name_=(value: CString): Unit = !struct.at1 = value
@@ -1519,6 +1960,16 @@ object types:
   opaque type sg_shader_desc = CStruct6[uint32_t, CArray[sg_shader_attr_desc, Nat.Digit2[Nat._1, Nat._6]], sg_shader_stage_desc, sg_shader_stage_desc, CString, uint32_t]
   object sg_shader_desc:
     given _tag: Tag[sg_shader_desc] = Tag.materializeCStruct6Tag[uint32_t, CArray[sg_shader_attr_desc, Nat.Digit2[Nat._1, Nat._6]], sg_shader_stage_desc, sg_shader_stage_desc, CString, uint32_t]
+    def apply()(using Zone): Ptr[sg_shader_desc] = scala.scalanative.unsafe.alloc[sg_shader_desc](1)
+    def apply(_start_canary: uint32_t, attrs: CArray[sg_shader_attr_desc, Nat.Digit2[Nat._1, Nat._6]], vs: sg_shader_stage_desc, fs: sg_shader_stage_desc, label: CString, _end_canary: uint32_t)(using Zone): Ptr[sg_shader_desc] = 
+      val ____ptr = apply()
+      (!____ptr)._start_canary = _start_canary
+      (!____ptr).attrs = attrs
+      (!____ptr).vs = vs
+      (!____ptr).fs = fs
+      (!____ptr).label = label
+      (!____ptr)._end_canary = _end_canary
+      ____ptr
     extension (struct: sg_shader_desc)
       def _start_canary: uint32_t = struct._1
       def _start_canary_=(value: uint32_t): Unit = !struct.at1 = value
@@ -1536,6 +1987,13 @@ object types:
   opaque type sg_shader_image_desc = CStruct3[CString, sg_image_type, sg_sampler_type]
   object sg_shader_image_desc:
     given _tag: Tag[sg_shader_image_desc] = Tag.materializeCStruct3Tag[CString, sg_image_type, sg_sampler_type]
+    def apply()(using Zone): Ptr[sg_shader_image_desc] = scala.scalanative.unsafe.alloc[sg_shader_image_desc](1)
+    def apply(name: CString, image_type: sg_image_type, sampler_type: sg_sampler_type)(using Zone): Ptr[sg_shader_image_desc] = 
+      val ____ptr = apply()
+      (!____ptr).name = name
+      (!____ptr).image_type = image_type
+      (!____ptr).sampler_type = sampler_type
+      ____ptr
     extension (struct: sg_shader_image_desc)
       def name: CString = struct._1
       def name_=(value: CString): Unit = !struct.at1 = value
@@ -1547,6 +2005,11 @@ object types:
   opaque type sg_shader_info = CStruct1[sg_slot_info]
   object sg_shader_info:
     given _tag: Tag[sg_shader_info] = Tag.materializeCStruct1Tag[sg_slot_info]
+    def apply()(using Zone): Ptr[sg_shader_info] = scala.scalanative.unsafe.alloc[sg_shader_info](1)
+    def apply(slot: sg_slot_info)(using Zone): Ptr[sg_shader_info] = 
+      val ____ptr = apply()
+      (!____ptr).slot = slot
+      ____ptr
     extension (struct: sg_shader_info)
       def slot: sg_slot_info = struct._1
       def slot_=(value: sg_slot_info): Unit = !struct.at1 = value
@@ -1554,6 +2017,16 @@ object types:
   opaque type sg_shader_stage_desc = CStruct6[CString, sg_range, CString, CString, CArray[sg_shader_uniform_block_desc, Nat._4], CArray[sg_shader_image_desc, Nat.Digit2[Nat._1, Nat._2]]]
   object sg_shader_stage_desc:
     given _tag: Tag[sg_shader_stage_desc] = Tag.materializeCStruct6Tag[CString, sg_range, CString, CString, CArray[sg_shader_uniform_block_desc, Nat._4], CArray[sg_shader_image_desc, Nat.Digit2[Nat._1, Nat._2]]]
+    def apply()(using Zone): Ptr[sg_shader_stage_desc] = scala.scalanative.unsafe.alloc[sg_shader_stage_desc](1)
+    def apply(source: CString, bytecode: sg_range, entry: CString, d3d11_target: CString, uniform_blocks: CArray[sg_shader_uniform_block_desc, Nat._4], images: CArray[sg_shader_image_desc, Nat.Digit2[Nat._1, Nat._2]])(using Zone): Ptr[sg_shader_stage_desc] = 
+      val ____ptr = apply()
+      (!____ptr).source = source
+      (!____ptr).bytecode = bytecode
+      (!____ptr).entry = entry
+      (!____ptr).d3d11_target = d3d11_target
+      (!____ptr).uniform_blocks = uniform_blocks
+      (!____ptr).images = images
+      ____ptr
     extension (struct: sg_shader_stage_desc)
       def source: CString = struct._1
       def source_=(value: CString): Unit = !struct.at1 = value
@@ -1571,6 +2044,12 @@ object types:
   opaque type sg_shader_uniform_block_desc = CStruct2[size_t, CArray[sg_shader_uniform_desc, Nat.Digit2[Nat._1, Nat._6]]]
   object sg_shader_uniform_block_desc:
     given _tag: Tag[sg_shader_uniform_block_desc] = Tag.materializeCStruct2Tag[size_t, CArray[sg_shader_uniform_desc, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[sg_shader_uniform_block_desc] = scala.scalanative.unsafe.alloc[sg_shader_uniform_block_desc](1)
+    def apply(size: size_t, uniforms: CArray[sg_shader_uniform_desc, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[sg_shader_uniform_block_desc] = 
+      val ____ptr = apply()
+      (!____ptr).size = size
+      (!____ptr).uniforms = uniforms
+      ____ptr
     extension (struct: sg_shader_uniform_block_desc)
       def size: size_t = struct._1
       def size_=(value: size_t): Unit = !struct.at1 = value
@@ -1580,6 +2059,13 @@ object types:
   opaque type sg_shader_uniform_desc = CStruct3[CString, sg_uniform_type, CInt]
   object sg_shader_uniform_desc:
     given _tag: Tag[sg_shader_uniform_desc] = Tag.materializeCStruct3Tag[CString, sg_uniform_type, CInt]
+    def apply()(using Zone): Ptr[sg_shader_uniform_desc] = scala.scalanative.unsafe.alloc[sg_shader_uniform_desc](1)
+    def apply(name: CString, `type`: sg_uniform_type, array_count: CInt)(using Zone): Ptr[sg_shader_uniform_desc] = 
+      val ____ptr = apply()
+      (!____ptr).name = name
+      (!____ptr).`type` = `type`
+      (!____ptr).array_count = array_count
+      ____ptr
     extension (struct: sg_shader_uniform_desc)
       def name: CString = struct._1
       def name_=(value: CString): Unit = !struct.at1 = value
@@ -1591,6 +2077,13 @@ object types:
   opaque type sg_slot_info = CStruct3[sg_resource_state, uint32_t, uint32_t]
   object sg_slot_info:
     given _tag: Tag[sg_slot_info] = Tag.materializeCStruct3Tag[sg_resource_state, uint32_t, uint32_t]
+    def apply()(using Zone): Ptr[sg_slot_info] = scala.scalanative.unsafe.alloc[sg_slot_info](1)
+    def apply(state: sg_resource_state, res_id: uint32_t, ctx_id: uint32_t)(using Zone): Ptr[sg_slot_info] = 
+      val ____ptr = apply()
+      (!____ptr).state = state
+      (!____ptr).res_id = res_id
+      (!____ptr).ctx_id = ctx_id
+      ____ptr
     extension (struct: sg_slot_info)
       def state: sg_resource_state = struct._1
       def state_=(value: sg_resource_state): Unit = !struct.at1 = value
@@ -1602,6 +2095,12 @@ object types:
   opaque type sg_stencil_attachment_action = CStruct2[sg_action, uint8_t]
   object sg_stencil_attachment_action:
     given _tag: Tag[sg_stencil_attachment_action] = Tag.materializeCStruct2Tag[sg_action, uint8_t]
+    def apply()(using Zone): Ptr[sg_stencil_attachment_action] = scala.scalanative.unsafe.alloc[sg_stencil_attachment_action](1)
+    def apply(action: sg_action, value: uint8_t)(using Zone): Ptr[sg_stencil_attachment_action] = 
+      val ____ptr = apply()
+      (!____ptr).action = action
+      (!____ptr).value = value
+      ____ptr
     extension (struct: sg_stencil_attachment_action)
       def action: sg_action = struct._1
       def action_=(value: sg_action): Unit = !struct.at1 = value
@@ -1611,6 +2110,14 @@ object types:
   opaque type sg_stencil_face_state = CStruct4[sg_compare_func, sg_stencil_op, sg_stencil_op, sg_stencil_op]
   object sg_stencil_face_state:
     given _tag: Tag[sg_stencil_face_state] = Tag.materializeCStruct4Tag[sg_compare_func, sg_stencil_op, sg_stencil_op, sg_stencil_op]
+    def apply()(using Zone): Ptr[sg_stencil_face_state] = scala.scalanative.unsafe.alloc[sg_stencil_face_state](1)
+    def apply(compare: sg_compare_func, fail_op: sg_stencil_op, depth_fail_op: sg_stencil_op, pass_op: sg_stencil_op)(using Zone): Ptr[sg_stencil_face_state] = 
+      val ____ptr = apply()
+      (!____ptr).compare = compare
+      (!____ptr).fail_op = fail_op
+      (!____ptr).depth_fail_op = depth_fail_op
+      (!____ptr).pass_op = pass_op
+      ____ptr
     extension (struct: sg_stencil_face_state)
       def compare: sg_compare_func = struct._1
       def compare_=(value: sg_compare_func): Unit = !struct.at1 = value
@@ -1624,6 +2131,16 @@ object types:
   opaque type sg_stencil_state = CStruct6[CInt, sg_stencil_face_state, sg_stencil_face_state, uint8_t, uint8_t, uint8_t]
   object sg_stencil_state:
     given _tag: Tag[sg_stencil_state] = Tag.materializeCStruct6Tag[CInt, sg_stencil_face_state, sg_stencil_face_state, uint8_t, uint8_t, uint8_t]
+    def apply()(using Zone): Ptr[sg_stencil_state] = scala.scalanative.unsafe.alloc[sg_stencil_state](1)
+    def apply(enabled: CInt, front: sg_stencil_face_state, back: sg_stencil_face_state, read_mask: uint8_t, write_mask: uint8_t, ref: uint8_t)(using Zone): Ptr[sg_stencil_state] = 
+      val ____ptr = apply()
+      (!____ptr).enabled = enabled
+      (!____ptr).front = front
+      (!____ptr).back = back
+      (!____ptr).read_mask = read_mask
+      (!____ptr).write_mask = write_mask
+      (!____ptr).ref = ref
+      ____ptr
     extension (struct: sg_stencil_state)
       def enabled: CInt = struct._1
       def enabled_=(value: CInt): Unit = !struct.at1 = value
@@ -1641,6 +2158,71 @@ object types:
   opaque type sg_trace_hooks = CArray[Byte, Nat.Digit3[Nat._4, Nat._8, Nat._8]]
   object sg_trace_hooks:
     given _tag: Tag[sg_trace_hooks] = Tag.CArray[CChar, Nat.Digit3[Nat._4, Nat._8, Nat._8]](Tag.Byte, Tag.Digit3[Nat._4, Nat._8, Nat._8](Tag.Nat4, Tag.Nat8, Tag.Nat8))
+    def apply()(using Zone): Ptr[sg_trace_hooks] = scala.scalanative.unsafe.alloc[sg_trace_hooks](1)
+    def apply(user_data: Ptr[Byte], reset_state_cache: Ptr[CFuncPtr1[Ptr[Byte], Unit]], make_buffer: Ptr[CFuncPtr3[Ptr[sg_buffer_desc], sg_buffer, Ptr[Byte], Unit]], make_image: Ptr[CFuncPtr3[Ptr[sg_image_desc], sg_image, Ptr[Byte], Unit]], make_shader: Ptr[CFuncPtr3[Ptr[sg_shader_desc], sg_shader, Ptr[Byte], Unit]], make_pipeline: Ptr[CFuncPtr3[Ptr[sg_pipeline_desc], sg_pipeline, Ptr[Byte], Unit]], make_pass: Ptr[CFuncPtr3[Ptr[sg_pass_desc], sg_pass, Ptr[Byte], Unit]], destroy_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]], destroy_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]], destroy_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]], destroy_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]], destroy_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]], update_buffer: Ptr[CFuncPtr3[sg_buffer, Ptr[sg_range], Ptr[Byte], Unit]], update_image: Ptr[CFuncPtr3[sg_image, Ptr[sg_image_data], Ptr[Byte], Unit]], append_buffer: Ptr[CFuncPtr4[sg_buffer, Ptr[sg_range], CInt, Ptr[Byte], Unit]], begin_default_pass: Ptr[CFuncPtr4[Ptr[sg_pass_action], CInt, CInt, Ptr[Byte], Unit]], begin_pass: Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_action], Ptr[Byte], Unit]], apply_viewport: Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]], apply_scissor_rect: Ptr[CFuncPtr6[CInt, CInt, CInt, CInt, CInt, Ptr[Byte], Unit]], apply_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]], apply_bindings: Ptr[CFuncPtr2[Ptr[sg_bindings], Ptr[Byte], Unit]], apply_uniforms: Ptr[CFuncPtr4[sg_shader_stage, CInt, Ptr[sg_range], Ptr[Byte], Unit]], draw: Ptr[CFuncPtr4[CInt, CInt, CInt, Ptr[Byte], Unit]], end_pass: Ptr[CFuncPtr1[Ptr[Byte], Unit]], commit: Ptr[CFuncPtr1[Ptr[Byte], Unit]], alloc_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]], alloc_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]], alloc_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]], alloc_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]], alloc_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]], dealloc_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]], dealloc_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]], dealloc_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]], dealloc_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]], dealloc_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]], init_buffer: Ptr[CFuncPtr3[sg_buffer, Ptr[sg_buffer_desc], Ptr[Byte], Unit]], init_image: Ptr[CFuncPtr3[sg_image, Ptr[sg_image_desc], Ptr[Byte], Unit]], init_shader: Ptr[CFuncPtr3[sg_shader, Ptr[sg_shader_desc], Ptr[Byte], Unit]], init_pipeline: Ptr[CFuncPtr3[sg_pipeline, Ptr[sg_pipeline_desc], Ptr[Byte], Unit]], init_pass: Ptr[CFuncPtr3[sg_pass, Ptr[sg_pass_desc], Ptr[Byte], Unit]], uninit_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]], uninit_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]], uninit_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]], uninit_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]], uninit_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]], fail_buffer: Ptr[CFuncPtr2[sg_buffer, Ptr[Byte], Unit]], fail_image: Ptr[CFuncPtr2[sg_image, Ptr[Byte], Unit]], fail_shader: Ptr[CFuncPtr2[sg_shader, Ptr[Byte], Unit]], fail_pipeline: Ptr[CFuncPtr2[sg_pipeline, Ptr[Byte], Unit]], fail_pass: Ptr[CFuncPtr2[sg_pass, Ptr[Byte], Unit]], push_debug_group: Ptr[CFuncPtr2[CString, Ptr[Byte], Unit]], pop_debug_group: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_buffer_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_image_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_shader_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_pipeline_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_pass_pool_exhausted: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_context_mismatch: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_pass_invalid: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_draw_invalid: Ptr[CFuncPtr1[Ptr[Byte], Unit]], err_bindings_invalid: Ptr[CFuncPtr1[Ptr[Byte], Unit]])(using Zone): Ptr[sg_trace_hooks] = 
+      val ____ptr = apply()
+      (!____ptr).user_data = user_data
+      (!____ptr).reset_state_cache = reset_state_cache
+      (!____ptr).make_buffer = make_buffer
+      (!____ptr).make_image = make_image
+      (!____ptr).make_shader = make_shader
+      (!____ptr).make_pipeline = make_pipeline
+      (!____ptr).make_pass = make_pass
+      (!____ptr).destroy_buffer = destroy_buffer
+      (!____ptr).destroy_image = destroy_image
+      (!____ptr).destroy_shader = destroy_shader
+      (!____ptr).destroy_pipeline = destroy_pipeline
+      (!____ptr).destroy_pass = destroy_pass
+      (!____ptr).update_buffer = update_buffer
+      (!____ptr).update_image = update_image
+      (!____ptr).append_buffer = append_buffer
+      (!____ptr).begin_default_pass = begin_default_pass
+      (!____ptr).begin_pass = begin_pass
+      (!____ptr).apply_viewport = apply_viewport
+      (!____ptr).apply_scissor_rect = apply_scissor_rect
+      (!____ptr).apply_pipeline = apply_pipeline
+      (!____ptr).apply_bindings = apply_bindings
+      (!____ptr).apply_uniforms = apply_uniforms
+      (!____ptr).draw = draw
+      (!____ptr).end_pass = end_pass
+      (!____ptr).commit = commit
+      (!____ptr).alloc_buffer = alloc_buffer
+      (!____ptr).alloc_image = alloc_image
+      (!____ptr).alloc_shader = alloc_shader
+      (!____ptr).alloc_pipeline = alloc_pipeline
+      (!____ptr).alloc_pass = alloc_pass
+      (!____ptr).dealloc_buffer = dealloc_buffer
+      (!____ptr).dealloc_image = dealloc_image
+      (!____ptr).dealloc_shader = dealloc_shader
+      (!____ptr).dealloc_pipeline = dealloc_pipeline
+      (!____ptr).dealloc_pass = dealloc_pass
+      (!____ptr).init_buffer = init_buffer
+      (!____ptr).init_image = init_image
+      (!____ptr).init_shader = init_shader
+      (!____ptr).init_pipeline = init_pipeline
+      (!____ptr).init_pass = init_pass
+      (!____ptr).uninit_buffer = uninit_buffer
+      (!____ptr).uninit_image = uninit_image
+      (!____ptr).uninit_shader = uninit_shader
+      (!____ptr).uninit_pipeline = uninit_pipeline
+      (!____ptr).uninit_pass = uninit_pass
+      (!____ptr).fail_buffer = fail_buffer
+      (!____ptr).fail_image = fail_image
+      (!____ptr).fail_shader = fail_shader
+      (!____ptr).fail_pipeline = fail_pipeline
+      (!____ptr).fail_pass = fail_pass
+      (!____ptr).push_debug_group = push_debug_group
+      (!____ptr).pop_debug_group = pop_debug_group
+      (!____ptr).err_buffer_pool_exhausted = err_buffer_pool_exhausted
+      (!____ptr).err_image_pool_exhausted = err_image_pool_exhausted
+      (!____ptr).err_shader_pool_exhausted = err_shader_pool_exhausted
+      (!____ptr).err_pipeline_pool_exhausted = err_pipeline_pool_exhausted
+      (!____ptr).err_pass_pool_exhausted = err_pass_pool_exhausted
+      (!____ptr).err_context_mismatch = err_context_mismatch
+      (!____ptr).err_pass_invalid = err_pass_invalid
+      (!____ptr).err_draw_invalid = err_draw_invalid
+      (!____ptr).err_bindings_invalid = err_bindings_invalid
+      ____ptr
     extension (struct: sg_trace_hooks)
       def user_data: Ptr[Byte] = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]]
       def user_data_=(value: Ptr[Byte]): Unit = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]] = value
@@ -1768,6 +2350,13 @@ object types:
   opaque type sg_vertex_attr_desc = CStruct3[CInt, CInt, sg_vertex_format]
   object sg_vertex_attr_desc:
     given _tag: Tag[sg_vertex_attr_desc] = Tag.materializeCStruct3Tag[CInt, CInt, sg_vertex_format]
+    def apply()(using Zone): Ptr[sg_vertex_attr_desc] = scala.scalanative.unsafe.alloc[sg_vertex_attr_desc](1)
+    def apply(buffer_index: CInt, offset: CInt, format: sg_vertex_format)(using Zone): Ptr[sg_vertex_attr_desc] = 
+      val ____ptr = apply()
+      (!____ptr).buffer_index = buffer_index
+      (!____ptr).offset = offset
+      (!____ptr).format = format
+      ____ptr
     extension (struct: sg_vertex_attr_desc)
       def buffer_index: CInt = struct._1
       def buffer_index_=(value: CInt): Unit = !struct.at1 = value
@@ -1779,6 +2368,18 @@ object types:
   opaque type sg_wgpu_context_desc = CStruct8[Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
   object sg_wgpu_context_desc:
     given _tag: Tag[sg_wgpu_context_desc] = Tag.materializeCStruct8Tag[Ptr[Byte], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[CFuncPtr0[Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], Ptr[Byte]]
+    def apply()(using Zone): Ptr[sg_wgpu_context_desc] = scala.scalanative.unsafe.alloc[sg_wgpu_context_desc](1)
+    def apply(device: Ptr[Byte], render_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]], render_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], resolve_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]], resolve_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], depth_stencil_view_cb: Ptr[CFuncPtr0[Ptr[Byte]]], depth_stencil_view_userdata_cb: Ptr[CFuncPtr1[Ptr[Byte], Ptr[Byte]]], user_data: Ptr[Byte])(using Zone): Ptr[sg_wgpu_context_desc] = 
+      val ____ptr = apply()
+      (!____ptr).device = device
+      (!____ptr).render_view_cb = render_view_cb
+      (!____ptr).render_view_userdata_cb = render_view_userdata_cb
+      (!____ptr).resolve_view_cb = resolve_view_cb
+      (!____ptr).resolve_view_userdata_cb = resolve_view_userdata_cb
+      (!____ptr).depth_stencil_view_cb = depth_stencil_view_cb
+      (!____ptr).depth_stencil_view_userdata_cb = depth_stencil_view_userdata_cb
+      (!____ptr).user_data = user_data
+      ____ptr
     extension (struct: sg_wgpu_context_desc)
       def device: Ptr[Byte] = struct._1
       def device_=(value: Ptr[Byte]): Unit = !struct.at1 = value
@@ -1807,161 +2408,26 @@ object types:
 private[libsokol] object extern_functions: 
   import types.*
 
-  @name("__sn_wrap_sg_append_buffer")
-  private[libsokol] def __sn_wrap_sg_append_buffer(buf: Ptr[sg_buffer], data: Ptr[sg_range]): CInt = extern
-
-  @name("__sn_wrap_sg_update_image")
-  private[libsokol] def __sn_wrap_sg_update_image(img: Ptr[sg_image], data: Ptr[sg_image_data]): Unit = extern
-
   @name("__sn_wrap_sg_activate_context")
   private[libsokol] def __sn_wrap_sg_activate_context(ctx_id: Ptr[sg_context]): Unit = extern
-
-  @name("__sn_wrap_sg_query_pass_info")
-  private[libsokol] def __sn_wrap_sg_query_pass_info(pass: Ptr[sg_pass], __return: Ptr[sg_pass_info]): Unit = extern
-
-  @name("__sn_wrap_sg_fail_shader")
-  private[libsokol] def __sn_wrap_sg_fail_shader(shd_id: Ptr[sg_shader]): Unit = extern
-
-  @name("__sn_wrap_sg_query_pass_defaults")
-  private[libsokol] def __sn_wrap_sg_query_pass_defaults(desc: Ptr[sg_pass_desc], __return: Ptr[sg_pass_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_dealloc_pipeline")
-  private[libsokol] def __sn_wrap_sg_dealloc_pipeline(pip_id: Ptr[sg_pipeline]): Unit = extern
-
-  @name("__sn_wrap_sg_query_desc")
-  private[libsokol] def __sn_wrap_sg_query_desc(__return: Ptr[sg_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_fail_image")
-  private[libsokol] def __sn_wrap_sg_fail_image(img_id: Ptr[sg_image]): Unit = extern
-
-  @name("__sn_wrap_sg_query_image_info")
-  private[libsokol] def __sn_wrap_sg_query_image_info(img: Ptr[sg_image], __return: Ptr[sg_image_info]): Unit = extern
-
-  @name("__sn_wrap_sg_query_pass_state")
-  private[libsokol] def __sn_wrap_sg_query_pass_state(pass: Ptr[sg_pass]): sg_resource_state = extern
-
-  @name("__sn_wrap_sg_destroy_pass")
-  private[libsokol] def __sn_wrap_sg_destroy_pass(pass: Ptr[sg_pass]): Unit = extern
-
-  @name("__sn_wrap_sg_dealloc_shader")
-  private[libsokol] def __sn_wrap_sg_dealloc_shader(shd_id: Ptr[sg_shader]): Unit = extern
-
-  @name("__sn_wrap_sg_query_pipeline_defaults")
-  private[libsokol] def __sn_wrap_sg_query_pipeline_defaults(desc: Ptr[sg_pipeline_desc], __return: Ptr[sg_pipeline_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_init_image")
-  private[libsokol] def __sn_wrap_sg_init_image(img_id: Ptr[sg_image], desc: Ptr[sg_image_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_update_buffer")
-  private[libsokol] def __sn_wrap_sg_update_buffer(buf: Ptr[sg_buffer], data: Ptr[sg_range]): Unit = extern
-
-  @name("__sn_wrap_sg_fail_pipeline")
-  private[libsokol] def __sn_wrap_sg_fail_pipeline(pip_id: Ptr[sg_pipeline]): Unit = extern
-
-  @name("__sn_wrap_sg_query_pixelformat")
-  private[libsokol] def __sn_wrap_sg_query_pixelformat(fmt: sg_pixel_format, __return: Ptr[sg_pixelformat_info]): Unit = extern
-
-  @name("__sn_wrap_sg_query_pipeline_state")
-  private[libsokol] def __sn_wrap_sg_query_pipeline_state(pip: Ptr[sg_pipeline]): sg_resource_state = extern
-
-  @name("__sn_wrap_sg_fail_buffer")
-  private[libsokol] def __sn_wrap_sg_fail_buffer(buf_id: Ptr[sg_buffer]): Unit = extern
-
-  @name("__sn_wrap_sg_setup_context")
-  private[libsokol] def __sn_wrap_sg_setup_context(__return: Ptr[sg_context]): Unit = extern
-
-  @name("__sn_wrap_sg_dealloc_buffer")
-  private[libsokol] def __sn_wrap_sg_dealloc_buffer(buf_id: Ptr[sg_buffer]): Unit = extern
-
-  @name("__sn_wrap_sg_make_image")
-  private[libsokol] def __sn_wrap_sg_make_image(desc: Ptr[sg_image_desc], __return: Ptr[sg_image]): Unit = extern
-
-  @name("__sn_wrap_sg_destroy_image")
-  private[libsokol] def __sn_wrap_sg_destroy_image(img: Ptr[sg_image]): Unit = extern
-
-  @name("__sn_wrap_sg_alloc_pipeline")
-  private[libsokol] def __sn_wrap_sg_alloc_pipeline(__return: Ptr[sg_pipeline]): Unit = extern
-
-  @name("__sn_wrap_sg_query_image_state")
-  private[libsokol] def __sn_wrap_sg_query_image_state(img: Ptr[sg_image]): sg_resource_state = extern
-
-  @name("__sn_wrap_sg_destroy_pipeline")
-  private[libsokol] def __sn_wrap_sg_destroy_pipeline(pip: Ptr[sg_pipeline]): Unit = extern
-
-  @name("__sn_wrap_sg_make_pipeline")
-  private[libsokol] def __sn_wrap_sg_make_pipeline(desc: Ptr[sg_pipeline_desc], __return: Ptr[sg_pipeline]): Unit = extern
-
-  @name("__sn_wrap_sg_fail_pass")
-  private[libsokol] def __sn_wrap_sg_fail_pass(pass_id: Ptr[sg_pass]): Unit = extern
-
-  @name("__sn_wrap_sg_init_pipeline")
-  private[libsokol] def __sn_wrap_sg_init_pipeline(pip_id: Ptr[sg_pipeline], desc: Ptr[sg_pipeline_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_init_buffer")
-  private[libsokol] def __sn_wrap_sg_init_buffer(buf_id: Ptr[sg_buffer], desc: Ptr[sg_buffer_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_query_pipeline_info")
-  private[libsokol] def __sn_wrap_sg_query_pipeline_info(pip: Ptr[sg_pipeline], __return: Ptr[sg_pipeline_info]): Unit = extern
-
-  @name("__sn_wrap_sg_query_buffer_defaults")
-  private[libsokol] def __sn_wrap_sg_query_buffer_defaults(desc: Ptr[sg_buffer_desc], __return: Ptr[sg_buffer_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_make_buffer")
-  private[libsokol] def __sn_wrap_sg_make_buffer(desc: Ptr[sg_buffer_desc], __return: Ptr[sg_buffer]): Unit = extern
-
-  @name("__sn_wrap_sg_alloc_shader")
-  private[libsokol] def __sn_wrap_sg_alloc_shader(__return: Ptr[sg_shader]): Unit = extern
 
   @name("__sn_wrap_sg_alloc_buffer")
   private[libsokol] def __sn_wrap_sg_alloc_buffer(__return: Ptr[sg_buffer]): Unit = extern
 
-  @name("__sn_wrap_sg_query_limits")
-  private[libsokol] def __sn_wrap_sg_query_limits(__return: Ptr[sg_limits]): Unit = extern
-
-  @name("__sn_wrap_sg_discard_context")
-  private[libsokol] def __sn_wrap_sg_discard_context(ctx_id: Ptr[sg_context]): Unit = extern
-
-  @name("__sn_wrap_sg_install_trace_hooks")
-  private[libsokol] def __sn_wrap_sg_install_trace_hooks(trace_hooks: Ptr[sg_trace_hooks], __return: Ptr[sg_trace_hooks]): Unit = extern
-
   @name("__sn_wrap_sg_alloc_image")
   private[libsokol] def __sn_wrap_sg_alloc_image(__return: Ptr[sg_image]): Unit = extern
-
-  @name("__sn_wrap_sg_init_shader")
-  private[libsokol] def __sn_wrap_sg_init_shader(shd_id: Ptr[sg_shader], desc: Ptr[sg_shader_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_destroy_buffer")
-  private[libsokol] def __sn_wrap_sg_destroy_buffer(buf: Ptr[sg_buffer]): Unit = extern
-
-  @name("__sn_wrap_sg_query_shader_info")
-  private[libsokol] def __sn_wrap_sg_query_shader_info(shd: Ptr[sg_shader], __return: Ptr[sg_shader_info]): Unit = extern
-
-  @name("__sn_wrap_sg_init_pass")
-  private[libsokol] def __sn_wrap_sg_init_pass(pass_id: Ptr[sg_pass], desc: Ptr[sg_pass_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_query_image_defaults")
-  private[libsokol] def __sn_wrap_sg_query_image_defaults(desc: Ptr[sg_image_desc], __return: Ptr[sg_image_desc]): Unit = extern
-
-  @name("__sn_wrap_sg_query_buffer_state")
-  private[libsokol] def __sn_wrap_sg_query_buffer_state(buf: Ptr[sg_buffer]): sg_resource_state = extern
-
-  @name("__sn_wrap_sg_query_shader_state")
-  private[libsokol] def __sn_wrap_sg_query_shader_state(shd: Ptr[sg_shader]): sg_resource_state = extern
-
-  @name("__sn_wrap_sg_query_buffer_info")
-  private[libsokol] def __sn_wrap_sg_query_buffer_info(buf: Ptr[sg_buffer], __return: Ptr[sg_buffer_info]): Unit = extern
-
-  @name("__sn_wrap_sg_destroy_shader")
-  private[libsokol] def __sn_wrap_sg_destroy_shader(shd: Ptr[sg_shader]): Unit = extern
-
-  @name("__sn_wrap_sg_make_shader")
-  private[libsokol] def __sn_wrap_sg_make_shader(desc: Ptr[sg_shader_desc], __return: Ptr[sg_shader]): Unit = extern
 
   @name("__sn_wrap_sg_alloc_pass")
   private[libsokol] def __sn_wrap_sg_alloc_pass(__return: Ptr[sg_pass]): Unit = extern
 
-  @name("__sn_wrap_sg_dealloc_pass")
-  private[libsokol] def __sn_wrap_sg_dealloc_pass(pass_id: Ptr[sg_pass]): Unit = extern
+  @name("__sn_wrap_sg_alloc_pipeline")
+  private[libsokol] def __sn_wrap_sg_alloc_pipeline(__return: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_alloc_shader")
+  private[libsokol] def __sn_wrap_sg_alloc_shader(__return: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_append_buffer")
+  private[libsokol] def __sn_wrap_sg_append_buffer(buf: Ptr[sg_buffer], data: Ptr[sg_range]): CInt = extern
 
   @name("__sn_wrap_sg_apply_pipeline")
   private[libsokol] def __sn_wrap_sg_apply_pipeline(pip: Ptr[sg_pipeline]): Unit = extern
@@ -1969,17 +2435,152 @@ private[libsokol] object extern_functions:
   @name("__sn_wrap_sg_begin_pass")
   private[libsokol] def __sn_wrap_sg_begin_pass(pass: Ptr[sg_pass], pass_action: Ptr[sg_pass_action]): Unit = extern
 
-  @name("__sn_wrap_sg_query_features")
-  private[libsokol] def __sn_wrap_sg_query_features(__return: Ptr[sg_features]): Unit = extern
-
-  @name("__sn_wrap_sg_make_pass")
-  private[libsokol] def __sn_wrap_sg_make_pass(desc: Ptr[sg_pass_desc], __return: Ptr[sg_pass]): Unit = extern
+  @name("__sn_wrap_sg_dealloc_buffer")
+  private[libsokol] def __sn_wrap_sg_dealloc_buffer(buf_id: Ptr[sg_buffer]): Unit = extern
 
   @name("__sn_wrap_sg_dealloc_image")
   private[libsokol] def __sn_wrap_sg_dealloc_image(img_id: Ptr[sg_image]): Unit = extern
 
+  @name("__sn_wrap_sg_dealloc_pass")
+  private[libsokol] def __sn_wrap_sg_dealloc_pass(pass_id: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_dealloc_pipeline")
+  private[libsokol] def __sn_wrap_sg_dealloc_pipeline(pip_id: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_dealloc_shader")
+  private[libsokol] def __sn_wrap_sg_dealloc_shader(shd_id: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_destroy_buffer")
+  private[libsokol] def __sn_wrap_sg_destroy_buffer(buf: Ptr[sg_buffer]): Unit = extern
+
+  @name("__sn_wrap_sg_destroy_image")
+  private[libsokol] def __sn_wrap_sg_destroy_image(img: Ptr[sg_image]): Unit = extern
+
+  @name("__sn_wrap_sg_destroy_pass")
+  private[libsokol] def __sn_wrap_sg_destroy_pass(pass: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_destroy_pipeline")
+  private[libsokol] def __sn_wrap_sg_destroy_pipeline(pip: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_destroy_shader")
+  private[libsokol] def __sn_wrap_sg_destroy_shader(shd: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_discard_context")
+  private[libsokol] def __sn_wrap_sg_discard_context(ctx_id: Ptr[sg_context]): Unit = extern
+
+  @name("__sn_wrap_sg_fail_buffer")
+  private[libsokol] def __sn_wrap_sg_fail_buffer(buf_id: Ptr[sg_buffer]): Unit = extern
+
+  @name("__sn_wrap_sg_fail_image")
+  private[libsokol] def __sn_wrap_sg_fail_image(img_id: Ptr[sg_image]): Unit = extern
+
+  @name("__sn_wrap_sg_fail_pass")
+  private[libsokol] def __sn_wrap_sg_fail_pass(pass_id: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_fail_pipeline")
+  private[libsokol] def __sn_wrap_sg_fail_pipeline(pip_id: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_fail_shader")
+  private[libsokol] def __sn_wrap_sg_fail_shader(shd_id: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_init_buffer")
+  private[libsokol] def __sn_wrap_sg_init_buffer(buf_id: Ptr[sg_buffer], desc: Ptr[sg_buffer_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_init_image")
+  private[libsokol] def __sn_wrap_sg_init_image(img_id: Ptr[sg_image], desc: Ptr[sg_image_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_init_pass")
+  private[libsokol] def __sn_wrap_sg_init_pass(pass_id: Ptr[sg_pass], desc: Ptr[sg_pass_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_init_pipeline")
+  private[libsokol] def __sn_wrap_sg_init_pipeline(pip_id: Ptr[sg_pipeline], desc: Ptr[sg_pipeline_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_init_shader")
+  private[libsokol] def __sn_wrap_sg_init_shader(shd_id: Ptr[sg_shader], desc: Ptr[sg_shader_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_install_trace_hooks")
+  private[libsokol] def __sn_wrap_sg_install_trace_hooks(trace_hooks: Ptr[sg_trace_hooks], __return: Ptr[sg_trace_hooks]): Unit = extern
+
+  @name("__sn_wrap_sg_make_buffer")
+  private[libsokol] def __sn_wrap_sg_make_buffer(desc: Ptr[sg_buffer_desc], __return: Ptr[sg_buffer]): Unit = extern
+
+  @name("__sn_wrap_sg_make_image")
+  private[libsokol] def __sn_wrap_sg_make_image(desc: Ptr[sg_image_desc], __return: Ptr[sg_image]): Unit = extern
+
+  @name("__sn_wrap_sg_make_pass")
+  private[libsokol] def __sn_wrap_sg_make_pass(desc: Ptr[sg_pass_desc], __return: Ptr[sg_pass]): Unit = extern
+
+  @name("__sn_wrap_sg_make_pipeline")
+  private[libsokol] def __sn_wrap_sg_make_pipeline(desc: Ptr[sg_pipeline_desc], __return: Ptr[sg_pipeline]): Unit = extern
+
+  @name("__sn_wrap_sg_make_shader")
+  private[libsokol] def __sn_wrap_sg_make_shader(desc: Ptr[sg_shader_desc], __return: Ptr[sg_shader]): Unit = extern
+
+  @name("__sn_wrap_sg_query_buffer_defaults")
+  private[libsokol] def __sn_wrap_sg_query_buffer_defaults(desc: Ptr[sg_buffer_desc], __return: Ptr[sg_buffer_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_buffer_info")
+  private[libsokol] def __sn_wrap_sg_query_buffer_info(buf: Ptr[sg_buffer], __return: Ptr[sg_buffer_info]): Unit = extern
+
+  @name("__sn_wrap_sg_query_buffer_state")
+  private[libsokol] def __sn_wrap_sg_query_buffer_state(buf: Ptr[sg_buffer]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_query_desc")
+  private[libsokol] def __sn_wrap_sg_query_desc(__return: Ptr[sg_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_features")
+  private[libsokol] def __sn_wrap_sg_query_features(__return: Ptr[sg_features]): Unit = extern
+
+  @name("__sn_wrap_sg_query_image_defaults")
+  private[libsokol] def __sn_wrap_sg_query_image_defaults(desc: Ptr[sg_image_desc], __return: Ptr[sg_image_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_image_info")
+  private[libsokol] def __sn_wrap_sg_query_image_info(img: Ptr[sg_image], __return: Ptr[sg_image_info]): Unit = extern
+
+  @name("__sn_wrap_sg_query_image_state")
+  private[libsokol] def __sn_wrap_sg_query_image_state(img: Ptr[sg_image]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_query_limits")
+  private[libsokol] def __sn_wrap_sg_query_limits(__return: Ptr[sg_limits]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pass_defaults")
+  private[libsokol] def __sn_wrap_sg_query_pass_defaults(desc: Ptr[sg_pass_desc], __return: Ptr[sg_pass_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pass_info")
+  private[libsokol] def __sn_wrap_sg_query_pass_info(pass: Ptr[sg_pass], __return: Ptr[sg_pass_info]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pass_state")
+  private[libsokol] def __sn_wrap_sg_query_pass_state(pass: Ptr[sg_pass]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_query_pipeline_defaults")
+  private[libsokol] def __sn_wrap_sg_query_pipeline_defaults(desc: Ptr[sg_pipeline_desc], __return: Ptr[sg_pipeline_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pipeline_info")
+  private[libsokol] def __sn_wrap_sg_query_pipeline_info(pip: Ptr[sg_pipeline], __return: Ptr[sg_pipeline_info]): Unit = extern
+
+  @name("__sn_wrap_sg_query_pipeline_state")
+  private[libsokol] def __sn_wrap_sg_query_pipeline_state(pip: Ptr[sg_pipeline]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_query_pixelformat")
+  private[libsokol] def __sn_wrap_sg_query_pixelformat(fmt: sg_pixel_format, __return: Ptr[sg_pixelformat_info]): Unit = extern
+
   @name("__sn_wrap_sg_query_shader_defaults")
   private[libsokol] def __sn_wrap_sg_query_shader_defaults(desc: Ptr[sg_shader_desc], __return: Ptr[sg_shader_desc]): Unit = extern
+
+  @name("__sn_wrap_sg_query_shader_info")
+  private[libsokol] def __sn_wrap_sg_query_shader_info(shd: Ptr[sg_shader], __return: Ptr[sg_shader_info]): Unit = extern
+
+  @name("__sn_wrap_sg_query_shader_state")
+  private[libsokol] def __sn_wrap_sg_query_shader_state(shd: Ptr[sg_shader]): sg_resource_state = extern
+
+  @name("__sn_wrap_sg_setup_context")
+  private[libsokol] def __sn_wrap_sg_setup_context(__return: Ptr[sg_context]): Unit = extern
+
+  @name("__sn_wrap_sg_update_buffer")
+  private[libsokol] def __sn_wrap_sg_update_buffer(buf: Ptr[sg_buffer], data: Ptr[sg_range]): Unit = extern
+
+  @name("__sn_wrap_sg_update_image")
+  private[libsokol] def __sn_wrap_sg_update_image(img: Ptr[sg_image], data: Ptr[sg_image_data]): Unit = extern
 
   def sg_apply_bindings(bindings: Ptr[sg_bindings]): Unit = extern
 
@@ -2042,6 +2643,7 @@ object functions:
 
   def sg_activate_context(ctx_id: sg_context)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_context](1)
+    !_ptr_0 = ctx_id
     __sn_wrap_sg_activate_context(_ptr_0)
 
   def sg_alloc_buffer()(using Zone): sg_buffer = 
@@ -2071,98 +2673,122 @@ object functions:
 
   def sg_append_buffer(buf: sg_buffer, data: Ptr[sg_range])(using Zone): CInt = 
     val _ptr_0 = alloc[sg_buffer](1)
+    !_ptr_0 = buf
     __sn_wrap_sg_append_buffer(_ptr_0, data)
 
   def sg_apply_pipeline(pip: sg_pipeline)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pipeline](1)
+    !_ptr_0 = pip
     __sn_wrap_sg_apply_pipeline(_ptr_0)
 
   def sg_begin_pass(pass: sg_pass, pass_action: Ptr[sg_pass_action])(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pass](1)
+    !_ptr_0 = pass
     __sn_wrap_sg_begin_pass(_ptr_0, pass_action)
 
   def sg_dealloc_buffer(buf_id: sg_buffer)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_buffer](1)
+    !_ptr_0 = buf_id
     __sn_wrap_sg_dealloc_buffer(_ptr_0)
 
   def sg_dealloc_image(img_id: sg_image)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_image](1)
+    !_ptr_0 = img_id
     __sn_wrap_sg_dealloc_image(_ptr_0)
 
   def sg_dealloc_pass(pass_id: sg_pass)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pass](1)
+    !_ptr_0 = pass_id
     __sn_wrap_sg_dealloc_pass(_ptr_0)
 
   def sg_dealloc_pipeline(pip_id: sg_pipeline)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pipeline](1)
+    !_ptr_0 = pip_id
     __sn_wrap_sg_dealloc_pipeline(_ptr_0)
 
   def sg_dealloc_shader(shd_id: sg_shader)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_shader](1)
+    !_ptr_0 = shd_id
     __sn_wrap_sg_dealloc_shader(_ptr_0)
 
   def sg_destroy_buffer(buf: sg_buffer)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_buffer](1)
+    !_ptr_0 = buf
     __sn_wrap_sg_destroy_buffer(_ptr_0)
 
   def sg_destroy_image(img: sg_image)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_image](1)
+    !_ptr_0 = img
     __sn_wrap_sg_destroy_image(_ptr_0)
 
   def sg_destroy_pass(pass: sg_pass)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pass](1)
+    !_ptr_0 = pass
     __sn_wrap_sg_destroy_pass(_ptr_0)
 
   def sg_destroy_pipeline(pip: sg_pipeline)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pipeline](1)
+    !_ptr_0 = pip
     __sn_wrap_sg_destroy_pipeline(_ptr_0)
 
   def sg_destroy_shader(shd: sg_shader)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_shader](1)
+    !_ptr_0 = shd
     __sn_wrap_sg_destroy_shader(_ptr_0)
 
   def sg_discard_context(ctx_id: sg_context)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_context](1)
+    !_ptr_0 = ctx_id
     __sn_wrap_sg_discard_context(_ptr_0)
 
   def sg_fail_buffer(buf_id: sg_buffer)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_buffer](1)
+    !_ptr_0 = buf_id
     __sn_wrap_sg_fail_buffer(_ptr_0)
 
   def sg_fail_image(img_id: sg_image)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_image](1)
+    !_ptr_0 = img_id
     __sn_wrap_sg_fail_image(_ptr_0)
 
   def sg_fail_pass(pass_id: sg_pass)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pass](1)
+    !_ptr_0 = pass_id
     __sn_wrap_sg_fail_pass(_ptr_0)
 
   def sg_fail_pipeline(pip_id: sg_pipeline)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pipeline](1)
+    !_ptr_0 = pip_id
     __sn_wrap_sg_fail_pipeline(_ptr_0)
 
   def sg_fail_shader(shd_id: sg_shader)(using Zone): Unit = 
     val _ptr_0 = alloc[sg_shader](1)
+    !_ptr_0 = shd_id
     __sn_wrap_sg_fail_shader(_ptr_0)
 
   def sg_init_buffer(buf_id: sg_buffer, desc: Ptr[sg_buffer_desc])(using Zone): Unit = 
     val _ptr_0 = alloc[sg_buffer](1)
+    !_ptr_0 = buf_id
     __sn_wrap_sg_init_buffer(_ptr_0, desc)
 
   def sg_init_image(img_id: sg_image, desc: Ptr[sg_image_desc])(using Zone): Unit = 
     val _ptr_0 = alloc[sg_image](1)
+    !_ptr_0 = img_id
     __sn_wrap_sg_init_image(_ptr_0, desc)
 
   def sg_init_pass(pass_id: sg_pass, desc: Ptr[sg_pass_desc])(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pass](1)
+    !_ptr_0 = pass_id
     __sn_wrap_sg_init_pass(_ptr_0, desc)
 
   def sg_init_pipeline(pip_id: sg_pipeline, desc: Ptr[sg_pipeline_desc])(using Zone): Unit = 
     val _ptr_0 = alloc[sg_pipeline](1)
+    !_ptr_0 = pip_id
     __sn_wrap_sg_init_pipeline(_ptr_0, desc)
 
   def sg_init_shader(shd_id: sg_shader, desc: Ptr[sg_shader_desc])(using Zone): Unit = 
     val _ptr_0 = alloc[sg_shader](1)
+    !_ptr_0 = shd_id
     __sn_wrap_sg_init_shader(_ptr_0, desc)
 
   def sg_install_trace_hooks(trace_hooks: Ptr[sg_trace_hooks])(using Zone): sg_trace_hooks = 
@@ -2202,12 +2828,14 @@ object functions:
 
   def sg_query_buffer_info(buf: sg_buffer)(using Zone): sg_buffer_info = 
     val _ptr_0 = alloc[sg_buffer](1)
+    !_ptr_0 = buf
     val _ptr_return = alloc[sg_buffer_info](1)
     __sn_wrap_sg_query_buffer_info(_ptr_0, _ptr_return)
     !_ptr_return
 
   def sg_query_buffer_state(buf: sg_buffer)(using Zone): sg_resource_state = 
     val _ptr_0 = alloc[sg_buffer](1)
+    !_ptr_0 = buf
     __sn_wrap_sg_query_buffer_state(_ptr_0)
 
   def sg_query_desc()(using Zone): sg_desc = 
@@ -2227,12 +2855,14 @@ object functions:
 
   def sg_query_image_info(img: sg_image)(using Zone): sg_image_info = 
     val _ptr_0 = alloc[sg_image](1)
+    !_ptr_0 = img
     val _ptr_return = alloc[sg_image_info](1)
     __sn_wrap_sg_query_image_info(_ptr_0, _ptr_return)
     !_ptr_return
 
   def sg_query_image_state(img: sg_image)(using Zone): sg_resource_state = 
     val _ptr_0 = alloc[sg_image](1)
+    !_ptr_0 = img
     __sn_wrap_sg_query_image_state(_ptr_0)
 
   def sg_query_limits()(using Zone): sg_limits = 
@@ -2247,12 +2877,14 @@ object functions:
 
   def sg_query_pass_info(pass: sg_pass)(using Zone): sg_pass_info = 
     val _ptr_0 = alloc[sg_pass](1)
+    !_ptr_0 = pass
     val _ptr_return = alloc[sg_pass_info](1)
     __sn_wrap_sg_query_pass_info(_ptr_0, _ptr_return)
     !_ptr_return
 
   def sg_query_pass_state(pass: sg_pass)(using Zone): sg_resource_state = 
     val _ptr_0 = alloc[sg_pass](1)
+    !_ptr_0 = pass
     __sn_wrap_sg_query_pass_state(_ptr_0)
 
   def sg_query_pipeline_defaults(desc: Ptr[sg_pipeline_desc])(using Zone): sg_pipeline_desc = 
@@ -2262,12 +2894,14 @@ object functions:
 
   def sg_query_pipeline_info(pip: sg_pipeline)(using Zone): sg_pipeline_info = 
     val _ptr_0 = alloc[sg_pipeline](1)
+    !_ptr_0 = pip
     val _ptr_return = alloc[sg_pipeline_info](1)
     __sn_wrap_sg_query_pipeline_info(_ptr_0, _ptr_return)
     !_ptr_return
 
   def sg_query_pipeline_state(pip: sg_pipeline)(using Zone): sg_resource_state = 
     val _ptr_0 = alloc[sg_pipeline](1)
+    !_ptr_0 = pip
     __sn_wrap_sg_query_pipeline_state(_ptr_0)
 
   def sg_query_pixelformat(fmt: sg_pixel_format)(using Zone): sg_pixelformat_info = 
@@ -2282,12 +2916,14 @@ object functions:
 
   def sg_query_shader_info(shd: sg_shader)(using Zone): sg_shader_info = 
     val _ptr_0 = alloc[sg_shader](1)
+    !_ptr_0 = shd
     val _ptr_return = alloc[sg_shader_info](1)
     __sn_wrap_sg_query_shader_info(_ptr_0, _ptr_return)
     !_ptr_return
 
   def sg_query_shader_state(shd: sg_shader)(using Zone): sg_resource_state = 
     val _ptr_0 = alloc[sg_shader](1)
+    !_ptr_0 = shd
     __sn_wrap_sg_query_shader_state(_ptr_0)
 
   def sg_setup_context()(using Zone): sg_context = 
@@ -2297,10 +2933,12 @@ object functions:
 
   def sg_update_buffer(buf: sg_buffer, data: Ptr[sg_range])(using Zone): Unit = 
     val _ptr_0 = alloc[sg_buffer](1)
+    !_ptr_0 = buf
     __sn_wrap_sg_update_buffer(_ptr_0, data)
 
   def sg_update_image(img: sg_image, data: Ptr[sg_image_data])(using Zone): Unit = 
     val _ptr_0 = alloc[sg_image](1)
+    !_ptr_0 = img
     __sn_wrap_sg_update_image(_ptr_0, data)
 
 

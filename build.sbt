@@ -28,12 +28,15 @@ lazy val examples = project
           headerFile: File,
           packageName: String,
           scalaFile: File,
+          cFile: File,
           linkName: String
       )
       val binary = (bindgen / Compile / nativeLink).value
       val headerFilesBase = baseDirectory.value / "libraries"
-      val destinationBase =
+      val destinationScalaBase =
         baseDirectory.value / "src" / "main" / "scala" / "bindings"
+      val destinationCBase =
+        baseDirectory.value / "src" / "main" / "resources" / "scala-native"
 
       val mapping = Map(
         "cJSON.h" -> "libcjson",
@@ -45,23 +48,32 @@ lazy val examples = project
         Binding(
           headerFilesBase / headerFile,
           packageName,
-          destinationBase / s"$packageName.scala",
+          destinationScalaBase / s"$packageName.scala",
+          destinationCBase / s"$packageName.c",
           packageName.replaceFirst("lib", "")
         )
       }
 
-      mapping.foreach { binding =>
-        val cmd = List(
-          binary.toString,
-          binding.packageName,
-          binding.linkName,
-          binding.headerFile.toString
-        )
-        import scala.sys.process.Process
+      List("scala", "c").foreach { lang =>
+        mapping.foreach { binding =>
+          val cmd = List(
+            binary.toString,
+            binding.packageName,
+            binding.linkName,
+            binding.headerFile.toString,
+            lang
+          )
+          import scala.sys.process.Process
 
-        val result = (Process(cmd) #> file(binding.scalaFile.toString)) !
 
-        println(s"Successfully regenerated binding for ${binding.packageName}")
+          val destination = if(lang == "scala") binding.scalaFile else binding.cFile
+
+          val result = (Process(cmd) #> file(destination.toString)) !
+
+          println(
+            s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
+          )
+        }
       }
 
     }

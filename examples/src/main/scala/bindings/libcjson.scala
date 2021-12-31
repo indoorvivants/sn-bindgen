@@ -11,7 +11,7 @@ object predef:
   
   abstract class CEnumU[T](using eq: T =:= UInt):
     given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-        
+      
 object types:
   import predef.*
   opaque type __builtin_va_list = CString
@@ -350,6 +350,12 @@ object types:
   opaque type __darwin_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_attr_t:
     given _tag: Tag[__darwin_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_attr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_attr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[__darwin_pthread_attr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_attr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -359,6 +365,12 @@ object types:
   opaque type __darwin_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object __darwin_pthread_cond_t:
     given _tag: Tag[__darwin_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_cond_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_cond_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]])(using Zone): Ptr[__darwin_pthread_cond_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_cond_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -368,6 +380,12 @@ object types:
   opaque type __darwin_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_condattr_t:
     given _tag: Tag[__darwin_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_condattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_condattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_condattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_condattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -377,6 +395,13 @@ object types:
   opaque type __darwin_pthread_handler_rec = CStruct3[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
   object __darwin_pthread_handler_rec:
     given _tag: Tag[__darwin_pthread_handler_rec] = Tag.materializeCStruct3Tag[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
+    def apply()(using Zone): Ptr[__darwin_pthread_handler_rec] = scala.scalanative.unsafe.alloc[__darwin_pthread_handler_rec](1)
+    def apply(__routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]], __arg: Ptr[Byte], __next: Ptr[__darwin_pthread_handler_rec])(using Zone): Ptr[__darwin_pthread_handler_rec] = 
+      val ____ptr = apply()
+      (!____ptr).__routine = __routine
+      (!____ptr).__arg = __arg
+      (!____ptr).__next = __next
+      ____ptr
     extension (struct: __darwin_pthread_handler_rec)
       def __routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = struct._1
       def __routine_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at1 = value
@@ -388,6 +413,12 @@ object types:
   opaque type __darwin_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_mutex_t:
     given _tag: Tag[__darwin_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_mutex_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_mutex_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[__darwin_pthread_mutex_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_mutex_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -397,6 +428,12 @@ object types:
   opaque type __darwin_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_mutexattr_t:
     given _tag: Tag[__darwin_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_mutexattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_mutexattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_mutexattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -406,6 +443,12 @@ object types:
   opaque type __darwin_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_once_t:
     given _tag: Tag[__darwin_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_once_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_once_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_once_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_once_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -415,6 +458,12 @@ object types:
   opaque type __darwin_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object __darwin_pthread_rwlock_t:
     given _tag: Tag[__darwin_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_rwlock_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_rwlock_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]])(using Zone): Ptr[__darwin_pthread_rwlock_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -424,6 +473,12 @@ object types:
   opaque type __darwin_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object __darwin_pthread_rwlockattr_t:
     given _tag: Tag[__darwin_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_rwlockattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_rwlockattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[__darwin_pthread_rwlockattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -433,6 +488,12 @@ object types:
   opaque type _opaque_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_attr_t:
     given _tag: Tag[_opaque_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_attr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_attr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[_opaque_pthread_attr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_attr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -442,6 +503,12 @@ object types:
   opaque type _opaque_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object _opaque_pthread_cond_t:
     given _tag: Tag[_opaque_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_cond_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_cond_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]])(using Zone): Ptr[_opaque_pthread_cond_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_cond_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -451,6 +518,12 @@ object types:
   opaque type _opaque_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_condattr_t:
     given _tag: Tag[_opaque_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_condattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_condattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_condattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_condattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -460,6 +533,12 @@ object types:
   opaque type _opaque_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_mutex_t:
     given _tag: Tag[_opaque_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_mutex_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_mutex_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[_opaque_pthread_mutex_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_mutex_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -469,6 +548,12 @@ object types:
   opaque type _opaque_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_mutexattr_t:
     given _tag: Tag[_opaque_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_mutexattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_mutexattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_mutexattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -478,6 +563,12 @@ object types:
   opaque type _opaque_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_once_t:
     given _tag: Tag[_opaque_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_once_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_once_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_once_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_once_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -487,6 +578,12 @@ object types:
   opaque type _opaque_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object _opaque_pthread_rwlock_t:
     given _tag: Tag[_opaque_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_rwlock_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_rwlock_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]])(using Zone): Ptr[_opaque_pthread_rwlock_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -496,6 +593,12 @@ object types:
   opaque type _opaque_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object _opaque_pthread_rwlockattr_t:
     given _tag: Tag[_opaque_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_rwlockattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_rwlockattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[_opaque_pthread_rwlockattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -505,6 +608,13 @@ object types:
   opaque type _opaque_pthread_t = CStruct3[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
   object _opaque_pthread_t:
     given _tag: Tag[_opaque_pthread_t] = Tag.materializeCStruct3Tag[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_t](1)
+    def apply(__sig: CLongInt, __cleanup_stack: Ptr[__darwin_pthread_handler_rec], __opaque: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]])(using Zone): Ptr[_opaque_pthread_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__cleanup_stack = __cleanup_stack
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -516,6 +626,18 @@ object types:
   opaque type cJSON = CStruct8[Ptr[Byte], Ptr[Byte], Ptr[Byte], CInt, CString, CInt, Double, CString]
   object cJSON:
     given _tag: Tag[cJSON] = Tag.materializeCStruct8Tag[Ptr[Byte], Ptr[Byte], Ptr[Byte], CInt, CString, CInt, Double, CString]
+    def apply()(using Zone): Ptr[cJSON] = scala.scalanative.unsafe.alloc[cJSON](1)
+    def apply(next: Ptr[cJSON], prev: Ptr[cJSON], child: Ptr[cJSON], `type`: CInt, valuestring: CString, valueint: CInt, valuedouble: Double, string: CString)(using Zone): Ptr[cJSON] = 
+      val ____ptr = apply()
+      (!____ptr).next = next
+      (!____ptr).prev = prev
+      (!____ptr).child = child
+      (!____ptr).`type` = `type`
+      (!____ptr).valuestring = valuestring
+      (!____ptr).valueint = valueint
+      (!____ptr).valuedouble = valuedouble
+      (!____ptr).string = string
+      ____ptr
     extension (struct: cJSON)
       def next: Ptr[cJSON] = struct._1.asInstanceOf[Ptr[cJSON]]
       def next_=(value: Ptr[cJSON]): Unit = !struct.at1 = value.asInstanceOf[Ptr[Byte]]
@@ -537,6 +659,12 @@ object types:
   opaque type cJSON_Hooks = CStruct2[Ptr[CFuncPtr1[size_t, Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Unit]]]
   object cJSON_Hooks:
     given _tag: Tag[cJSON_Hooks] = Tag.materializeCStruct2Tag[Ptr[CFuncPtr1[size_t, Ptr[Byte]]], Ptr[CFuncPtr1[Ptr[Byte], Unit]]]
+    def apply()(using Zone): Ptr[cJSON_Hooks] = scala.scalanative.unsafe.alloc[cJSON_Hooks](1)
+    def apply(malloc_fn: Ptr[CFuncPtr1[size_t, Ptr[Byte]]], free_fn: Ptr[CFuncPtr1[Ptr[Byte], Unit]])(using Zone): Ptr[cJSON_Hooks] = 
+      val ____ptr = apply()
+      (!____ptr).malloc_fn = malloc_fn
+      (!____ptr).free_fn = free_fn
+      ____ptr
     extension (struct: cJSON_Hooks)
       def malloc_fn: Ptr[CFuncPtr1[size_t, Ptr[Byte]]] = struct._1
       def malloc_fn_=(value: Ptr[CFuncPtr1[size_t, Ptr[Byte]]]): Unit = !struct.at1 = value

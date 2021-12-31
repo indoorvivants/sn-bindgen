@@ -20,7 +20,8 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
       name = functionName,
       returnType = constructType(returnType),
       parameters = ListBuffer.empty,
-      tpe = CFunctionType.Extern
+      tpe = CFunctionType.Extern,
+      originalCType = OriginalCType(constructType(returnType), clang_getTypeSpelling(returnType).string)
     )
 
     clang_visitChildren(
@@ -36,8 +37,16 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
             // System.err.println(parameterName)
 
             val parameterType = constructType(clang_getCursorType(cursor))
+            val parameterTypeRendered =
+              clang_getTypeSpelling(clang_getCursorType(cursor)).string
 
-            builder.parameters.addOne(parameterName -> parameterType)
+            builder.parameters.addOne(
+              (
+                parameterName,
+                parameterType,
+                OriginalCType(parameterType, parameterTypeRendered)
+              )
+            )
             CXChildVisitResult.CXChildVisit_Continue
           else
             // System.err.println(

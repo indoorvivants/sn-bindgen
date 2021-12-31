@@ -11,7 +11,7 @@ object predef:
   
   abstract class CEnumU[T](using eq: T =:= UInt):
     given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-        
+      
 object types:
   import predef.*
   opaque type nk_allocation_type = CUnsignedInt
@@ -581,6 +581,12 @@ object types:
   opaque type nk_buffer_marker = CStruct2[nk_bool, nk_size]
   object nk_buffer_marker:
     given _tag: Tag[nk_buffer_marker] = Tag.materializeCStruct2Tag[nk_bool, nk_size]
+    def apply()(using Zone): Ptr[nk_buffer_marker] = scala.scalanative.unsafe.alloc[nk_buffer_marker](1)
+    def apply(active: nk_bool, offset: nk_size)(using Zone): Ptr[nk_buffer_marker] = 
+      val ____ptr = apply()
+      (!____ptr).active = active
+      (!____ptr).offset = offset
+      ____ptr
     extension (struct: nk_buffer_marker)
       def active: nk_bool = struct._1
       def active_=(value: nk_bool): Unit = !struct.at1 = value
@@ -590,6 +596,16 @@ object types:
   opaque type nk_chart = CStruct6[CInt, Float, Float, Float, Float, CArray[nk_chart_slot, Nat._4]]
   object nk_chart:
     given _tag: Tag[nk_chart] = Tag.materializeCStruct6Tag[CInt, Float, Float, Float, Float, CArray[nk_chart_slot, Nat._4]]
+    def apply()(using Zone): Ptr[nk_chart] = scala.scalanative.unsafe.alloc[nk_chart](1)
+    def apply(slot: CInt, x: Float, y: Float, w: Float, h: Float, slots: CArray[nk_chart_slot, Nat._4])(using Zone): Ptr[nk_chart] = 
+      val ____ptr = apply()
+      (!____ptr).slot = slot
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).slots = slots
+      ____ptr
     extension (struct: nk_chart)
       def slot: CInt = struct._1
       def slot_=(value: CInt): Unit = !struct.at1 = value
@@ -607,6 +623,19 @@ object types:
   opaque type nk_chart_slot = CStruct9[nk_chart_type, nk_color, nk_color, Float, Float, Float, CInt, nk_vec2, CInt]
   object nk_chart_slot:
     given _tag: Tag[nk_chart_slot] = Tag.materializeCStruct9Tag[nk_chart_type, nk_color, nk_color, Float, Float, Float, CInt, nk_vec2, CInt]
+    def apply()(using Zone): Ptr[nk_chart_slot] = scala.scalanative.unsafe.alloc[nk_chart_slot](1)
+    def apply(`type`: nk_chart_type, color: nk_color, highlight: nk_color, min: Float, max: Float, range: Float, count: CInt, last: nk_vec2, index: CInt)(using Zone): Ptr[nk_chart_slot] = 
+      val ____ptr = apply()
+      (!____ptr).`type` = `type`
+      (!____ptr).color = color
+      (!____ptr).highlight = highlight
+      (!____ptr).min = min
+      (!____ptr).max = max
+      (!____ptr).range = range
+      (!____ptr).count = count
+      (!____ptr).last = last
+      (!____ptr).index = index
+      ____ptr
     extension (struct: nk_chart_slot)
       def `type`: nk_chart_type = struct._1
       def type_=(value: nk_chart_type): Unit = !struct.at1 = value
@@ -630,6 +659,13 @@ object types:
   opaque type nk_clipboard = CStruct3[nk_handle, nk_plugin_paste, nk_plugin_copy]
   object nk_clipboard:
     given _tag: Tag[nk_clipboard] = Tag.materializeCStruct3Tag[nk_handle, nk_plugin_paste, nk_plugin_copy]
+    def apply()(using Zone): Ptr[nk_clipboard] = scala.scalanative.unsafe.alloc[nk_clipboard](1)
+    def apply(userdata: nk_handle, paste: nk_plugin_paste, copy: nk_plugin_copy)(using Zone): Ptr[nk_clipboard] = 
+      val ____ptr = apply()
+      (!____ptr).userdata = userdata
+      (!____ptr).paste = paste
+      (!____ptr).copy = copy
+      ____ptr
     extension (struct: nk_clipboard)
       def userdata: nk_handle = struct._1
       def userdata_=(value: nk_handle): Unit = !struct.at1 = value
@@ -641,6 +677,14 @@ object types:
   opaque type nk_color = CStruct4[nk_byte, nk_byte, nk_byte, nk_byte]
   object nk_color:
     given _tag: Tag[nk_color] = Tag.materializeCStruct4Tag[nk_byte, nk_byte, nk_byte, nk_byte]
+    def apply()(using Zone): Ptr[nk_color] = scala.scalanative.unsafe.alloc[nk_color](1)
+    def apply(r: nk_byte, g: nk_byte, b: nk_byte, a: nk_byte)(using Zone): Ptr[nk_color] = 
+      val ____ptr = apply()
+      (!____ptr).r = r
+      (!____ptr).g = g
+      (!____ptr).b = b
+      (!____ptr).a = a
+      ____ptr
     extension (struct: nk_color)
       def r: nk_byte = struct._1
       def r_=(value: nk_byte): Unit = !struct.at1 = value
@@ -654,6 +698,14 @@ object types:
   opaque type nk_colorf = CStruct4[Float, Float, Float, Float]
   object nk_colorf:
     given _tag: Tag[nk_colorf] = Tag.materializeCStruct4Tag[Float, Float, Float, Float]
+    def apply()(using Zone): Ptr[nk_colorf] = scala.scalanative.unsafe.alloc[nk_colorf](1)
+    def apply(r: Float, g: Float, b: Float, a: Float)(using Zone): Ptr[nk_colorf] = 
+      val ____ptr = apply()
+      (!____ptr).r = r
+      (!____ptr).g = g
+      (!____ptr).b = b
+      (!____ptr).a = a
+      ____ptr
     extension (struct: nk_colorf)
       def r: Float = struct._1
       def r_=(value: Float): Unit = !struct.at1 = value
@@ -671,6 +723,17 @@ object types:
   opaque type nk_command_arc = CStruct7[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, CArray[Float, Nat._2], nk_color]
   object nk_command_arc:
     given _tag: Tag[nk_command_arc] = Tag.materializeCStruct7Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, CArray[Float, Nat._2], nk_color]
+    def apply()(using Zone): Ptr[nk_command_arc] = scala.scalanative.unsafe.alloc[nk_command_arc](1)
+    def apply(header: nk_command, cx: CShort, cy: CShort, r: CUnsignedShort, line_thickness: CUnsignedShort, a: CArray[Float, Nat._2], color: nk_color)(using Zone): Ptr[nk_command_arc] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).cx = cx
+      (!____ptr).cy = cy
+      (!____ptr).r = r
+      (!____ptr).line_thickness = line_thickness
+      (!____ptr).a = a
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_arc)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -690,6 +753,16 @@ object types:
   opaque type nk_command_arc_filled = CStruct6[nk_command, CShort, CShort, CUnsignedShort, CArray[Float, Nat._2], nk_color]
   object nk_command_arc_filled:
     given _tag: Tag[nk_command_arc_filled] = Tag.materializeCStruct6Tag[nk_command, CShort, CShort, CUnsignedShort, CArray[Float, Nat._2], nk_color]
+    def apply()(using Zone): Ptr[nk_command_arc_filled] = scala.scalanative.unsafe.alloc[nk_command_arc_filled](1)
+    def apply(header: nk_command, cx: CShort, cy: CShort, r: CUnsignedShort, a: CArray[Float, Nat._2], color: nk_color)(using Zone): Ptr[nk_command_arc_filled] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).cx = cx
+      (!____ptr).cy = cy
+      (!____ptr).r = r
+      (!____ptr).a = a
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_arc_filled)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -711,6 +784,17 @@ object types:
   opaque type nk_command_circle = CStruct7[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, CUnsignedShort, nk_color]
   object nk_command_circle:
     given _tag: Tag[nk_command_circle] = Tag.materializeCStruct7Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, CUnsignedShort, nk_color]
+    def apply()(using Zone): Ptr[nk_command_circle] = scala.scalanative.unsafe.alloc[nk_command_circle](1)
+    def apply(header: nk_command, x: CShort, y: CShort, line_thickness: CUnsignedShort, w: CUnsignedShort, h: CUnsignedShort, color: nk_color)(using Zone): Ptr[nk_command_circle] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).line_thickness = line_thickness
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_circle)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -730,6 +814,16 @@ object types:
   opaque type nk_command_circle_filled = CStruct6[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
   object nk_command_circle_filled:
     given _tag: Tag[nk_command_circle_filled] = Tag.materializeCStruct6Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
+    def apply()(using Zone): Ptr[nk_command_circle_filled] = scala.scalanative.unsafe.alloc[nk_command_circle_filled](1)
+    def apply(header: nk_command, x: CShort, y: CShort, w: CUnsignedShort, h: CUnsignedShort, color: nk_color)(using Zone): Ptr[nk_command_circle_filled] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_circle_filled)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -747,6 +841,16 @@ object types:
   opaque type nk_command_curve = CStruct6[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, CArray[nk_vec2i, Nat._2], nk_color]
   object nk_command_curve:
     given _tag: Tag[nk_command_curve] = Tag.materializeCStruct6Tag[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, CArray[nk_vec2i, Nat._2], nk_color]
+    def apply()(using Zone): Ptr[nk_command_curve] = scala.scalanative.unsafe.alloc[nk_command_curve](1)
+    def apply(header: nk_command, line_thickness: CUnsignedShort, begin: nk_vec2i, end: nk_vec2i, ctrl: CArray[nk_vec2i, Nat._2], color: nk_color)(using Zone): Ptr[nk_command_curve] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).line_thickness = line_thickness
+      (!____ptr).begin = begin
+      (!____ptr).end = end
+      (!____ptr).ctrl = ctrl
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_curve)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -764,6 +868,17 @@ object types:
   opaque type nk_command_custom = CStruct7[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_handle, nk_command_custom_callback]
   object nk_command_custom:
     given _tag: Tag[nk_command_custom] = Tag.materializeCStruct7Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_handle, nk_command_custom_callback]
+    def apply()(using Zone): Ptr[nk_command_custom] = scala.scalanative.unsafe.alloc[nk_command_custom](1)
+    def apply(header: nk_command, x: CShort, y: CShort, w: CUnsignedShort, h: CUnsignedShort, callback_data: nk_handle, callback: nk_command_custom_callback)(using Zone): Ptr[nk_command_custom] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).callback_data = callback_data
+      (!____ptr).callback = callback
+      ____ptr
     extension (struct: nk_command_custom)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -783,6 +898,17 @@ object types:
   opaque type nk_command_image = CStruct7[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_image, nk_color]
   object nk_command_image:
     given _tag: Tag[nk_command_image] = Tag.materializeCStruct7Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_image, nk_color]
+    def apply()(using Zone): Ptr[nk_command_image] = scala.scalanative.unsafe.alloc[nk_command_image](1)
+    def apply(header: nk_command, x: CShort, y: CShort, w: CUnsignedShort, h: CUnsignedShort, img: nk_image, col: nk_color)(using Zone): Ptr[nk_command_image] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).img = img
+      (!____ptr).col = col
+      ____ptr
     extension (struct: nk_command_image)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -802,6 +928,15 @@ object types:
   opaque type nk_command_line = CStruct5[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, nk_color]
   object nk_command_line:
     given _tag: Tag[nk_command_line] = Tag.materializeCStruct5Tag[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, nk_color]
+    def apply()(using Zone): Ptr[nk_command_line] = scala.scalanative.unsafe.alloc[nk_command_line](1)
+    def apply(header: nk_command, line_thickness: CUnsignedShort, begin: nk_vec2i, end: nk_vec2i, color: nk_color)(using Zone): Ptr[nk_command_line] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).line_thickness = line_thickness
+      (!____ptr).begin = begin
+      (!____ptr).end = end
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_line)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -817,6 +952,15 @@ object types:
   opaque type nk_command_polygon = CStruct5[nk_command, nk_color, CUnsignedShort, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
   object nk_command_polygon:
     given _tag: Tag[nk_command_polygon] = Tag.materializeCStruct5Tag[nk_command, nk_color, CUnsignedShort, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
+    def apply()(using Zone): Ptr[nk_command_polygon] = scala.scalanative.unsafe.alloc[nk_command_polygon](1)
+    def apply(header: nk_command, color: nk_color, line_thickness: CUnsignedShort, point_count: CUnsignedShort, points: CArray[nk_vec2i, Nat._1])(using Zone): Ptr[nk_command_polygon] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).color = color
+      (!____ptr).line_thickness = line_thickness
+      (!____ptr).point_count = point_count
+      (!____ptr).points = points
+      ____ptr
     extension (struct: nk_command_polygon)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -832,6 +976,14 @@ object types:
   opaque type nk_command_polygon_filled = CStruct4[nk_command, nk_color, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
   object nk_command_polygon_filled:
     given _tag: Tag[nk_command_polygon_filled] = Tag.materializeCStruct4Tag[nk_command, nk_color, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
+    def apply()(using Zone): Ptr[nk_command_polygon_filled] = scala.scalanative.unsafe.alloc[nk_command_polygon_filled](1)
+    def apply(header: nk_command, color: nk_color, point_count: CUnsignedShort, points: CArray[nk_vec2i, Nat._1])(using Zone): Ptr[nk_command_polygon_filled] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).color = color
+      (!____ptr).point_count = point_count
+      (!____ptr).points = points
+      ____ptr
     extension (struct: nk_command_polygon_filled)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -845,6 +997,15 @@ object types:
   opaque type nk_command_polyline = CStruct5[nk_command, nk_color, CUnsignedShort, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
   object nk_command_polyline:
     given _tag: Tag[nk_command_polyline] = Tag.materializeCStruct5Tag[nk_command, nk_color, CUnsignedShort, CUnsignedShort, CArray[nk_vec2i, Nat._1]]
+    def apply()(using Zone): Ptr[nk_command_polyline] = scala.scalanative.unsafe.alloc[nk_command_polyline](1)
+    def apply(header: nk_command, color: nk_color, line_thickness: CUnsignedShort, point_count: CUnsignedShort, points: CArray[nk_vec2i, Nat._1])(using Zone): Ptr[nk_command_polyline] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).color = color
+      (!____ptr).line_thickness = line_thickness
+      (!____ptr).point_count = point_count
+      (!____ptr).points = points
+      ____ptr
     extension (struct: nk_command_polyline)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -860,6 +1021,18 @@ object types:
   opaque type nk_command_rect = CStruct8[nk_command, CUnsignedShort, CUnsignedShort, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
   object nk_command_rect:
     given _tag: Tag[nk_command_rect] = Tag.materializeCStruct8Tag[nk_command, CUnsignedShort, CUnsignedShort, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
+    def apply()(using Zone): Ptr[nk_command_rect] = scala.scalanative.unsafe.alloc[nk_command_rect](1)
+    def apply(header: nk_command, rounding: CUnsignedShort, line_thickness: CUnsignedShort, x: CShort, y: CShort, w: CUnsignedShort, h: CUnsignedShort, color: nk_color)(using Zone): Ptr[nk_command_rect] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).rounding = rounding
+      (!____ptr).line_thickness = line_thickness
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_rect)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -881,6 +1054,17 @@ object types:
   opaque type nk_command_rect_filled = CStruct7[nk_command, CUnsignedShort, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
   object nk_command_rect_filled:
     given _tag: Tag[nk_command_rect_filled] = Tag.materializeCStruct7Tag[nk_command, CUnsignedShort, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color]
+    def apply()(using Zone): Ptr[nk_command_rect_filled] = scala.scalanative.unsafe.alloc[nk_command_rect_filled](1)
+    def apply(header: nk_command, rounding: CUnsignedShort, x: CShort, y: CShort, w: CUnsignedShort, h: CUnsignedShort, color: nk_color)(using Zone): Ptr[nk_command_rect_filled] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).rounding = rounding
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_rect_filled)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -900,6 +1084,19 @@ object types:
   opaque type nk_command_rect_multi_color = CStruct9[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color, nk_color, nk_color, nk_color]
   object nk_command_rect_multi_color:
     given _tag: Tag[nk_command_rect_multi_color] = Tag.materializeCStruct9Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort, nk_color, nk_color, nk_color, nk_color]
+    def apply()(using Zone): Ptr[nk_command_rect_multi_color] = scala.scalanative.unsafe.alloc[nk_command_rect_multi_color](1)
+    def apply(header: nk_command, x: CShort, y: CShort, w: CUnsignedShort, h: CUnsignedShort, left: nk_color, top: nk_color, bottom: nk_color, right: nk_color)(using Zone): Ptr[nk_command_rect_multi_color] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).left = left
+      (!____ptr).top = top
+      (!____ptr).bottom = bottom
+      (!____ptr).right = right
+      ____ptr
     extension (struct: nk_command_rect_multi_color)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -923,6 +1120,15 @@ object types:
   opaque type nk_command_scissor = CStruct5[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort]
   object nk_command_scissor:
     given _tag: Tag[nk_command_scissor] = Tag.materializeCStruct5Tag[nk_command, CShort, CShort, CUnsignedShort, CUnsignedShort]
+    def apply()(using Zone): Ptr[nk_command_scissor] = scala.scalanative.unsafe.alloc[nk_command_scissor](1)
+    def apply(header: nk_command, x: CShort, y: CShort, w: CUnsignedShort, h: CUnsignedShort)(using Zone): Ptr[nk_command_scissor] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      ____ptr
     extension (struct: nk_command_scissor)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -938,6 +1144,21 @@ object types:
   opaque type nk_command_text = CStruct11[nk_command, Ptr[nk_user_font], nk_color, nk_color, CShort, CShort, CUnsignedShort, CUnsignedShort, Float, CInt, CArray[CChar, Nat._1]]
   object nk_command_text:
     given _tag: Tag[nk_command_text] = Tag.materializeCStruct11Tag[nk_command, Ptr[nk_user_font], nk_color, nk_color, CShort, CShort, CUnsignedShort, CUnsignedShort, Float, CInt, CArray[CChar, Nat._1]]
+    def apply()(using Zone): Ptr[nk_command_text] = scala.scalanative.unsafe.alloc[nk_command_text](1)
+    def apply(header: nk_command, font: Ptr[nk_user_font], background: nk_color, foreground: nk_color, x: CShort, y: CShort, w: CUnsignedShort, h: CUnsignedShort, height: Float, length: CInt, string: CArray[CChar, Nat._1])(using Zone): Ptr[nk_command_text] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).font = font
+      (!____ptr).background = background
+      (!____ptr).foreground = foreground
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).height = height
+      (!____ptr).length = length
+      (!____ptr).string = string
+      ____ptr
     extension (struct: nk_command_text)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -965,6 +1186,16 @@ object types:
   opaque type nk_command_triangle = CStruct6[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, nk_vec2i, nk_color]
   object nk_command_triangle:
     given _tag: Tag[nk_command_triangle] = Tag.materializeCStruct6Tag[nk_command, CUnsignedShort, nk_vec2i, nk_vec2i, nk_vec2i, nk_color]
+    def apply()(using Zone): Ptr[nk_command_triangle] = scala.scalanative.unsafe.alloc[nk_command_triangle](1)
+    def apply(header: nk_command, line_thickness: CUnsignedShort, a: nk_vec2i, b: nk_vec2i, c: nk_vec2i, color: nk_color)(using Zone): Ptr[nk_command_triangle] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).line_thickness = line_thickness
+      (!____ptr).a = a
+      (!____ptr).b = b
+      (!____ptr).c = c
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_triangle)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -982,6 +1213,15 @@ object types:
   opaque type nk_command_triangle_filled = CStruct5[nk_command, nk_vec2i, nk_vec2i, nk_vec2i, nk_color]
   object nk_command_triangle_filled:
     given _tag: Tag[nk_command_triangle_filled] = Tag.materializeCStruct5Tag[nk_command, nk_vec2i, nk_vec2i, nk_vec2i, nk_color]
+    def apply()(using Zone): Ptr[nk_command_triangle_filled] = scala.scalanative.unsafe.alloc[nk_command_triangle_filled](1)
+    def apply(header: nk_command, a: nk_vec2i, b: nk_vec2i, c: nk_vec2i, color: nk_color)(using Zone): Ptr[nk_command_triangle_filled] = 
+      val ____ptr = apply()
+      (!____ptr).header = header
+      (!____ptr).a = a
+      (!____ptr).b = b
+      (!____ptr).c = c
+      (!____ptr).color = color
+      ____ptr
     extension (struct: nk_command_triangle_filled)
       def header: nk_command = struct._1
       def header_=(value: nk_command): Unit = !struct.at1 = value
@@ -997,6 +1237,12 @@ object types:
   opaque type nk_config_stack_button_behavior = CStruct2[CInt, CArray[nk_config_stack_button_behavior_element, Nat._8]]
   object nk_config_stack_button_behavior:
     given _tag: Tag[nk_config_stack_button_behavior] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_button_behavior_element, Nat._8]]
+    def apply()(using Zone): Ptr[nk_config_stack_button_behavior] = scala.scalanative.unsafe.alloc[nk_config_stack_button_behavior](1)
+    def apply(head: CInt, elements: CArray[nk_config_stack_button_behavior_element, Nat._8])(using Zone): Ptr[nk_config_stack_button_behavior] = 
+      val ____ptr = apply()
+      (!____ptr).head = head
+      (!____ptr).elements = elements
+      ____ptr
     extension (struct: nk_config_stack_button_behavior)
       def head: CInt = struct._1
       def head_=(value: CInt): Unit = !struct.at1 = value
@@ -1006,6 +1252,12 @@ object types:
   opaque type nk_config_stack_button_behavior_element = CStruct2[Ptr[nk_button_behavior], nk_button_behavior]
   object nk_config_stack_button_behavior_element:
     given _tag: Tag[nk_config_stack_button_behavior_element] = Tag.materializeCStruct2Tag[Ptr[nk_button_behavior], nk_button_behavior]
+    def apply()(using Zone): Ptr[nk_config_stack_button_behavior_element] = scala.scalanative.unsafe.alloc[nk_config_stack_button_behavior_element](1)
+    def apply(address: Ptr[nk_button_behavior], old_value: nk_button_behavior)(using Zone): Ptr[nk_config_stack_button_behavior_element] = 
+      val ____ptr = apply()
+      (!____ptr).address = address
+      (!____ptr).old_value = old_value
+      ____ptr
     extension (struct: nk_config_stack_button_behavior_element)
       def address: Ptr[nk_button_behavior] = struct._1
       def address_=(value: Ptr[nk_button_behavior]): Unit = !struct.at1 = value
@@ -1015,6 +1267,12 @@ object types:
   opaque type nk_config_stack_color = CStruct2[CInt, CArray[nk_config_stack_color_element, Nat.Digit2[Nat._3, Nat._2]]]
   object nk_config_stack_color:
     given _tag: Tag[nk_config_stack_color] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_color_element, Nat.Digit2[Nat._3, Nat._2]]]
+    def apply()(using Zone): Ptr[nk_config_stack_color] = scala.scalanative.unsafe.alloc[nk_config_stack_color](1)
+    def apply(head: CInt, elements: CArray[nk_config_stack_color_element, Nat.Digit2[Nat._3, Nat._2]])(using Zone): Ptr[nk_config_stack_color] = 
+      val ____ptr = apply()
+      (!____ptr).head = head
+      (!____ptr).elements = elements
+      ____ptr
     extension (struct: nk_config_stack_color)
       def head: CInt = struct._1
       def head_=(value: CInt): Unit = !struct.at1 = value
@@ -1024,6 +1282,12 @@ object types:
   opaque type nk_config_stack_color_element = CStruct2[Ptr[nk_color], nk_color]
   object nk_config_stack_color_element:
     given _tag: Tag[nk_config_stack_color_element] = Tag.materializeCStruct2Tag[Ptr[nk_color], nk_color]
+    def apply()(using Zone): Ptr[nk_config_stack_color_element] = scala.scalanative.unsafe.alloc[nk_config_stack_color_element](1)
+    def apply(address: Ptr[nk_color], old_value: nk_color)(using Zone): Ptr[nk_config_stack_color_element] = 
+      val ____ptr = apply()
+      (!____ptr).address = address
+      (!____ptr).old_value = old_value
+      ____ptr
     extension (struct: nk_config_stack_color_element)
       def address: Ptr[nk_color] = struct._1
       def address_=(value: Ptr[nk_color]): Unit = !struct.at1 = value
@@ -1033,6 +1297,12 @@ object types:
   opaque type nk_config_stack_flags = CStruct2[CInt, CArray[nk_config_stack_flags_element, Nat.Digit2[Nat._3, Nat._2]]]
   object nk_config_stack_flags:
     given _tag: Tag[nk_config_stack_flags] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_flags_element, Nat.Digit2[Nat._3, Nat._2]]]
+    def apply()(using Zone): Ptr[nk_config_stack_flags] = scala.scalanative.unsafe.alloc[nk_config_stack_flags](1)
+    def apply(head: CInt, elements: CArray[nk_config_stack_flags_element, Nat.Digit2[Nat._3, Nat._2]])(using Zone): Ptr[nk_config_stack_flags] = 
+      val ____ptr = apply()
+      (!____ptr).head = head
+      (!____ptr).elements = elements
+      ____ptr
     extension (struct: nk_config_stack_flags)
       def head: CInt = struct._1
       def head_=(value: CInt): Unit = !struct.at1 = value
@@ -1042,6 +1312,12 @@ object types:
   opaque type nk_config_stack_flags_element = CStruct2[Ptr[nk_flags], nk_flags]
   object nk_config_stack_flags_element:
     given _tag: Tag[nk_config_stack_flags_element] = Tag.materializeCStruct2Tag[Ptr[nk_flags], nk_flags]
+    def apply()(using Zone): Ptr[nk_config_stack_flags_element] = scala.scalanative.unsafe.alloc[nk_config_stack_flags_element](1)
+    def apply(address: Ptr[nk_flags], old_value: nk_flags)(using Zone): Ptr[nk_config_stack_flags_element] = 
+      val ____ptr = apply()
+      (!____ptr).address = address
+      (!____ptr).old_value = old_value
+      ____ptr
     extension (struct: nk_config_stack_flags_element)
       def address: Ptr[nk_flags] = struct._1
       def address_=(value: Ptr[nk_flags]): Unit = !struct.at1 = value
@@ -1051,6 +1327,12 @@ object types:
   opaque type nk_config_stack_float = CStruct2[CInt, CArray[nk_config_stack_float_element, Nat.Digit2[Nat._3, Nat._2]]]
   object nk_config_stack_float:
     given _tag: Tag[nk_config_stack_float] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_float_element, Nat.Digit2[Nat._3, Nat._2]]]
+    def apply()(using Zone): Ptr[nk_config_stack_float] = scala.scalanative.unsafe.alloc[nk_config_stack_float](1)
+    def apply(head: CInt, elements: CArray[nk_config_stack_float_element, Nat.Digit2[Nat._3, Nat._2]])(using Zone): Ptr[nk_config_stack_float] = 
+      val ____ptr = apply()
+      (!____ptr).head = head
+      (!____ptr).elements = elements
+      ____ptr
     extension (struct: nk_config_stack_float)
       def head: CInt = struct._1
       def head_=(value: CInt): Unit = !struct.at1 = value
@@ -1060,6 +1342,12 @@ object types:
   opaque type nk_config_stack_float_element = CStruct2[Ptr[Float], Float]
   object nk_config_stack_float_element:
     given _tag: Tag[nk_config_stack_float_element] = Tag.materializeCStruct2Tag[Ptr[Float], Float]
+    def apply()(using Zone): Ptr[nk_config_stack_float_element] = scala.scalanative.unsafe.alloc[nk_config_stack_float_element](1)
+    def apply(address: Ptr[Float], old_value: Float)(using Zone): Ptr[nk_config_stack_float_element] = 
+      val ____ptr = apply()
+      (!____ptr).address = address
+      (!____ptr).old_value = old_value
+      ____ptr
     extension (struct: nk_config_stack_float_element)
       def address: Ptr[Float] = struct._1
       def address_=(value: Ptr[Float]): Unit = !struct.at1 = value
@@ -1069,6 +1357,12 @@ object types:
   opaque type nk_config_stack_style_item = CStruct2[CInt, CArray[nk_config_stack_style_item_element, Nat.Digit2[Nat._1, Nat._6]]]
   object nk_config_stack_style_item:
     given _tag: Tag[nk_config_stack_style_item] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_style_item_element, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[nk_config_stack_style_item] = scala.scalanative.unsafe.alloc[nk_config_stack_style_item](1)
+    def apply(head: CInt, elements: CArray[nk_config_stack_style_item_element, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[nk_config_stack_style_item] = 
+      val ____ptr = apply()
+      (!____ptr).head = head
+      (!____ptr).elements = elements
+      ____ptr
     extension (struct: nk_config_stack_style_item)
       def head: CInt = struct._1
       def head_=(value: CInt): Unit = !struct.at1 = value
@@ -1078,6 +1372,12 @@ object types:
   opaque type nk_config_stack_style_item_element = CStruct2[Ptr[nk_style_item], nk_style_item]
   object nk_config_stack_style_item_element:
     given _tag: Tag[nk_config_stack_style_item_element] = Tag.materializeCStruct2Tag[Ptr[nk_style_item], nk_style_item]
+    def apply()(using Zone): Ptr[nk_config_stack_style_item_element] = scala.scalanative.unsafe.alloc[nk_config_stack_style_item_element](1)
+    def apply(address: Ptr[nk_style_item], old_value: nk_style_item)(using Zone): Ptr[nk_config_stack_style_item_element] = 
+      val ____ptr = apply()
+      (!____ptr).address = address
+      (!____ptr).old_value = old_value
+      ____ptr
     extension (struct: nk_config_stack_style_item_element)
       def address: Ptr[nk_style_item] = struct._1
       def address_=(value: Ptr[nk_style_item]): Unit = !struct.at1 = value
@@ -1087,6 +1387,12 @@ object types:
   opaque type nk_config_stack_user_font = CStruct2[CInt, CArray[nk_config_stack_user_font_element, Nat._8]]
   object nk_config_stack_user_font:
     given _tag: Tag[nk_config_stack_user_font] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_user_font_element, Nat._8]]
+    def apply()(using Zone): Ptr[nk_config_stack_user_font] = scala.scalanative.unsafe.alloc[nk_config_stack_user_font](1)
+    def apply(head: CInt, elements: CArray[nk_config_stack_user_font_element, Nat._8])(using Zone): Ptr[nk_config_stack_user_font] = 
+      val ____ptr = apply()
+      (!____ptr).head = head
+      (!____ptr).elements = elements
+      ____ptr
     extension (struct: nk_config_stack_user_font)
       def head: CInt = struct._1
       def head_=(value: CInt): Unit = !struct.at1 = value
@@ -1096,6 +1402,12 @@ object types:
   opaque type nk_config_stack_user_font_element = CStruct2[Ptr[Ptr[nk_user_font]], Ptr[nk_user_font]]
   object nk_config_stack_user_font_element:
     given _tag: Tag[nk_config_stack_user_font_element] = Tag.materializeCStruct2Tag[Ptr[Ptr[nk_user_font]], Ptr[nk_user_font]]
+    def apply()(using Zone): Ptr[nk_config_stack_user_font_element] = scala.scalanative.unsafe.alloc[nk_config_stack_user_font_element](1)
+    def apply(address: Ptr[Ptr[nk_user_font]], old_value: Ptr[nk_user_font])(using Zone): Ptr[nk_config_stack_user_font_element] = 
+      val ____ptr = apply()
+      (!____ptr).address = address
+      (!____ptr).old_value = old_value
+      ____ptr
     extension (struct: nk_config_stack_user_font_element)
       def address: Ptr[Ptr[nk_user_font]] = struct._1
       def address_=(value: Ptr[Ptr[nk_user_font]]): Unit = !struct.at1 = value
@@ -1105,6 +1417,12 @@ object types:
   opaque type nk_config_stack_vec2 = CStruct2[CInt, CArray[nk_config_stack_vec2_element, Nat.Digit2[Nat._1, Nat._6]]]
   object nk_config_stack_vec2:
     given _tag: Tag[nk_config_stack_vec2] = Tag.materializeCStruct2Tag[CInt, CArray[nk_config_stack_vec2_element, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[nk_config_stack_vec2] = scala.scalanative.unsafe.alloc[nk_config_stack_vec2](1)
+    def apply(head: CInt, elements: CArray[nk_config_stack_vec2_element, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[nk_config_stack_vec2] = 
+      val ____ptr = apply()
+      (!____ptr).head = head
+      (!____ptr).elements = elements
+      ____ptr
     extension (struct: nk_config_stack_vec2)
       def head: CInt = struct._1
       def head_=(value: CInt): Unit = !struct.at1 = value
@@ -1114,6 +1432,12 @@ object types:
   opaque type nk_config_stack_vec2_element = CStruct2[Ptr[nk_vec2], nk_vec2]
   object nk_config_stack_vec2_element:
     given _tag: Tag[nk_config_stack_vec2_element] = Tag.materializeCStruct2Tag[Ptr[nk_vec2], nk_vec2]
+    def apply()(using Zone): Ptr[nk_config_stack_vec2_element] = scala.scalanative.unsafe.alloc[nk_config_stack_vec2_element](1)
+    def apply(address: Ptr[nk_vec2], old_value: nk_vec2)(using Zone): Ptr[nk_config_stack_vec2_element] = 
+      val ____ptr = apply()
+      (!____ptr).address = address
+      (!____ptr).old_value = old_value
+      ____ptr
     extension (struct: nk_config_stack_vec2_element)
       def address: Ptr[nk_vec2] = struct._1
       def address_=(value: Ptr[nk_vec2]): Unit = !struct.at1 = value
@@ -1123,6 +1447,17 @@ object types:
   opaque type nk_configuration_stacks = CStruct7[nk_config_stack_style_item, nk_config_stack_float, nk_config_stack_vec2, nk_config_stack_flags, nk_config_stack_color, nk_config_stack_user_font, nk_config_stack_button_behavior]
   object nk_configuration_stacks:
     given _tag: Tag[nk_configuration_stacks] = Tag.materializeCStruct7Tag[nk_config_stack_style_item, nk_config_stack_float, nk_config_stack_vec2, nk_config_stack_flags, nk_config_stack_color, nk_config_stack_user_font, nk_config_stack_button_behavior]
+    def apply()(using Zone): Ptr[nk_configuration_stacks] = scala.scalanative.unsafe.alloc[nk_configuration_stacks](1)
+    def apply(style_items: nk_config_stack_style_item, floats: nk_config_stack_float, vectors: nk_config_stack_vec2, flags: nk_config_stack_flags, colors: nk_config_stack_color, fonts: nk_config_stack_user_font, button_behaviors: nk_config_stack_button_behavior)(using Zone): Ptr[nk_configuration_stacks] = 
+      val ____ptr = apply()
+      (!____ptr).style_items = style_items
+      (!____ptr).floats = floats
+      (!____ptr).vectors = vectors
+      (!____ptr).flags = flags
+      (!____ptr).colors = colors
+      (!____ptr).fonts = fonts
+      (!____ptr).button_behaviors = button_behaviors
+      ____ptr
     extension (struct: nk_configuration_stacks)
       def style_items: nk_config_stack_style_item = struct._1
       def style_items_=(value: nk_config_stack_style_item): Unit = !struct.at1 = value
@@ -1150,6 +1485,13 @@ object types:
   opaque type nk_cursor = CStruct3[nk_image, nk_vec2, nk_vec2]
   object nk_cursor:
     given _tag: Tag[nk_cursor] = Tag.materializeCStruct3Tag[nk_image, nk_vec2, nk_vec2]
+    def apply()(using Zone): Ptr[nk_cursor] = scala.scalanative.unsafe.alloc[nk_cursor](1)
+    def apply(img: nk_image, size: nk_vec2, offset: nk_vec2)(using Zone): Ptr[nk_cursor] = 
+      val ____ptr = apply()
+      (!____ptr).img = img
+      (!____ptr).size = size
+      (!____ptr).offset = offset
+      ____ptr
     extension (struct: nk_cursor)
       def img: nk_image = struct._1
       def img_=(value: nk_image): Unit = !struct.at1 = value
@@ -1169,6 +1511,12 @@ object types:
   opaque type nk_draw_null_texture = CStruct2[nk_handle, nk_vec2]
   object nk_draw_null_texture:
     given _tag: Tag[nk_draw_null_texture] = Tag.materializeCStruct2Tag[nk_handle, nk_vec2]
+    def apply()(using Zone): Ptr[nk_draw_null_texture] = scala.scalanative.unsafe.alloc[nk_draw_null_texture](1)
+    def apply(texture: nk_handle, uv: nk_vec2)(using Zone): Ptr[nk_draw_null_texture] = 
+      val ____ptr = apply()
+      (!____ptr).texture = texture
+      (!____ptr).uv = uv
+      ____ptr
     extension (struct: nk_draw_null_texture)
       def texture: nk_handle = struct._1
       def texture_=(value: nk_handle): Unit = !struct.at1 = value
@@ -1182,6 +1530,21 @@ object types:
   opaque type nk_edit_state = CStruct11[nk_hash, CUnsignedInt, CUnsignedInt, CInt, CInt, CInt, CInt, CInt, nk_scroll, CUnsignedChar, CUnsignedChar]
   object nk_edit_state:
     given _tag: Tag[nk_edit_state] = Tag.materializeCStruct11Tag[nk_hash, CUnsignedInt, CUnsignedInt, CInt, CInt, CInt, CInt, CInt, nk_scroll, CUnsignedChar, CUnsignedChar]
+    def apply()(using Zone): Ptr[nk_edit_state] = scala.scalanative.unsafe.alloc[nk_edit_state](1)
+    def apply(name: nk_hash, seq: CUnsignedInt, old: CUnsignedInt, active: CInt, prev: CInt, cursor: CInt, sel_start: CInt, sel_end: CInt, scrollbar: nk_scroll, mode: CUnsignedChar, single_line: CUnsignedChar)(using Zone): Ptr[nk_edit_state] = 
+      val ____ptr = apply()
+      (!____ptr).name = name
+      (!____ptr).seq = seq
+      (!____ptr).old = old
+      (!____ptr).active = active
+      (!____ptr).prev = prev
+      (!____ptr).cursor = cursor
+      (!____ptr).sel_start = sel_start
+      (!____ptr).sel_end = sel_end
+      (!____ptr).scrollbar = scrollbar
+      (!____ptr).mode = mode
+      (!____ptr).single_line = single_line
+      ____ptr
     extension (struct: nk_edit_state)
       def name: nk_hash = struct._1
       def name_=(value: nk_hash): Unit = !struct.at1 = value
@@ -1209,6 +1572,14 @@ object types:
   opaque type nk_image = CStruct4[nk_handle, nk_ushort, nk_ushort, CArray[nk_ushort, Nat._4]]
   object nk_image:
     given _tag: Tag[nk_image] = Tag.materializeCStruct4Tag[nk_handle, nk_ushort, nk_ushort, CArray[nk_ushort, Nat._4]]
+    def apply()(using Zone): Ptr[nk_image] = scala.scalanative.unsafe.alloc[nk_image](1)
+    def apply(handle: nk_handle, w: nk_ushort, h: nk_ushort, region: CArray[nk_ushort, Nat._4])(using Zone): Ptr[nk_image] = 
+      val ____ptr = apply()
+      (!____ptr).handle = handle
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).region = region
+      ____ptr
     extension (struct: nk_image)
       def handle: nk_handle = struct._1
       def handle_=(value: nk_handle): Unit = !struct.at1 = value
@@ -1222,6 +1593,12 @@ object types:
   opaque type nk_input = CStruct2[nk_keyboard, nk_mouse]
   object nk_input:
     given _tag: Tag[nk_input] = Tag.materializeCStruct2Tag[nk_keyboard, nk_mouse]
+    def apply()(using Zone): Ptr[nk_input] = scala.scalanative.unsafe.alloc[nk_input](1)
+    def apply(keyboard: nk_keyboard, mouse: nk_mouse)(using Zone): Ptr[nk_input] = 
+      val ____ptr = apply()
+      (!____ptr).keyboard = keyboard
+      (!____ptr).mouse = mouse
+      ____ptr
     extension (struct: nk_input)
       def keyboard: nk_keyboard = struct._1
       def keyboard_=(value: nk_keyboard): Unit = !struct.at1 = value
@@ -1231,6 +1608,12 @@ object types:
   opaque type nk_key = CStruct2[nk_bool, CUnsignedInt]
   object nk_key:
     given _tag: Tag[nk_key] = Tag.materializeCStruct2Tag[nk_bool, CUnsignedInt]
+    def apply()(using Zone): Ptr[nk_key] = scala.scalanative.unsafe.alloc[nk_key](1)
+    def apply(down: nk_bool, clicked: CUnsignedInt)(using Zone): Ptr[nk_key] = 
+      val ____ptr = apply()
+      (!____ptr).down = down
+      (!____ptr).clicked = clicked
+      ____ptr
     extension (struct: nk_key)
       def down: nk_bool = struct._1
       def down_=(value: nk_bool): Unit = !struct.at1 = value
@@ -1240,6 +1623,13 @@ object types:
   opaque type nk_keyboard = CStruct3[CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]], CArray[CChar, Nat.Digit2[Nat._1, Nat._6]], CInt]
   object nk_keyboard:
     given _tag: Tag[nk_keyboard] = Tag.materializeCStruct3Tag[CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]], CArray[CChar, Nat.Digit2[Nat._1, Nat._6]], CInt]
+    def apply()(using Zone): Ptr[nk_keyboard] = scala.scalanative.unsafe.alloc[nk_keyboard](1)
+    def apply(keys: CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]], text: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]], text_len: CInt)(using Zone): Ptr[nk_keyboard] = 
+      val ____ptr = apply()
+      (!____ptr).keys = keys
+      (!____ptr).text = text
+      (!____ptr).text_len = text_len
+      ____ptr
     extension (struct: nk_keyboard)
       def keys: CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]] = struct._1
       def keys_=(value: CArray[nk_key, Nat.Digit2[Nat._3, Nat._0]]): Unit = !struct.at1 = value
@@ -1251,6 +1641,17 @@ object types:
   opaque type nk_list_view = CStruct7[CInt, CInt, CInt, CInt, Ptr[nk_context], Ptr[nk_uint], nk_uint]
   object nk_list_view:
     given _tag: Tag[nk_list_view] = Tag.materializeCStruct7Tag[CInt, CInt, CInt, CInt, Ptr[nk_context], Ptr[nk_uint], nk_uint]
+    def apply()(using Zone): Ptr[nk_list_view] = scala.scalanative.unsafe.alloc[nk_list_view](1)
+    def apply(begin: CInt, end: CInt, count: CInt, total_height: CInt, ctx: Ptr[nk_context], scroll_pointer: Ptr[nk_uint], scroll_value: nk_uint)(using Zone): Ptr[nk_list_view] = 
+      val ____ptr = apply()
+      (!____ptr).begin = begin
+      (!____ptr).end = end
+      (!____ptr).count = count
+      (!____ptr).total_height = total_height
+      (!____ptr).ctx = ctx
+      (!____ptr).scroll_pointer = scroll_pointer
+      (!____ptr).scroll_value = scroll_value
+      ____ptr
     extension (struct: nk_list_view)
       def begin: CInt = struct._1
       def begin_=(value: CInt): Unit = !struct.at1 = value
@@ -1270,6 +1671,12 @@ object types:
   opaque type nk_memory = CStruct2[Ptr[Byte], nk_size]
   object nk_memory:
     given _tag: Tag[nk_memory] = Tag.materializeCStruct2Tag[Ptr[Byte], nk_size]
+    def apply()(using Zone): Ptr[nk_memory] = scala.scalanative.unsafe.alloc[nk_memory](1)
+    def apply(ptr: Ptr[Byte], size: nk_size)(using Zone): Ptr[nk_memory] = 
+      val ____ptr = apply()
+      (!____ptr).ptr = ptr
+      (!____ptr).size = size
+      ____ptr
     extension (struct: nk_memory)
       def ptr: Ptr[Byte] = struct._1
       def ptr_=(value: Ptr[Byte]): Unit = !struct.at1 = value
@@ -1279,6 +1686,16 @@ object types:
   opaque type nk_memory_status = CStruct6[Ptr[Byte], CUnsignedInt, nk_size, nk_size, nk_size, nk_size]
   object nk_memory_status:
     given _tag: Tag[nk_memory_status] = Tag.materializeCStruct6Tag[Ptr[Byte], CUnsignedInt, nk_size, nk_size, nk_size, nk_size]
+    def apply()(using Zone): Ptr[nk_memory_status] = scala.scalanative.unsafe.alloc[nk_memory_status](1)
+    def apply(memory: Ptr[Byte], `type`: CUnsignedInt, size: nk_size, allocated: nk_size, needed: nk_size, calls: nk_size)(using Zone): Ptr[nk_memory_status] = 
+      val ____ptr = apply()
+      (!____ptr).memory = memory
+      (!____ptr).`type` = `type`
+      (!____ptr).size = size
+      (!____ptr).allocated = allocated
+      (!____ptr).needed = needed
+      (!____ptr).calls = calls
+      ____ptr
     extension (struct: nk_memory_status)
       def memory: Ptr[Byte] = struct._1
       def memory_=(value: Ptr[Byte]): Unit = !struct.at1 = value
@@ -1296,6 +1713,15 @@ object types:
   opaque type nk_menu_state = CStruct5[Float, Float, Float, Float, nk_scroll]
   object nk_menu_state:
     given _tag: Tag[nk_menu_state] = Tag.materializeCStruct5Tag[Float, Float, Float, Float, nk_scroll]
+    def apply()(using Zone): Ptr[nk_menu_state] = scala.scalanative.unsafe.alloc[nk_menu_state](1)
+    def apply(x: Float, y: Float, w: Float, h: Float, offset: nk_scroll)(using Zone): Ptr[nk_menu_state] = 
+      val ____ptr = apply()
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      (!____ptr).offset = offset
+      ____ptr
     extension (struct: nk_menu_state)
       def x: Float = struct._1
       def x_=(value: Float): Unit = !struct.at1 = value
@@ -1311,6 +1737,18 @@ object types:
   opaque type nk_mouse = CStruct8[CArray[nk_mouse_button, Nat._4], nk_vec2, nk_vec2, nk_vec2, nk_vec2, CUnsignedChar, CUnsignedChar, CUnsignedChar]
   object nk_mouse:
     given _tag: Tag[nk_mouse] = Tag.materializeCStruct8Tag[CArray[nk_mouse_button, Nat._4], nk_vec2, nk_vec2, nk_vec2, nk_vec2, CUnsignedChar, CUnsignedChar, CUnsignedChar]
+    def apply()(using Zone): Ptr[nk_mouse] = scala.scalanative.unsafe.alloc[nk_mouse](1)
+    def apply(buttons: CArray[nk_mouse_button, Nat._4], pos: nk_vec2, prev: nk_vec2, delta: nk_vec2, scroll_delta: nk_vec2, grab: CUnsignedChar, grabbed: CUnsignedChar, ungrab: CUnsignedChar)(using Zone): Ptr[nk_mouse] = 
+      val ____ptr = apply()
+      (!____ptr).buttons = buttons
+      (!____ptr).pos = pos
+      (!____ptr).prev = prev
+      (!____ptr).delta = delta
+      (!____ptr).scroll_delta = scroll_delta
+      (!____ptr).grab = grab
+      (!____ptr).grabbed = grabbed
+      (!____ptr).ungrab = ungrab
+      ____ptr
     extension (struct: nk_mouse)
       def buttons: CArray[nk_mouse_button, Nat._4] = struct._1
       def buttons_=(value: CArray[nk_mouse_button, Nat._4]): Unit = !struct.at1 = value
@@ -1332,6 +1770,13 @@ object types:
   opaque type nk_mouse_button = CStruct3[nk_bool, CUnsignedInt, nk_vec2]
   object nk_mouse_button:
     given _tag: Tag[nk_mouse_button] = Tag.materializeCStruct3Tag[nk_bool, CUnsignedInt, nk_vec2]
+    def apply()(using Zone): Ptr[nk_mouse_button] = scala.scalanative.unsafe.alloc[nk_mouse_button](1)
+    def apply(down: nk_bool, clicked: CUnsignedInt, clicked_pos: nk_vec2)(using Zone): Ptr[nk_mouse_button] = 
+      val ____ptr = apply()
+      (!____ptr).down = down
+      (!____ptr).clicked = clicked
+      (!____ptr).clicked_pos = clicked_pos
+      ____ptr
     extension (struct: nk_mouse_button)
       def down: nk_bool = struct._1
       def down_=(value: nk_bool): Unit = !struct.at1 = value
@@ -1343,6 +1788,15 @@ object types:
   opaque type nk_nine_slice = CStruct5[nk_image, nk_ushort, nk_ushort, nk_ushort, nk_ushort]
   object nk_nine_slice:
     given _tag: Tag[nk_nine_slice] = Tag.materializeCStruct5Tag[nk_image, nk_ushort, nk_ushort, nk_ushort, nk_ushort]
+    def apply()(using Zone): Ptr[nk_nine_slice] = scala.scalanative.unsafe.alloc[nk_nine_slice](1)
+    def apply(img: nk_image, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): Ptr[nk_nine_slice] = 
+      val ____ptr = apply()
+      (!____ptr).img = img
+      (!____ptr).l = l
+      (!____ptr).t = t
+      (!____ptr).r = r
+      (!____ptr).b = b
+      ____ptr
     extension (struct: nk_nine_slice)
       def img: nk_image = struct._1
       def img_=(value: nk_image): Unit = !struct.at1 = value
@@ -1358,6 +1812,13 @@ object types:
   opaque type nk_page = CStruct3[CUnsignedInt, Ptr[Byte], CArray[nk_page_element, Nat._1]]
   object nk_page:
     given _tag: Tag[nk_page] = Tag.materializeCStruct3Tag[CUnsignedInt, Ptr[Byte], CArray[nk_page_element, Nat._1]]
+    def apply()(using Zone): Ptr[nk_page] = scala.scalanative.unsafe.alloc[nk_page](1)
+    def apply(size: CUnsignedInt, next: Ptr[nk_page], win: CArray[nk_page_element, Nat._1])(using Zone): Ptr[nk_page] = 
+      val ____ptr = apply()
+      (!____ptr).size = size
+      (!____ptr).next = next
+      (!____ptr).win = win
+      ____ptr
     extension (struct: nk_page)
       def size: CUnsignedInt = struct._1
       def size_=(value: CUnsignedInt): Unit = !struct.at1 = value
@@ -1369,6 +1830,13 @@ object types:
   opaque type nk_page_element = CStruct3[nk_page_data, Ptr[Byte], Ptr[Byte]]
   object nk_page_element:
     given _tag: Tag[nk_page_element] = Tag.materializeCStruct3Tag[nk_page_data, Ptr[Byte], Ptr[Byte]]
+    def apply()(using Zone): Ptr[nk_page_element] = scala.scalanative.unsafe.alloc[nk_page_element](1)
+    def apply(data: nk_page_data, next: Ptr[nk_page_element], prev: Ptr[nk_page_element])(using Zone): Ptr[nk_page_element] = 
+      val ____ptr = apply()
+      (!____ptr).data = data
+      (!____ptr).next = next
+      (!____ptr).prev = prev
+      ____ptr
     extension (struct: nk_page_element)
       def data: nk_page_data = struct._1
       def data_=(value: nk_page_data): Unit = !struct.at1 = value
@@ -1384,6 +1852,18 @@ object types:
   opaque type nk_pool = CStruct8[nk_allocator, nk_allocation_type, CUnsignedInt, Ptr[nk_page], Ptr[nk_page_element], CUnsignedInt, nk_size, nk_size]
   object nk_pool:
     given _tag: Tag[nk_pool] = Tag.materializeCStruct8Tag[nk_allocator, nk_allocation_type, CUnsignedInt, Ptr[nk_page], Ptr[nk_page_element], CUnsignedInt, nk_size, nk_size]
+    def apply()(using Zone): Ptr[nk_pool] = scala.scalanative.unsafe.alloc[nk_pool](1)
+    def apply(alloc: nk_allocator, `type`: nk_allocation_type, page_count: CUnsignedInt, pages: Ptr[nk_page], freelist: Ptr[nk_page_element], capacity: CUnsignedInt, size: nk_size, cap: nk_size)(using Zone): Ptr[nk_pool] = 
+      val ____ptr = apply()
+      (!____ptr).alloc = alloc
+      (!____ptr).`type` = `type`
+      (!____ptr).page_count = page_count
+      (!____ptr).pages = pages
+      (!____ptr).freelist = freelist
+      (!____ptr).capacity = capacity
+      (!____ptr).size = size
+      (!____ptr).cap = cap
+      ____ptr
     extension (struct: nk_pool)
       def alloc: nk_allocator = struct._1
       def alloc_=(value: nk_allocator): Unit = !struct.at1 = value
@@ -1405,6 +1885,15 @@ object types:
   opaque type nk_popup_buffer = CStruct5[nk_size, nk_size, nk_size, nk_size, nk_bool]
   object nk_popup_buffer:
     given _tag: Tag[nk_popup_buffer] = Tag.materializeCStruct5Tag[nk_size, nk_size, nk_size, nk_size, nk_bool]
+    def apply()(using Zone): Ptr[nk_popup_buffer] = scala.scalanative.unsafe.alloc[nk_popup_buffer](1)
+    def apply(begin: nk_size, parent: nk_size, last: nk_size, end: nk_size, active: nk_bool)(using Zone): Ptr[nk_popup_buffer] = 
+      val ____ptr = apply()
+      (!____ptr).begin = begin
+      (!____ptr).parent = parent
+      (!____ptr).last = last
+      (!____ptr).end = end
+      (!____ptr).active = active
+      ____ptr
     extension (struct: nk_popup_buffer)
       def begin: nk_size = struct._1
       def begin_=(value: nk_size): Unit = !struct.at1 = value
@@ -1420,6 +1909,20 @@ object types:
   opaque type nk_popup_state = CStruct10[Ptr[nk_window], nk_panel_type, nk_popup_buffer, nk_hash, nk_bool, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, nk_rect]
   object nk_popup_state:
     given _tag: Tag[nk_popup_state] = Tag.materializeCStruct10Tag[Ptr[nk_window], nk_panel_type, nk_popup_buffer, nk_hash, nk_bool, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, nk_rect]
+    def apply()(using Zone): Ptr[nk_popup_state] = scala.scalanative.unsafe.alloc[nk_popup_state](1)
+    def apply(win: Ptr[nk_window], `type`: nk_panel_type, buf: nk_popup_buffer, name: nk_hash, active: nk_bool, combo_count: CUnsignedInt, con_count: CUnsignedInt, con_old: CUnsignedInt, active_con: CUnsignedInt, header: nk_rect)(using Zone): Ptr[nk_popup_state] = 
+      val ____ptr = apply()
+      (!____ptr).win = win
+      (!____ptr).`type` = `type`
+      (!____ptr).buf = buf
+      (!____ptr).name = name
+      (!____ptr).active = active
+      (!____ptr).combo_count = combo_count
+      (!____ptr).con_count = con_count
+      (!____ptr).con_old = con_old
+      (!____ptr).active_con = active_con
+      (!____ptr).header = header
+      ____ptr
     extension (struct: nk_popup_state)
       def win: Ptr[nk_window] = struct._1
       def win_=(value: Ptr[nk_window]): Unit = !struct.at1 = value
@@ -1445,6 +1948,21 @@ object types:
   opaque type nk_property_state = CStruct11[CInt, CInt, CArray[CChar, Nat.Digit2[Nat._6, Nat._4]], CInt, CInt, CInt, CInt, nk_hash, CUnsignedInt, CUnsignedInt, CInt]
   object nk_property_state:
     given _tag: Tag[nk_property_state] = Tag.materializeCStruct11Tag[CInt, CInt, CArray[CChar, Nat.Digit2[Nat._6, Nat._4]], CInt, CInt, CInt, CInt, nk_hash, CUnsignedInt, CUnsignedInt, CInt]
+    def apply()(using Zone): Ptr[nk_property_state] = scala.scalanative.unsafe.alloc[nk_property_state](1)
+    def apply(active: CInt, prev: CInt, buffer: CArray[CChar, Nat.Digit2[Nat._6, Nat._4]], length: CInt, cursor: CInt, select_start: CInt, select_end: CInt, name: nk_hash, seq: CUnsignedInt, old: CUnsignedInt, state: CInt)(using Zone): Ptr[nk_property_state] = 
+      val ____ptr = apply()
+      (!____ptr).active = active
+      (!____ptr).prev = prev
+      (!____ptr).buffer = buffer
+      (!____ptr).length = length
+      (!____ptr).cursor = cursor
+      (!____ptr).select_start = select_start
+      (!____ptr).select_end = select_end
+      (!____ptr).name = name
+      (!____ptr).seq = seq
+      (!____ptr).old = old
+      (!____ptr).state = state
+      ____ptr
     extension (struct: nk_property_state)
       def active: CInt = struct._1
       def active_=(value: CInt): Unit = !struct.at1 = value
@@ -1472,6 +1990,14 @@ object types:
   opaque type nk_rect = CStruct4[Float, Float, Float, Float]
   object nk_rect:
     given _tag: Tag[nk_rect] = Tag.materializeCStruct4Tag[Float, Float, Float, Float]
+    def apply()(using Zone): Ptr[nk_rect] = scala.scalanative.unsafe.alloc[nk_rect](1)
+    def apply(x: Float, y: Float, w: Float, h: Float)(using Zone): Ptr[nk_rect] = 
+      val ____ptr = apply()
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      ____ptr
     extension (struct: nk_rect)
       def x: Float = struct._1
       def x_=(value: Float): Unit = !struct.at1 = value
@@ -1485,6 +2011,14 @@ object types:
   opaque type nk_recti = CStruct4[CShort, CShort, CShort, CShort]
   object nk_recti:
     given _tag: Tag[nk_recti] = Tag.materializeCStruct4Tag[CShort, CShort, CShort, CShort]
+    def apply()(using Zone): Ptr[nk_recti] = scala.scalanative.unsafe.alloc[nk_recti](1)
+    def apply(x: CShort, y: CShort, w: CShort, h: CShort)(using Zone): Ptr[nk_recti] = 
+      val ____ptr = apply()
+      (!____ptr).x = x
+      (!____ptr).y = y
+      (!____ptr).w = w
+      (!____ptr).h = h
+      ____ptr
     extension (struct: nk_recti)
       def x: CShort = struct._1
       def x_=(value: CShort): Unit = !struct.at1 = value
@@ -1498,6 +2032,23 @@ object types:
   opaque type nk_row_layout = CStruct13[nk_panel_row_layout_type, CInt, Float, Float, CInt, Ptr[Float], Float, Float, Float, Float, nk_rect, CInt, CArray[Float, Nat.Digit2[Nat._1, Nat._6]]]
   object nk_row_layout:
     given _tag: Tag[nk_row_layout] = Tag.materializeCStruct13Tag[nk_panel_row_layout_type, CInt, Float, Float, CInt, Ptr[Float], Float, Float, Float, Float, nk_rect, CInt, CArray[Float, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[nk_row_layout] = scala.scalanative.unsafe.alloc[nk_row_layout](1)
+    def apply(`type`: nk_panel_row_layout_type, index: CInt, height: Float, min_height: Float, columns: CInt, ratio: Ptr[Float], item_width: Float, item_height: Float, item_offset: Float, filled: Float, item: nk_rect, tree_depth: CInt, templates: CArray[Float, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[nk_row_layout] = 
+      val ____ptr = apply()
+      (!____ptr).`type` = `type`
+      (!____ptr).index = index
+      (!____ptr).height = height
+      (!____ptr).min_height = min_height
+      (!____ptr).columns = columns
+      (!____ptr).ratio = ratio
+      (!____ptr).item_width = item_width
+      (!____ptr).item_height = item_height
+      (!____ptr).item_offset = item_offset
+      (!____ptr).filled = filled
+      (!____ptr).item = item
+      (!____ptr).tree_depth = tree_depth
+      (!____ptr).templates = templates
+      ____ptr
     extension (struct: nk_row_layout)
       def `type`: nk_panel_row_layout_type = struct._1
       def type_=(value: nk_panel_row_layout_type): Unit = !struct.at1 = value
@@ -1529,6 +2080,12 @@ object types:
   opaque type nk_scroll = CStruct2[nk_uint, nk_uint]
   object nk_scroll:
     given _tag: Tag[nk_scroll] = Tag.materializeCStruct2Tag[nk_uint, nk_uint]
+    def apply()(using Zone): Ptr[nk_scroll] = scala.scalanative.unsafe.alloc[nk_scroll](1)
+    def apply(x: nk_uint, y: nk_uint)(using Zone): Ptr[nk_scroll] = 
+      val ____ptr = apply()
+      (!____ptr).x = x
+      (!____ptr).y = y
+      ____ptr
     extension (struct: nk_scroll)
       def x: nk_uint = struct._1
       def x_=(value: nk_uint): Unit = !struct.at1 = value
@@ -1538,6 +2095,12 @@ object types:
   opaque type nk_str = CStruct2[nk_buffer, CInt]
   object nk_str:
     given _tag: Tag[nk_str] = Tag.materializeCStruct2Tag[nk_buffer, CInt]
+    def apply()(using Zone): Ptr[nk_str] = scala.scalanative.unsafe.alloc[nk_str](1)
+    def apply(buffer: nk_buffer, len: CInt)(using Zone): Ptr[nk_str] = 
+      val ____ptr = apply()
+      (!____ptr).buffer = buffer
+      (!____ptr).len = len
+      ____ptr
     extension (struct: nk_str)
       def buffer: nk_buffer = struct._1
       def buffer_=(value: nk_buffer): Unit = !struct.at1 = value
@@ -1547,6 +2110,32 @@ object types:
   opaque type nk_style = CStruct22[Ptr[nk_user_font], CArray[Ptr[nk_cursor], Nat._7], Ptr[nk_cursor], Ptr[nk_cursor], CInt, nk_style_text, nk_style_button, nk_style_button, nk_style_button, nk_style_toggle, nk_style_toggle, nk_style_selectable, nk_style_slider, nk_style_progress, nk_style_property, nk_style_edit, nk_style_chart, nk_style_scrollbar, nk_style_scrollbar, nk_style_tab, nk_style_combo, nk_style_window]
   object nk_style:
     given _tag: Tag[nk_style] = Tag.materializeCStruct22Tag[Ptr[nk_user_font], CArray[Ptr[nk_cursor], Nat._7], Ptr[nk_cursor], Ptr[nk_cursor], CInt, nk_style_text, nk_style_button, nk_style_button, nk_style_button, nk_style_toggle, nk_style_toggle, nk_style_selectable, nk_style_slider, nk_style_progress, nk_style_property, nk_style_edit, nk_style_chart, nk_style_scrollbar, nk_style_scrollbar, nk_style_tab, nk_style_combo, nk_style_window]
+    def apply()(using Zone): Ptr[nk_style] = scala.scalanative.unsafe.alloc[nk_style](1)
+    def apply(font: Ptr[nk_user_font], cursors: CArray[Ptr[nk_cursor], Nat._7], cursor_active: Ptr[nk_cursor], cursor_last: Ptr[nk_cursor], cursor_visible: CInt, text: nk_style_text, button: nk_style_button, contextual_button: nk_style_button, menu_button: nk_style_button, option: nk_style_toggle, checkbox: nk_style_toggle, selectable: nk_style_selectable, slider: nk_style_slider, progress: nk_style_progress, property: nk_style_property, edit: nk_style_edit, chart: nk_style_chart, scrollh: nk_style_scrollbar, scrollv: nk_style_scrollbar, tab: nk_style_tab, combo: nk_style_combo, window: nk_style_window)(using Zone): Ptr[nk_style] = 
+      val ____ptr = apply()
+      (!____ptr).font = font
+      (!____ptr).cursors = cursors
+      (!____ptr).cursor_active = cursor_active
+      (!____ptr).cursor_last = cursor_last
+      (!____ptr).cursor_visible = cursor_visible
+      (!____ptr).text = text
+      (!____ptr).button = button
+      (!____ptr).contextual_button = contextual_button
+      (!____ptr).menu_button = menu_button
+      (!____ptr).option = option
+      (!____ptr).checkbox = checkbox
+      (!____ptr).selectable = selectable
+      (!____ptr).slider = slider
+      (!____ptr).progress = progress
+      (!____ptr).property = property
+      (!____ptr).edit = edit
+      (!____ptr).chart = chart
+      (!____ptr).scrollh = scrollh
+      (!____ptr).scrollv = scrollv
+      (!____ptr).tab = tab
+      (!____ptr).combo = combo
+      (!____ptr).window = window
+      ____ptr
     extension (struct: nk_style)
       def font: Ptr[nk_user_font] = struct._1
       def font_=(value: Ptr[nk_user_font]): Unit = !struct.at1 = value
@@ -1636,6 +2225,35 @@ object types:
   opaque type nk_style_slider = CArray[Byte, Nat.Digit2[Nat._9, Nat._6]]
   object nk_style_slider:
     given _tag: Tag[nk_style_slider] = Tag.CArray[CChar, Nat.Digit2[Nat._9, Nat._6]](Tag.Byte, Tag.Digit2[Nat._9, Nat._6](Tag.Nat9, Tag.Nat6))
+    def apply()(using Zone): Ptr[nk_style_slider] = scala.scalanative.unsafe.alloc[nk_style_slider](1)
+    def apply(normal: nk_style_item, hover: nk_style_item, active: nk_style_item, border_color: nk_color, bar_normal: nk_color, bar_hover: nk_color, bar_active: nk_color, bar_filled: nk_color, cursor_normal: nk_style_item, cursor_hover: nk_style_item, cursor_active: nk_style_item, border: Float, rounding: Float, bar_height: Float, padding: nk_vec2, spacing: nk_vec2, cursor_size: nk_vec2, show_buttons: CInt, inc_button: nk_style_button, dec_button: nk_style_button, inc_symbol: nk_symbol_type, dec_symbol: nk_symbol_type, userdata: nk_handle, draw_begin: Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]], draw_end: Ptr[CFuncPtr2[Ptr[nk_command_buffer], nk_handle, Unit]])(using Zone): Ptr[nk_style_slider] = 
+      val ____ptr = apply()
+      (!____ptr).normal = normal
+      (!____ptr).hover = hover
+      (!____ptr).active = active
+      (!____ptr).border_color = border_color
+      (!____ptr).bar_normal = bar_normal
+      (!____ptr).bar_hover = bar_hover
+      (!____ptr).bar_active = bar_active
+      (!____ptr).bar_filled = bar_filled
+      (!____ptr).cursor_normal = cursor_normal
+      (!____ptr).cursor_hover = cursor_hover
+      (!____ptr).cursor_active = cursor_active
+      (!____ptr).border = border
+      (!____ptr).rounding = rounding
+      (!____ptr).bar_height = bar_height
+      (!____ptr).padding = padding
+      (!____ptr).spacing = spacing
+      (!____ptr).cursor_size = cursor_size
+      (!____ptr).show_buttons = show_buttons
+      (!____ptr).inc_button = inc_button
+      (!____ptr).dec_button = dec_button
+      (!____ptr).inc_symbol = inc_symbol
+      (!____ptr).dec_symbol = dec_symbol
+      (!____ptr).userdata = userdata
+      (!____ptr).draw_begin = draw_begin
+      (!____ptr).draw_end = draw_end
+      ____ptr
     extension (struct: nk_style_slider)
       def normal: nk_style_item = !struct.at(0).asInstanceOf[Ptr[nk_style_item]]
       def normal_=(value: nk_style_item): Unit = !struct.at(0).asInstanceOf[Ptr[nk_style_item]] = value
@@ -1695,6 +2313,12 @@ object types:
   opaque type nk_style_text = CStruct2[nk_color, nk_vec2]
   object nk_style_text:
     given _tag: Tag[nk_style_text] = Tag.materializeCStruct2Tag[nk_color, nk_vec2]
+    def apply()(using Zone): Ptr[nk_style_text] = scala.scalanative.unsafe.alloc[nk_style_text](1)
+    def apply(color: nk_color, padding: nk_vec2)(using Zone): Ptr[nk_style_text] = 
+      val ____ptr = apply()
+      (!____ptr).color = color
+      (!____ptr).padding = padding
+      ____ptr
     extension (struct: nk_style_text)
       def color: nk_color = struct._1
       def color_=(value: nk_color): Unit = !struct.at1 = value
@@ -1724,6 +2348,14 @@ object types:
   opaque type nk_text_undo_record = CStruct4[CInt, CShort, CShort, CShort]
   object nk_text_undo_record:
     given _tag: Tag[nk_text_undo_record] = Tag.materializeCStruct4Tag[CInt, CShort, CShort, CShort]
+    def apply()(using Zone): Ptr[nk_text_undo_record] = scala.scalanative.unsafe.alloc[nk_text_undo_record](1)
+    def apply(where: CInt, insert_length: CShort, delete_length: CShort, char_storage: CShort)(using Zone): Ptr[nk_text_undo_record] = 
+      val ____ptr = apply()
+      (!____ptr).where = where
+      (!____ptr).insert_length = insert_length
+      (!____ptr).delete_length = delete_length
+      (!____ptr).char_storage = char_storage
+      ____ptr
     extension (struct: nk_text_undo_record)
       def where: CInt = struct._1
       def where_=(value: CInt): Unit = !struct.at1 = value
@@ -1737,6 +2369,16 @@ object types:
   opaque type nk_text_undo_state = CStruct6[CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]], CArray[nk_rune, Nat.Digit3[Nat._9, Nat._9, Nat._9]], CShort, CShort, CShort, CShort]
   object nk_text_undo_state:
     given _tag: Tag[nk_text_undo_state] = Tag.materializeCStruct6Tag[CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]], CArray[nk_rune, Nat.Digit3[Nat._9, Nat._9, Nat._9]], CShort, CShort, CShort, CShort]
+    def apply()(using Zone): Ptr[nk_text_undo_state] = scala.scalanative.unsafe.alloc[nk_text_undo_state](1)
+    def apply(undo_rec: CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]], undo_char: CArray[nk_rune, Nat.Digit3[Nat._9, Nat._9, Nat._9]], undo_point: CShort, redo_point: CShort, undo_char_point: CShort, redo_char_point: CShort)(using Zone): Ptr[nk_text_undo_state] = 
+      val ____ptr = apply()
+      (!____ptr).undo_rec = undo_rec
+      (!____ptr).undo_char = undo_char
+      (!____ptr).undo_point = undo_point
+      (!____ptr).redo_point = redo_point
+      (!____ptr).undo_char_point = undo_char_point
+      (!____ptr).redo_char_point = redo_char_point
+      ____ptr
     extension (struct: nk_text_undo_state)
       def undo_rec: CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]] = struct._1
       def undo_rec_=(value: CArray[nk_text_undo_record, Nat.Digit2[Nat._9, Nat._9]]): Unit = !struct.at1 = value
@@ -1762,6 +2404,12 @@ object types:
   opaque type nk_vec2 = CStruct2[Float, Float]
   object nk_vec2:
     given _tag: Tag[nk_vec2] = Tag.materializeCStruct2Tag[Float, Float]
+    def apply()(using Zone): Ptr[nk_vec2] = scala.scalanative.unsafe.alloc[nk_vec2](1)
+    def apply(x: Float, y: Float)(using Zone): Ptr[nk_vec2] = 
+      val ____ptr = apply()
+      (!____ptr).x = x
+      (!____ptr).y = y
+      ____ptr
     extension (struct: nk_vec2)
       def x: Float = struct._1
       def x_=(value: Float): Unit = !struct.at1 = value
@@ -1771,6 +2419,12 @@ object types:
   opaque type nk_vec2i = CStruct2[CShort, CShort]
   object nk_vec2i:
     given _tag: Tag[nk_vec2i] = Tag.materializeCStruct2Tag[CShort, CShort]
+    def apply()(using Zone): Ptr[nk_vec2i] = scala.scalanative.unsafe.alloc[nk_vec2i](1)
+    def apply(x: CShort, y: CShort)(using Zone): Ptr[nk_vec2i] = 
+      val ____ptr = apply()
+      (!____ptr).x = x
+      (!____ptr).y = y
+      ____ptr
     extension (struct: nk_vec2i)
       def x: CShort = struct._1
       def x_=(value: CShort): Unit = !struct.at1 = value
@@ -1807,569 +2461,569 @@ object types:
 private[libnuklear] object extern_functions: 
   import types.*
 
-  @name("__sn_wrap_nk_rectv")
-  private[libnuklear] def __sn_wrap_nk_rectv(xywh: Ptr[Float], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_combo_begin_label")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_label(_0: Ptr[nk_context], selected: CString, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_window_get_bounds")
-  private[libnuklear] def __sn_wrap_nk_window_get_bounds(ctx: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_input_any_mouse_click_in_rect")
-  private[libnuklear] def __sn_wrap_nk_input_any_mouse_click_in_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
-
-  @name("__sn_wrap_nk_colorf_hsva_fv")
-  private[libnuklear] def __sn_wrap_nk_colorf_hsva_fv(hsva: Ptr[Float], in: Ptr[nk_colorf]): Unit = extern
-
-  @name("__sn_wrap_nk_button_image_label")
-  private[libnuklear] def __sn_wrap_nk_button_image_label(_0: Ptr[nk_context], img: Ptr[nk_image], _2: CString, text_alignment: nk_flags): nk_bool = extern
-
-  @name("__sn_wrap_nk_nine_slice_id")
-  private[libnuklear] def __sn_wrap_nk_nine_slice_id(_0: CInt, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
-
-  @name("__sn_wrap_nk_fill_triangle")
-  private[libnuklear] def __sn_wrap_nk_fill_triangle(_0: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, _7: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_input_scroll")
-  private[libnuklear] def __sn_wrap_nk_input_scroll(_0: Ptr[nk_context], `val`: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_rect_size")
-  private[libnuklear] def __sn_wrap_nk_rect_size(_0: Ptr[nk_rect], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsva_f")
-  private[libnuklear] def __sn_wrap_nk_color_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], _4: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_combobox_string")
-  private[libnuklear] def __sn_wrap_nk_combobox_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: Ptr[CInt], count: CInt, item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_stroke_rect")
-  private[libnuklear] def __sn_wrap_nk_stroke_rect(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], rounding: Float, line_thickness: Float, _4: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_color_dv")
-  private[libnuklear] def __sn_wrap_nk_color_dv(rgba_out: Ptr[Double], _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_input_is_mouse_hovering_rect")
-  private[libnuklear] def __sn_wrap_nk_input_is_mouse_hovering_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
-
-  @name("__sn_wrap_nk_combo_begin_image_label")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_image_label(_0: Ptr[nk_context], selected: CString, _2: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_hsva_colorf")
-  private[libnuklear] def __sn_wrap_nk_hsva_colorf(h: Float, s: Float, v: Float, a: Float, __return: Ptr[nk_colorf]): Unit = extern
-
-  @name("__sn_wrap_nk_input_has_mouse_click_in_rect")
-  private[libnuklear] def __sn_wrap_nk_input_has_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
-
-  @name("__sn_wrap_nk_input_is_mouse_prev_hovering_rect")
-  private[libnuklear] def __sn_wrap_nk_input_is_mouse_prev_hovering_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
-
-  @name("__sn_wrap_nk_rgba_hex")
-  private[libnuklear] def __sn_wrap_nk_rgba_hex(rgb: CString, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_image_handle")
-  private[libnuklear] def __sn_wrap_nk_image_handle(_0: nk_handle, __return: Ptr[nk_image]): Unit = extern
-
-  @name("__sn_wrap_nk_rgba_iv")
-  private[libnuklear] def __sn_wrap_nk_rgba_iv(rgba: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_input_is_mouse_click_down_in_rect")
-  private[libnuklear] def __sn_wrap_nk_input_is_mouse_click_down_in_rect(i: Ptr[nk_input], id: nk_buttons, b: Ptr[nk_rect], down: nk_bool): nk_bool = extern
-
-  @name("__sn_wrap_nk_rgb")
-  private[libnuklear] def __sn_wrap_nk_rgb(r: CInt, g: CInt, b: CInt, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_menu_begin_label")
-  private[libnuklear] def __sn_wrap_nk_menu_begin_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_subimage_ptr")
-  private[libnuklear] def __sn_wrap_nk_subimage_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
-
-  @name("__sn_wrap_nk_input_mouse_clicked")
-  private[libnuklear] def __sn_wrap_nk_input_mouse_clicked(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
-
-  @name("__sn_wrap_nk_combo_separator")
-  private[libnuklear] def __sn_wrap_nk_combo_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
-
-  @name("__sn_wrap_nk_stroke_curve")
-  private[libnuklear] def __sn_wrap_nk_stroke_curve(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, _7: Float, _8: Float, line_thickness: Float, _10: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_fill_polygon")
-  private[libnuklear] def __sn_wrap_nk_fill_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsv_b")
-  private[libnuklear] def __sn_wrap_nk_color_hsv_b(out_h: Ptr[nk_byte], out_s: Ptr[nk_byte], out_v: Ptr[nk_byte], _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_window_set_position")
-  private[libnuklear] def __sn_wrap_nk_window_set_position(_0: Ptr[nk_context], name: CString, pos: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsv_iv")
-  private[libnuklear] def __sn_wrap_nk_color_hsv_iv(hsv_out: Ptr[CInt], _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_rgba_f")
-  private[libnuklear] def __sn_wrap_nk_rgba_f(r: Float, g: Float, b: Float, a: Float, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_combo_begin_color")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_color(_0: Ptr[nk_context], color: Ptr[nk_color], size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_combo")
-  private[libnuklear] def __sn_wrap_nk_combo(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
-
-  @name("__sn_wrap_nk_chart_add_slot_colored")
-  private[libnuklear] def __sn_wrap_nk_chart_add_slot_colored(ctx: Ptr[nk_context], _1: nk_chart_type, _2: Ptr[nk_color], active: Ptr[nk_color], count: CInt, min_value: Float, max_value: Float): Unit = extern
-
-  @name("__sn_wrap_nk_hsva_fv")
-  private[libnuklear] def __sn_wrap_nk_hsva_fv(hsva: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_menu_begin_image")
-  private[libnuklear] def __sn_wrap_nk_menu_begin_image(_0: Ptr[nk_context], _1: CString, _2: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_rgb_iv")
-  private[libnuklear] def __sn_wrap_nk_rgb_iv(rgb: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_button_image_text_styled")
-  private[libnuklear] def __sn_wrap_nk_button_image_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image], _3: CString, _4: CInt, alignment: nk_flags): nk_bool = extern
-
-  @name("__sn_wrap_nk_hsva_colorfv")
-  private[libnuklear] def __sn_wrap_nk_hsva_colorfv(c: Ptr[Float], __return: Ptr[nk_colorf]): Unit = extern
-
-  @name("__sn_wrap_nk_menu_begin_symbol")
-  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol(_0: Ptr[nk_context], _1: CString, _2: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_color_hsva_fv")
-  private[libnuklear] def __sn_wrap_nk_color_hsva_fv(hsva_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_layout_space_rect_to_screen")
-  private[libnuklear] def __sn_wrap_nk_layout_space_rect_to_screen(_0: Ptr[nk_context], _1: Ptr[nk_rect], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_stroke_circle")
-  private[libnuklear] def __sn_wrap_nk_stroke_circle(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], line_thickness: Float, _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsv_bv")
-  private[libnuklear] def __sn_wrap_nk_color_hsv_bv(hsv_out: Ptr[nk_byte], _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_nine_slice_ptr")
-  private[libnuklear] def __sn_wrap_nk_nine_slice_ptr(_0: Ptr[Byte], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
-
-  @name("__sn_wrap_nk_combo_begin_text")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_text(_0: Ptr[nk_context], selected: CString, _2: CInt, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_image_ptr")
-  private[libnuklear] def __sn_wrap_nk_image_ptr(_0: Ptr[Byte], __return: Ptr[nk_image]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hex_rgba")
-  private[libnuklear] def __sn_wrap_nk_color_hex_rgba(output: CString, _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_stroke_line")
-  private[libnuklear] def __sn_wrap_nk_stroke_line(b: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, line_thickness: Float, _6: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_vec2iv")
-  private[libnuklear] def __sn_wrap_nk_vec2iv(xy: Ptr[CInt], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_combo_string")
-  private[libnuklear] def __sn_wrap_nk_combo_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
-
-  @name("__sn_wrap_nk_select_image_text")
-  private[libnuklear] def __sn_wrap_nk_select_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
-
-  @name("__sn_wrap_nk_hsv_f")
-  private[libnuklear] def __sn_wrap_nk_hsv_f(h: Float, s: Float, v: Float, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_hsv_iv")
-  private[libnuklear] def __sn_wrap_nk_hsv_iv(hsv: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_subimage_id")
-  private[libnuklear] def __sn_wrap_nk_subimage_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
-
-  @name("__sn_wrap_nk_hsv")
-  private[libnuklear] def __sn_wrap_nk_hsv(h: CInt, s: CInt, v: CInt, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_triangle_from_direction")
-  private[libnuklear] def __sn_wrap_nk_triangle_from_direction(result: Ptr[nk_vec2], r: Ptr[nk_rect], pad_x: Float, pad_y: Float, _4: nk_heading): Unit = extern
-
-  @name("__sn_wrap_nk_label_colored")
-  private[libnuklear] def __sn_wrap_nk_label_colored(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_stroke_polygon")
-  private[libnuklear] def __sn_wrap_nk_stroke_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, line_thickness: Float, _4: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_hsva_iv")
-  private[libnuklear] def __sn_wrap_nk_hsva_iv(hsva: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_selectable_image_text")
-  private[libnuklear] def __sn_wrap_nk_selectable_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  @name("__sn_wrap_nk_button_color")
-  private[libnuklear] def __sn_wrap_nk_button_color(_0: Ptr[nk_context], _1: Ptr[nk_color]): nk_bool = extern
-
-  @name("__sn_wrap_nk_combo_begin_symbol_text")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_hsv_bv")
-  private[libnuklear] def __sn_wrap_nk_hsv_bv(hsv: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_label_colored_wrap")
-  private[libnuklear] def __sn_wrap_nk_label_colored_wrap(_0: Ptr[nk_context], _1: CString, _2: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_selectable_image_label")
-  private[libnuklear] def __sn_wrap_nk_selectable_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
-
-  @name("__sn_wrap_nk_vec2v")
-  private[libnuklear] def __sn_wrap_nk_vec2v(xy: Ptr[Float], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_push_scissor")
-  private[libnuklear] def __sn_wrap_nk_push_scissor(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_layout_widget_bounds")
-  private[libnuklear] def __sn_wrap_nk_layout_widget_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_rgba_fv")
-  private[libnuklear] def __sn_wrap_nk_rgba_fv(rgba: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_stroke_polyline")
-  private[libnuklear] def __sn_wrap_nk_stroke_polyline(_0: Ptr[nk_command_buffer], points: Ptr[Float], point_count: CInt, line_thickness: Float, col: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_stroke_arc")
-  private[libnuklear] def __sn_wrap_nk_stroke_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, line_thickness: Float, _7: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_style_item_color")
-  private[libnuklear] def __sn_wrap_nk_style_item_color(_0: Ptr[nk_color], __return: Ptr[nk_style_item]): Unit = extern
-
-  @name("__sn_wrap_nk_widget_bounds")
-  private[libnuklear] def __sn_wrap_nk_widget_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_window_get_content_region")
-  private[libnuklear] def __sn_wrap_nk_window_get_content_region(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_draw_text")
-  private[libnuklear] def __sn_wrap_nk_draw_text(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], text: CString, len: CInt, _4: Ptr[nk_user_font], _5: Ptr[nk_color], _6: Ptr[nk_color]): Unit = extern
+  @name("__sn_wrap_nk_begin")
+  private[libnuklear] def __sn_wrap_nk_begin(ctx: Ptr[nk_context], title: CString, bounds: Ptr[nk_rect], flags: nk_flags): nk_bool = extern
 
   @name("__sn_wrap_nk_begin_titled")
   private[libnuklear] def __sn_wrap_nk_begin_titled(ctx: Ptr[nk_context], name: CString, title: CString, bounds: Ptr[nk_rect], flags: nk_flags): nk_bool = extern
 
-  @name("__sn_wrap_nk_color_hsva_i")
-  private[libnuklear] def __sn_wrap_nk_color_hsva_i(h: Ptr[CInt], s: Ptr[CInt], v: Ptr[CInt], a: Ptr[CInt], _4: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_image_color")
-  private[libnuklear] def __sn_wrap_nk_image_color(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hex_rgb")
-  private[libnuklear] def __sn_wrap_nk_color_hex_rgb(output: CString, _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_draw_nine_slice")
-  private[libnuklear] def __sn_wrap_nk_draw_nine_slice(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_nine_slice], _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsva_bv")
-  private[libnuklear] def __sn_wrap_nk_color_hsva_bv(hsva_out: Ptr[nk_byte], _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_widget_size")
-  private[libnuklear] def __sn_wrap_nk_widget_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_vec2")
-  private[libnuklear] def __sn_wrap_nk_vec2(x: Float, y: Float, __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_text_wrap_colored")
-  private[libnuklear] def __sn_wrap_nk_text_wrap_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_menu_begin_text")
-  private[libnuklear] def __sn_wrap_nk_menu_begin_text(_0: Ptr[nk_context], title: CString, title_len: CInt, align: nk_flags, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_combo_item_image_text")
-  private[libnuklear] def __sn_wrap_nk_combo_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
-
-  @name("__sn_wrap_nk_fill_rect")
-  private[libnuklear] def __sn_wrap_nk_fill_rect(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], rounding: Float, _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_combo_begin_image_text")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_image_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_rgba_u32")
-  private[libnuklear] def __sn_wrap_nk_rgba_u32(_0: nk_uint, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_button_image_text")
-  private[libnuklear] def __sn_wrap_nk_button_image_text(_0: Ptr[nk_context], img: Ptr[nk_image], _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
-
-  @name("__sn_wrap_nk_menu_item_image_label")
-  private[libnuklear] def __sn_wrap_nk_menu_item_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, alignment: nk_flags): nk_bool = extern
-
-  @name("__sn_wrap_nk_rgba")
-  private[libnuklear] def __sn_wrap_nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_contextual_begin")
-  private[libnuklear] def __sn_wrap_nk_contextual_begin(_0: Ptr[nk_context], _1: nk_flags, _2: Ptr[nk_vec2], trigger_bounds: Ptr[nk_rect]): nk_bool = extern
-
-  @name("__sn_wrap_nk_tree_image_push_hashed")
-  private[libnuklear] def __sn_wrap_nk_tree_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt): nk_bool = extern
-
-  @name("__sn_wrap_nk_combo_begin_image")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_image(_0: Ptr[nk_context], img: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_widget_fitting")
-  private[libnuklear] def __sn_wrap_nk_widget_fitting(_0: Ptr[nk_rect], _1: Ptr[nk_context], _2: Ptr[nk_vec2]): nk_widget_layout_states = extern
-
-  @name("__sn_wrap_nk_combo_begin_symbol")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol(_0: Ptr[nk_context], _1: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_rgb_f")
-  private[libnuklear] def __sn_wrap_nk_rgb_f(r: Float, g: Float, b: Float, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_style_push_style_item")
-  private[libnuklear] def __sn_wrap_nk_style_push_style_item(_0: Ptr[nk_context], _1: Ptr[nk_style_item], _2: Ptr[nk_style_item]): nk_bool = extern
-
-  @name("__sn_wrap_nk_rectiv")
-  private[libnuklear] def __sn_wrap_nk_rectiv(xywh: Ptr[CInt], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_rgb_hex")
-  private[libnuklear] def __sn_wrap_nk_rgb_hex(rgb: CString, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_window_set_bounds")
-  private[libnuklear] def __sn_wrap_nk_window_set_bounds(_0: Ptr[nk_context], name: CString, bounds: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_color_picker")
-  private[libnuklear] def __sn_wrap_nk_color_picker(_0: Ptr[nk_context], _1: Ptr[nk_colorf], _2: nk_color_format, __return: Ptr[nk_colorf]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsv_i")
-  private[libnuklear] def __sn_wrap_nk_color_hsv_i(out_h: Ptr[CInt], out_s: Ptr[CInt], out_v: Ptr[CInt], _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_style_item_hide")
-  private[libnuklear] def __sn_wrap_nk_style_item_hide(__return: Ptr[nk_style_item]): Unit = extern
-
-  @name("__sn_wrap_nk_combobox_separator")
-  private[libnuklear] def __sn_wrap_nk_combobox_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: Ptr[CInt], count: CInt, item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_window_get_content_region_min")
-  private[libnuklear] def __sn_wrap_nk_window_get_content_region_min(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsva_iv")
-  private[libnuklear] def __sn_wrap_nk_color_hsva_iv(hsva_out: Ptr[CInt], _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_layout_space_push")
-  private[libnuklear] def __sn_wrap_nk_layout_space_push(_0: Ptr[nk_context], bounds: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_combo_callback")
-  private[libnuklear] def __sn_wrap_nk_combo_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], userdata: Ptr[Byte], selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
-
-  @name("__sn_wrap_nk_begin")
-  private[libnuklear] def __sn_wrap_nk_begin(ctx: Ptr[nk_context], title: CString, bounds: Ptr[nk_rect], flags: nk_flags): nk_bool = extern
-
-  @name("__sn_wrap_nk_sub9slice_handle")
-  private[libnuklear] def __sn_wrap_nk_sub9slice_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
-
-  @name("__sn_wrap_nk_window_get_size")
-  private[libnuklear] def __sn_wrap_nk_window_get_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_fill_circle")
-  private[libnuklear] def __sn_wrap_nk_fill_circle(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_rgb_cf")
-  private[libnuklear] def __sn_wrap_nk_rgb_cf(c: Ptr[nk_colorf], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_rect_pos")
-  private[libnuklear] def __sn_wrap_nk_rect_pos(_0: Ptr[nk_rect], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_contextual_item_image_text")
-  private[libnuklear] def __sn_wrap_nk_contextual_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
-
-  @name("__sn_wrap_nk_layout_space_bounds")
-  private[libnuklear] def __sn_wrap_nk_layout_space_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_window_get_position")
-  private[libnuklear] def __sn_wrap_nk_window_get_position(ctx: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_draw_image")
-  private[libnuklear] def __sn_wrap_nk_draw_image(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_image], _3: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_rgb_fv")
-  private[libnuklear] def __sn_wrap_nk_rgb_fv(rgb: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_text_colored")
-  private[libnuklear] def __sn_wrap_nk_text_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags, _4: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_vec2i")
-  private[libnuklear] def __sn_wrap_nk_vec2i(x: CInt, y: CInt, __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_select_image_label")
-  private[libnuklear] def __sn_wrap_nk_select_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, align: nk_flags, value: nk_bool): nk_bool = extern
-
-  @name("__sn_wrap_nk_style_item_nine_slice")
-  private[libnuklear] def __sn_wrap_nk_style_item_nine_slice(slice: Ptr[nk_nine_slice], __return: Ptr[nk_style_item]): Unit = extern
-
-  @name("__sn_wrap_nk_get_null_rect")
-  private[libnuklear] def __sn_wrap_nk_get_null_rect(__return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_color_f")
-  private[libnuklear] def __sn_wrap_nk_color_f(r: Ptr[Float], g: Ptr[Float], b: Ptr[Float], a: Ptr[Float], _4: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_rect")
-  private[libnuklear] def __sn_wrap_nk_rect(x: Float, y: Float, w: Float, h: Float, __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_rgba_bv")
-  private[libnuklear] def __sn_wrap_nk_rgba_bv(rgba: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_menu_begin_symbol_label")
-  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_window_get_content_region_max")
-  private[libnuklear] def __sn_wrap_nk_window_get_content_region_max(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_nine_slice_handle")
-  private[libnuklear] def __sn_wrap_nk_nine_slice_handle(_0: nk_handle, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
-
-  @name("__sn_wrap_nk_tree_state_image_push")
-  private[libnuklear] def __sn_wrap_nk_tree_state_image_push(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
-
-  @name("__sn_wrap_nk_style_push_color")
-  private[libnuklear] def __sn_wrap_nk_style_push_color(_0: Ptr[nk_context], _1: Ptr[nk_color], _2: Ptr[nk_color]): nk_bool = extern
-
-  @name("__sn_wrap_nk_layout_space_to_local")
-  private[libnuklear] def __sn_wrap_nk_layout_space_to_local(_0: Ptr[nk_context], _1: Ptr[nk_vec2], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_rgba_cf")
-  private[libnuklear] def __sn_wrap_nk_rgba_cf(c: Ptr[nk_colorf], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_push_custom")
-  private[libnuklear] def __sn_wrap_nk_push_custom(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: nk_command_custom_callback, usr: nk_handle): Unit = extern
-
-  @name("__sn_wrap_nk_combo_begin_symbol_label")
-  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol_label(_0: Ptr[nk_context], selected: CString, _2: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_chart_begin_colored")
-  private[libnuklear] def __sn_wrap_nk_chart_begin_colored(_0: Ptr[nk_context], _1: nk_chart_type, _2: Ptr[nk_color], active: Ptr[nk_color], num: CInt, min: Float, max: Float): nk_bool = extern
-
-  @name("__sn_wrap_nk_color_d")
-  private[libnuklear] def __sn_wrap_nk_color_d(r: Ptr[Double], g: Ptr[Double], b: Ptr[Double], a: Ptr[Double], _4: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_color_u32")
-  private[libnuklear] def __sn_wrap_nk_color_u32(_0: Ptr[nk_color]): nk_uint = extern
-
-  @name("__sn_wrap_nk_recti")
-  private[libnuklear] def __sn_wrap_nk_recti(x: CInt, y: CInt, w: CInt, h: CInt, __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_hsva")
-  private[libnuklear] def __sn_wrap_nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt, __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsva_b")
-  private[libnuklear] def __sn_wrap_nk_color_hsva_b(h: Ptr[nk_byte], s: Ptr[nk_byte], v: Ptr[nk_byte], a: Ptr[nk_byte], _4: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_popup_begin")
-  private[libnuklear] def __sn_wrap_nk_popup_begin(_0: Ptr[nk_context], _1: nk_popup_type, _2: CString, _3: nk_flags, bounds: Ptr[nk_rect]): nk_bool = extern
-
-  @name("__sn_wrap_nk_tree_element_image_push_hashed")
-  private[libnuklear] def __sn_wrap_nk_tree_element_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
-
-  @name("__sn_wrap_nk_window_set_size")
-  private[libnuklear] def __sn_wrap_nk_window_set_size(_0: Ptr[nk_context], name: CString, _2: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_button_image_styled")
-  private[libnuklear] def __sn_wrap_nk_button_image_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image]): nk_bool = extern
-
-  @name("__sn_wrap_nk_layout_space_to_screen")
-  private[libnuklear] def __sn_wrap_nk_layout_space_to_screen(_0: Ptr[nk_context], _1: Ptr[nk_vec2], __return: Ptr[nk_vec2]): Unit = extern
-
-  @name("__sn_wrap_nk_image")
-  private[libnuklear] def __sn_wrap_nk_image(_0: Ptr[nk_context], _1: Ptr[nk_image]): Unit = extern
-
-  @name("__sn_wrap_nk_button_image_label_styled")
-  private[libnuklear] def __sn_wrap_nk_button_image_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image], _3: CString, text_alignment: nk_flags): nk_bool = extern
-
-  @name("__sn_wrap_nk_rgb_bv")
-  private[libnuklear] def __sn_wrap_nk_rgb_bv(rgb: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_recta")
-  private[libnuklear] def __sn_wrap_nk_recta(pos: Ptr[nk_vec2], size: Ptr[nk_vec2], __return: Ptr[nk_rect]): Unit = extern
-
-  @name("__sn_wrap_nk_colorf_hsva_f")
-  private[libnuklear] def __sn_wrap_nk_colorf_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], in: Ptr[nk_colorf]): Unit = extern
-
-  @name("__sn_wrap_nk_style_push_vec2")
-  private[libnuklear] def __sn_wrap_nk_style_push_vec2(_0: Ptr[nk_context], _1: Ptr[nk_vec2], _2: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_color_cf")
-  private[libnuklear] def __sn_wrap_nk_color_cf(_0: Ptr[nk_color], __return: Ptr[nk_colorf]): Unit = extern
-
-  @name("__sn_wrap_nk_menu_begin_symbol_text")
-  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
-
-  @name("__sn_wrap_nk_image_id")
-  private[libnuklear] def __sn_wrap_nk_image_id(_0: CInt, __return: Ptr[nk_image]): Unit = extern
-
-  @name("__sn_wrap_nk_style_item_image")
-  private[libnuklear] def __sn_wrap_nk_style_item_image(img: Ptr[nk_image], __return: Ptr[nk_style_item]): Unit = extern
-
-  @name("__sn_wrap_nk_color_fv")
-  private[libnuklear] def __sn_wrap_nk_color_fv(rgba_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_color_hsv_fv")
-  private[libnuklear] def __sn_wrap_nk_color_hsv_fv(hsv_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_stroke_triangle")
-  private[libnuklear] def __sn_wrap_nk_stroke_triangle(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, line_thichness: Float, _8: Ptr[nk_color]): Unit = extern
-
-  @name("__sn_wrap_nk_subimage_handle")
-  private[libnuklear] def __sn_wrap_nk_subimage_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
-
-  @name("__sn_wrap_nk_input_is_mouse_click_in_rect")
-  private[libnuklear] def __sn_wrap_nk_input_is_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
+  @name("__sn_wrap_nk_button_color")
+  private[libnuklear] def __sn_wrap_nk_button_color(_0: Ptr[nk_context], _1: Ptr[nk_color]): nk_bool = extern
 
   @name("__sn_wrap_nk_button_image")
   private[libnuklear] def __sn_wrap_nk_button_image(_0: Ptr[nk_context], img: Ptr[nk_image]): nk_bool = extern
 
-  @name("__sn_wrap_nk_input_has_mouse_click_down_in_rect")
-  private[libnuklear] def __sn_wrap_nk_input_has_mouse_click_down_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect], down: nk_bool): nk_bool = extern
+  @name("__sn_wrap_nk_button_image_label")
+  private[libnuklear] def __sn_wrap_nk_button_image_label(_0: Ptr[nk_context], img: Ptr[nk_image], _2: CString, text_alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_button_image_label_styled")
+  private[libnuklear] def __sn_wrap_nk_button_image_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image], _3: CString, text_alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_button_image_styled")
+  private[libnuklear] def __sn_wrap_nk_button_image_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image]): nk_bool = extern
+
+  @name("__sn_wrap_nk_button_image_text")
+  private[libnuklear] def __sn_wrap_nk_button_image_text(_0: Ptr[nk_context], img: Ptr[nk_image], _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_button_image_text_styled")
+  private[libnuklear] def __sn_wrap_nk_button_image_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: Ptr[nk_image], _3: CString, _4: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_chart_add_slot_colored")
+  private[libnuklear] def __sn_wrap_nk_chart_add_slot_colored(ctx: Ptr[nk_context], _1: nk_chart_type, _2: Ptr[nk_color], active: Ptr[nk_color], count: CInt, min_value: Float, max_value: Float): Unit = extern
+
+  @name("__sn_wrap_nk_chart_begin_colored")
+  private[libnuklear] def __sn_wrap_nk_chart_begin_colored(_0: Ptr[nk_context], _1: nk_chart_type, _2: Ptr[nk_color], active: Ptr[nk_color], num: CInt, min: Float, max: Float): nk_bool = extern
+
+  @name("__sn_wrap_nk_color_cf")
+  private[libnuklear] def __sn_wrap_nk_color_cf(_0: Ptr[nk_color], __return: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_color_d")
+  private[libnuklear] def __sn_wrap_nk_color_d(r: Ptr[Double], g: Ptr[Double], b: Ptr[Double], a: Ptr[Double], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_dv")
+  private[libnuklear] def __sn_wrap_nk_color_dv(rgba_out: Ptr[Double], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_f")
+  private[libnuklear] def __sn_wrap_nk_color_f(r: Ptr[Float], g: Ptr[Float], b: Ptr[Float], a: Ptr[Float], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_fv")
+  private[libnuklear] def __sn_wrap_nk_color_fv(rgba_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hex_rgb")
+  private[libnuklear] def __sn_wrap_nk_color_hex_rgb(output: CString, _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hex_rgba")
+  private[libnuklear] def __sn_wrap_nk_color_hex_rgba(output: CString, _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsv_b")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_b(out_h: Ptr[nk_byte], out_s: Ptr[nk_byte], out_v: Ptr[nk_byte], _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsv_bv")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_bv(hsv_out: Ptr[nk_byte], _1: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_color_hsv_f")
   private[libnuklear] def __sn_wrap_nk_color_hsv_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], _3: Ptr[nk_color]): Unit = extern
 
-  @name("__sn_wrap_nk_menu_begin_image_text")
-  private[libnuklear] def __sn_wrap_nk_menu_begin_image_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+  @name("__sn_wrap_nk_color_hsv_fv")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_fv(hsv_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
 
-  @name("__sn_wrap_nk_hsv_fv")
-  private[libnuklear] def __sn_wrap_nk_hsv_fv(hsv: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+  @name("__sn_wrap_nk_color_hsv_i")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_i(out_h: Ptr[CInt], out_s: Ptr[CInt], out_v: Ptr[CInt], _3: Ptr[nk_color]): Unit = extern
 
-  @name("__sn_wrap_nk_combobox")
-  private[libnuklear] def __sn_wrap_nk_combobox(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: Ptr[CInt], item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
+  @name("__sn_wrap_nk_color_hsv_iv")
+  private[libnuklear] def __sn_wrap_nk_color_hsv_iv(hsv_out: Ptr[CInt], _1: Ptr[nk_color]): Unit = extern
 
-  @name("__sn_wrap_nk_widget_position")
-  private[libnuklear] def __sn_wrap_nk_widget_position(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+  @name("__sn_wrap_nk_color_hsva_b")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_b(h: Ptr[nk_byte], s: Ptr[nk_byte], v: Ptr[nk_byte], a: Ptr[nk_byte], _4: Ptr[nk_color]): Unit = extern
 
-  @name("__sn_wrap_nk_contextual_item_image_label")
-  private[libnuklear] def __sn_wrap_nk_contextual_item_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, alignment: nk_flags): nk_bool = extern
+  @name("__sn_wrap_nk_color_hsva_bv")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_bv(hsva_out: Ptr[nk_byte], _1: Ptr[nk_color]): Unit = extern
 
-  @name("__sn_wrap_nk_menu_begin_image_label")
-  private[libnuklear] def __sn_wrap_nk_menu_begin_image_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+  @name("__sn_wrap_nk_color_hsva_f")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsva_fv")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_fv(hsva_out: Ptr[Float], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsva_i")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_i(h: Ptr[CInt], s: Ptr[CInt], v: Ptr[CInt], a: Ptr[CInt], _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_hsva_iv")
+  private[libnuklear] def __sn_wrap_nk_color_hsva_iv(hsva_out: Ptr[CInt], _1: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_color_picker")
+  private[libnuklear] def __sn_wrap_nk_color_picker(_0: Ptr[nk_context], _1: Ptr[nk_colorf], _2: nk_color_format, __return: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_color_u32")
+  private[libnuklear] def __sn_wrap_nk_color_u32(_0: Ptr[nk_color]): nk_uint = extern
+
+  @name("__sn_wrap_nk_colorf_hsva_f")
+  private[libnuklear] def __sn_wrap_nk_colorf_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], in: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_colorf_hsva_fv")
+  private[libnuklear] def __sn_wrap_nk_colorf_hsva_fv(hsva: Ptr[Float], in: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_combo")
+  private[libnuklear] def __sn_wrap_nk_combo(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
+
+  @name("__sn_wrap_nk_combo_begin_color")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_color(_0: Ptr[nk_context], color: Ptr[nk_color], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_image")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_image(_0: Ptr[nk_context], img: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_image_label")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_image_label(_0: Ptr[nk_context], selected: CString, _2: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_image_text")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_image_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_label")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_label(_0: Ptr[nk_context], selected: CString, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_symbol")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol(_0: Ptr[nk_context], _1: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_symbol_label")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol_label(_0: Ptr[nk_context], selected: CString, _2: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_symbol_text")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_symbol_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_begin_text")
+  private[libnuklear] def __sn_wrap_nk_combo_begin_text(_0: Ptr[nk_context], selected: CString, _2: CInt, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_callback")
+  private[libnuklear] def __sn_wrap_nk_combo_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], userdata: Ptr[Byte], selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
 
   @name("__sn_wrap_nk_combo_item_image_label")
   private[libnuklear] def __sn_wrap_nk_combo_item_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, alignment: nk_flags): nk_bool = extern
 
-  @name("__sn_wrap_nk_sub9slice_ptr")
-  private[libnuklear] def __sn_wrap_nk_sub9slice_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+  @name("__sn_wrap_nk_combo_item_image_text")
+  private[libnuklear] def __sn_wrap_nk_combo_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_combo_separator")
+  private[libnuklear] def __sn_wrap_nk_combo_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
+
+  @name("__sn_wrap_nk_combo_string")
+  private[libnuklear] def __sn_wrap_nk_combo_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: CInt, count: CInt, item_height: CInt, size: Ptr[nk_vec2]): CInt = extern
+
+  @name("__sn_wrap_nk_combobox")
+  private[libnuklear] def __sn_wrap_nk_combobox(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: Ptr[CInt], item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
 
   @name("__sn_wrap_nk_combobox_callback")
   private[libnuklear] def __sn_wrap_nk_combobox_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], _2: Ptr[Byte], selected: Ptr[CInt], count: CInt, item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
 
-  @name("__sn_wrap_nk_hsva_bv")
-  private[libnuklear] def __sn_wrap_nk_hsva_bv(hsva: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+  @name("__sn_wrap_nk_combobox_separator")
+  private[libnuklear] def __sn_wrap_nk_combobox_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: Ptr[CInt], count: CInt, item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
 
-  @name("__sn_wrap_nk_fill_rect_multi_color")
-  private[libnuklear] def __sn_wrap_nk_fill_rect_multi_color(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], left: Ptr[nk_color], top: Ptr[nk_color], right: Ptr[nk_color], bottom: Ptr[nk_color]): Unit = extern
+  @name("__sn_wrap_nk_combobox_string")
+  private[libnuklear] def __sn_wrap_nk_combobox_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: Ptr[CInt], count: CInt, item_height: CInt, size: Ptr[nk_vec2]): Unit = extern
 
-  @name("__sn_wrap_nk_window_get_content_region_size")
-  private[libnuklear] def __sn_wrap_nk_window_get_content_region_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+  @name("__sn_wrap_nk_contextual_begin")
+  private[libnuklear] def __sn_wrap_nk_contextual_begin(_0: Ptr[nk_context], _1: nk_flags, _2: Ptr[nk_vec2], trigger_bounds: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_contextual_item_image_label")
+  private[libnuklear] def __sn_wrap_nk_contextual_item_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_contextual_item_image_text")
+  private[libnuklear] def __sn_wrap_nk_contextual_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_draw_image")
+  private[libnuklear] def __sn_wrap_nk_draw_image(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_image], _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_draw_nine_slice")
+  private[libnuklear] def __sn_wrap_nk_draw_nine_slice(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_nine_slice], _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_draw_text")
+  private[libnuklear] def __sn_wrap_nk_draw_text(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], text: CString, len: CInt, _4: Ptr[nk_user_font], _5: Ptr[nk_color], _6: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_fill_arc")
   private[libnuklear] def __sn_wrap_nk_fill_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, _6: Ptr[nk_color]): Unit = extern
 
+  @name("__sn_wrap_nk_fill_circle")
+  private[libnuklear] def __sn_wrap_nk_fill_circle(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_polygon")
+  private[libnuklear] def __sn_wrap_nk_fill_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_rect")
+  private[libnuklear] def __sn_wrap_nk_fill_rect(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], rounding: Float, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_rect_multi_color")
+  private[libnuklear] def __sn_wrap_nk_fill_rect_multi_color(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], left: Ptr[nk_color], top: Ptr[nk_color], right: Ptr[nk_color], bottom: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_fill_triangle")
+  private[libnuklear] def __sn_wrap_nk_fill_triangle(_0: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, _7: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_get_null_rect")
+  private[libnuklear] def __sn_wrap_nk_get_null_rect(__return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_hsv")
+  private[libnuklear] def __sn_wrap_nk_hsv(h: CInt, s: CInt, v: CInt, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsv_bv")
+  private[libnuklear] def __sn_wrap_nk_hsv_bv(hsv: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsv_f")
+  private[libnuklear] def __sn_wrap_nk_hsv_f(h: Float, s: Float, v: Float, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsv_fv")
+  private[libnuklear] def __sn_wrap_nk_hsv_fv(hsv: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsv_iv")
+  private[libnuklear] def __sn_wrap_nk_hsv_iv(hsv: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva")
+  private[libnuklear] def __sn_wrap_nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva_bv")
+  private[libnuklear] def __sn_wrap_nk_hsva_bv(hsva: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva_colorf")
+  private[libnuklear] def __sn_wrap_nk_hsva_colorf(h: Float, s: Float, v: Float, a: Float, __return: Ptr[nk_colorf]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva_colorfv")
+  private[libnuklear] def __sn_wrap_nk_hsva_colorfv(c: Ptr[Float], __return: Ptr[nk_colorf]): Unit = extern
+
   @name("__sn_wrap_nk_hsva_f")
   private[libnuklear] def __sn_wrap_nk_hsva_f(h: Float, s: Float, v: Float, a: Float, __return: Ptr[nk_color]): Unit = extern
 
-  @name("__sn_wrap_nk_menu_item_image_text")
-  private[libnuklear] def __sn_wrap_nk_menu_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
+  @name("__sn_wrap_nk_hsva_fv")
+  private[libnuklear] def __sn_wrap_nk_hsva_fv(hsva: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_hsva_iv")
+  private[libnuklear] def __sn_wrap_nk_hsva_iv(hsva: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_image")
+  private[libnuklear] def __sn_wrap_nk_image(_0: Ptr[nk_context], _1: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_image_color")
+  private[libnuklear] def __sn_wrap_nk_image_color(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_image_handle")
+  private[libnuklear] def __sn_wrap_nk_image_handle(_0: nk_handle, __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_image_id")
+  private[libnuklear] def __sn_wrap_nk_image_id(_0: CInt, __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_image_ptr")
+  private[libnuklear] def __sn_wrap_nk_image_ptr(_0: Ptr[Byte], __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_input_any_mouse_click_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_any_mouse_click_in_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_has_mouse_click_down_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_has_mouse_click_down_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect], down: nk_bool): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_has_mouse_click_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_has_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_is_mouse_click_down_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_is_mouse_click_down_in_rect(i: Ptr[nk_input], id: nk_buttons, b: Ptr[nk_rect], down: nk_bool): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_is_mouse_click_in_rect")
+  private[libnuklear] def __sn_wrap_nk_input_is_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_is_mouse_hovering_rect")
+  private[libnuklear] def __sn_wrap_nk_input_is_mouse_hovering_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_is_mouse_prev_hovering_rect")
+  private[libnuklear] def __sn_wrap_nk_input_is_mouse_prev_hovering_rect(_0: Ptr[nk_input], _1: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_mouse_clicked")
+  private[libnuklear] def __sn_wrap_nk_input_mouse_clicked(_0: Ptr[nk_input], _1: nk_buttons, _2: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_input_scroll")
+  private[libnuklear] def __sn_wrap_nk_input_scroll(_0: Ptr[nk_context], `val`: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_label_colored")
+  private[libnuklear] def __sn_wrap_nk_label_colored(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_label_colored_wrap")
+  private[libnuklear] def __sn_wrap_nk_label_colored_wrap(_0: Ptr[nk_context], _1: CString, _2: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_layout_space_bounds")
+  private[libnuklear] def __sn_wrap_nk_layout_space_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_layout_space_push")
+  private[libnuklear] def __sn_wrap_nk_layout_space_push(_0: Ptr[nk_context], bounds: Ptr[nk_rect]): Unit = extern
 
   @name("__sn_wrap_nk_layout_space_rect_to_local")
   private[libnuklear] def __sn_wrap_nk_layout_space_rect_to_local(_0: Ptr[nk_context], _1: Ptr[nk_rect], __return: Ptr[nk_rect]): Unit = extern
 
+  @name("__sn_wrap_nk_layout_space_rect_to_screen")
+  private[libnuklear] def __sn_wrap_nk_layout_space_rect_to_screen(_0: Ptr[nk_context], _1: Ptr[nk_rect], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_layout_space_to_local")
+  private[libnuklear] def __sn_wrap_nk_layout_space_to_local(_0: Ptr[nk_context], _1: Ptr[nk_vec2], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_layout_space_to_screen")
+  private[libnuklear] def __sn_wrap_nk_layout_space_to_screen(_0: Ptr[nk_context], _1: Ptr[nk_vec2], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_layout_widget_bounds")
+  private[libnuklear] def __sn_wrap_nk_layout_widget_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_menu_begin_image")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_image(_0: Ptr[nk_context], _1: CString, _2: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_begin_image_label")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_image_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_begin_image_text")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_image_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: Ptr[nk_image], size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_begin_label")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_begin_symbol")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol(_0: Ptr[nk_context], _1: CString, _2: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_begin_symbol_label")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_begin_symbol_text")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_symbol_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_symbol_type, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_begin_text")
+  private[libnuklear] def __sn_wrap_nk_menu_begin_text(_0: Ptr[nk_context], title: CString, title_len: CInt, align: nk_flags, size: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_item_image_label")
+  private[libnuklear] def __sn_wrap_nk_menu_item_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_menu_item_image_text")
+  private[libnuklear] def __sn_wrap_nk_menu_item_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, len: CInt, alignment: nk_flags): nk_bool = extern
+
+  @name("__sn_wrap_nk_nine_slice_handle")
+  private[libnuklear] def __sn_wrap_nk_nine_slice_handle(_0: nk_handle, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_nine_slice_id")
+  private[libnuklear] def __sn_wrap_nk_nine_slice_id(_0: CInt, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_nine_slice_ptr")
+  private[libnuklear] def __sn_wrap_nk_nine_slice_ptr(_0: Ptr[Byte], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_popup_begin")
+  private[libnuklear] def __sn_wrap_nk_popup_begin(_0: Ptr[nk_context], _1: nk_popup_type, _2: CString, _3: nk_flags, bounds: Ptr[nk_rect]): nk_bool = extern
+
+  @name("__sn_wrap_nk_push_custom")
+  private[libnuklear] def __sn_wrap_nk_push_custom(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], _2: nk_command_custom_callback, usr: nk_handle): Unit = extern
+
+  @name("__sn_wrap_nk_push_scissor")
+  private[libnuklear] def __sn_wrap_nk_push_scissor(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_rect")
+  private[libnuklear] def __sn_wrap_nk_rect(x: Float, y: Float, w: Float, h: Float, __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_rect_pos")
+  private[libnuklear] def __sn_wrap_nk_rect_pos(_0: Ptr[nk_rect], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_rect_size")
+  private[libnuklear] def __sn_wrap_nk_rect_size(_0: Ptr[nk_rect], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_recta")
+  private[libnuklear] def __sn_wrap_nk_recta(pos: Ptr[nk_vec2], size: Ptr[nk_vec2], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_recti")
+  private[libnuklear] def __sn_wrap_nk_recti(x: CInt, y: CInt, w: CInt, h: CInt, __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_rectiv")
+  private[libnuklear] def __sn_wrap_nk_rectiv(xywh: Ptr[CInt], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_rectv")
+  private[libnuklear] def __sn_wrap_nk_rectv(xywh: Ptr[Float], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb")
+  private[libnuklear] def __sn_wrap_nk_rgb(r: CInt, g: CInt, b: CInt, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_bv")
+  private[libnuklear] def __sn_wrap_nk_rgb_bv(rgb: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_cf")
+  private[libnuklear] def __sn_wrap_nk_rgb_cf(c: Ptr[nk_colorf], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_f")
+  private[libnuklear] def __sn_wrap_nk_rgb_f(r: Float, g: Float, b: Float, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_fv")
+  private[libnuklear] def __sn_wrap_nk_rgb_fv(rgb: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_hex")
+  private[libnuklear] def __sn_wrap_nk_rgb_hex(rgb: CString, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgb_iv")
+  private[libnuklear] def __sn_wrap_nk_rgb_iv(rgb: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba")
+  private[libnuklear] def __sn_wrap_nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_bv")
+  private[libnuklear] def __sn_wrap_nk_rgba_bv(rgba: Ptr[nk_byte], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_cf")
+  private[libnuklear] def __sn_wrap_nk_rgba_cf(c: Ptr[nk_colorf], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_f")
+  private[libnuklear] def __sn_wrap_nk_rgba_f(r: Float, g: Float, b: Float, a: Float, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_fv")
+  private[libnuklear] def __sn_wrap_nk_rgba_fv(rgba: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_hex")
+  private[libnuklear] def __sn_wrap_nk_rgba_hex(rgb: CString, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_iv")
+  private[libnuklear] def __sn_wrap_nk_rgba_iv(rgba: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_rgba_u32")
+  private[libnuklear] def __sn_wrap_nk_rgba_u32(_0: nk_uint, __return: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_select_image_label")
+  private[libnuklear] def __sn_wrap_nk_select_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  @name("__sn_wrap_nk_select_image_text")
+  private[libnuklear] def __sn_wrap_nk_select_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, align: nk_flags, value: nk_bool): nk_bool = extern
+
+  @name("__sn_wrap_nk_selectable_image_label")
+  private[libnuklear] def __sn_wrap_nk_selectable_image_label(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  @name("__sn_wrap_nk_selectable_image_text")
+  private[libnuklear] def __sn_wrap_nk_selectable_image_text(_0: Ptr[nk_context], _1: Ptr[nk_image], _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool]): nk_bool = extern
+
+  @name("__sn_wrap_nk_stroke_arc")
+  private[libnuklear] def __sn_wrap_nk_stroke_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, line_thickness: Float, _7: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_circle")
+  private[libnuklear] def __sn_wrap_nk_stroke_circle(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], line_thickness: Float, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_curve")
+  private[libnuklear] def __sn_wrap_nk_stroke_curve(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, _7: Float, _8: Float, line_thickness: Float, _10: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_line")
+  private[libnuklear] def __sn_wrap_nk_stroke_line(b: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, line_thickness: Float, _6: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_polygon")
+  private[libnuklear] def __sn_wrap_nk_stroke_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, line_thickness: Float, _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_polyline")
+  private[libnuklear] def __sn_wrap_nk_stroke_polyline(_0: Ptr[nk_command_buffer], points: Ptr[Float], point_count: CInt, line_thickness: Float, col: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_rect")
+  private[libnuklear] def __sn_wrap_nk_stroke_rect(_0: Ptr[nk_command_buffer], _1: Ptr[nk_rect], rounding: Float, line_thickness: Float, _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_stroke_triangle")
+  private[libnuklear] def __sn_wrap_nk_stroke_triangle(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, line_thichness: Float, _8: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_style_item_color")
+  private[libnuklear] def __sn_wrap_nk_style_item_color(_0: Ptr[nk_color], __return: Ptr[nk_style_item]): Unit = extern
+
+  @name("__sn_wrap_nk_style_item_hide")
+  private[libnuklear] def __sn_wrap_nk_style_item_hide(__return: Ptr[nk_style_item]): Unit = extern
+
+  @name("__sn_wrap_nk_style_item_image")
+  private[libnuklear] def __sn_wrap_nk_style_item_image(img: Ptr[nk_image], __return: Ptr[nk_style_item]): Unit = extern
+
+  @name("__sn_wrap_nk_style_item_nine_slice")
+  private[libnuklear] def __sn_wrap_nk_style_item_nine_slice(slice: Ptr[nk_nine_slice], __return: Ptr[nk_style_item]): Unit = extern
+
+  @name("__sn_wrap_nk_style_push_color")
+  private[libnuklear] def __sn_wrap_nk_style_push_color(_0: Ptr[nk_context], _1: Ptr[nk_color], _2: Ptr[nk_color]): nk_bool = extern
+
+  @name("__sn_wrap_nk_style_push_style_item")
+  private[libnuklear] def __sn_wrap_nk_style_push_style_item(_0: Ptr[nk_context], _1: Ptr[nk_style_item], _2: Ptr[nk_style_item]): nk_bool = extern
+
+  @name("__sn_wrap_nk_style_push_vec2")
+  private[libnuklear] def __sn_wrap_nk_style_push_vec2(_0: Ptr[nk_context], _1: Ptr[nk_vec2], _2: Ptr[nk_vec2]): nk_bool = extern
+
+  @name("__sn_wrap_nk_sub9slice_handle")
+  private[libnuklear] def __sn_wrap_nk_sub9slice_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
   @name("__sn_wrap_nk_sub9slice_id")
   private[libnuklear] def __sn_wrap_nk_sub9slice_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_sub9slice_ptr")
+  private[libnuklear] def __sn_wrap_nk_sub9slice_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort, __return: Ptr[nk_nine_slice]): Unit = extern
+
+  @name("__sn_wrap_nk_subimage_handle")
+  private[libnuklear] def __sn_wrap_nk_subimage_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_subimage_id")
+  private[libnuklear] def __sn_wrap_nk_subimage_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_subimage_ptr")
+  private[libnuklear] def __sn_wrap_nk_subimage_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: Ptr[nk_rect], __return: Ptr[nk_image]): Unit = extern
+
+  @name("__sn_wrap_nk_text_colored")
+  private[libnuklear] def __sn_wrap_nk_text_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags, _4: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_text_wrap_colored")
+  private[libnuklear] def __sn_wrap_nk_text_wrap_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: Ptr[nk_color]): Unit = extern
+
+  @name("__sn_wrap_nk_tree_element_image_push_hashed")
+  private[libnuklear] def __sn_wrap_nk_tree_element_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt): nk_bool = extern
+
+  @name("__sn_wrap_nk_tree_image_push_hashed")
+  private[libnuklear] def __sn_wrap_nk_tree_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt): nk_bool = extern
+
+  @name("__sn_wrap_nk_tree_state_image_push")
+  private[libnuklear] def __sn_wrap_nk_tree_state_image_push(_0: Ptr[nk_context], _1: nk_tree_type, _2: Ptr[nk_image], title: CString, state: Ptr[nk_collapse_states]): nk_bool = extern
+
+  @name("__sn_wrap_nk_triangle_from_direction")
+  private[libnuklear] def __sn_wrap_nk_triangle_from_direction(result: Ptr[nk_vec2], r: Ptr[nk_rect], pad_x: Float, pad_y: Float, _4: nk_heading): Unit = extern
+
+  @name("__sn_wrap_nk_vec2")
+  private[libnuklear] def __sn_wrap_nk_vec2(x: Float, y: Float, __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_vec2i")
+  private[libnuklear] def __sn_wrap_nk_vec2i(x: CInt, y: CInt, __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_vec2iv")
+  private[libnuklear] def __sn_wrap_nk_vec2iv(xy: Ptr[CInt], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_vec2v")
+  private[libnuklear] def __sn_wrap_nk_vec2v(xy: Ptr[Float], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_widget_bounds")
+  private[libnuklear] def __sn_wrap_nk_widget_bounds(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_widget_fitting")
+  private[libnuklear] def __sn_wrap_nk_widget_fitting(_0: Ptr[nk_rect], _1: Ptr[nk_context], _2: Ptr[nk_vec2]): nk_widget_layout_states = extern
+
+  @name("__sn_wrap_nk_widget_position")
+  private[libnuklear] def __sn_wrap_nk_widget_position(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_widget_size")
+  private[libnuklear] def __sn_wrap_nk_widget_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_bounds")
+  private[libnuklear] def __sn_wrap_nk_window_get_bounds(ctx: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_content_region")
+  private[libnuklear] def __sn_wrap_nk_window_get_content_region(_0: Ptr[nk_context], __return: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_content_region_max")
+  private[libnuklear] def __sn_wrap_nk_window_get_content_region_max(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_content_region_min")
+  private[libnuklear] def __sn_wrap_nk_window_get_content_region_min(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_content_region_size")
+  private[libnuklear] def __sn_wrap_nk_window_get_content_region_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_position")
+  private[libnuklear] def __sn_wrap_nk_window_get_position(ctx: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_window_get_size")
+  private[libnuklear] def __sn_wrap_nk_window_get_size(_0: Ptr[nk_context], __return: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_window_set_bounds")
+  private[libnuklear] def __sn_wrap_nk_window_set_bounds(_0: Ptr[nk_context], name: CString, bounds: Ptr[nk_rect]): Unit = extern
+
+  @name("__sn_wrap_nk_window_set_position")
+  private[libnuklear] def __sn_wrap_nk_window_set_position(_0: Ptr[nk_context], name: CString, pos: Ptr[nk_vec2]): Unit = extern
+
+  @name("__sn_wrap_nk_window_set_size")
+  private[libnuklear] def __sn_wrap_nk_window_set_size(_0: Ptr[nk_context], name: CString, _2: Ptr[nk_vec2]): Unit = extern
 
   def nk__begin(_0: Ptr[nk_context]): Ptr[nk_command] = extern
 
@@ -2916,283 +3570,365 @@ object functions:
 
   def nk_begin(ctx: Ptr[nk_context], title: CString, bounds: nk_rect, flags: nk_flags)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_rect](1)
+    !_ptr_2 = bounds
     __sn_wrap_nk_begin(ctx, title, _ptr_2, flags)
 
   def nk_begin_titled(ctx: Ptr[nk_context], name: CString, title: CString, bounds: nk_rect, flags: nk_flags)(using Zone): nk_bool = 
     val _ptr_3 = alloc[nk_rect](1)
+    !_ptr_3 = bounds
     __sn_wrap_nk_begin_titled(ctx, name, title, _ptr_3, flags)
 
   def nk_button_color(_0: Ptr[nk_context], _1: nk_color)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_button_color(_0, _ptr_1)
 
   def nk_button_image(_0: Ptr[nk_context], img: nk_image)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = img
     __sn_wrap_nk_button_image(_0, _ptr_1)
 
   def nk_button_image_label(_0: Ptr[nk_context], img: nk_image, _2: CString, text_alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = img
     __sn_wrap_nk_button_image_label(_0, _ptr_1, _2, text_alignment)
 
   def nk_button_image_label_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, text_alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_image](1)
+    !_ptr_2 = img
     __sn_wrap_nk_button_image_label_styled(_0, _1, _ptr_2, _3, text_alignment)
 
   def nk_button_image_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_image](1)
+    !_ptr_2 = img
     __sn_wrap_nk_button_image_styled(_0, _1, _ptr_2)
 
   def nk_button_image_text(_0: Ptr[nk_context], img: nk_image, _2: CString, _3: CInt, alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = img
     __sn_wrap_nk_button_image_text(_0, _ptr_1, _2, _3, alignment)
 
   def nk_button_image_text_styled(_0: Ptr[nk_context], _1: Ptr[nk_style_button], img: nk_image, _3: CString, _4: CInt, alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_image](1)
+    !_ptr_2 = img
     __sn_wrap_nk_button_image_text_styled(_0, _1, _ptr_2, _3, _4, alignment)
 
   def nk_chart_add_slot_colored(ctx: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, count: CInt, min_value: Float, max_value: Float)(using Zone): Unit = 
     val _ptr_2 = alloc[nk_color](1)
+    !_ptr_2 = _2
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = active
     __sn_wrap_nk_chart_add_slot_colored(ctx, _1, _ptr_2, _ptr_3, count, min_value, max_value)
 
   def nk_chart_begin_colored(_0: Ptr[nk_context], _1: nk_chart_type, _2: nk_color, active: nk_color, num: CInt, min: Float, max: Float)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_color](1)
+    !_ptr_2 = _2
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = active
     __sn_wrap_nk_chart_begin_colored(_0, _1, _ptr_2, _ptr_3, num, min, max)
 
   def nk_color_cf(_0: nk_color)(using Zone): nk_colorf = 
     val _ptr_0 = alloc[nk_color](1)
+    !_ptr_0 = _0
     val _ptr_return = alloc[nk_colorf](1)
     __sn_wrap_nk_color_cf(_ptr_0, _ptr_return)
     !_ptr_return
 
   def nk_color_d(r: Ptr[Double], g: Ptr[Double], b: Ptr[Double], a: Ptr[Double], _4: nk_color)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = _4
     __sn_wrap_nk_color_d(r, g, b, a, _ptr_4)
 
   def nk_color_dv(rgba_out: Ptr[Double], _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_dv(rgba_out, _ptr_1)
 
   def nk_color_f(r: Ptr[Float], g: Ptr[Float], b: Ptr[Float], a: Ptr[Float], _4: nk_color)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = _4
     __sn_wrap_nk_color_f(r, g, b, a, _ptr_4)
 
   def nk_color_fv(rgba_out: Ptr[Float], _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_fv(rgba_out, _ptr_1)
 
   def nk_color_hex_rgb(output: CString, _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_hex_rgb(output, _ptr_1)
 
   def nk_color_hex_rgba(output: CString, _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_hex_rgba(output, _ptr_1)
 
   def nk_color_hsv_b(out_h: Ptr[nk_byte], out_s: Ptr[nk_byte], out_v: Ptr[nk_byte], _3: nk_color)(using Zone): Unit = 
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_color_hsv_b(out_h, out_s, out_v, _ptr_3)
 
   def nk_color_hsv_bv(hsv_out: Ptr[nk_byte], _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_hsv_bv(hsv_out, _ptr_1)
 
   def nk_color_hsv_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], _3: nk_color)(using Zone): Unit = 
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_color_hsv_f(out_h, out_s, out_v, _ptr_3)
 
   def nk_color_hsv_fv(hsv_out: Ptr[Float], _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_hsv_fv(hsv_out, _ptr_1)
 
   def nk_color_hsv_i(out_h: Ptr[CInt], out_s: Ptr[CInt], out_v: Ptr[CInt], _3: nk_color)(using Zone): Unit = 
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_color_hsv_i(out_h, out_s, out_v, _ptr_3)
 
   def nk_color_hsv_iv(hsv_out: Ptr[CInt], _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_hsv_iv(hsv_out, _ptr_1)
 
   def nk_color_hsva_b(h: Ptr[nk_byte], s: Ptr[nk_byte], v: Ptr[nk_byte], a: Ptr[nk_byte], _4: nk_color)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = _4
     __sn_wrap_nk_color_hsva_b(h, s, v, a, _ptr_4)
 
   def nk_color_hsva_bv(hsva_out: Ptr[nk_byte], _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_hsva_bv(hsva_out, _ptr_1)
 
   def nk_color_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], _4: nk_color)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = _4
     __sn_wrap_nk_color_hsva_f(out_h, out_s, out_v, out_a, _ptr_4)
 
   def nk_color_hsva_fv(hsva_out: Ptr[Float], _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_hsva_fv(hsva_out, _ptr_1)
 
   def nk_color_hsva_i(h: Ptr[CInt], s: Ptr[CInt], v: Ptr[CInt], a: Ptr[CInt], _4: nk_color)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = _4
     __sn_wrap_nk_color_hsva_i(h, s, v, a, _ptr_4)
 
   def nk_color_hsva_iv(hsva_out: Ptr[CInt], _1: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_color_hsva_iv(hsva_out, _ptr_1)
 
   def nk_color_picker(_0: Ptr[nk_context], _1: nk_colorf, _2: nk_color_format)(using Zone): nk_colorf = 
     val _ptr_1 = alloc[nk_colorf](1)
+    !_ptr_1 = _1
     val _ptr_return = alloc[nk_colorf](1)
     __sn_wrap_nk_color_picker(_0, _ptr_1, _2, _ptr_return)
     !_ptr_return
 
   def nk_color_u32(_0: nk_color)(using Zone): nk_uint = 
     val _ptr_0 = alloc[nk_color](1)
+    !_ptr_0 = _0
     __sn_wrap_nk_color_u32(_ptr_0)
 
   def nk_colorf_hsva_f(out_h: Ptr[Float], out_s: Ptr[Float], out_v: Ptr[Float], out_a: Ptr[Float], in: nk_colorf)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_colorf](1)
+    !_ptr_4 = in
     __sn_wrap_nk_colorf_hsva_f(out_h, out_s, out_v, out_a, _ptr_4)
 
   def nk_colorf_hsva_fv(hsva: Ptr[Float], in: nk_colorf)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_colorf](1)
+    !_ptr_1 = in
     __sn_wrap_nk_colorf_hsva_fv(hsva, _ptr_1)
 
   def nk_combo(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: CInt, item_height: CInt, size: nk_vec2)(using Zone): CInt = 
     val _ptr_5 = alloc[nk_vec2](1)
+    !_ptr_5 = size
     __sn_wrap_nk_combo(_0, items, count, selected, item_height, _ptr_5)
 
   def nk_combo_begin_color(_0: Ptr[nk_context], color: nk_color, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_color](1)
+    !_ptr_1 = color
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = size
     __sn_wrap_nk_combo_begin_color(_0, _ptr_1, _ptr_2)
 
   def nk_combo_begin_image(_0: Ptr[nk_context], img: nk_image, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = img
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = size
     __sn_wrap_nk_combo_begin_image(_0, _ptr_1, _ptr_2)
 
   def nk_combo_begin_image_label(_0: Ptr[nk_context], selected: CString, _2: nk_image, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_image](1)
+    !_ptr_2 = _2
     val _ptr_3 = alloc[nk_vec2](1)
+    !_ptr_3 = size
     __sn_wrap_nk_combo_begin_image_label(_0, selected, _ptr_2, _ptr_3)
 
   def nk_combo_begin_image_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_image, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_3 = alloc[nk_image](1)
+    !_ptr_3 = _3
     val _ptr_4 = alloc[nk_vec2](1)
+    !_ptr_4 = size
     __sn_wrap_nk_combo_begin_image_text(_0, selected, _2, _ptr_3, _ptr_4)
 
   def nk_combo_begin_label(_0: Ptr[nk_context], selected: CString, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = size
     __sn_wrap_nk_combo_begin_label(_0, selected, _ptr_2)
 
   def nk_combo_begin_symbol(_0: Ptr[nk_context], _1: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = size
     __sn_wrap_nk_combo_begin_symbol(_0, _1, _ptr_2)
 
   def nk_combo_begin_symbol_label(_0: Ptr[nk_context], selected: CString, _2: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_3 = alloc[nk_vec2](1)
+    !_ptr_3 = size
     __sn_wrap_nk_combo_begin_symbol_label(_0, selected, _2, _ptr_3)
 
   def nk_combo_begin_symbol_text(_0: Ptr[nk_context], selected: CString, _2: CInt, _3: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_4 = alloc[nk_vec2](1)
+    !_ptr_4 = size
     __sn_wrap_nk_combo_begin_symbol_text(_0, selected, _2, _3, _ptr_4)
 
   def nk_combo_begin_text(_0: Ptr[nk_context], selected: CString, _2: CInt, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_3 = alloc[nk_vec2](1)
+    !_ptr_3 = size
     __sn_wrap_nk_combo_begin_text(_0, selected, _2, _ptr_3)
 
   def nk_combo_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], userdata: Ptr[Byte], selected: CInt, count: CInt, item_height: CInt, size: nk_vec2)(using Zone): CInt = 
     val _ptr_6 = alloc[nk_vec2](1)
+    !_ptr_6 = size
     __sn_wrap_nk_combo_callback(_0, item_getter, userdata, selected, count, item_height, _ptr_6)
 
   def nk_combo_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_combo_item_image_label(_0, _ptr_1, _2, alignment)
 
   def nk_combo_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_combo_item_image_text(_0, _ptr_1, _2, _3, alignment)
 
   def nk_combo_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2)(using Zone): CInt = 
     val _ptr_6 = alloc[nk_vec2](1)
+    !_ptr_6 = size
     __sn_wrap_nk_combo_separator(_0, items_separated_by_separator, separator, selected, count, item_height, _ptr_6)
 
   def nk_combo_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: CInt, count: CInt, item_height: CInt, size: nk_vec2)(using Zone): CInt = 
     val _ptr_5 = alloc[nk_vec2](1)
+    !_ptr_5 = size
     __sn_wrap_nk_combo_string(_0, items_separated_by_zeros, selected, count, item_height, _ptr_5)
 
   def nk_combobox(_0: Ptr[nk_context], items: Ptr[CString], count: CInt, selected: Ptr[CInt], item_height: CInt, size: nk_vec2)(using Zone): Unit = 
     val _ptr_5 = alloc[nk_vec2](1)
+    !_ptr_5 = size
     __sn_wrap_nk_combobox(_0, items, count, selected, item_height, _ptr_5)
 
   def nk_combobox_callback(_0: Ptr[nk_context], item_getter: Ptr[CFuncPtr3[Ptr[Byte], CInt, Ptr[CString], Unit]], _2: Ptr[Byte], selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2)(using Zone): Unit = 
     val _ptr_6 = alloc[nk_vec2](1)
+    !_ptr_6 = size
     __sn_wrap_nk_combobox_callback(_0, item_getter, _2, selected, count, item_height, _ptr_6)
 
   def nk_combobox_separator(_0: Ptr[nk_context], items_separated_by_separator: CString, separator: CInt, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2)(using Zone): Unit = 
     val _ptr_6 = alloc[nk_vec2](1)
+    !_ptr_6 = size
     __sn_wrap_nk_combobox_separator(_0, items_separated_by_separator, separator, selected, count, item_height, _ptr_6)
 
   def nk_combobox_string(_0: Ptr[nk_context], items_separated_by_zeros: CString, selected: Ptr[CInt], count: CInt, item_height: CInt, size: nk_vec2)(using Zone): Unit = 
     val _ptr_5 = alloc[nk_vec2](1)
+    !_ptr_5 = size
     __sn_wrap_nk_combobox_string(_0, items_separated_by_zeros, selected, count, item_height, _ptr_5)
 
   def nk_contextual_begin(_0: Ptr[nk_context], _1: nk_flags, _2: nk_vec2, trigger_bounds: nk_rect)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = _2
     val _ptr_3 = alloc[nk_rect](1)
+    !_ptr_3 = trigger_bounds
     __sn_wrap_nk_contextual_begin(_0, _1, _ptr_2, _ptr_3)
 
   def nk_contextual_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_contextual_item_image_label(_0, _ptr_1, _2, alignment)
 
   def nk_contextual_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_contextual_item_image_text(_0, _ptr_1, _2, len, alignment)
 
   def nk_draw_image(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_image], _3: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_draw_image(_0, _ptr_1, _2, _ptr_3)
 
   def nk_draw_nine_slice(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: Ptr[nk_nine_slice], _3: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_draw_nine_slice(_0, _ptr_1, _2, _ptr_3)
 
   def nk_draw_text(_0: Ptr[nk_command_buffer], _1: nk_rect, text: CString, len: CInt, _4: Ptr[nk_user_font], _5: nk_color, _6: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_5 = alloc[nk_color](1)
+    !_ptr_5 = _5
     val _ptr_6 = alloc[nk_color](1)
+    !_ptr_6 = _6
     __sn_wrap_nk_draw_text(_0, _ptr_1, text, len, _4, _ptr_5, _ptr_6)
 
   def nk_fill_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, _6: nk_color)(using Zone): Unit = 
     val _ptr_6 = alloc[nk_color](1)
+    !_ptr_6 = _6
     __sn_wrap_nk_fill_arc(_0, cx, cy, radius, a_min, a_max, _ptr_6)
 
   def nk_fill_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_2 = alloc[nk_color](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_fill_circle(_0, _ptr_1, _ptr_2)
 
   def nk_fill_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, _3: nk_color)(using Zone): Unit = 
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_fill_polygon(_0, _1, point_count, _ptr_3)
 
   def nk_fill_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, _3: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_fill_rect(_0, _ptr_1, rounding, _ptr_3)
 
   def nk_fill_rect_multi_color(_0: Ptr[nk_command_buffer], _1: nk_rect, left: nk_color, top: nk_color, right: nk_color, bottom: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_2 = alloc[nk_color](1)
+    !_ptr_2 = left
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = top
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = right
     val _ptr_5 = alloc[nk_color](1)
+    !_ptr_5 = bottom
     __sn_wrap_nk_fill_rect_multi_color(_0, _ptr_1, _ptr_2, _ptr_3, _ptr_4, _ptr_5)
 
   def nk_fill_triangle(_0: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, _7: nk_color)(using Zone): Unit = 
     val _ptr_7 = alloc[nk_color](1)
+    !_ptr_7 = _7
     __sn_wrap_nk_fill_triangle(_0, x0, y0, x1, y1, x2, y2, _ptr_7)
 
   def nk_get_null_rect()(using Zone): nk_rect = 
@@ -3262,11 +3998,14 @@ object functions:
 
   def nk_image(_0: Ptr[nk_context], _1: nk_image)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_image(_0, _ptr_1)
 
   def nk_image_color(_0: Ptr[nk_context], _1: nk_image, _2: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     val _ptr_2 = alloc[nk_color](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_image_color(_0, _ptr_1, _ptr_2)
 
   def nk_image_handle(_0: nk_handle)(using Zone): nk_image = 
@@ -3286,46 +4025,57 @@ object functions:
 
   def nk_input_any_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_rect)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_input_any_mouse_click_in_rect(_0, _ptr_1)
 
   def nk_input_has_mouse_click_down_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect, down: nk_bool)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_rect](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_input_has_mouse_click_down_in_rect(_0, _1, _ptr_2, down)
 
   def nk_input_has_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_rect](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_input_has_mouse_click_in_rect(_0, _1, _ptr_2)
 
   def nk_input_is_mouse_click_down_in_rect(i: Ptr[nk_input], id: nk_buttons, b: nk_rect, down: nk_bool)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_rect](1)
+    !_ptr_2 = b
     __sn_wrap_nk_input_is_mouse_click_down_in_rect(i, id, _ptr_2, down)
 
   def nk_input_is_mouse_click_in_rect(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_rect](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_input_is_mouse_click_in_rect(_0, _1, _ptr_2)
 
   def nk_input_is_mouse_hovering_rect(_0: Ptr[nk_input], _1: nk_rect)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_input_is_mouse_hovering_rect(_0, _ptr_1)
 
   def nk_input_is_mouse_prev_hovering_rect(_0: Ptr[nk_input], _1: nk_rect)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_input_is_mouse_prev_hovering_rect(_0, _ptr_1)
 
   def nk_input_mouse_clicked(_0: Ptr[nk_input], _1: nk_buttons, _2: nk_rect)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_rect](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_input_mouse_clicked(_0, _1, _ptr_2)
 
   def nk_input_scroll(_0: Ptr[nk_context], `val`: nk_vec2)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_vec2](1)
+    !_ptr_1 = `val`
     __sn_wrap_nk_input_scroll(_0, _ptr_1)
 
   def nk_label_colored(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_color)(using Zone): Unit = 
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_label_colored(_0, _1, align, _ptr_3)
 
   def nk_label_colored_wrap(_0: Ptr[nk_context], _1: CString, _2: nk_color)(using Zone): Unit = 
     val _ptr_2 = alloc[nk_color](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_label_colored_wrap(_0, _1, _ptr_2)
 
   def nk_layout_space_bounds(_0: Ptr[nk_context])(using Zone): nk_rect = 
@@ -3335,28 +4085,33 @@ object functions:
 
   def nk_layout_space_push(_0: Ptr[nk_context], bounds: nk_rect)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = bounds
     __sn_wrap_nk_layout_space_push(_0, _ptr_1)
 
   def nk_layout_space_rect_to_local(_0: Ptr[nk_context], _1: nk_rect)(using Zone): nk_rect = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_return = alloc[nk_rect](1)
     __sn_wrap_nk_layout_space_rect_to_local(_0, _ptr_1, _ptr_return)
     !_ptr_return
 
   def nk_layout_space_rect_to_screen(_0: Ptr[nk_context], _1: nk_rect)(using Zone): nk_rect = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_return = alloc[nk_rect](1)
     __sn_wrap_nk_layout_space_rect_to_screen(_0, _ptr_1, _ptr_return)
     !_ptr_return
 
   def nk_layout_space_to_local(_0: Ptr[nk_context], _1: nk_vec2)(using Zone): nk_vec2 = 
     val _ptr_1 = alloc[nk_vec2](1)
+    !_ptr_1 = _1
     val _ptr_return = alloc[nk_vec2](1)
     __sn_wrap_nk_layout_space_to_local(_0, _ptr_1, _ptr_return)
     !_ptr_return
 
   def nk_layout_space_to_screen(_0: Ptr[nk_context], _1: nk_vec2)(using Zone): nk_vec2 = 
     val _ptr_1 = alloc[nk_vec2](1)
+    !_ptr_1 = _1
     val _ptr_return = alloc[nk_vec2](1)
     __sn_wrap_nk_layout_space_to_screen(_0, _ptr_1, _ptr_return)
     !_ptr_return
@@ -3368,45 +4123,58 @@ object functions:
 
   def nk_menu_begin_image(_0: Ptr[nk_context], _1: CString, _2: nk_image, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_image](1)
+    !_ptr_2 = _2
     val _ptr_3 = alloc[nk_vec2](1)
+    !_ptr_3 = size
     __sn_wrap_nk_menu_begin_image(_0, _1, _ptr_2, _ptr_3)
 
   def nk_menu_begin_image_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_image, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_3 = alloc[nk_image](1)
+    !_ptr_3 = _3
     val _ptr_4 = alloc[nk_vec2](1)
+    !_ptr_4 = size
     __sn_wrap_nk_menu_begin_image_label(_0, _1, align, _ptr_3, _ptr_4)
 
   def nk_menu_begin_image_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_image, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_4 = alloc[nk_image](1)
+    !_ptr_4 = _4
     val _ptr_5 = alloc[nk_vec2](1)
+    !_ptr_5 = size
     __sn_wrap_nk_menu_begin_image_text(_0, _1, _2, align, _ptr_4, _ptr_5)
 
   def nk_menu_begin_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_3 = alloc[nk_vec2](1)
+    !_ptr_3 = size
     __sn_wrap_nk_menu_begin_label(_0, _1, align, _ptr_3)
 
   def nk_menu_begin_symbol(_0: Ptr[nk_context], _1: CString, _2: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_3 = alloc[nk_vec2](1)
+    !_ptr_3 = size
     __sn_wrap_nk_menu_begin_symbol(_0, _1, _2, _ptr_3)
 
   def nk_menu_begin_symbol_label(_0: Ptr[nk_context], _1: CString, align: nk_flags, _3: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_4 = alloc[nk_vec2](1)
+    !_ptr_4 = size
     __sn_wrap_nk_menu_begin_symbol_label(_0, _1, align, _3, _ptr_4)
 
   def nk_menu_begin_symbol_text(_0: Ptr[nk_context], _1: CString, _2: CInt, align: nk_flags, _4: nk_symbol_type, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_5 = alloc[nk_vec2](1)
+    !_ptr_5 = size
     __sn_wrap_nk_menu_begin_symbol_text(_0, _1, _2, align, _4, _ptr_5)
 
   def nk_menu_begin_text(_0: Ptr[nk_context], title: CString, title_len: CInt, align: nk_flags, size: nk_vec2)(using Zone): nk_bool = 
     val _ptr_4 = alloc[nk_vec2](1)
+    !_ptr_4 = size
     __sn_wrap_nk_menu_begin_text(_0, title, title_len, align, _ptr_4)
 
   def nk_menu_item_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_menu_item_image_label(_0, _ptr_1, _2, alignment)
 
   def nk_menu_item_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, len: CInt, alignment: nk_flags)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_menu_item_image_text(_0, _ptr_1, _2, len, alignment)
 
   def nk_nine_slice_handle(_0: nk_handle, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
@@ -3426,14 +4194,17 @@ object functions:
 
   def nk_popup_begin(_0: Ptr[nk_context], _1: nk_popup_type, _2: CString, _3: nk_flags, bounds: nk_rect)(using Zone): nk_bool = 
     val _ptr_4 = alloc[nk_rect](1)
+    !_ptr_4 = bounds
     __sn_wrap_nk_popup_begin(_0, _1, _2, _3, _ptr_4)
 
   def nk_push_custom(_0: Ptr[nk_command_buffer], _1: nk_rect, _2: nk_command_custom_callback, usr: nk_handle)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_push_custom(_0, _ptr_1, _2, usr)
 
   def nk_push_scissor(_0: Ptr[nk_command_buffer], _1: nk_rect)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_push_scissor(_0, _ptr_1)
 
   def nk_rect(x: Float, y: Float, w: Float, h: Float)(using Zone): nk_rect = 
@@ -3443,19 +4214,23 @@ object functions:
 
   def nk_rect_pos(_0: nk_rect)(using Zone): nk_vec2 = 
     val _ptr_0 = alloc[nk_rect](1)
+    !_ptr_0 = _0
     val _ptr_return = alloc[nk_vec2](1)
     __sn_wrap_nk_rect_pos(_ptr_0, _ptr_return)
     !_ptr_return
 
   def nk_rect_size(_0: nk_rect)(using Zone): nk_vec2 = 
     val _ptr_0 = alloc[nk_rect](1)
+    !_ptr_0 = _0
     val _ptr_return = alloc[nk_vec2](1)
     __sn_wrap_nk_rect_size(_ptr_0, _ptr_return)
     !_ptr_return
 
   def nk_recta(pos: nk_vec2, size: nk_vec2)(using Zone): nk_rect = 
     val _ptr_0 = alloc[nk_vec2](1)
+    !_ptr_0 = pos
     val _ptr_1 = alloc[nk_vec2](1)
+    !_ptr_1 = size
     val _ptr_return = alloc[nk_rect](1)
     __sn_wrap_nk_recta(_ptr_0, _ptr_1, _ptr_return)
     !_ptr_return
@@ -3487,6 +4262,7 @@ object functions:
 
   def nk_rgb_cf(c: nk_colorf)(using Zone): nk_color = 
     val _ptr_0 = alloc[nk_colorf](1)
+    !_ptr_0 = c
     val _ptr_return = alloc[nk_color](1)
     __sn_wrap_nk_rgb_cf(_ptr_0, _ptr_return)
     !_ptr_return
@@ -3523,6 +4299,7 @@ object functions:
 
   def nk_rgba_cf(c: nk_colorf)(using Zone): nk_color = 
     val _ptr_0 = alloc[nk_colorf](1)
+    !_ptr_0 = c
     val _ptr_return = alloc[nk_color](1)
     __sn_wrap_nk_rgba_cf(_ptr_0, _ptr_return)
     !_ptr_return
@@ -3554,56 +4331,71 @@ object functions:
 
   def nk_select_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: nk_bool)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_select_image_label(_0, _ptr_1, _2, align, value)
 
   def nk_select_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: nk_bool)(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_select_image_text(_0, _ptr_1, _2, _3, align, value)
 
   def nk_selectable_image_label(_0: Ptr[nk_context], _1: nk_image, _2: CString, align: nk_flags, value: Ptr[nk_bool])(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_selectable_image_label(_0, _ptr_1, _2, align, value)
 
   def nk_selectable_image_text(_0: Ptr[nk_context], _1: nk_image, _2: CString, _3: CInt, align: nk_flags, value: Ptr[nk_bool])(using Zone): nk_bool = 
     val _ptr_1 = alloc[nk_image](1)
+    !_ptr_1 = _1
     __sn_wrap_nk_selectable_image_text(_0, _ptr_1, _2, _3, align, value)
 
   def nk_stroke_arc(_0: Ptr[nk_command_buffer], cx: Float, cy: Float, radius: Float, a_min: Float, a_max: Float, line_thickness: Float, _7: nk_color)(using Zone): Unit = 
     val _ptr_7 = alloc[nk_color](1)
+    !_ptr_7 = _7
     __sn_wrap_nk_stroke_arc(_0, cx, cy, radius, a_min, a_max, line_thickness, _ptr_7)
 
   def nk_stroke_circle(_0: Ptr[nk_command_buffer], _1: nk_rect, line_thickness: Float, _3: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_stroke_circle(_0, _ptr_1, line_thickness, _ptr_3)
 
   def nk_stroke_curve(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, _7: Float, _8: Float, line_thickness: Float, _10: nk_color)(using Zone): Unit = 
     val _ptr_10 = alloc[nk_color](1)
+    !_ptr_10 = _10
     __sn_wrap_nk_stroke_curve(_0, _1, _2, _3, _4, _5, _6, _7, _8, line_thickness, _ptr_10)
 
   def nk_stroke_line(b: Ptr[nk_command_buffer], x0: Float, y0: Float, x1: Float, y1: Float, line_thickness: Float, _6: nk_color)(using Zone): Unit = 
     val _ptr_6 = alloc[nk_color](1)
+    !_ptr_6 = _6
     __sn_wrap_nk_stroke_line(b, x0, y0, x1, y1, line_thickness, _ptr_6)
 
   def nk_stroke_polygon(_0: Ptr[nk_command_buffer], _1: Ptr[Float], point_count: CInt, line_thickness: Float, _4: nk_color)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = _4
     __sn_wrap_nk_stroke_polygon(_0, _1, point_count, line_thickness, _ptr_4)
 
   def nk_stroke_polyline(_0: Ptr[nk_command_buffer], points: Ptr[Float], point_count: CInt, line_thickness: Float, col: nk_color)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = col
     __sn_wrap_nk_stroke_polyline(_0, points, point_count, line_thickness, _ptr_4)
 
   def nk_stroke_rect(_0: Ptr[nk_command_buffer], _1: nk_rect, rounding: Float, line_thickness: Float, _4: nk_color)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = _1
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = _4
     __sn_wrap_nk_stroke_rect(_0, _ptr_1, rounding, line_thickness, _ptr_4)
 
   def nk_stroke_triangle(_0: Ptr[nk_command_buffer], _1: Float, _2: Float, _3: Float, _4: Float, _5: Float, _6: Float, line_thichness: Float, _8: nk_color)(using Zone): Unit = 
     val _ptr_8 = alloc[nk_color](1)
+    !_ptr_8 = _8
     __sn_wrap_nk_stroke_triangle(_0, _1, _2, _3, _4, _5, _6, line_thichness, _ptr_8)
 
   def nk_style_item_color(_0: nk_color)(using Zone): nk_style_item = 
     val _ptr_0 = alloc[nk_color](1)
+    !_ptr_0 = _0
     val _ptr_return = alloc[nk_style_item](1)
     __sn_wrap_nk_style_item_color(_ptr_0, _ptr_return)
     !_ptr_return
@@ -3615,86 +4407,103 @@ object functions:
 
   def nk_style_item_image(img: nk_image)(using Zone): nk_style_item = 
     val _ptr_0 = alloc[nk_image](1)
+    !_ptr_0 = img
     val _ptr_return = alloc[nk_style_item](1)
     __sn_wrap_nk_style_item_image(_ptr_0, _ptr_return)
     !_ptr_return
 
   def nk_style_item_nine_slice(slice: nk_nine_slice)(using Zone): nk_style_item = 
     val _ptr_0 = alloc[nk_nine_slice](1)
+    !_ptr_0 = slice
     val _ptr_return = alloc[nk_style_item](1)
     __sn_wrap_nk_style_item_nine_slice(_ptr_0, _ptr_return)
     !_ptr_return
 
   def nk_style_push_color(_0: Ptr[nk_context], _1: Ptr[nk_color], _2: nk_color)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_color](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_style_push_color(_0, _1, _ptr_2)
 
   def nk_style_push_style_item(_0: Ptr[nk_context], _1: Ptr[nk_style_item], _2: nk_style_item)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_style_item](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_style_push_style_item(_0, _1, _ptr_2)
 
   def nk_style_push_vec2(_0: Ptr[nk_context], _1: Ptr[nk_vec2], _2: nk_vec2)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_style_push_vec2(_0, _1, _ptr_2)
 
   def nk_sub9slice_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
     val _ptr_3 = alloc[nk_rect](1)
+    !_ptr_3 = sub_region
     val _ptr_return = alloc[nk_nine_slice](1)
     __sn_wrap_nk_sub9slice_handle(_0, w, h, _ptr_3, l, t, r, b, _ptr_return)
     !_ptr_return
 
   def nk_sub9slice_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
     val _ptr_3 = alloc[nk_rect](1)
+    !_ptr_3 = sub_region
     val _ptr_return = alloc[nk_nine_slice](1)
     __sn_wrap_nk_sub9slice_id(_0, w, h, _ptr_3, l, t, r, b, _ptr_return)
     !_ptr_return
 
   def nk_sub9slice_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: nk_rect, l: nk_ushort, t: nk_ushort, r: nk_ushort, b: nk_ushort)(using Zone): nk_nine_slice = 
     val _ptr_3 = alloc[nk_rect](1)
+    !_ptr_3 = sub_region
     val _ptr_return = alloc[nk_nine_slice](1)
     __sn_wrap_nk_sub9slice_ptr(_0, w, h, _ptr_3, l, t, r, b, _ptr_return)
     !_ptr_return
 
   def nk_subimage_handle(_0: nk_handle, w: nk_ushort, h: nk_ushort, sub_region: nk_rect)(using Zone): nk_image = 
     val _ptr_3 = alloc[nk_rect](1)
+    !_ptr_3 = sub_region
     val _ptr_return = alloc[nk_image](1)
     __sn_wrap_nk_subimage_handle(_0, w, h, _ptr_3, _ptr_return)
     !_ptr_return
 
   def nk_subimage_id(_0: CInt, w: nk_ushort, h: nk_ushort, sub_region: nk_rect)(using Zone): nk_image = 
     val _ptr_3 = alloc[nk_rect](1)
+    !_ptr_3 = sub_region
     val _ptr_return = alloc[nk_image](1)
     __sn_wrap_nk_subimage_id(_0, w, h, _ptr_3, _ptr_return)
     !_ptr_return
 
   def nk_subimage_ptr(_0: Ptr[Byte], w: nk_ushort, h: nk_ushort, sub_region: nk_rect)(using Zone): nk_image = 
     val _ptr_3 = alloc[nk_rect](1)
+    !_ptr_3 = sub_region
     val _ptr_return = alloc[nk_image](1)
     __sn_wrap_nk_subimage_ptr(_0, w, h, _ptr_3, _ptr_return)
     !_ptr_return
 
   def nk_text_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_flags, _4: nk_color)(using Zone): Unit = 
     val _ptr_4 = alloc[nk_color](1)
+    !_ptr_4 = _4
     __sn_wrap_nk_text_colored(_0, _1, _2, _3, _ptr_4)
 
   def nk_text_wrap_colored(_0: Ptr[nk_context], _1: CString, _2: CInt, _3: nk_color)(using Zone): Unit = 
     val _ptr_3 = alloc[nk_color](1)
+    !_ptr_3 = _3
     __sn_wrap_nk_text_wrap_colored(_0, _1, _2, _ptr_3)
 
   def nk_tree_element_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, selected: Ptr[nk_bool], hash: CString, len: CInt, seed: CInt)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_image](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_tree_element_image_push_hashed(_0, _1, _ptr_2, title, initial_state, selected, hash, len, seed)
 
   def nk_tree_image_push_hashed(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, initial_state: nk_collapse_states, hash: CString, len: CInt, seed: CInt)(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_image](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_tree_image_push_hashed(_0, _1, _ptr_2, title, initial_state, hash, len, seed)
 
   def nk_tree_state_image_push(_0: Ptr[nk_context], _1: nk_tree_type, _2: nk_image, title: CString, state: Ptr[nk_collapse_states])(using Zone): nk_bool = 
     val _ptr_2 = alloc[nk_image](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_tree_state_image_push(_0, _1, _ptr_2, title, state)
 
   def nk_triangle_from_direction(result: Ptr[nk_vec2], r: nk_rect, pad_x: Float, pad_y: Float, _4: nk_heading)(using Zone): Unit = 
     val _ptr_1 = alloc[nk_rect](1)
+    !_ptr_1 = r
     __sn_wrap_nk_triangle_from_direction(result, _ptr_1, pad_x, pad_y, _4)
 
   def nk_vec2(x: Float, y: Float)(using Zone): nk_vec2 = 
@@ -3724,6 +4533,7 @@ object functions:
 
   def nk_widget_fitting(_0: Ptr[nk_rect], _1: Ptr[nk_context], _2: nk_vec2)(using Zone): nk_widget_layout_states = 
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_widget_fitting(_0, _1, _ptr_2)
 
   def nk_widget_position(_0: Ptr[nk_context])(using Zone): nk_vec2 = 
@@ -3773,14 +4583,17 @@ object functions:
 
   def nk_window_set_bounds(_0: Ptr[nk_context], name: CString, bounds: nk_rect)(using Zone): Unit = 
     val _ptr_2 = alloc[nk_rect](1)
+    !_ptr_2 = bounds
     __sn_wrap_nk_window_set_bounds(_0, name, _ptr_2)
 
   def nk_window_set_position(_0: Ptr[nk_context], name: CString, pos: nk_vec2)(using Zone): Unit = 
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = pos
     __sn_wrap_nk_window_set_position(_0, name, _ptr_2)
 
   def nk_window_set_size(_0: Ptr[nk_context], name: CString, _2: nk_vec2)(using Zone): Unit = 
     val _ptr_2 = alloc[nk_vec2](1)
+    !_ptr_2 = _2
     __sn_wrap_nk_window_set_size(_0, name, _ptr_2)
 
 

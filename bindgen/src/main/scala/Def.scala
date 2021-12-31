@@ -22,21 +22,24 @@ object Def:
   case class Function(
       var name: String,
       var returnType: CType,
-      var parameters: ListBuffer[(String, CType)],
-      var tpe: CFunctionType
+      var parameters: ListBuffer[(String, CType, OriginalCType)],
+      var tpe: CFunctionType,
+      val originalCType: OriginalCType
   )
   case class Alias(name: String, underlying: CType)
 
   def typeOf(d: Function): CType.Function =
     CType.Function(
       d.returnType,
-      d.parameters.map { case (name, typ) => Parameter(Some(name), typ) }.toList
+      d.parameters.map { case (name, typ, _) => Parameter(Some(name), typ) }.toList
     )
 end Def
 
+case class OriginalCType(typ: CType, s: String)
+
 enum CFunctionType:
   case Extern
-  case ExternRename(name: String, internal: Boolean)
+  case ExternRename(name: String, internal: Boolean, original: String)
   case Delegate(parameters: Set[Int], withReturn: Boolean, delegateTo: String)
 
 enum CType:

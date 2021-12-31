@@ -11,7 +11,7 @@ object predef:
   
   abstract class CEnumU[T](using eq: T =:= UInt):
     given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-        
+      
 object types:
   import predef.*
   opaque type CXAvailabilityKind = CUnsignedInt
@@ -1365,6 +1365,12 @@ object types:
   opaque type CXCodeCompleteResults = CStruct2[Ptr[CXCompletionResult], CUnsignedInt]
   object CXCodeCompleteResults:
     given _tag: Tag[CXCodeCompleteResults] = Tag.materializeCStruct2Tag[Ptr[CXCompletionResult], CUnsignedInt]
+    def apply()(using Zone): Ptr[CXCodeCompleteResults] = scala.scalanative.unsafe.alloc[CXCodeCompleteResults](1)
+    def apply(Results: Ptr[CXCompletionResult], NumResults: CUnsignedInt)(using Zone): Ptr[CXCodeCompleteResults] = 
+      val ____ptr = apply()
+      (!____ptr).Results = Results
+      (!____ptr).NumResults = NumResults
+      ____ptr
     extension (struct: CXCodeCompleteResults)
       def Results: Ptr[CXCompletionResult] = struct._1
       def Results_=(value: Ptr[CXCompletionResult]): Unit = !struct.at1 = value
@@ -1374,6 +1380,12 @@ object types:
   opaque type CXCompletionResult = CStruct2[CXCursorKind, CXCompletionString]
   object CXCompletionResult:
     given _tag: Tag[CXCompletionResult] = Tag.materializeCStruct2Tag[CXCursorKind, CXCompletionString]
+    def apply()(using Zone): Ptr[CXCompletionResult] = scala.scalanative.unsafe.alloc[CXCompletionResult](1)
+    def apply(CursorKind: CXCursorKind, CompletionString: CXCompletionString)(using Zone): Ptr[CXCompletionResult] = 
+      val ____ptr = apply()
+      (!____ptr).CursorKind = CursorKind
+      (!____ptr).CompletionString = CompletionString
+      ____ptr
     extension (struct: CXCompletionResult)
       def CursorKind: CXCursorKind = struct._1
       def CursorKind_=(value: CXCursorKind): Unit = !struct.at1 = value
@@ -1383,6 +1395,13 @@ object types:
   opaque type CXCursor = CStruct3[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
   object CXCursor:
     given _tag: Tag[CXCursor] = Tag.materializeCStruct3Tag[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
+    def apply()(using Zone): Ptr[CXCursor] = scala.scalanative.unsafe.alloc[CXCursor](1)
+    def apply(kind: CXCursorKind, xdata: CInt, data: CArray[Ptr[Byte], Nat._3])(using Zone): Ptr[CXCursor] = 
+      val ____ptr = apply()
+      (!____ptr).kind = kind
+      (!____ptr).xdata = xdata
+      (!____ptr).data = data
+      ____ptr
     extension (struct: CXCursor)
       def kind: CXCursorKind = struct._1
       def kind_=(value: CXCursorKind): Unit = !struct.at1 = value
@@ -1394,6 +1413,12 @@ object types:
   opaque type CXCursorAndRangeVisitor = CStruct2[Ptr[Byte], Ptr[CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]]]
   object CXCursorAndRangeVisitor:
     given _tag: Tag[CXCursorAndRangeVisitor] = Tag.materializeCStruct2Tag[Ptr[Byte], Ptr[CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]]]
+    def apply()(using Zone): Ptr[CXCursorAndRangeVisitor] = scala.scalanative.unsafe.alloc[CXCursorAndRangeVisitor](1)
+    def apply(context: Ptr[Byte], visit: Ptr[CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]])(using Zone): Ptr[CXCursorAndRangeVisitor] = 
+      val ____ptr = apply()
+      (!____ptr).context = context
+      (!____ptr).visit = visit
+      ____ptr
     extension (struct: CXCursorAndRangeVisitor)
       def context: Ptr[Byte] = struct._1
       def context_=(value: Ptr[Byte]): Unit = !struct.at1 = value
@@ -1407,6 +1432,11 @@ object types:
   opaque type CXFileUniqueID = CStruct1[CArray[CUnsignedLongLong, Nat._3]]
   object CXFileUniqueID:
     given _tag: Tag[CXFileUniqueID] = Tag.materializeCStruct1Tag[CArray[CUnsignedLongLong, Nat._3]]
+    def apply()(using Zone): Ptr[CXFileUniqueID] = scala.scalanative.unsafe.alloc[CXFileUniqueID](1)
+    def apply(data: CArray[CUnsignedLongLong, Nat._3])(using Zone): Ptr[CXFileUniqueID] = 
+      val ____ptr = apply()
+      (!____ptr).data = data
+      ____ptr
     extension (struct: CXFileUniqueID)
       def data: CArray[CUnsignedLongLong, Nat._3] = struct._1
       def data_=(value: CArray[CUnsignedLongLong, Nat._3]): Unit = !struct.at1 = value
@@ -1414,6 +1444,13 @@ object types:
   opaque type CXIdxAttrInfo = CStruct3[CXIdxAttrKind, CXCursor, CXIdxLoc]
   object CXIdxAttrInfo:
     given _tag: Tag[CXIdxAttrInfo] = Tag.materializeCStruct3Tag[CXIdxAttrKind, CXCursor, CXIdxLoc]
+    def apply()(using Zone): Ptr[CXIdxAttrInfo] = scala.scalanative.unsafe.alloc[CXIdxAttrInfo](1)
+    def apply(kind: CXIdxAttrKind, cursor: CXCursor, loc: CXIdxLoc)(using Zone): Ptr[CXIdxAttrInfo] = 
+      val ____ptr = apply()
+      (!____ptr).kind = kind
+      (!____ptr).cursor = cursor
+      (!____ptr).loc = loc
+      ____ptr
     extension (struct: CXIdxAttrInfo)
       def kind: CXIdxAttrKind = struct._1
       def kind_=(value: CXIdxAttrKind): Unit = !struct.at1 = value
@@ -1425,6 +1462,13 @@ object types:
   opaque type CXIdxBaseClassInfo = CStruct3[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
   object CXIdxBaseClassInfo:
     given _tag: Tag[CXIdxBaseClassInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
+    def apply()(using Zone): Ptr[CXIdxBaseClassInfo] = scala.scalanative.unsafe.alloc[CXIdxBaseClassInfo](1)
+    def apply(base: Ptr[CXIdxEntityInfo], cursor: CXCursor, loc: CXIdxLoc)(using Zone): Ptr[CXIdxBaseClassInfo] = 
+      val ____ptr = apply()
+      (!____ptr).base = base
+      (!____ptr).cursor = cursor
+      (!____ptr).loc = loc
+      ____ptr
     extension (struct: CXIdxBaseClassInfo)
       def base: Ptr[CXIdxEntityInfo] = struct._1
       def base_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at1 = value
@@ -1436,6 +1480,13 @@ object types:
   opaque type CXIdxCXXClassDeclInfo = CStruct3[Ptr[CXIdxDeclInfo], Ptr[Ptr[CXIdxBaseClassInfo]], CUnsignedInt]
   object CXIdxCXXClassDeclInfo:
     given _tag: Tag[CXIdxCXXClassDeclInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxDeclInfo], Ptr[Ptr[CXIdxBaseClassInfo]], CUnsignedInt]
+    def apply()(using Zone): Ptr[CXIdxCXXClassDeclInfo] = scala.scalanative.unsafe.alloc[CXIdxCXXClassDeclInfo](1)
+    def apply(declInfo: Ptr[CXIdxDeclInfo], bases: Ptr[Ptr[CXIdxBaseClassInfo]], numBases: CUnsignedInt)(using Zone): Ptr[CXIdxCXXClassDeclInfo] = 
+      val ____ptr = apply()
+      (!____ptr).declInfo = declInfo
+      (!____ptr).bases = bases
+      (!____ptr).numBases = numBases
+      ____ptr
     extension (struct: CXIdxCXXClassDeclInfo)
       def declInfo: Ptr[CXIdxDeclInfo] = struct._1
       def declInfo_=(value: Ptr[CXIdxDeclInfo]): Unit = !struct.at1 = value
@@ -1447,6 +1498,11 @@ object types:
   opaque type CXIdxContainerInfo = CStruct1[CXCursor]
   object CXIdxContainerInfo:
     given _tag: Tag[CXIdxContainerInfo] = Tag.materializeCStruct1Tag[CXCursor]
+    def apply()(using Zone): Ptr[CXIdxContainerInfo] = scala.scalanative.unsafe.alloc[CXIdxContainerInfo](1)
+    def apply(cursor: CXCursor)(using Zone): Ptr[CXIdxContainerInfo] = 
+      val ____ptr = apply()
+      (!____ptr).cursor = cursor
+      ____ptr
     extension (struct: CXIdxContainerInfo)
       def cursor: CXCursor = struct._1
       def cursor_=(value: CXCursor): Unit = !struct.at1 = value
@@ -1454,6 +1510,23 @@ object types:
   opaque type CXIdxDeclInfo = CStruct13[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxContainerInfo], Ptr[CXIdxContainerInfo], CInt, CInt, CInt, Ptr[CXIdxContainerInfo], CInt, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt, CUnsignedInt]
   object CXIdxDeclInfo:
     given _tag: Tag[CXIdxDeclInfo] = Tag.materializeCStruct13Tag[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxContainerInfo], Ptr[CXIdxContainerInfo], CInt, CInt, CInt, Ptr[CXIdxContainerInfo], CInt, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt, CUnsignedInt]
+    def apply()(using Zone): Ptr[CXIdxDeclInfo] = scala.scalanative.unsafe.alloc[CXIdxDeclInfo](1)
+    def apply(entityInfo: Ptr[CXIdxEntityInfo], cursor: CXCursor, loc: CXIdxLoc, semanticContainer: Ptr[CXIdxContainerInfo], lexicalContainer: Ptr[CXIdxContainerInfo], isRedeclaration: CInt, isDefinition: CInt, isContainer: CInt, declAsContainer: Ptr[CXIdxContainerInfo], isImplicit: CInt, attributes: Ptr[Ptr[CXIdxAttrInfo]], numAttributes: CUnsignedInt, flags: CUnsignedInt)(using Zone): Ptr[CXIdxDeclInfo] = 
+      val ____ptr = apply()
+      (!____ptr).entityInfo = entityInfo
+      (!____ptr).cursor = cursor
+      (!____ptr).loc = loc
+      (!____ptr).semanticContainer = semanticContainer
+      (!____ptr).lexicalContainer = lexicalContainer
+      (!____ptr).isRedeclaration = isRedeclaration
+      (!____ptr).isDefinition = isDefinition
+      (!____ptr).isContainer = isContainer
+      (!____ptr).declAsContainer = declAsContainer
+      (!____ptr).isImplicit = isImplicit
+      (!____ptr).attributes = attributes
+      (!____ptr).numAttributes = numAttributes
+      (!____ptr).flags = flags
+      ____ptr
     extension (struct: CXIdxDeclInfo)
       def entityInfo: Ptr[CXIdxEntityInfo] = struct._1
       def entityInfo_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at1 = value
@@ -1485,6 +1558,18 @@ object types:
   opaque type CXIdxEntityInfo = CStruct8[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, CString, CString, CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
   object CXIdxEntityInfo:
     given _tag: Tag[CXIdxEntityInfo] = Tag.materializeCStruct8Tag[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, CString, CString, CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
+    def apply()(using Zone): Ptr[CXIdxEntityInfo] = scala.scalanative.unsafe.alloc[CXIdxEntityInfo](1)
+    def apply(kind: CXIdxEntityKind, templateKind: CXIdxEntityCXXTemplateKind, lang: CXIdxEntityLanguage, name: CString, USR: CString, cursor: CXCursor, attributes: Ptr[Ptr[CXIdxAttrInfo]], numAttributes: CUnsignedInt)(using Zone): Ptr[CXIdxEntityInfo] = 
+      val ____ptr = apply()
+      (!____ptr).kind = kind
+      (!____ptr).templateKind = templateKind
+      (!____ptr).lang = lang
+      (!____ptr).name = name
+      (!____ptr).USR = USR
+      (!____ptr).cursor = cursor
+      (!____ptr).attributes = attributes
+      (!____ptr).numAttributes = numAttributes
+      ____ptr
     extension (struct: CXIdxEntityInfo)
       def kind: CXIdxEntityKind = struct._1
       def kind_=(value: CXIdxEntityKind): Unit = !struct.at1 = value
@@ -1506,6 +1591,17 @@ object types:
   opaque type CXIdxEntityRefInfo = CStruct7[CXIdxEntityRefKind, CXCursor, CXIdxLoc, Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxContainerInfo], CXSymbolRole]
   object CXIdxEntityRefInfo:
     given _tag: Tag[CXIdxEntityRefInfo] = Tag.materializeCStruct7Tag[CXIdxEntityRefKind, CXCursor, CXIdxLoc, Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxContainerInfo], CXSymbolRole]
+    def apply()(using Zone): Ptr[CXIdxEntityRefInfo] = scala.scalanative.unsafe.alloc[CXIdxEntityRefInfo](1)
+    def apply(kind: CXIdxEntityRefKind, cursor: CXCursor, loc: CXIdxLoc, referencedEntity: Ptr[CXIdxEntityInfo], parentEntity: Ptr[CXIdxEntityInfo], container: Ptr[CXIdxContainerInfo], role: CXSymbolRole)(using Zone): Ptr[CXIdxEntityRefInfo] = 
+      val ____ptr = apply()
+      (!____ptr).kind = kind
+      (!____ptr).cursor = cursor
+      (!____ptr).loc = loc
+      (!____ptr).referencedEntity = referencedEntity
+      (!____ptr).parentEntity = parentEntity
+      (!____ptr).container = container
+      (!____ptr).role = role
+      ____ptr
     extension (struct: CXIdxEntityRefInfo)
       def kind: CXIdxEntityRefKind = struct._1
       def kind_=(value: CXIdxEntityRefKind): Unit = !struct.at1 = value
@@ -1525,6 +1621,14 @@ object types:
   opaque type CXIdxIBOutletCollectionAttrInfo = CStruct4[Ptr[CXIdxAttrInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
   object CXIdxIBOutletCollectionAttrInfo:
     given _tag: Tag[CXIdxIBOutletCollectionAttrInfo] = Tag.materializeCStruct4Tag[Ptr[CXIdxAttrInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
+    def apply()(using Zone): Ptr[CXIdxIBOutletCollectionAttrInfo] = scala.scalanative.unsafe.alloc[CXIdxIBOutletCollectionAttrInfo](1)
+    def apply(attrInfo: Ptr[CXIdxAttrInfo], objcClass: Ptr[CXIdxEntityInfo], classCursor: CXCursor, classLoc: CXIdxLoc)(using Zone): Ptr[CXIdxIBOutletCollectionAttrInfo] = 
+      val ____ptr = apply()
+      (!____ptr).attrInfo = attrInfo
+      (!____ptr).objcClass = objcClass
+      (!____ptr).classCursor = classCursor
+      (!____ptr).classLoc = classLoc
+      ____ptr
     extension (struct: CXIdxIBOutletCollectionAttrInfo)
       def attrInfo: Ptr[CXIdxAttrInfo] = struct._1
       def attrInfo_=(value: Ptr[CXIdxAttrInfo]): Unit = !struct.at1 = value
@@ -1538,6 +1642,14 @@ object types:
   opaque type CXIdxImportedASTFileInfo = CStruct4[CXFile, CXModule, CXIdxLoc, CInt]
   object CXIdxImportedASTFileInfo:
     given _tag: Tag[CXIdxImportedASTFileInfo] = Tag.materializeCStruct4Tag[CXFile, CXModule, CXIdxLoc, CInt]
+    def apply()(using Zone): Ptr[CXIdxImportedASTFileInfo] = scala.scalanative.unsafe.alloc[CXIdxImportedASTFileInfo](1)
+    def apply(file: CXFile, module: CXModule, loc: CXIdxLoc, isImplicit: CInt)(using Zone): Ptr[CXIdxImportedASTFileInfo] = 
+      val ____ptr = apply()
+      (!____ptr).file = file
+      (!____ptr).module = module
+      (!____ptr).loc = loc
+      (!____ptr).isImplicit = isImplicit
+      ____ptr
     extension (struct: CXIdxImportedASTFileInfo)
       def file: CXFile = struct._1
       def file_=(value: CXFile): Unit = !struct.at1 = value
@@ -1551,6 +1663,16 @@ object types:
   opaque type CXIdxIncludedFileInfo = CStruct6[CXIdxLoc, CString, CXFile, CInt, CInt, CInt]
   object CXIdxIncludedFileInfo:
     given _tag: Tag[CXIdxIncludedFileInfo] = Tag.materializeCStruct6Tag[CXIdxLoc, CString, CXFile, CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[CXIdxIncludedFileInfo] = scala.scalanative.unsafe.alloc[CXIdxIncludedFileInfo](1)
+    def apply(hashLoc: CXIdxLoc, filename: CString, file: CXFile, isImport: CInt, isAngled: CInt, isModuleImport: CInt)(using Zone): Ptr[CXIdxIncludedFileInfo] = 
+      val ____ptr = apply()
+      (!____ptr).hashLoc = hashLoc
+      (!____ptr).filename = filename
+      (!____ptr).file = file
+      (!____ptr).isImport = isImport
+      (!____ptr).isAngled = isAngled
+      (!____ptr).isModuleImport = isModuleImport
+      ____ptr
     extension (struct: CXIdxIncludedFileInfo)
       def hashLoc: CXIdxLoc = struct._1
       def hashLoc_=(value: CXIdxLoc): Unit = !struct.at1 = value
@@ -1568,6 +1690,12 @@ object types:
   opaque type CXIdxLoc = CStruct2[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
   object CXIdxLoc:
     given _tag: Tag[CXIdxLoc] = Tag.materializeCStruct2Tag[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
+    def apply()(using Zone): Ptr[CXIdxLoc] = scala.scalanative.unsafe.alloc[CXIdxLoc](1)
+    def apply(ptr_data: CArray[Ptr[Byte], Nat._2], int_data: CUnsignedInt)(using Zone): Ptr[CXIdxLoc] = 
+      val ____ptr = apply()
+      (!____ptr).ptr_data = ptr_data
+      (!____ptr).int_data = int_data
+      ____ptr
     extension (struct: CXIdxLoc)
       def ptr_data: CArray[Ptr[Byte], Nat._2] = struct._1
       def ptr_data_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at1 = value
@@ -1577,6 +1705,15 @@ object types:
   opaque type CXIdxObjCCategoryDeclInfo = CStruct5[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxObjCProtocolRefListInfo]]
   object CXIdxObjCCategoryDeclInfo:
     given _tag: Tag[CXIdxObjCCategoryDeclInfo] = Tag.materializeCStruct5Tag[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxObjCProtocolRefListInfo]]
+    def apply()(using Zone): Ptr[CXIdxObjCCategoryDeclInfo] = scala.scalanative.unsafe.alloc[CXIdxObjCCategoryDeclInfo](1)
+    def apply(containerInfo: Ptr[CXIdxObjCContainerDeclInfo], objcClass: Ptr[CXIdxEntityInfo], classCursor: CXCursor, classLoc: CXIdxLoc, protocols: Ptr[CXIdxObjCProtocolRefListInfo])(using Zone): Ptr[CXIdxObjCCategoryDeclInfo] = 
+      val ____ptr = apply()
+      (!____ptr).containerInfo = containerInfo
+      (!____ptr).objcClass = objcClass
+      (!____ptr).classCursor = classCursor
+      (!____ptr).classLoc = classLoc
+      (!____ptr).protocols = protocols
+      ____ptr
     extension (struct: CXIdxObjCCategoryDeclInfo)
       def containerInfo: Ptr[CXIdxObjCContainerDeclInfo] = struct._1
       def containerInfo_=(value: Ptr[CXIdxObjCContainerDeclInfo]): Unit = !struct.at1 = value
@@ -1592,6 +1729,12 @@ object types:
   opaque type CXIdxObjCContainerDeclInfo = CStruct2[Ptr[CXIdxDeclInfo], CXIdxObjCContainerKind]
   object CXIdxObjCContainerDeclInfo:
     given _tag: Tag[CXIdxObjCContainerDeclInfo] = Tag.materializeCStruct2Tag[Ptr[CXIdxDeclInfo], CXIdxObjCContainerKind]
+    def apply()(using Zone): Ptr[CXIdxObjCContainerDeclInfo] = scala.scalanative.unsafe.alloc[CXIdxObjCContainerDeclInfo](1)
+    def apply(declInfo: Ptr[CXIdxDeclInfo], kind: CXIdxObjCContainerKind)(using Zone): Ptr[CXIdxObjCContainerDeclInfo] = 
+      val ____ptr = apply()
+      (!____ptr).declInfo = declInfo
+      (!____ptr).kind = kind
+      ____ptr
     extension (struct: CXIdxObjCContainerDeclInfo)
       def declInfo: Ptr[CXIdxDeclInfo] = struct._1
       def declInfo_=(value: Ptr[CXIdxDeclInfo]): Unit = !struct.at1 = value
@@ -1601,6 +1744,13 @@ object types:
   opaque type CXIdxObjCInterfaceDeclInfo = CStruct3[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxBaseClassInfo], Ptr[CXIdxObjCProtocolRefListInfo]]
   object CXIdxObjCInterfaceDeclInfo:
     given _tag: Tag[CXIdxObjCInterfaceDeclInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxBaseClassInfo], Ptr[CXIdxObjCProtocolRefListInfo]]
+    def apply()(using Zone): Ptr[CXIdxObjCInterfaceDeclInfo] = scala.scalanative.unsafe.alloc[CXIdxObjCInterfaceDeclInfo](1)
+    def apply(containerInfo: Ptr[CXIdxObjCContainerDeclInfo], superInfo: Ptr[CXIdxBaseClassInfo], protocols: Ptr[CXIdxObjCProtocolRefListInfo])(using Zone): Ptr[CXIdxObjCInterfaceDeclInfo] = 
+      val ____ptr = apply()
+      (!____ptr).containerInfo = containerInfo
+      (!____ptr).superInfo = superInfo
+      (!____ptr).protocols = protocols
+      ____ptr
     extension (struct: CXIdxObjCInterfaceDeclInfo)
       def containerInfo: Ptr[CXIdxObjCContainerDeclInfo] = struct._1
       def containerInfo_=(value: Ptr[CXIdxObjCContainerDeclInfo]): Unit = !struct.at1 = value
@@ -1612,6 +1762,13 @@ object types:
   opaque type CXIdxObjCPropertyDeclInfo = CStruct3[Ptr[CXIdxDeclInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo]]
   object CXIdxObjCPropertyDeclInfo:
     given _tag: Tag[CXIdxObjCPropertyDeclInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxDeclInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo]]
+    def apply()(using Zone): Ptr[CXIdxObjCPropertyDeclInfo] = scala.scalanative.unsafe.alloc[CXIdxObjCPropertyDeclInfo](1)
+    def apply(declInfo: Ptr[CXIdxDeclInfo], getter: Ptr[CXIdxEntityInfo], setter: Ptr[CXIdxEntityInfo])(using Zone): Ptr[CXIdxObjCPropertyDeclInfo] = 
+      val ____ptr = apply()
+      (!____ptr).declInfo = declInfo
+      (!____ptr).getter = getter
+      (!____ptr).setter = setter
+      ____ptr
     extension (struct: CXIdxObjCPropertyDeclInfo)
       def declInfo: Ptr[CXIdxDeclInfo] = struct._1
       def declInfo_=(value: Ptr[CXIdxDeclInfo]): Unit = !struct.at1 = value
@@ -1623,6 +1780,13 @@ object types:
   opaque type CXIdxObjCProtocolRefInfo = CStruct3[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
   object CXIdxObjCProtocolRefInfo:
     given _tag: Tag[CXIdxObjCProtocolRefInfo] = Tag.materializeCStruct3Tag[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
+    def apply()(using Zone): Ptr[CXIdxObjCProtocolRefInfo] = scala.scalanative.unsafe.alloc[CXIdxObjCProtocolRefInfo](1)
+    def apply(protocol: Ptr[CXIdxEntityInfo], cursor: CXCursor, loc: CXIdxLoc)(using Zone): Ptr[CXIdxObjCProtocolRefInfo] = 
+      val ____ptr = apply()
+      (!____ptr).protocol = protocol
+      (!____ptr).cursor = cursor
+      (!____ptr).loc = loc
+      ____ptr
     extension (struct: CXIdxObjCProtocolRefInfo)
       def protocol: Ptr[CXIdxEntityInfo] = struct._1
       def protocol_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at1 = value
@@ -1634,6 +1798,12 @@ object types:
   opaque type CXIdxObjCProtocolRefListInfo = CStruct2[Ptr[Ptr[CXIdxObjCProtocolRefInfo]], CUnsignedInt]
   object CXIdxObjCProtocolRefListInfo:
     given _tag: Tag[CXIdxObjCProtocolRefListInfo] = Tag.materializeCStruct2Tag[Ptr[Ptr[CXIdxObjCProtocolRefInfo]], CUnsignedInt]
+    def apply()(using Zone): Ptr[CXIdxObjCProtocolRefListInfo] = scala.scalanative.unsafe.alloc[CXIdxObjCProtocolRefListInfo](1)
+    def apply(protocols: Ptr[Ptr[CXIdxObjCProtocolRefInfo]], numProtocols: CUnsignedInt)(using Zone): Ptr[CXIdxObjCProtocolRefListInfo] = 
+      val ____ptr = apply()
+      (!____ptr).protocols = protocols
+      (!____ptr).numProtocols = numProtocols
+      ____ptr
     extension (struct: CXIdxObjCProtocolRefListInfo)
       def protocols: Ptr[Ptr[CXIdxObjCProtocolRefInfo]] = struct._1
       def protocols_=(value: Ptr[Ptr[CXIdxObjCProtocolRefInfo]]): Unit = !struct.at1 = value
@@ -1643,6 +1813,16 @@ object types:
   opaque type CXPlatformAvailability = CStruct6[CInt, CXVersion, CXVersion, CXVersion, CInt, CInt]
   object CXPlatformAvailability:
     given _tag: Tag[CXPlatformAvailability] = Tag.materializeCStruct6Tag[CInt, CXVersion, CXVersion, CXVersion, CInt, CInt]
+    def apply()(using Zone): Ptr[CXPlatformAvailability] = scala.scalanative.unsafe.alloc[CXPlatformAvailability](1)
+    def apply(Platform: CInt, Introduced: CXVersion, Deprecated: CXVersion, Obsoleted: CXVersion, Unavailable: CInt, Message: CInt)(using Zone): Ptr[CXPlatformAvailability] = 
+      val ____ptr = apply()
+      (!____ptr).Platform = Platform
+      (!____ptr).Introduced = Introduced
+      (!____ptr).Deprecated = Deprecated
+      (!____ptr).Obsoleted = Obsoleted
+      (!____ptr).Unavailable = Unavailable
+      (!____ptr).Message = Message
+      ____ptr
     extension (struct: CXPlatformAvailability)
       def Platform: CInt = struct._1
       def Platform_=(value: CInt): Unit = !struct.at1 = value
@@ -1660,6 +1840,12 @@ object types:
   opaque type CXSourceLocation = CStruct2[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
   object CXSourceLocation:
     given _tag: Tag[CXSourceLocation] = Tag.materializeCStruct2Tag[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
+    def apply()(using Zone): Ptr[CXSourceLocation] = scala.scalanative.unsafe.alloc[CXSourceLocation](1)
+    def apply(ptr_data: CArray[Ptr[Byte], Nat._2], int_data: CUnsignedInt)(using Zone): Ptr[CXSourceLocation] = 
+      val ____ptr = apply()
+      (!____ptr).ptr_data = ptr_data
+      (!____ptr).int_data = int_data
+      ____ptr
     extension (struct: CXSourceLocation)
       def ptr_data: CArray[Ptr[Byte], Nat._2] = struct._1
       def ptr_data_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at1 = value
@@ -1669,6 +1855,13 @@ object types:
   opaque type CXSourceRange = CStruct3[CArray[Ptr[Byte], Nat._2], CUnsignedInt, CUnsignedInt]
   object CXSourceRange:
     given _tag: Tag[CXSourceRange] = Tag.materializeCStruct3Tag[CArray[Ptr[Byte], Nat._2], CUnsignedInt, CUnsignedInt]
+    def apply()(using Zone): Ptr[CXSourceRange] = scala.scalanative.unsafe.alloc[CXSourceRange](1)
+    def apply(ptr_data: CArray[Ptr[Byte], Nat._2], begin_int_data: CUnsignedInt, end_int_data: CUnsignedInt)(using Zone): Ptr[CXSourceRange] = 
+      val ____ptr = apply()
+      (!____ptr).ptr_data = ptr_data
+      (!____ptr).begin_int_data = begin_int_data
+      (!____ptr).end_int_data = end_int_data
+      ____ptr
     extension (struct: CXSourceRange)
       def ptr_data: CArray[Ptr[Byte], Nat._2] = struct._1
       def ptr_data_=(value: CArray[Ptr[Byte], Nat._2]): Unit = !struct.at1 = value
@@ -1680,6 +1873,12 @@ object types:
   opaque type CXSourceRangeList = CStruct2[CUnsignedInt, Ptr[CXSourceRange]]
   object CXSourceRangeList:
     given _tag: Tag[CXSourceRangeList] = Tag.materializeCStruct2Tag[CUnsignedInt, Ptr[CXSourceRange]]
+    def apply()(using Zone): Ptr[CXSourceRangeList] = scala.scalanative.unsafe.alloc[CXSourceRangeList](1)
+    def apply(count: CUnsignedInt, ranges: Ptr[CXSourceRange])(using Zone): Ptr[CXSourceRangeList] = 
+      val ____ptr = apply()
+      (!____ptr).count = count
+      (!____ptr).ranges = ranges
+      ____ptr
     extension (struct: CXSourceRangeList)
       def count: CUnsignedInt = struct._1
       def count_=(value: CUnsignedInt): Unit = !struct.at1 = value
@@ -1689,6 +1888,13 @@ object types:
   opaque type CXTUResourceUsage = CStruct3[Ptr[Byte], CUnsignedInt, Ptr[CXTUResourceUsageEntry]]
   object CXTUResourceUsage:
     given _tag: Tag[CXTUResourceUsage] = Tag.materializeCStruct3Tag[Ptr[Byte], CUnsignedInt, Ptr[CXTUResourceUsageEntry]]
+    def apply()(using Zone): Ptr[CXTUResourceUsage] = scala.scalanative.unsafe.alloc[CXTUResourceUsage](1)
+    def apply(data: Ptr[Byte], numEntries: CUnsignedInt, entries: Ptr[CXTUResourceUsageEntry])(using Zone): Ptr[CXTUResourceUsage] = 
+      val ____ptr = apply()
+      (!____ptr).data = data
+      (!____ptr).numEntries = numEntries
+      (!____ptr).entries = entries
+      ____ptr
     extension (struct: CXTUResourceUsage)
       def data: Ptr[Byte] = struct._1
       def data_=(value: Ptr[Byte]): Unit = !struct.at1 = value
@@ -1700,6 +1906,12 @@ object types:
   opaque type CXTUResourceUsageEntry = CStruct2[CXTUResourceUsageKind, CUnsignedLongInt]
   object CXTUResourceUsageEntry:
     given _tag: Tag[CXTUResourceUsageEntry] = Tag.materializeCStruct2Tag[CXTUResourceUsageKind, CUnsignedLongInt]
+    def apply()(using Zone): Ptr[CXTUResourceUsageEntry] = scala.scalanative.unsafe.alloc[CXTUResourceUsageEntry](1)
+    def apply(kind: CXTUResourceUsageKind, amount: CUnsignedLongInt)(using Zone): Ptr[CXTUResourceUsageEntry] = 
+      val ____ptr = apply()
+      (!____ptr).kind = kind
+      (!____ptr).amount = amount
+      ____ptr
     extension (struct: CXTUResourceUsageEntry)
       def kind: CXTUResourceUsageKind = struct._1
       def kind_=(value: CXTUResourceUsageKind): Unit = !struct.at1 = value
@@ -1713,6 +1925,12 @@ object types:
   opaque type CXToken = CStruct2[CArray[CUnsignedInt, Nat._4], Ptr[Byte]]
   object CXToken:
     given _tag: Tag[CXToken] = Tag.materializeCStruct2Tag[CArray[CUnsignedInt, Nat._4], Ptr[Byte]]
+    def apply()(using Zone): Ptr[CXToken] = scala.scalanative.unsafe.alloc[CXToken](1)
+    def apply(int_data: CArray[CUnsignedInt, Nat._4], ptr_data: Ptr[Byte])(using Zone): Ptr[CXToken] = 
+      val ____ptr = apply()
+      (!____ptr).int_data = int_data
+      (!____ptr).ptr_data = ptr_data
+      ____ptr
     extension (struct: CXToken)
       def int_data: CArray[CUnsignedInt, Nat._4] = struct._1
       def int_data_=(value: CArray[CUnsignedInt, Nat._4]): Unit = !struct.at1 = value
@@ -1726,6 +1944,12 @@ object types:
   opaque type CXType = CStruct2[CXTypeKind, CArray[Ptr[Byte], Nat._2]]
   object CXType:
     given _tag: Tag[CXType] = Tag.materializeCStruct2Tag[CXTypeKind, CArray[Ptr[Byte], Nat._2]]
+    def apply()(using Zone): Ptr[CXType] = scala.scalanative.unsafe.alloc[CXType](1)
+    def apply(kind: CXTypeKind, data: CArray[Ptr[Byte], Nat._2])(using Zone): Ptr[CXType] = 
+      val ____ptr = apply()
+      (!____ptr).kind = kind
+      (!____ptr).data = data
+      ____ptr
     extension (struct: CXType)
       def kind: CXTypeKind = struct._1
       def kind_=(value: CXTypeKind): Unit = !struct.at1 = value
@@ -1735,6 +1959,13 @@ object types:
   opaque type CXUnsavedFile = CStruct3[CString, CString, CUnsignedLongInt]
   object CXUnsavedFile:
     given _tag: Tag[CXUnsavedFile] = Tag.materializeCStruct3Tag[CString, CString, CUnsignedLongInt]
+    def apply()(using Zone): Ptr[CXUnsavedFile] = scala.scalanative.unsafe.alloc[CXUnsavedFile](1)
+    def apply(Filename: CString, Contents: CString, Length: CUnsignedLongInt)(using Zone): Ptr[CXUnsavedFile] = 
+      val ____ptr = apply()
+      (!____ptr).Filename = Filename
+      (!____ptr).Contents = Contents
+      (!____ptr).Length = Length
+      ____ptr
     extension (struct: CXUnsavedFile)
       def Filename: CString = struct._1
       def Filename_=(value: CString): Unit = !struct.at1 = value
@@ -1746,6 +1977,13 @@ object types:
   opaque type CXVersion = CStruct3[CInt, CInt, CInt]
   object CXVersion:
     given _tag: Tag[CXVersion] = Tag.materializeCStruct3Tag[CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[CXVersion] = scala.scalanative.unsafe.alloc[CXVersion](1)
+    def apply(Major: CInt, Minor: CInt, Subminor: CInt)(using Zone): Ptr[CXVersion] = 
+      val ____ptr = apply()
+      (!____ptr).Major = Major
+      (!____ptr).Minor = Minor
+      (!____ptr).Subminor = Subminor
+      ____ptr
     extension (struct: CXVersion)
       def Major: CInt = struct._1
       def Major_=(value: CInt): Unit = !struct.at1 = value
@@ -1757,6 +1995,18 @@ object types:
   opaque type IndexerCallbacks = CStruct8[Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]], Ptr[CFuncPtr3[CXClientData, CXDiagnosticSet, Ptr[Byte], Unit]], Ptr[CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxIncludedFileInfo], CXIdxClientFile]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxImportedASTFileInfo], CXIdxClientASTFile]], Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]]]
   object IndexerCallbacks:
     given _tag: Tag[IndexerCallbacks] = Tag.materializeCStruct8Tag[Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]], Ptr[CFuncPtr3[CXClientData, CXDiagnosticSet, Ptr[Byte], Unit]], Ptr[CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxIncludedFileInfo], CXIdxClientFile]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxImportedASTFileInfo], CXIdxClientASTFile]], Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit]], Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]]]
+    def apply()(using Zone): Ptr[IndexerCallbacks] = scala.scalanative.unsafe.alloc[IndexerCallbacks](1)
+    def apply(abortQuery: Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]], diagnostic: Ptr[CFuncPtr3[CXClientData, CXDiagnosticSet, Ptr[Byte], Unit]], enteredMainFile: Ptr[CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile]], ppIncludedFile: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxIncludedFileInfo], CXIdxClientFile]], importedASTFile: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxImportedASTFileInfo], CXIdxClientASTFile]], startedTranslationUnit: Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer]], indexDeclaration: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit]], indexEntityReference: Ptr[CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]])(using Zone): Ptr[IndexerCallbacks] = 
+      val ____ptr = apply()
+      (!____ptr).abortQuery = abortQuery
+      (!____ptr).diagnostic = diagnostic
+      (!____ptr).enteredMainFile = enteredMainFile
+      (!____ptr).ppIncludedFile = ppIncludedFile
+      (!____ptr).importedASTFile = importedASTFile
+      (!____ptr).startedTranslationUnit = startedTranslationUnit
+      (!____ptr).indexDeclaration = indexDeclaration
+      (!____ptr).indexEntityReference = indexEntityReference
+      ____ptr
     extension (struct: IndexerCallbacks)
       def abortQuery: Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]] = struct._1
       def abortQuery_=(value: Ptr[CFuncPtr2[CXClientData, Ptr[Byte], CInt]]): Unit = !struct.at1 = value
@@ -1778,6 +2028,12 @@ object types:
   opaque type __darwin_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_attr_t:
     given _tag: Tag[__darwin_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_attr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_attr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[__darwin_pthread_attr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_attr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1787,6 +2043,12 @@ object types:
   opaque type __darwin_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object __darwin_pthread_cond_t:
     given _tag: Tag[__darwin_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_cond_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_cond_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]])(using Zone): Ptr[__darwin_pthread_cond_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_cond_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1796,6 +2058,12 @@ object types:
   opaque type __darwin_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_condattr_t:
     given _tag: Tag[__darwin_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_condattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_condattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_condattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_condattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1805,6 +2073,13 @@ object types:
   opaque type __darwin_pthread_handler_rec = CStruct3[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
   object __darwin_pthread_handler_rec:
     given _tag: Tag[__darwin_pthread_handler_rec] = Tag.materializeCStruct3Tag[Ptr[CFuncPtr1[Ptr[Byte], Unit]], Ptr[Byte], Ptr[Byte]]
+    def apply()(using Zone): Ptr[__darwin_pthread_handler_rec] = scala.scalanative.unsafe.alloc[__darwin_pthread_handler_rec](1)
+    def apply(__routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]], __arg: Ptr[Byte], __next: Ptr[__darwin_pthread_handler_rec])(using Zone): Ptr[__darwin_pthread_handler_rec] = 
+      val ____ptr = apply()
+      (!____ptr).__routine = __routine
+      (!____ptr).__arg = __arg
+      (!____ptr).__next = __next
+      ____ptr
     extension (struct: __darwin_pthread_handler_rec)
       def __routine: Ptr[CFuncPtr1[Ptr[Byte], Unit]] = struct._1
       def __routine_=(value: Ptr[CFuncPtr1[Ptr[Byte], Unit]]): Unit = !struct.at1 = value
@@ -1816,6 +2091,12 @@ object types:
   opaque type __darwin_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object __darwin_pthread_mutex_t:
     given _tag: Tag[__darwin_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_mutex_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_mutex_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[__darwin_pthread_mutex_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_mutex_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1825,6 +2106,12 @@ object types:
   opaque type __darwin_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_mutexattr_t:
     given _tag: Tag[__darwin_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_mutexattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_mutexattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_mutexattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1834,6 +2121,12 @@ object types:
   opaque type __darwin_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object __darwin_pthread_once_t:
     given _tag: Tag[__darwin_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[__darwin_pthread_once_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_once_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[__darwin_pthread_once_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_once_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1843,6 +2136,12 @@ object types:
   opaque type __darwin_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object __darwin_pthread_rwlock_t:
     given _tag: Tag[__darwin_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_rwlock_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_rwlock_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]])(using Zone): Ptr[__darwin_pthread_rwlock_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1852,6 +2151,12 @@ object types:
   opaque type __darwin_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object __darwin_pthread_rwlockattr_t:
     given _tag: Tag[__darwin_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[__darwin_pthread_rwlockattr_t] = scala.scalanative.unsafe.alloc[__darwin_pthread_rwlockattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[__darwin_pthread_rwlockattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: __darwin_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1861,6 +2166,12 @@ object types:
   opaque type _opaque_pthread_attr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_attr_t:
     given _tag: Tag[_opaque_pthread_attr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_attr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_attr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[_opaque_pthread_attr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_attr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1870,6 +2181,12 @@ object types:
   opaque type _opaque_pthread_cond_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
   object _opaque_pthread_cond_t:
     given _tag: Tag[_opaque_pthread_cond_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._4, Nat._0]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_cond_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_cond_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._4, Nat._0]])(using Zone): Ptr[_opaque_pthread_cond_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_cond_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1879,6 +2196,12 @@ object types:
   opaque type _opaque_pthread_condattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_condattr_t:
     given _tag: Tag[_opaque_pthread_condattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_condattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_condattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_condattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_condattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1888,6 +2211,12 @@ object types:
   opaque type _opaque_pthread_mutex_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
   object _opaque_pthread_mutex_t:
     given _tag: Tag[_opaque_pthread_mutex_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._5, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_mutex_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_mutex_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._5, Nat._6]])(using Zone): Ptr[_opaque_pthread_mutex_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_mutex_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1897,6 +2226,12 @@ object types:
   opaque type _opaque_pthread_mutexattr_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_mutexattr_t:
     given _tag: Tag[_opaque_pthread_mutexattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_mutexattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_mutexattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_mutexattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_mutexattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1906,6 +2241,12 @@ object types:
   opaque type _opaque_pthread_once_t = CStruct2[CLongInt, CArray[CChar, Nat._8]]
   object _opaque_pthread_once_t:
     given _tag: Tag[_opaque_pthread_once_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat._8]]
+    def apply()(using Zone): Ptr[_opaque_pthread_once_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_once_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat._8])(using Zone): Ptr[_opaque_pthread_once_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_once_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1915,6 +2256,12 @@ object types:
   opaque type _opaque_pthread_rwlock_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
   object _opaque_pthread_rwlock_t:
     given _tag: Tag[_opaque_pthread_rwlock_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_rwlock_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_rwlock_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit3[Nat._1, Nat._9, Nat._2]])(using Zone): Ptr[_opaque_pthread_rwlock_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_rwlock_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1924,6 +2271,12 @@ object types:
   opaque type _opaque_pthread_rwlockattr_t = CStruct2[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
   object _opaque_pthread_rwlockattr_t:
     given _tag: Tag[_opaque_pthread_rwlockattr_t] = Tag.materializeCStruct2Tag[CLongInt, CArray[CChar, Nat.Digit2[Nat._1, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_rwlockattr_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_rwlockattr_t](1)
+    def apply(__sig: CLongInt, __opaque: CArray[CChar, Nat.Digit2[Nat._1, Nat._6]])(using Zone): Ptr[_opaque_pthread_rwlockattr_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_rwlockattr_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1933,6 +2286,13 @@ object types:
   opaque type _opaque_pthread_t = CStruct3[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
   object _opaque_pthread_t:
     given _tag: Tag[_opaque_pthread_t] = Tag.materializeCStruct3Tag[CLongInt, Ptr[__darwin_pthread_handler_rec], CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]]]
+    def apply()(using Zone): Ptr[_opaque_pthread_t] = scala.scalanative.unsafe.alloc[_opaque_pthread_t](1)
+    def apply(__sig: CLongInt, __cleanup_stack: Ptr[__darwin_pthread_handler_rec], __opaque: CArray[CChar, Nat.Digit4[Nat._8, Nat._1, Nat._7, Nat._6]])(using Zone): Ptr[_opaque_pthread_t] = 
+      val ____ptr = apply()
+      (!____ptr).__sig = __sig
+      (!____ptr).__cleanup_stack = __cleanup_stack
+      (!____ptr).__opaque = __opaque
+      ____ptr
     extension (struct: _opaque_pthread_t)
       def __sig: CLongInt = struct._1
       def __sig_=(value: CLongInt): Unit = !struct.at1 = value
@@ -1944,6 +2304,12 @@ object types:
   opaque type timespec = CStruct2[__darwin_time_t, CLongInt]
   object timespec:
     given _tag: Tag[timespec] = Tag.materializeCStruct2Tag[__darwin_time_t, CLongInt]
+    def apply()(using Zone): Ptr[timespec] = scala.scalanative.unsafe.alloc[timespec](1)
+    def apply(tv_sec: __darwin_time_t, tv_nsec: CLongInt)(using Zone): Ptr[timespec] = 
+      val ____ptr = apply()
+      (!____ptr).tv_sec = tv_sec
+      (!____ptr).tv_nsec = tv_nsec
+      ____ptr
     extension (struct: timespec)
       def tv_sec: __darwin_time_t = struct._1
       def tv_sec_=(value: __darwin_time_t): Unit = !struct.at1 = value
@@ -1953,6 +2319,21 @@ object types:
   opaque type tm = CStruct11[CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CLongInt, CString]
   object tm:
     given _tag: Tag[tm] = Tag.materializeCStruct11Tag[CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CInt, CLongInt, CString]
+    def apply()(using Zone): Ptr[tm] = scala.scalanative.unsafe.alloc[tm](1)
+    def apply(tm_sec: CInt, tm_min: CInt, tm_hour: CInt, tm_mday: CInt, tm_mon: CInt, tm_year: CInt, tm_wday: CInt, tm_yday: CInt, tm_isdst: CInt, tm_gmtoff: CLongInt, tm_zone: CString)(using Zone): Ptr[tm] = 
+      val ____ptr = apply()
+      (!____ptr).tm_sec = tm_sec
+      (!____ptr).tm_min = tm_min
+      (!____ptr).tm_hour = tm_hour
+      (!____ptr).tm_mday = tm_mday
+      (!____ptr).tm_mon = tm_mon
+      (!____ptr).tm_year = tm_year
+      (!____ptr).tm_wday = tm_wday
+      (!____ptr).tm_yday = tm_yday
+      (!____ptr).tm_isdst = tm_isdst
+      (!____ptr).tm_gmtoff = tm_gmtoff
+      (!____ptr).tm_zone = tm_zone
+      ____ptr
     extension (struct: tm)
       def tm_sec: CInt = struct._1
       def tm_sec_=(value: CInt): Unit = !struct.at1 = value
