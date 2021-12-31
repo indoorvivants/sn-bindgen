@@ -123,13 +123,16 @@ Main goals of the project are:
 For each header file, you will need to invoke 2 commands of the following shape:
 
 ```bash
-$ bindgen-out <packageName> <cImports> <headerFile> <lang>
+$ bindgen-out <packageName> <cImports> <linkName> <headerFile> <lang>
 ```
 
 * `packageName` - Scala package where the binding will be generated (`package
     packageName`)
 
 * `cImports` - list of imports (comma separated) to be placed at the top of generated `C` file 
+
+* `linkName` - name of library to link the binding against (i.e. for "libclang"
+    it's "clang", for "libraylib" it's "raylib", you get the gist)
 
 * `headerFile` - path to the header file from which to generate bindings
 
