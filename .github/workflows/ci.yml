@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*"]
+  pull_request:
+    branches: ["*"]
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Compile
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: coursier/cache-action@v3      
+      - uses: olafurpg/setup-scala@v13
+        with:
+          java-version: adopt@1.8
+
+      - name: Setup Scala Native environment
+        run: |
+            sudo apt-get update
+            sudo apt install clang llvm
+
+      - name: Tests
+        run: sbt compile examples/regenerate examples/compile
+

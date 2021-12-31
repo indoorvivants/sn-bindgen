@@ -1,6 +1,8 @@
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 // --------------MODULES-------------------------
+lazy val root = project.in(file(".")).aggregate(bindgen, libclang, examples)
+
 lazy val bindgen = project
   .in(file("bindgen"))
   .dependsOn(libclang)
@@ -57,7 +59,7 @@ lazy val examples = project
       val mapping = List(
         define("cJSON.h", "libcjson", "cjson", List("cJSON.h")),
         /* define("Clang-Index.h", "libclang", "clang", List("clang-c/Index.h")), */
-        define("raylib.h", "libraylib", "raylib", List("raylib.h")),
+        define("raylib.h", "libraylib", "raylib", List("raylib.h"))
         /* define("nuklear.h", "libnuklear", "nuklear", List("nuklear.h")), */
         /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
       )
