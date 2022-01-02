@@ -120,35 +120,37 @@ Main goals of the project are:
 
 ### usage
 
-For each header file, you will need to invoke 2 commands of the following shape:
+```
+Usage: bindgen --package <string> --header <string> [--link-name <string>] [--indentation-size <integer>] [--scala] [--c] [--c-import <string>]... [--clang <string>]...
 
-```bash
-$ bindgen-out <packageName> <cImports> <linkName> <headerFile> <lang>
+Generate Scala 3 native bindings from C header files
+
+Options and flags:
+    --help
+        Display this help text.
+    --package <string>
+        Package name (Scala) for generated code
+    --header <string>
+        C header file with definitions you want bindings for
+    --link-name <string>
+        Library name for linkage (i.e. 'clang' is equivalent to -lclang flag)
+    --indentation-size <integer>
+        number of spaces used for indentation (default: 2)
+    --base-indentation <integer>
+        Base indentation of generated Scala code (default: 0)
+    --scala
+        Generate Scala part of the binding
+    --c
+        Generate C part of the binding
+    --c-import <string>
+        List of C imports to add to generated C file (at the very least you will need the header file for the library itself)
+    --clang <string>
+        List of flags to pass directly to clang
 ```
 
-* `packageName` - Scala package where the binding will be generated (`package
-    packageName`)
+Some bindings have both Scala and C code that you will need, so make sure you run the command with both `--scala` and `--c`.
 
-* `cImports` - list of imports (comma separated) to be placed at the top of generated `C` file 
-
-* `linkName` - name of library to link the binding against (i.e. for "libclang"
-    it's "clang", for "libraylib" it's "raylib", you get the gist)
-
-* `headerFile` - path to the header file from which to generate bindings
-
-* `lang` - either `scala` or `c`, depending on what part of the binding you need
-    to generate. Some header files will produce no `C` code at all - lucky you!
-
-**example**
-
-```bash
-$ export DEST=examples/src/main/
-$ export BINDGEN=./bindgen/target/scala-3.1.0/bindgen-out
-$ $BINDGEN libraylib raylib.h raylib raylib.h c > $DEST/resources/scala-native/libraylib.c
-$ $BINDGEN libraylib raylib.h raylib raylib.h scala > $DEST/scala/bindings/libraylib.scala
-```
-
-In fact, these are the commands that will run when you do `sbt examples/regenerate`
+If you want to see examples of those commands, run `sbt examples/regenerate`.
 
 You can see the rest of examples in the `examples` folder, with both bindings and usage
 
@@ -159,9 +161,10 @@ TODO:
       this is part of a larger problem in relying on typedefs at top level
 - [ ] FileWriter for some reason truncates the output - SN issue
 - [x] Fix recursive structs
+- [ ] Fix transitively recursive structs - we don't detect loops of length more than 1
 - [x] implement unions (i.e. Nuklear depends on it)
-- [ ] bool return types are not recognized correctly and are missing parameters
+- [x] bool return types are not recognized correctly and are missing parameters
     in the AST
-- [ ] implement CLang diagnostics API
+- [x] implement CLang diagnostics API
 - [ ] Generate a by-name Scala method for those calls that have to be done
     through a C proxy
