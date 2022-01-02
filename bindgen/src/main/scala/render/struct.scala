@@ -35,10 +35,7 @@ def struct(model: Def.Struct, line: Appender)(using Config, AliasResolver) =
       nest {
         line(s"val ____ptr = apply()")
         struct.fields.foreach { case (n, _) =>
-          // if !rewriteFields.contains(n) then
           line(s"(!____ptr).${escape(n)} = ${escape(n)}")
-        // else
-        //   line(s"(!ptr).${escape(n)} = ${escape(n)}.asInstanceOf[Ptr[$structName]]")
         }
         line(s"____ptr")
       }

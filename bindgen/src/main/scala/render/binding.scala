@@ -61,7 +61,7 @@ def binding(
 
       alias.orElse(struct).orElse(_enum).orElse(union) match
         case Some(resolved) => resolved
-        case None => throw error(s"Failed to resolve aliased definition $s")
+        case None => throw Error(s"Failed to resolve aliased definition $s")
 
   def commentException(element: Any, exc: Throwable) =
     val stackTrace =
@@ -119,7 +119,9 @@ def binding(
     }
   }
 
-  val resolvedFunctions = binding.functions.flatMap(functionRewriter)
+  val resolvedFunctions = deduplicateFunctions(
+    binding.functions.flatMap(functionRewriter)
+  )
 
   val externFunctions = resolvedFunctions.collect {
     case f @ Def.Function(_, _, _, CFunctionType.Extern, _)          => f

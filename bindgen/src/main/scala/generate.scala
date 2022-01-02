@@ -15,30 +15,24 @@ inline def errln(inline a: Any) = System.err.println(a)
 
 inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
 
-@main def generate(
-    packageName: String,
-    cImports: String,
-    linkName: String,
-    file: String,
-    lang: String
-) =
-  zone {
-    val language = if (lang.toLowerCase == "scala") then Lang.Scala else Lang.C
-    given Config = Config(
-      indentSize = IndentationSize(2),
-      packageName = PackageName(packageName),
-      linkName = Some(LinkName(linkName)),
-      lang = language,
-      cImports = cImports.split(",").toList.map(CImport.apply)
-    )
-    val b = analyse(file)
+object Generate:
+  def main(args: Array[String]): Unit =
+    zone {
+      CLI.command.parse(args) match
+        case Left(help) =>
+          System.err.println(help)
+          sys.exit(1)
+        case Right(config) =>
+          given Config = config
+          val b = analyse(config.headerFile.value)
 
-    val scalaOutput = StringBuilder()
-    val cOutput = StringBuilder()
+          val scalaOutput = StringBuilder()
+          val cOutput = StringBuilder()
 
-    binding(b, scalaOutput, cOutput)
+          binding(b, scalaOutput, cOutput)
 
-    language match
-      case Lang.Scala => println(scalaOutput.result)
-      case Lang.C     => println(cOutput.result)
-  }
+          config.lang match
+            case Lang.Scala => println(scalaOutput.result)
+            case Lang.C     => println(cOutput.result)
+    }
+end Generate

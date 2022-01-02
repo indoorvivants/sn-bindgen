@@ -14,6 +14,10 @@ lazy val bindgen = project
       .withLinkingOptions(Seq("-lclang", "-L/opt/homebrew/opt/llvm/lib"))
       .withCompileOptions(Seq("-I/opt/homebrew/opt/llvm/include"))
   })
+  .settings(
+    libraryDependencies += ("com.monovore" %%% "decline" % "2.2.0" cross CrossVersion.for3Use2_13)
+      .excludeAll(ExclusionRule("org.scala-native"))
+  )
 
 lazy val libclang = project
   .in(file("libclang"))
@@ -37,7 +41,7 @@ lazy val examples = project
           )
           .withCompileOptions(
             conf.compileOptions ++ Seq(
-              "-I/opt/homebrew/opt/llvm/include",
+              "-I/opt/homebrew/opt/llvm/include"
               /* "-I/Users/velvetbaldmime/projects/libclang-scala3/examples/libraries", */
               /* "-DNK_IMPLEMENTATION=1" */
             )
@@ -53,8 +57,24 @@ lazy val examples = project
           scalaFile: File,
           cFile: File,
           linkName: String,
-          cImports: List[String]
-      )
+          cImports: List[String],
+          clangFlags: List[String]
+      ) {
+        def toCommand: String = {
+          val sb = new StringBuilder
+          sb.append(s"--header $headerFile ")
+          sb.append(s"--package $packageName ")
+          sb.append(s"--link-name $linkName ")
+          cImports.foreach { cimp =>
+            sb.append(s"--c-import $cimp ")
+          }
+          clangFlags.foreach { clangFlag =>
+            sb.append(s"--clang $clangFlag ")
+          }
+
+          sb.result
+        }
+      }
       val binary = (bindgen / Compile / nativeLink).value
       val headerFilesBase = baseDirectory.value / "libraries"
       val destinationScalaBase =
@@ -66,7 +86,8 @@ lazy val examples = project
           headerFile: String,
           packageName: String,
           linkName: String,
-          cImports: List[String]
+          cImports: List[String],
+          clangFlags: List[String] = Nil
       ) =
         Binding(
           headerFile = headerFilesBase / headerFile,
@@ -74,39 +95,54 @@ lazy val examples = project
           linkName = linkName,
           cFile = destinationCBase / s"$packageName.c",
           scalaFile = destinationScalaBase / s"$packageName.scala",
-          cImports = cImports
+          cImports = cImports,
+          clangFlags = clangFlags
         )
 
       val mapping = List(
         define("cJSON.h", "libcjson", "cjson", List("cJSON.h")),
-        define("Clang-Index.h", "libclang", "clang", List("clang-c/Index.h")),
-        define("raylib.h", "libraylib", "raylib", List("raylib.h")),
-        /* define("nuklear.h", "libnuklear", "nuklear", List("nuklear.h")) */
+        define(
+          "Clang-Index.h",
+          "libclang",
+          "clang",
+          List("clang-c/Index.h"),
+          List("-I/opt/homebrew/opt/llvm/include")
+        ),
+        define(
+          "raylib.h",
+          "libraylib",
+          "raylib",
+          List("raylib.h"),
+          List("-I/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
+        ),
+        define(
+          "nuklear.h",
+          "libnuklear",
+          "nuklear",
+          List("nuklear.h"),
+          List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1")
+        )
         /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
       )
 
       List("scala", "c").foreach { lang =>
         mapping.foreach { binding =>
-          val cmd = List(
-            binary.toString,
-            binding.packageName,
-            binding.cImports.mkString(","),
-            binding.linkName,
-            binding.headerFile.toString,
-            lang
-          )
           import scala.sys.process.Process
 
           val destination =
             if (lang == "scala") binding.scalaFile else binding.cFile
 
-          println(s"Executing ${cmd.mkString(" ")}")
+          val cmd = binary.toString + " " + binding.toCommand + s" --$lang"
 
-          val result = (Process(cmd) #> file(destination.toString)) !
+          println(s"Executing $cmd")
 
-          println(
-            s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
-          )
+          val result =
+            (Process(cmd) #> file(destination.toString)) !
+
+          if (result == 0)
+            println(
+              s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
+            )
         }
       }
 

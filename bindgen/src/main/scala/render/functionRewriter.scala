@@ -29,10 +29,11 @@ def functionRewriter(badFunction: Def.Function)(using
       val tail =
         if isReturnTypeAStruct then
           ListBuffer(
-            (
+            FunctionParameter(
               "__return",
               CType.Pointer(badFunction.returnType),
-              badFunction.originalCType
+              badFunction.originalCType,
+              generatedName = false
             )
           )
         else ListBuffer.empty
@@ -41,12 +42,13 @@ def functionRewriter(badFunction: Def.Function)(using
         externFuncName,
         returnType =
           if isReturnTypeAStruct then CType.Void else badFunction.returnType,
-        parameters =
-          badFunction.parameters.map { case original @ (name, typ, ot) =>
-            if (isDirectStructAccess(typ)) then (name, CType.Pointer(typ), ot)
-            else original
-            end if
-          } ++ tail,
+        parameters = badFunction.parameters.map { case original =>
+          if (isDirectStructAccess(original.typ)) then
+            original.copy(typ = CType.Pointer(original.typ))
+            // FunctionParameter(original.name, CType.Pointer(original.typ), original.originalTyp)
+          else original
+          end if
+        } ++ tail,
         tpe = CFunctionType.ExternRename(
           externFuncName,
           internal = true,

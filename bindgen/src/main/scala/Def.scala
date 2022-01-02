@@ -22,7 +22,7 @@ enum Def:
   case Function(
       var name: String,
       var returnType: CType,
-      var parameters: ListBuffer[(String, CType, OriginalCType)],
+      var parameters: ListBuffer[FunctionParameter],
       var tpe: CFunctionType,
       val originalCType: OriginalCType
   )
@@ -31,11 +31,18 @@ enum Def:
   def typeOf(d: Function): CType.Function =
     CType.Function(
       d.returnType,
-      d.parameters.map { case (name, typ, _) =>
-        Parameter(Some(name), typ)
+      d.parameters.map { case fp =>
+        Parameter(Some(fp.name), fp.typ)
       }.toList
     )
 end Def
+
+case class FunctionParameter(
+    name: String,
+    typ: CType,
+    originalTyp: OriginalCType,
+    generatedName: Boolean
+)
 
 case class OriginalCType(typ: CType, s: String)
 

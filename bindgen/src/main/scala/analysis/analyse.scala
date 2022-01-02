@@ -9,6 +9,7 @@ import libclang.enumerations.*
 import scala.collection.mutable
 import java.nio.file.Files
 import java.io.FileWriter
+import cats.data.NestedInstances0
 
 def addBuiltin(binding: Def.Binding): Def.Binding =
   binding.copy(aliases =
@@ -16,44 +17,52 @@ def addBuiltin(binding: Def.Binding): Def.Binding =
       .addOne(Def.Alias("__builtin_va_list", CType.Pointer(CType.Byte)))
   )
 
+def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
+  import CXDiagnosticSeverity as sev
+  clang_getDiagnosticSeverity(diag) match
+    case sev.CXDiagnostic_Error | sev.CXDiagnostic_Fatal  => error(_)
+    case sev.CXDiagnostic_Warning                         => warning(_)
+    case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
+
 def analyse(file: String)(using Zone, Config): Def.Binding =
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
   val l = List.newBuilder[String]
   import CXTranslationUnit_Flags as flags
-  val tmpFile = Files.createTempFile("macros", ".h")
-  val writer = FileWriter(tmpFile.toFile)
-  writer.write("NK_IMPLEMENTATION")
-  val args = List.newBuilder[String]
-
-  args
-    .addOne("-I/opt/homebrew/opt/llvm/include")
-    .addOne("-I/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
-    .addOne("-imacros")
-    .addOne(tmpFile.toString)
 
   val unit = clang_parseTranslationUnit(
     index,
     filename,
-    args.result.toCArray,
-    args.result.size.toUInt,
+    summon[Config].clangFlags.map(_.value).toCArray,
+    summon[Config].clangFlags.size.toUInt,
     null,
     0.toUInt,
     flags.CXTranslationUnit_None
   )
+
+  var errors = 0
 
   (0 until clang_getNumDiagnostics(unit).toInt).foreach { diagId =>
     errln(diagId)
     val diag = clang_getDiagnostic(unit, diagId.toUInt)
 
     import CXDiagnosticDisplayOptions as flags
-    errln(
-      clang_formatDiagnostic(
-        diag,
-        flags.CXDiagnostic_DisplaySourceLocation.int.toUInt
-      ).string
+    outputDiagnostic(diag)(
+      "clang: " +
+        clang_formatDiagnostic(
+          diag,
+          0.toUInt
+        ).string
     )
+
+    errors += 1
   }
+
+  if errors != 0 then
+    throw Exception(
+      s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
+    )
+
   val bindingMem = stackalloc[Def.Binding](1)
   !bindingMem = Def.Binding(
     enums = mutable.Set.empty,
@@ -89,7 +98,10 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
                 val struct = visitStruct(typeDecl, name)
                 if clang_getTypeSpelling(typ).string.startsWith("union ") then
                   binding.unions.addOne(Def.Union(struct.fields, struct.name))
-                else binding.structs.addOne(visitStruct(typeDecl, name))
+                else if name != "" then
+                  errln(s"Found a struct defined as typedef $name")
+                  binding.structs.filterInPlace(_.name != name)
+                  binding.structs.addOne(visitStruct(typeDecl, name))
               else binding.aliases.addOne(Def.Alias(name, constructType(typ)))
               end if
             end if
@@ -107,8 +119,9 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
 
             if cursor.kind == CXCursorKind.CXCursor_StructDecl then
               val name = clang_getCursorSpelling(cursor).string
-              // errln(s"Defined $name")
-              if name != "" && (!binding.structs.exists(_.name == name)) then
+              errln(s"Found a struct defined separately $name")
+              if name != "" then
+                binding.structs.filterInPlace(_.name != name)
                 binding.structs.addOne(visitStruct(cursor, name))
 
             if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
@@ -122,10 +135,9 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
               )
             end if
 
-            // if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-            //   CXChildVisitResult.CXChildVisit_Continue
-            // else
-            CXChildVisitResult.CXChildVisit_Recurse
+            if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+              CXChildVisitResult.CXChildVisit_Continue
+            else CXChildVisitResult.CXChildVisit_Recurse
           else CXChildVisitResult.CXChildVisit_Continue
           end if
         }
@@ -136,6 +148,8 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
 
   clang_disposeTranslationUnit(unit)
   clang_disposeIndex(index)
+
+  val binding = !bindingMem
 
   addBuiltin(!bindingMem)
 end analyse

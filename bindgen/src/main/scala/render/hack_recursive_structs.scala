@@ -26,7 +26,7 @@ def deRecurse(struct: Def.Struct): (Def.Struct, Set[String]) =
   val isRecursive = struct.fields.map(_._2).exists(selfReferential)
 
   if isRecursive then
-    throw error(
+    throw Error(
       s"struct '${struct.name}' is self-referential, and I don't know how to de-recurse it"
     )
 

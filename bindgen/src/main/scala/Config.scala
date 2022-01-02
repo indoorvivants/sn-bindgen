@@ -2,11 +2,13 @@ package bindgen
 
 case class Config(
     packageName: PackageName,
+    headerFile: HeaderFile,
     linkName: Option[LinkName],
     indentSize: IndentationSize,
     indents: Indentation = Indentation(0),
     lang: Lang,
-    cImports: List[CImport]
+    cImports: List[CImport],
+    clangFlags: List[ClangFlag] = Nil
 )
 
 enum Lang:
@@ -20,6 +22,12 @@ object LinkName extends bindgen.OpaqueString[LinkName]
 
 opaque type CImport = String
 object CImport extends bindgen.OpaqueString[CImport]
+
+opaque type ClangFlag = String
+object ClangFlag extends bindgen.OpaqueString[ClangFlag]
+
+opaque type HeaderFile = String
+object HeaderFile extends bindgen.OpaqueString[HeaderFile]
 
 opaque type IndentationSize = Int
 object IndentationSize extends bindgen.OpaqueNum[IndentationSize]

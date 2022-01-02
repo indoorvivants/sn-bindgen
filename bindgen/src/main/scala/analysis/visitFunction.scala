@@ -34,8 +34,10 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
           val builder = (!d.unwrap[Def.Function])
           // errln(builder.name)
           if cursor.kind == CXCursorKind.CXCursor_ParmDecl then
-            val parameterName = Option(clang_getCursorSpelling(cursor).string)
+            val origParamName = Option(clang_getCursorSpelling(cursor).string)
               .filter(_.nonEmpty)
+
+            val parameterName = origParamName
               .getOrElse(s"_${builder.parameters.size}")
 
             // errln(s"    $parameterName")
@@ -45,10 +47,12 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
               clang_getTypeSpelling(clang_getCursorType(cursor)).string
 
             builder.parameters.addOne(
-              (
-                parameterName,
-                parameterType,
-                OriginalCType(parameterType, parameterTypeRendered)
+              FunctionParameter(
+                name = parameterName,
+                typ = parameterType,
+                originalTyp =
+                  OriginalCType(parameterType, parameterTypeRendered),
+                generatedName = origParamName.isEmpty
               )
             )
             CXChildVisitResult.CXChildVisit_Continue

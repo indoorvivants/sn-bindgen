@@ -11,7 +11,7 @@ def function(model: Def.Function, line: Appender)(using
   import model.*
 
   val arglist = parameters
-    .map((name, ctype, _) => s"${escape(name)}: ${scalaType(ctype)}")
+    .map(fp => s"${escape(fp.name)}: ${scalaType(fp.typ)}")
     .mkString(", ")
 
   val privatise = model.tpe match
@@ -54,11 +54,11 @@ def function(model: Def.Function, line: Appender)(using
       def ptr_name(n: String) = s"_ptr_$n"
       nest {
         rewrites.toList.sorted.foreach { idx =>
-          val (name, typ, _) = model.parameters(idx)
+          val fp = model.parameters(idx)
           line(
-            s"val ${ptr_name(idx.toString)} = alloc[${scalaType(typ)}](1)"
+            s"val ${ptr_name(idx.toString)} = alloc[${scalaType(fp.typ)}](1)"
           )
-          line(s"!${ptr_name(idx.toString)} = ${escape(name)}")
+          line(s"!${ptr_name(idx.toString)} = ${escape(fp.name)}")
         }
 
         if returnAsWell then
@@ -77,7 +77,7 @@ def function(model: Def.Function, line: Appender)(using
 
         if returnAsWell then delegateCallArgList.addOne(ptr_name("return"))
 
-        line(s"$delegateTo(${delegateCallArgList.mkString(", ")})")
+        line(s"$delegateTo(${delegateCallArgList.map(escape).mkString(", ")})")
 
         if returnAsWell then line(s"!${ptr_name("return")}")
       }

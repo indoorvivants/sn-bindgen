@@ -16,7 +16,7 @@ def cFunctionForwarder(model: Def.Function, line: Appender)(using
           originalCType
         ) =>
       val arglist = parameters
-        .map { case a @ (n, typ, oct) =>
+        .map { case FunctionParameter(n, typ, oct, _) =>
           if isDirectStructAccess(oct.typ) then s"${oct.s} *$n"
           else s"${oct.s} $n"
         }
@@ -26,7 +26,7 @@ def cFunctionForwarder(model: Def.Function, line: Appender)(using
 
       val delegateCallList = ListBuffer.empty[String]
       parameters
-        .map { case a @ (n, typ, oct) =>
+        .map { case FunctionParameter(n, typ, oct, _) =>
           delegateCallList.addOne(
             if isDirectStructAccess(oct.typ) then s"*$n"
             else s"$n"
@@ -43,7 +43,7 @@ def cFunctionForwarder(model: Def.Function, line: Appender)(using
           case CType.RecordRef(name) => name
           case CType.Typedef(name)   => name
           case _ =>
-            throw error(
+            throw Error(
               s"${originalCType.typ} should be a RecordRef or a TypeDef"
             )
         line(s"${originalCType.s} $name($arglist) {")

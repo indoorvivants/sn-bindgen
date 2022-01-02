@@ -7,14 +7,10 @@ import scala.scalanative.annotation.alwaysinline
 import scala.collection.mutable.ListBuffer
 
 def escape(name: String) =
-  name match
-    case "type"   => "`type`"
-    case "val"    => "`val`"
-    case "class"  => "`class`"
-    case "object" => "`object`"
-    case other    => other
+  val keywords = Set("type", "val", "class", "object", "null")
+  if keywords.contains(name) then s"`$name`" else name
 
-case class error(msg: String) extends Exception(msg)
+case class Error(msg: String) extends Exception(msg)
 
 import scala.scalanative.unsafe.*
 import scalanative.unsigned.*
