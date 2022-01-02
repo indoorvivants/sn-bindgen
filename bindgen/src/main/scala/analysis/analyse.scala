@@ -7,31 +7,53 @@ import libclang.defs.*
 import libclang.types.*
 import libclang.enumerations.*
 import scala.collection.mutable
+import java.nio.file.Files
+import java.io.FileWriter
 
 def addBuiltin(binding: Def.Binding): Def.Binding =
   binding.copy(aliases =
     binding.aliases
       .addOne(Def.Alias("__builtin_va_list", CType.Pointer(CType.Byte)))
-  //   .addOne(Def.Alias("ssize_t", BuiltinType.ssize_t))
-  //   .addOne(Def.Alias("uint32_t", BuiltinType.uint32_t))
-  //   .addOne(Def.Alias("uint8_t", BuiltinType.uint8_t))
   )
 
 def analyse(file: String)(using Zone): Def.Binding =
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
   val l = List.newBuilder[String]
-  val flags =
-    CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies // | CXTranslationUnit_Flags.CXTranslationUnit_SingleFileParse
+  import CXTranslationUnit_Flags as flags
+  val tmpFile = Files.createTempFile("macros", ".h")
+  val writer = FileWriter(tmpFile.toFile)
+  writer.write("NK_IMPLEMENTATION")
+  val args = List.newBuilder[String]
+
+  args
+    .addOne("-I/opt/homebrew/opt/llvm/include")
+    .addOne("-I/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
+    .addOne("-imacros")
+    .addOne(tmpFile.toString)
+
   val unit = clang_parseTranslationUnit(
     index,
     filename,
+    args.result.toCArray,
+    args.result.size.toUInt,
     null,
     0.toUInt,
-    null,
-    0.toUInt,
-    flags
+    flags.CXTranslationUnit_None
   )
+
+  (0 until clang_getNumDiagnostics(unit).toInt).foreach { diagId =>
+    errln(diagId)
+    val diag = clang_getDiagnostic(unit, diagId.toUInt)
+
+    import CXDiagnosticDisplayOptions as flags
+    errln(
+      clang_formatDiagnostic(
+        diag,
+        flags.CXDiagnostic_DisplaySourceLocation.int.toUInt
+      ).string
+    )
+  }
   val bindingMem = stackalloc[Def.Binding](1)
   !bindingMem = Def.Binding(
     enums = mutable.Set.empty,
@@ -100,9 +122,10 @@ def analyse(file: String)(using Zone): Def.Binding =
               )
             end if
 
-            if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-              CXChildVisitResult.CXChildVisit_Continue
-            else CXChildVisitResult.CXChildVisit_Recurse
+            // if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+            //   CXChildVisitResult.CXChildVisit_Continue
+            // else
+            CXChildVisitResult.CXChildVisit_Recurse
           else CXChildVisitResult.CXChildVisit_Continue
           end if
         }

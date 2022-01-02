@@ -32,15 +32,13 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
       CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
         zone {
           val builder = (!d.unwrap[Def.Function])
-          def errln1(a: Any) = if builder.name == "IsKeyPressed" then errln(a)
-          errln1(cursor.kind)
-          // println(builder.name)
+          // errln(builder.name)
           if cursor.kind == CXCursorKind.CXCursor_ParmDecl then
             val parameterName = Option(clang_getCursorSpelling(cursor).string)
               .filter(_.nonEmpty)
               .getOrElse(s"_${builder.parameters.size}")
 
-            // errln1(s"    $parameterName")
+            // errln(s"    $parameterName")
 
             val parameterType = constructType(clang_getCursorType(cursor))
             val parameterTypeRendered =
@@ -55,8 +53,10 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
             )
             CXChildVisitResult.CXChildVisit_Continue
           else
-            // errln1(
-            //   s"    Not a parmdecl, but ${clang_getCursorKindSpelling(cursor.kind).string}"
+            // errln(
+            //   s"    Not a parmdecl, but ${clang_getCursorKindSpelling(
+            //     cursor.kind
+            //   ).string} === ${clang_getCursorSpelling(cursor).string}"
             // )
             CXChildVisitResult.CXChildVisit_Recurse
           end if
@@ -65,5 +65,7 @@ def visitFunction(functionCursor: CXCursor)(using Zone) =
       CXClientData.wrap(mem)
     )
   }
+
+  // errln(s"Registered function ${!mem}")
   !mem
 end visitFunction

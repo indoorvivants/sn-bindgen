@@ -51,6 +51,7 @@ def scalaTag(typ: CType)(using AliasResolver): String =
     case Arr(tpe, Some(n)) =>
       s"Tag.CArray[${scalaType(tpe)}, ${natDigits(n)}](${scalaTag(tpe)}, ${natDigitsTag(n)})"
     case Void => s"Tag.Unit"
+    case Bool => s"Tag.Boolean"
   end match
 end scalaTag
 

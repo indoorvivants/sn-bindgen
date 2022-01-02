@@ -22,6 +22,50 @@ void __sn_wrap_BeginVrStereoMode(VrStereoConfig *config) {
  BeginVrStereoMode(*config);
 };
 
+_Bool __sn_wrap_CheckCollisionBoxSphere(BoundingBox *box, Vector3 *center, float radius) {
+ return CheckCollisionBoxSphere(*box, *center, radius);
+};
+
+_Bool __sn_wrap_CheckCollisionBoxes(BoundingBox *box1, BoundingBox *box2) {
+ return CheckCollisionBoxes(*box1, *box2);
+};
+
+_Bool __sn_wrap_CheckCollisionCircleRec(Vector2 *center, float radius, Rectangle *rec) {
+ return CheckCollisionCircleRec(*center, radius, *rec);
+};
+
+_Bool __sn_wrap_CheckCollisionCircles(Vector2 *center1, float radius1, Vector2 *center2, float radius2) {
+ return CheckCollisionCircles(*center1, radius1, *center2, radius2);
+};
+
+_Bool __sn_wrap_CheckCollisionLines(Vector2 *startPos1, Vector2 *endPos1, Vector2 *startPos2, Vector2 *endPos2, Vector2 * collisionPoint) {
+ return CheckCollisionLines(*startPos1, *endPos1, *startPos2, *endPos2, collisionPoint);
+};
+
+_Bool __sn_wrap_CheckCollisionPointCircle(Vector2 *point, Vector2 *center, float radius) {
+ return CheckCollisionPointCircle(*point, *center, radius);
+};
+
+_Bool __sn_wrap_CheckCollisionPointLine(Vector2 *point, Vector2 *p1, Vector2 *p2, int threshold) {
+ return CheckCollisionPointLine(*point, *p1, *p2, threshold);
+};
+
+_Bool __sn_wrap_CheckCollisionPointRec(Vector2 *point, Rectangle *rec) {
+ return CheckCollisionPointRec(*point, *rec);
+};
+
+_Bool __sn_wrap_CheckCollisionPointTriangle(Vector2 *point, Vector2 *p1, Vector2 *p2, Vector2 *p3) {
+ return CheckCollisionPointTriangle(*point, *p1, *p2, *p3);
+};
+
+_Bool __sn_wrap_CheckCollisionRecs(Rectangle *rec1, Rectangle *rec2) {
+ return CheckCollisionRecs(*rec1, *rec2);
+};
+
+_Bool __sn_wrap_CheckCollisionSpheres(Vector3 *center1, float radius1, Vector3 *center2, float radius2) {
+ return CheckCollisionSpheres(*center1, radius1, *center2, radius2);
+};
+
 void __sn_wrap_ClearBackground(Color *color) {
  ClearBackground(*color);
 };
@@ -378,6 +422,26 @@ void __sn_wrap_DrawTriangleStrip(Vector2 * points, int pointCount, Color *color)
 
 void __sn_wrap_DrawTriangleStrip3D(Vector3 * points, int pointCount, Color *color) {
  DrawTriangleStrip3D(points, pointCount, *color);
+};
+
+_Bool __sn_wrap_ExportImage(Image *image, const char * fileName) {
+ return ExportImage(*image, fileName);
+};
+
+_Bool __sn_wrap_ExportImageAsCode(Image *image, const char * fileName) {
+ return ExportImageAsCode(*image, fileName);
+};
+
+_Bool __sn_wrap_ExportMesh(Mesh *mesh, const char * fileName) {
+ return ExportMesh(*mesh, fileName);
+};
+
+_Bool __sn_wrap_ExportWave(Wave *wave, const char * fileName) {
+ return ExportWave(*wave, fileName);
+};
+
+_Bool __sn_wrap_ExportWaveAsCode(Wave *wave, const char * fileName) {
+ return ExportWaveAsCode(*wave, fileName);
 };
 
 void __sn_wrap_Fade(Color *color, float alpha, Color *__return) {
@@ -757,6 +821,26 @@ void __sn_wrap_ImageTextEx(Font *font, const char * text, float fontSize, float 
 
 void __sn_wrap_ImageToPOT(Image * image, Color *fill) {
  ImageToPOT(image, *fill);
+};
+
+_Bool __sn_wrap_IsAudioStreamPlaying(AudioStream *stream) {
+ return IsAudioStreamPlaying(*stream);
+};
+
+_Bool __sn_wrap_IsAudioStreamProcessed(AudioStream *stream) {
+ return IsAudioStreamProcessed(*stream);
+};
+
+_Bool __sn_wrap_IsModelAnimationValid(Model *model, ModelAnimation *anim) {
+ return IsModelAnimationValid(*model, *anim);
+};
+
+_Bool __sn_wrap_IsMusicStreamPlaying(Music *music) {
+ return IsMusicStreamPlaying(*music);
+};
+
+_Bool __sn_wrap_IsSoundPlaying(Sound *sound) {
+ return IsSoundPlaying(*sound);
 };
 
 void __sn_wrap_LoadAudioStream(unsigned int sampleRate, unsigned int sampleSize, unsigned int channels, AudioStream *__return) {

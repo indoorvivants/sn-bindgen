@@ -87,10 +87,13 @@
 // Boolean type
 #if defined(__STDC__) && __STDC_VERSION__ >= 199901L
     #include <stdbool.h>
+    /* #define bool _Bool */
 #elif !defined(__cplusplus) && !defined(bool)
     typedef enum bool { false, true } bool;
     #define RL_BOOL_TYPE
 #endif
+
+// check if hello
 bool IsKeyPressed(int key);                             // Check if a key has been pressed once
 bool IsKeyDown(int key);                                // Check if a key is being pressed
 bool IsKeyReleased(int key);                            // Check if a key has been released once

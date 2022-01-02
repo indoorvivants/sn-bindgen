@@ -41,7 +41,7 @@ def functionRewriter(badFunction: Def.Function)(using
     // transparently for structs.
     val externFuncName =
       "__sn_wrap_" + badFunction.name
-    val externed =
+    val externed: Def.Function =
       val tail =
         if isReturnTypeAStruct then
           ListBuffer(
@@ -74,7 +74,7 @@ def functionRewriter(badFunction: Def.Function)(using
       )
     end externed
 
-    val delegate =
+    val delegate: Def.Function =
       val rewriteArgumentIndices = badFunction.parameters
         .map(_._2)
         .zipWithIndex

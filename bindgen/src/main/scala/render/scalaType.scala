@@ -59,6 +59,7 @@ def scalaType(typ: CType)(using AliasResolver): String =
 
     case Void =>
       "Unit"
+    case Bool => "Boolean"
 
   end match
 end scalaType

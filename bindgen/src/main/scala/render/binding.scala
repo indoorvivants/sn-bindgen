@@ -26,6 +26,9 @@ def binding(
     |
     |abstract class CEnumU[T](using eq: T =:= UInt):
     |  given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+    |  extension (t: T)
+    |   def int: CInt = eq.apply(t).toInt
+    |   def uint: CUnsignedInt = eq.apply(t)
     """.stripMargin.linesIterator
     predef.foreach(to(scalaOutput))
   }
@@ -139,7 +142,7 @@ def binding(
             func,
             to(scalaOutput)
           )
-          catch exc => System.err.println(s"Failed to render $func: $exc")
+          catch exc => to(scalaOutput)(commentException(func, exc))
           if idx != externFunctions.size - 1 then scalaOutput.append("\n")
       }
     }
@@ -153,7 +156,7 @@ def binding(
             func,
             to(scalaOutput)
           )
-          catch exc => System.err.println(s"Failed to render $func: $exc")
+          catch exc => to(scalaOutput)(commentException(func, exc))
           if idx != regularFunctions.size - 1 then scalaOutput.append("\n")
       }
     }
@@ -174,7 +177,7 @@ def binding(
         func,
         to(cOutput)
       )
-      catch exc => System.err.println(s"Failed to render $func: $exc")
+      catch exc => to(cOutput)(commentException(func, exc))
       if idx != cFunctions.size - 1 then scalaOutput.append("\n")
     }
 

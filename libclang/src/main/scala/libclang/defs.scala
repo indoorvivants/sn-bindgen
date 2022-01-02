@@ -101,10 +101,18 @@ object defs:
       val ptr = CXCursor.allocate(1)
       wrap_getTypeDeclaration(curs, ptr)
       ptr
-    
+
     def clang_getCursorLocation(curs: CXCursor)(using Zone): CXSourceLocation =
       val ptr = CXSourceLocation.allocate(1)
       wrap_getCursorLocation(curs, ptr)
+      ptr
+
+    def clang_formatDiagnostic(
+        curs: CXDiagnostic,
+        options: CUnsignedInt = 0.toUInt
+    )(using Zone): CXString =
+      val ptr = CXString.allocate(1)
+      wrap_formatDiagnostic(curs, ptr, options)
       ptr
   end wrappers
 
@@ -140,6 +148,13 @@ object defs:
     def clang_disposeTranslationUnit(unit: CXTranslationUnit): Unit = extern
     def clang_getCursorKind(unit: CXCursor): CXCursorKind = extern
     def clang_getCursorLanguage(cursor: CXCursor): CXLanguageKind = extern
+    def clang_getDiagnostic(
+        unit: CXTranslationUnit,
+        idx: CUnsignedInt
+    ): CXDiagnostic = extern
+    def clang_getNumDiagnostics(unit: CXTranslationUnit): CUnsignedInt = extern
+    def clang_getDiagnosticSeverity(unit: CXDiagnostic): CXDiagnosticSeverity =
+      extern
 
     private[libclang] def wrap_getNullCursor(ptr: CXCursor): Unit = extern
 
@@ -222,6 +237,12 @@ object defs:
     private[libclang] def wrap_getCursorLocation(
         curs: CXCursor,
         loc: CXSourceLocation
+    ): Unit = extern
+
+    private[libclang] def wrap_formatDiagnostic(
+        curs: CXDiagnostic,
+        loc: CXString,
+        options: CUnsignedInt
     ): Unit = extern
 
     private[libclang] def wrap_hashCursor(ptr: CXCursor): UInt = extern

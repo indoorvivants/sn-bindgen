@@ -11,6 +11,9 @@ object predef:
   
   abstract class CEnumU[T](using eq: T =:= UInt):
     given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+    extension (t: T)
+     def int: CInt = eq.apply(t).toInt
+     def uint: CUnsignedInt = eq.apply(t)
       
 object types:
   import predef.*
@@ -410,10 +413,15 @@ object types:
   object RenderTexture2D: 
     given _tag: Tag[RenderTexture2D] = RenderTexture._tag
 
-  opaque type SaveFileTextCallback = Ptr[CFuncPtr2[CString, CString, CInt]]
+  opaque type SaveFileDataCallback = Ptr[CFuncPtr3[CString, Ptr[Byte], CUnsignedInt, Boolean]]
+  object SaveFileDataCallback: 
+    given _tag: Tag[SaveFileDataCallback] = Tag.Ptr[CFuncPtr3[CString, Ptr[Byte], CUnsignedInt, Boolean]](Tag.materializeCFuncPtr3[CString, Ptr[Byte], CUnsignedInt, Boolean])
+    inline def apply(inline o: Ptr[CFuncPtr3[CString, Ptr[Byte], CUnsignedInt, Boolean]]): SaveFileDataCallback = o
+
+  opaque type SaveFileTextCallback = Ptr[CFuncPtr2[CString, CString, Boolean]]
   object SaveFileTextCallback: 
-    given _tag: Tag[SaveFileTextCallback] = Tag.Ptr[CFuncPtr2[CString, CString, CInt]](Tag.materializeCFuncPtr2[CString, CString, CInt])
-    inline def apply(inline o: Ptr[CFuncPtr2[CString, CString, CInt]]): SaveFileTextCallback = o
+    given _tag: Tag[SaveFileTextCallback] = Tag.Ptr[CFuncPtr2[CString, CString, Boolean]](Tag.materializeCFuncPtr2[CString, CString, Boolean])
+    inline def apply(inline o: Ptr[CFuncPtr2[CString, CString, Boolean]]): SaveFileTextCallback = o
 
   type Texture2D = Texture
   object Texture2D: 
@@ -423,19 +431,23 @@ object types:
   object TextureCubemap: 
     given _tag: Tag[TextureCubemap] = Texture._tag
 
-  opaque type TraceLogCallback = Ptr[CFuncPtr3[CInt, CString, CInt, Unit]]
+  opaque type TraceLogCallback = Ptr[CFuncPtr3[CInt, CString, va_list, Unit]]
   object TraceLogCallback: 
-    given _tag: Tag[TraceLogCallback] = Tag.Ptr[CFuncPtr3[CInt, CString, CInt, Unit]](Tag.materializeCFuncPtr3[CInt, CString, CInt, Unit])
-    inline def apply(inline o: Ptr[CFuncPtr3[CInt, CString, CInt, Unit]]): TraceLogCallback = o
+    given _tag: Tag[TraceLogCallback] = Tag.Ptr[CFuncPtr3[CInt, CString, va_list, Unit]](Tag.materializeCFuncPtr3[CInt, CString, va_list, Unit])
+    inline def apply(inline o: Ptr[CFuncPtr3[CInt, CString, va_list, Unit]]): TraceLogCallback = o
 
   opaque type __builtin_va_list = CString
   object __builtin_va_list: 
     given _tag: Tag[__builtin_va_list] = Tag.Ptr[CChar](Tag.Byte)
     inline def apply(inline o: CString): __builtin_va_list = o
 
-  type bool = CFuncPtr1[Ptr[CInt], CInt]
-  object bool: 
-    given _tag: Tag[bool] = Tag.materializeCFuncPtr1[Ptr[CInt], CInt]
+  type __gnuc_va_list = __builtin_va_list
+  object __gnuc_va_list: 
+    given _tag: Tag[__gnuc_va_list] = __builtin_va_list._tag
+
+  type va_list = __builtin_va_list
+  object va_list: 
+    given _tag: Tag[va_list] = __builtin_va_list._tag
   opaque type AudioStream = CStruct4[Ptr[rAudioBuffer], CUnsignedInt, CUnsignedInt, CUnsignedInt]
   object AudioStream:
     given _tag: Tag[AudioStream] = Tag.materializeCStruct4Tag[Ptr[rAudioBuffer], CUnsignedInt, CUnsignedInt, CUnsignedInt]
@@ -832,11 +844,11 @@ object types:
       def framePoses: Ptr[Ptr[Transform]] = struct._4
       def framePoses_=(value: Ptr[Ptr[Transform]]): Unit = !struct.at4 = value
 
-  opaque type Music = CStruct5[AudioStream, CUnsignedInt, CInt, CInt, Ptr[Byte]]
+  opaque type Music = CStruct5[AudioStream, CUnsignedInt, Boolean, CInt, Ptr[Byte]]
   object Music:
-    given _tag: Tag[Music] = Tag.materializeCStruct5Tag[AudioStream, CUnsignedInt, CInt, CInt, Ptr[Byte]]
+    given _tag: Tag[Music] = Tag.materializeCStruct5Tag[AudioStream, CUnsignedInt, Boolean, CInt, Ptr[Byte]]
     def apply()(using Zone): Ptr[Music] = scala.scalanative.unsafe.alloc[Music](1)
-    def apply(stream: AudioStream, frameCount: CUnsignedInt, looping: CInt, ctxType: CInt, ctxData: Ptr[Byte])(using Zone): Ptr[Music] = 
+    def apply(stream: AudioStream, frameCount: CUnsignedInt, looping: Boolean, ctxType: CInt, ctxData: Ptr[Byte])(using Zone): Ptr[Music] = 
       val ____ptr = apply()
       (!____ptr).stream = stream
       (!____ptr).frameCount = frameCount
@@ -849,8 +861,8 @@ object types:
       def stream_=(value: AudioStream): Unit = !struct.at1 = value
       def frameCount: CUnsignedInt = struct._2
       def frameCount_=(value: CUnsignedInt): Unit = !struct.at2 = value
-      def looping: CInt = struct._3
-      def looping_=(value: CInt): Unit = !struct.at3 = value
+      def looping: Boolean = struct._3
+      def looping_=(value: Boolean): Unit = !struct.at3 = value
       def ctxType: CInt = struct._4
       def ctxType_=(value: CInt): Unit = !struct.at4 = value
       def ctxData: Ptr[Byte] = struct._5
@@ -898,11 +910,11 @@ object types:
       def direction: Vector3 = struct._2
       def direction_=(value: Vector3): Unit = !struct.at2 = value
 
-  opaque type RayCollision = CStruct4[CInt, Float, Vector3, Vector3]
+  opaque type RayCollision = CStruct4[Boolean, Float, Vector3, Vector3]
   object RayCollision:
-    given _tag: Tag[RayCollision] = Tag.materializeCStruct4Tag[CInt, Float, Vector3, Vector3]
+    given _tag: Tag[RayCollision] = Tag.materializeCStruct4Tag[Boolean, Float, Vector3, Vector3]
     def apply()(using Zone): Ptr[RayCollision] = scala.scalanative.unsafe.alloc[RayCollision](1)
-    def apply(hit: CInt, distance: Float, point: Vector3, normal: Vector3)(using Zone): Ptr[RayCollision] = 
+    def apply(hit: Boolean, distance: Float, point: Vector3, normal: Vector3)(using Zone): Ptr[RayCollision] = 
       val ____ptr = apply()
       (!____ptr).hit = hit
       (!____ptr).distance = distance
@@ -910,8 +922,8 @@ object types:
       (!____ptr).normal = normal
       ____ptr
     extension (struct: RayCollision)
-      def hit: CInt = struct._1
-      def hit_=(value: CInt): Unit = !struct.at1 = value
+      def hit: Boolean = struct._1
+      def hit_=(value: Boolean): Unit = !struct.at1 = value
       def distance: Float = struct._2
       def distance_=(value: Float): Unit = !struct.at2 = value
       def point: Vector3 = struct._3
@@ -1194,29 +1206,7 @@ private[libraylib] object extern_functions:
 
   def BeginScissorMode(x: CInt, y: CInt, width: CInt, height: CInt): Unit = extern
 
-  def ChangeDirectory(): CInt = extern
-
-  def CheckCollisionBoxSphere(): CInt = extern
-
-  def CheckCollisionBoxes(): CInt = extern
-
-  def CheckCollisionCircleRec(): CInt = extern
-
-  def CheckCollisionCircles(): CInt = extern
-
-  def CheckCollisionLines(): CInt = extern
-
-  def CheckCollisionPointCircle(): CInt = extern
-
-  def CheckCollisionPointLine(): CInt = extern
-
-  def CheckCollisionPointRec(): CInt = extern
-
-  def CheckCollisionPointTriangle(): CInt = extern
-
-  def CheckCollisionRecs(): CInt = extern
-
-  def CheckCollisionSpheres(): CInt = extern
+  def ChangeDirectory(dir: CString): Boolean = extern
 
   def ClearDirectoryFiles(): Unit = extern
 
@@ -1236,7 +1226,7 @@ private[libraylib] object extern_functions:
 
   def DecompressData(compData: Ptr[CUnsignedChar], compDataLength: CInt, dataLength: Ptr[CInt]): Ptr[CUnsignedChar] = extern
 
-  def DirectoryExists(): CInt = extern
+  def DirectoryExists(dirPath: CString): Boolean = extern
 
   def DisableCursor(): Unit = extern
 
@@ -1264,17 +1254,7 @@ private[libraylib] object extern_functions:
 
   def EndVrStereoMode(): Unit = extern
 
-  def ExportImage(): CInt = extern
-
-  def ExportImageAsCode(): CInt = extern
-
-  def ExportMesh(): CInt = extern
-
-  def ExportWave(): CInt = extern
-
-  def ExportWaveAsCode(): CInt = extern
-
-  def FileExists(): CInt = extern
+  def FileExists(fileName: CString): Boolean = extern
 
   def GenMeshBinormals(mesh: Ptr[Mesh]): Unit = extern
 
@@ -1414,69 +1394,59 @@ private[libraylib] object extern_functions:
 
   def InitWindow(width: CInt, height: CInt, title: CString): Unit = extern
 
-  def IsAudioDeviceReady(): CInt = extern
+  def IsAudioDeviceReady(): Boolean = extern
 
-  def IsAudioStreamPlaying(): CInt = extern
+  def IsCursorHidden(): Boolean = extern
 
-  def IsAudioStreamProcessed(): CInt = extern
+  def IsCursorOnScreen(): Boolean = extern
 
-  def IsCursorHidden(): CInt = extern
+  def IsFileDropped(): Boolean = extern
 
-  def IsCursorOnScreen(): CInt = extern
+  def IsFileExtension(fileName: CString, ext: CString): Boolean = extern
 
-  def IsFileDropped(): CInt = extern
+  def IsGamepadAvailable(gamepad: CInt): Boolean = extern
 
-  def IsFileExtension(): CInt = extern
+  def IsGamepadButtonDown(gamepad: CInt, button: CInt): Boolean = extern
 
-  def IsGamepadAvailable(): CInt = extern
+  def IsGamepadButtonPressed(gamepad: CInt, button: CInt): Boolean = extern
 
-  def IsGamepadButtonDown(): CInt = extern
+  def IsGamepadButtonReleased(gamepad: CInt, button: CInt): Boolean = extern
 
-  def IsGamepadButtonPressed(): CInt = extern
+  def IsGamepadButtonUp(gamepad: CInt, button: CInt): Boolean = extern
 
-  def IsGamepadButtonReleased(): CInt = extern
+  def IsGestureDetected(gesture: CInt): Boolean = extern
 
-  def IsGamepadButtonUp(): CInt = extern
+  def IsKeyDown(key: CInt): Boolean = extern
 
-  def IsGestureDetected(): CInt = extern
+  def IsKeyPressed(key: CInt): Boolean = extern
 
-  def IsKeyDown(): CInt = extern
+  def IsKeyReleased(key: CInt): Boolean = extern
 
-  def IsKeyPressed(): CInt = extern
+  def IsKeyUp(key: CInt): Boolean = extern
 
-  def IsKeyReleased(): CInt = extern
+  def IsMouseButtonDown(button: CInt): Boolean = extern
 
-  def IsKeyUp(): CInt = extern
+  def IsMouseButtonPressed(button: CInt): Boolean = extern
 
-  def IsModelAnimationValid(): CInt = extern
+  def IsMouseButtonReleased(button: CInt): Boolean = extern
 
-  def IsMouseButtonDown(): CInt = extern
+  def IsMouseButtonUp(button: CInt): Boolean = extern
 
-  def IsMouseButtonPressed(): CInt = extern
+  def IsWindowFocused(): Boolean = extern
 
-  def IsMouseButtonReleased(): CInt = extern
+  def IsWindowFullscreen(): Boolean = extern
 
-  def IsMouseButtonUp(): CInt = extern
+  def IsWindowHidden(): Boolean = extern
 
-  def IsMusicStreamPlaying(): CInt = extern
+  def IsWindowMaximized(): Boolean = extern
 
-  def IsSoundPlaying(): CInt = extern
+  def IsWindowMinimized(): Boolean = extern
 
-  def IsWindowFocused(): CInt = extern
+  def IsWindowReady(): Boolean = extern
 
-  def IsWindowFullscreen(): CInt = extern
+  def IsWindowResized(): Boolean = extern
 
-  def IsWindowHidden(): CInt = extern
-
-  def IsWindowMaximized(): CInt = extern
-
-  def IsWindowMinimized(): CInt = extern
-
-  def IsWindowReady(): CInt = extern
-
-  def IsWindowResized(): CInt = extern
-
-  def IsWindowState(): CInt = extern
+  def IsWindowState(flag: CUnsignedInt): Boolean = extern
 
   def LoadCodepoints(text: CString, count: Ptr[CInt]): Ptr[CInt] = extern
 
@@ -1510,11 +1480,11 @@ private[libraylib] object extern_functions:
 
   def RestoreWindow(): Unit = extern
 
-  def SaveFileData(): CInt = extern
+  def SaveFileData(fileName: CString, data: Ptr[Byte], bytesToWrite: CUnsignedInt): Boolean = extern
 
-  def SaveFileText(): CInt = extern
+  def SaveFileText(fileName: CString, text: CString): Boolean = extern
 
-  def SaveStorageValue(): CInt = extern
+  def SaveStorageValue(position: CUnsignedInt, value: CInt): Boolean = extern
 
   def SetAudioStreamBufferSizeDefault(size: CInt): Unit = extern
 
@@ -1554,7 +1524,7 @@ private[libraylib] object extern_functions:
 
   def SetRandomSeed(seed: CUnsignedInt): Unit = extern
 
-  def SetSaveFileDataCallback(callback: CInt): Unit = extern
+  def SetSaveFileDataCallback(callback: SaveFileDataCallback): Unit = extern
 
   def SetSaveFileTextCallback(callback: SaveFileTextCallback): Unit = extern
 
@@ -1598,7 +1568,7 @@ private[libraylib] object extern_functions:
 
   def TextInsert(text: CString, insert: CString, position: CInt): CString = extern
 
-  def TextIsEqual(): CInt = extern
+  def TextIsEqual(text1: CString, text2: CString): Boolean = extern
 
   def TextJoin(textList: Ptr[CString], count: CInt, delimiter: CString): CString = extern
 
@@ -1640,7 +1610,7 @@ private[libraylib] object extern_functions:
 
   def UpdateCamera(camera: Ptr[Camera]): Unit = extern
 
-  def UploadMesh(mesh: Ptr[Mesh], dynamic: bool): Unit = extern
+  def UploadMesh(mesh: Ptr[Mesh], dynamic: Boolean): Unit = extern
 
   def WaitTime(ms: Float): Unit = extern
 
@@ -1648,7 +1618,7 @@ private[libraylib] object extern_functions:
 
   def WaveFormat(wave: Ptr[Wave], sampleRate: CInt, sampleSize: CInt, channels: CInt): Unit = extern
 
-  def WindowShouldClose(): CInt = extern
+  def WindowShouldClose(): Boolean = extern
 
   @name("__sn_wrap_BeginMode2D")
   private[libraylib] def __sn_wrap_BeginMode2D(camera: Ptr[Camera2D]): Unit = extern
@@ -1664,6 +1634,39 @@ private[libraylib] object extern_functions:
 
   @name("__sn_wrap_BeginVrStereoMode")
   private[libraylib] def __sn_wrap_BeginVrStereoMode(config: Ptr[VrStereoConfig]): Unit = extern
+
+  @name("__sn_wrap_CheckCollisionBoxSphere")
+  private[libraylib] def __sn_wrap_CheckCollisionBoxSphere(box: Ptr[BoundingBox], center: Ptr[Vector3], radius: Float): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionBoxes")
+  private[libraylib] def __sn_wrap_CheckCollisionBoxes(box1: Ptr[BoundingBox], box2: Ptr[BoundingBox]): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionCircleRec")
+  private[libraylib] def __sn_wrap_CheckCollisionCircleRec(center: Ptr[Vector2], radius: Float, rec: Ptr[Rectangle]): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionCircles")
+  private[libraylib] def __sn_wrap_CheckCollisionCircles(center1: Ptr[Vector2], radius1: Float, center2: Ptr[Vector2], radius2: Float): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionLines")
+  private[libraylib] def __sn_wrap_CheckCollisionLines(startPos1: Ptr[Vector2], endPos1: Ptr[Vector2], startPos2: Ptr[Vector2], endPos2: Ptr[Vector2], collisionPoint: Ptr[Vector2]): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionPointCircle")
+  private[libraylib] def __sn_wrap_CheckCollisionPointCircle(point: Ptr[Vector2], center: Ptr[Vector2], radius: Float): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionPointLine")
+  private[libraylib] def __sn_wrap_CheckCollisionPointLine(point: Ptr[Vector2], p1: Ptr[Vector2], p2: Ptr[Vector2], threshold: CInt): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionPointRec")
+  private[libraylib] def __sn_wrap_CheckCollisionPointRec(point: Ptr[Vector2], rec: Ptr[Rectangle]): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionPointTriangle")
+  private[libraylib] def __sn_wrap_CheckCollisionPointTriangle(point: Ptr[Vector2], p1: Ptr[Vector2], p2: Ptr[Vector2], p3: Ptr[Vector2]): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionRecs")
+  private[libraylib] def __sn_wrap_CheckCollisionRecs(rec1: Ptr[Rectangle], rec2: Ptr[Rectangle]): Boolean = extern
+
+  @name("__sn_wrap_CheckCollisionSpheres")
+  private[libraylib] def __sn_wrap_CheckCollisionSpheres(center1: Ptr[Vector3], radius1: Float, center2: Ptr[Vector3], radius2: Float): Boolean = extern
 
   @name("__sn_wrap_ClearBackground")
   private[libraylib] def __sn_wrap_ClearBackground(color: Ptr[Color]): Unit = extern
@@ -1929,6 +1932,21 @@ private[libraylib] object extern_functions:
   @name("__sn_wrap_DrawTriangleStrip3D")
   private[libraylib] def __sn_wrap_DrawTriangleStrip3D(points: Ptr[Vector3], pointCount: CInt, color: Ptr[Color]): Unit = extern
 
+  @name("__sn_wrap_ExportImage")
+  private[libraylib] def __sn_wrap_ExportImage(image: Ptr[Image], fileName: CString): Boolean = extern
+
+  @name("__sn_wrap_ExportImageAsCode")
+  private[libraylib] def __sn_wrap_ExportImageAsCode(image: Ptr[Image], fileName: CString): Boolean = extern
+
+  @name("__sn_wrap_ExportMesh")
+  private[libraylib] def __sn_wrap_ExportMesh(mesh: Ptr[Mesh], fileName: CString): Boolean = extern
+
+  @name("__sn_wrap_ExportWave")
+  private[libraylib] def __sn_wrap_ExportWave(wave: Ptr[Wave], fileName: CString): Boolean = extern
+
+  @name("__sn_wrap_ExportWaveAsCode")
+  private[libraylib] def __sn_wrap_ExportWaveAsCode(wave: Ptr[Wave], fileName: CString): Boolean = extern
+
   @name("__sn_wrap_Fade")
   private[libraylib] def __sn_wrap_Fade(color: Ptr[Color], alpha: Float, __return: Ptr[Color]): Unit = extern
 
@@ -2171,6 +2189,21 @@ private[libraylib] object extern_functions:
 
   @name("__sn_wrap_ImageToPOT")
   private[libraylib] def __sn_wrap_ImageToPOT(image: Ptr[Image], fill: Ptr[Color]): Unit = extern
+
+  @name("__sn_wrap_IsAudioStreamPlaying")
+  private[libraylib] def __sn_wrap_IsAudioStreamPlaying(stream: Ptr[AudioStream]): Boolean = extern
+
+  @name("__sn_wrap_IsAudioStreamProcessed")
+  private[libraylib] def __sn_wrap_IsAudioStreamProcessed(stream: Ptr[AudioStream]): Boolean = extern
+
+  @name("__sn_wrap_IsModelAnimationValid")
+  private[libraylib] def __sn_wrap_IsModelAnimationValid(model: Ptr[Model], anim: Ptr[ModelAnimation]): Boolean = extern
+
+  @name("__sn_wrap_IsMusicStreamPlaying")
+  private[libraylib] def __sn_wrap_IsMusicStreamPlaying(music: Ptr[Music]): Boolean = extern
+
+  @name("__sn_wrap_IsSoundPlaying")
+  private[libraylib] def __sn_wrap_IsSoundPlaying(sound: Ptr[Sound]): Boolean = extern
 
   @name("__sn_wrap_LoadAudioStream")
   private[libraylib] def __sn_wrap_LoadAudioStream(sampleRate: CUnsignedInt, sampleSize: CUnsignedInt, channels: CUnsignedInt, __return: Ptr[AudioStream]): Unit = extern
@@ -2456,6 +2489,93 @@ object functions:
     val _ptr_0 = alloc[VrStereoConfig](1)
     !_ptr_0 = config
     __sn_wrap_BeginVrStereoMode(_ptr_0)
+
+  def CheckCollisionBoxSphere(box: BoundingBox, center: Vector3, radius: Float)(using Zone): Boolean = 
+    val _ptr_0 = alloc[BoundingBox](1)
+    !_ptr_0 = box
+    val _ptr_1 = alloc[Vector3](1)
+    !_ptr_1 = center
+    __sn_wrap_CheckCollisionBoxSphere(_ptr_0, _ptr_1, radius)
+
+  def CheckCollisionBoxes(box1: BoundingBox, box2: BoundingBox)(using Zone): Boolean = 
+    val _ptr_0 = alloc[BoundingBox](1)
+    !_ptr_0 = box1
+    val _ptr_1 = alloc[BoundingBox](1)
+    !_ptr_1 = box2
+    __sn_wrap_CheckCollisionBoxes(_ptr_0, _ptr_1)
+
+  def CheckCollisionCircleRec(center: Vector2, radius: Float, rec: Rectangle)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Vector2](1)
+    !_ptr_0 = center
+    val _ptr_2 = alloc[Rectangle](1)
+    !_ptr_2 = rec
+    __sn_wrap_CheckCollisionCircleRec(_ptr_0, radius, _ptr_2)
+
+  def CheckCollisionCircles(center1: Vector2, radius1: Float, center2: Vector2, radius2: Float)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Vector2](1)
+    !_ptr_0 = center1
+    val _ptr_2 = alloc[Vector2](1)
+    !_ptr_2 = center2
+    __sn_wrap_CheckCollisionCircles(_ptr_0, radius1, _ptr_2, radius2)
+
+  def CheckCollisionLines(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: Ptr[Vector2])(using Zone): Boolean = 
+    val _ptr_0 = alloc[Vector2](1)
+    !_ptr_0 = startPos1
+    val _ptr_1 = alloc[Vector2](1)
+    !_ptr_1 = endPos1
+    val _ptr_2 = alloc[Vector2](1)
+    !_ptr_2 = startPos2
+    val _ptr_3 = alloc[Vector2](1)
+    !_ptr_3 = endPos2
+    __sn_wrap_CheckCollisionLines(_ptr_0, _ptr_1, _ptr_2, _ptr_3, collisionPoint)
+
+  def CheckCollisionPointCircle(point: Vector2, center: Vector2, radius: Float)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Vector2](1)
+    !_ptr_0 = point
+    val _ptr_1 = alloc[Vector2](1)
+    !_ptr_1 = center
+    __sn_wrap_CheckCollisionPointCircle(_ptr_0, _ptr_1, radius)
+
+  def CheckCollisionPointLine(point: Vector2, p1: Vector2, p2: Vector2, threshold: CInt)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Vector2](1)
+    !_ptr_0 = point
+    val _ptr_1 = alloc[Vector2](1)
+    !_ptr_1 = p1
+    val _ptr_2 = alloc[Vector2](1)
+    !_ptr_2 = p2
+    __sn_wrap_CheckCollisionPointLine(_ptr_0, _ptr_1, _ptr_2, threshold)
+
+  def CheckCollisionPointRec(point: Vector2, rec: Rectangle)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Vector2](1)
+    !_ptr_0 = point
+    val _ptr_1 = alloc[Rectangle](1)
+    !_ptr_1 = rec
+    __sn_wrap_CheckCollisionPointRec(_ptr_0, _ptr_1)
+
+  def CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Vector2](1)
+    !_ptr_0 = point
+    val _ptr_1 = alloc[Vector2](1)
+    !_ptr_1 = p1
+    val _ptr_2 = alloc[Vector2](1)
+    !_ptr_2 = p2
+    val _ptr_3 = alloc[Vector2](1)
+    !_ptr_3 = p3
+    __sn_wrap_CheckCollisionPointTriangle(_ptr_0, _ptr_1, _ptr_2, _ptr_3)
+
+  def CheckCollisionRecs(rec1: Rectangle, rec2: Rectangle)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Rectangle](1)
+    !_ptr_0 = rec1
+    val _ptr_1 = alloc[Rectangle](1)
+    !_ptr_1 = rec2
+    __sn_wrap_CheckCollisionRecs(_ptr_0, _ptr_1)
+
+  def CheckCollisionSpheres(center1: Vector3, radius1: Float, center2: Vector3, radius2: Float)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Vector3](1)
+    !_ptr_0 = center1
+    val _ptr_2 = alloc[Vector3](1)
+    !_ptr_2 = center2
+    __sn_wrap_CheckCollisionSpheres(_ptr_0, radius1, _ptr_2, radius2)
 
   def ClearBackground(color: Color)(using Zone): Unit = 
     val _ptr_0 = alloc[Color](1)
@@ -3187,6 +3307,31 @@ object functions:
     !_ptr_2 = color
     __sn_wrap_DrawTriangleStrip3D(points, pointCount, _ptr_2)
 
+  def ExportImage(image: Image, fileName: CString)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Image](1)
+    !_ptr_0 = image
+    __sn_wrap_ExportImage(_ptr_0, fileName)
+
+  def ExportImageAsCode(image: Image, fileName: CString)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Image](1)
+    !_ptr_0 = image
+    __sn_wrap_ExportImageAsCode(_ptr_0, fileName)
+
+  def ExportMesh(mesh: Mesh, fileName: CString)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Mesh](1)
+    !_ptr_0 = mesh
+    __sn_wrap_ExportMesh(_ptr_0, fileName)
+
+  def ExportWave(wave: Wave, fileName: CString)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Wave](1)
+    !_ptr_0 = wave
+    __sn_wrap_ExportWave(_ptr_0, fileName)
+
+  def ExportWaveAsCode(wave: Wave, fileName: CString)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Wave](1)
+    !_ptr_0 = wave
+    __sn_wrap_ExportWaveAsCode(_ptr_0, fileName)
+
   def Fade(color: Color, alpha: Float)(using Zone): Color = 
     val _ptr_0 = alloc[Color](1)
     !_ptr_0 = color
@@ -3736,6 +3881,33 @@ object functions:
     !_ptr_1 = fill
     __sn_wrap_ImageToPOT(image, _ptr_1)
 
+  def IsAudioStreamPlaying(stream: AudioStream)(using Zone): Boolean = 
+    val _ptr_0 = alloc[AudioStream](1)
+    !_ptr_0 = stream
+    __sn_wrap_IsAudioStreamPlaying(_ptr_0)
+
+  def IsAudioStreamProcessed(stream: AudioStream)(using Zone): Boolean = 
+    val _ptr_0 = alloc[AudioStream](1)
+    !_ptr_0 = stream
+    __sn_wrap_IsAudioStreamProcessed(_ptr_0)
+
+  def IsModelAnimationValid(model: Model, anim: ModelAnimation)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Model](1)
+    !_ptr_0 = model
+    val _ptr_1 = alloc[ModelAnimation](1)
+    !_ptr_1 = anim
+    __sn_wrap_IsModelAnimationValid(_ptr_0, _ptr_1)
+
+  def IsMusicStreamPlaying(music: Music)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Music](1)
+    !_ptr_0 = music
+    __sn_wrap_IsMusicStreamPlaying(_ptr_0)
+
+  def IsSoundPlaying(sound: Sound)(using Zone): Boolean = 
+    val _ptr_0 = alloc[Sound](1)
+    !_ptr_0 = sound
+    __sn_wrap_IsSoundPlaying(_ptr_0)
+
   def LoadAudioStream(sampleRate: CUnsignedInt, sampleSize: CUnsignedInt, channels: CUnsignedInt)(using Zone): AudioStream = 
     val _ptr_return = alloc[AudioStream](1)
     __sn_wrap_LoadAudioStream(sampleRate, sampleSize, channels, _ptr_return)
@@ -4190,6 +4362,27 @@ object functions:
     val _ptr_return = alloc[Wave](1)
     __sn_wrap_WaveCopy(_ptr_0, _ptr_return)
     !_ptr_return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

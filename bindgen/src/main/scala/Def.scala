@@ -2,36 +2,38 @@ package bindgen
 
 import scala.collection.mutable.ListBuffer
 import bindgen.CType.Parameter
+import scala.collection.mutable
 
-object Def:
-  import scala.collection.mutable
-  case class Binding(
+enum Def:
+  case Binding(
       var enums: mutable.Set[Enum],
       var structs: mutable.Set[Struct],
       var unions: mutable.Set[Union],
       var functions: mutable.Set[Function],
       var aliases: mutable.Set[Alias]
   )
-  case class Enum(
+  case Enum(
       var values: ListBuffer[(String, Long)],
       var name: Option[String],
       var intType: Option[CType.NumericIntegral]
   )
-  case class Struct(var fields: ListBuffer[(String, CType)], var name: String)
-  case class Union(var fields: ListBuffer[(String, CType)], var name: String)
-  case class Function(
+  case Struct(var fields: ListBuffer[(String, CType)], var name: String)
+  case Union(var fields: ListBuffer[(String, CType)], var name: String)
+  case Function(
       var name: String,
       var returnType: CType,
       var parameters: ListBuffer[(String, CType, OriginalCType)],
       var tpe: CFunctionType,
       val originalCType: OriginalCType
   )
-  case class Alias(name: String, underlying: CType)
+  case Alias(name: String, underlying: CType)
 
   def typeOf(d: Function): CType.Function =
     CType.Function(
       d.returnType,
-      d.parameters.map { case (name, typ, _) => Parameter(Some(name), typ) }.toList
+      d.parameters.map { case (name, typ, _) =>
+        Parameter(Some(name), typ)
+      }.toList
     )
 end Def
 

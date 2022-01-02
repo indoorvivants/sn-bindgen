@@ -11,6 +11,9 @@ object predef:
   
   abstract class CEnumU[T](using eq: T =:= UInt):
     given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+    extension (t: T)
+     def int: CInt = eq.apply(t).toInt
+     def uint: CUnsignedInt = eq.apply(t)
       
 object types:
   import predef.*

@@ -24,6 +24,27 @@ lazy val examples = project
   .in(file("examples"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
+  .settings({
+    nativeConfig ~= {
+      { conf =>
+        conf
+          .withLinkingOptions(
+            conf.linkingOptions ++ Seq(
+              "-lclang",
+              "-lraylib",
+              "-L/opt/homebrew/opt/llvm/lib"
+            )
+          )
+          .withCompileOptions(
+            conf.compileOptions ++ Seq(
+              "-I/opt/homebrew/opt/llvm/include",
+              /* "-I/Users/velvetbaldmime/projects/libclang-scala3/examples/libraries", */
+              /* "-DNK_IMPLEMENTATION=1" */
+            )
+          )
+      }
+    }
+  })
   .settings(
     regenerate := {
       case class Binding(
@@ -58,9 +79,9 @@ lazy val examples = project
 
       val mapping = List(
         define("cJSON.h", "libcjson", "cjson", List("cJSON.h")),
-        /* define("Clang-Index.h", "libclang", "clang", List("clang-c/Index.h")), */
-        define("raylib.h", "libraylib", "raylib", List("raylib.h"))
-        /* define("nuklear.h", "libnuklear", "nuklear", List("nuklear.h")), */
+        define("Clang-Index.h", "libclang", "clang", List("clang-c/Index.h")),
+        define("raylib.h", "libraylib", "raylib", List("raylib.h")),
+        /* define("nuklear.h", "libnuklear", "nuklear", List("nuklear.h")) */
         /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
       )
 

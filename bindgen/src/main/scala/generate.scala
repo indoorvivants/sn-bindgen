@@ -38,7 +38,6 @@ inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
     )
     binding(b, scalaOutput, cOutput)
 
-    errln(language)
     language match
       case Lang.Scala => println(scalaOutput.result)
       case Lang.C     => println(cOutput.result)

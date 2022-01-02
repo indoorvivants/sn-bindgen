@@ -128,3 +128,8 @@ void wrap_getCursorLocation(CXCursor *curs, CXSourceLocation *location) {
 unsigned wrap_Location_isFromMainFile(CXSourceLocation *location) {
   return clang_Location_isFromMainFile(*location);
 }
+
+void wrap_formatDiagnostic(CXDiagnostic cxd, CXString *cxs, unsigned options) {
+  CXString cs = clang_formatDiagnostic(cxd, options);
+  memcpy(cxs, &cs, sizeof(CXString));
+}

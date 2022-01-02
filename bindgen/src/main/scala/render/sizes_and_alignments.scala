@@ -80,7 +80,7 @@ def staticSize(typ: CType)(using AliasResolver): CSize =
       fields.map(staticSize).max
     case Typedef(name)   => staticSize(aliasResolver(name))
     case RecordRef(name) => staticSize(aliasResolver(name))
+    case Bool            => 1.toULong
 
   end match
 end staticSize
-
