@@ -18,6 +18,8 @@ def deduplicateFunctions(res: mutable.Set[Def.Function])(using
   val toRemove = mutable.Set.empty[Def.Function]
   val vec = res.toVector
 
+  info(s"Deduplication ${vec.size} functions")
+
   vec.foreach { funcA =>
     vec.foreach { funcB =>
       if funcA != funcB && functionsAreSame(funcA, funcB) then

@@ -99,16 +99,11 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
                 if clang_getTypeSpelling(typ).string.startsWith("union ") then
                   binding.unions.addOne(Def.Union(struct.fields, struct.name))
                 else if name != "" then
-                  errln(s"Found a struct defined as typedef $name")
                   binding.structs.filterInPlace(_.name != name)
                   binding.structs.addOne(visitStruct(typeDecl, name))
               else binding.aliases.addOne(Def.Alias(name, constructType(typ)))
               end if
             end if
-
-            // errln(
-            //   s"Cursor (${clang_getCursorSpelling(cursor).string}): ${clang_getCursorKindSpelling(cursor.kind).string}"
-            // )
 
             if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
               val name = clang_getCursorSpelling(cursor).string
@@ -119,7 +114,6 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
 
             if cursor.kind == CXCursorKind.CXCursor_StructDecl then
               val name = clang_getCursorSpelling(cursor).string
-              errln(s"Found a struct defined separately $name")
               if name != "" then
                 binding.structs.filterInPlace(_.name != name)
                 binding.structs.addOne(visitStruct(cursor, name))

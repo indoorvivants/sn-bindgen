@@ -11,8 +11,8 @@ lazy val bindgen = project
   .settings(nativeConfig ~= { conf =>
     conf
       .withDump(true)
-      .withLinkingOptions(Seq("-lclang", "-L/opt/homebrew/opt/llvm/lib"))
-      .withCompileOptions(Seq("-I/opt/homebrew/opt/llvm/include"))
+      .withLinkingOptions(Seq("-lclang") ++ llvmLib)
+      .withCompileOptions(llvmInclude)
   })
   .settings(
     libraryDependencies += ("com.monovore" %%% "decline" % "2.2.0" cross CrossVersion.for3Use2_13)
@@ -23,6 +23,36 @@ lazy val libclang = project
   .in(file("libclang"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
+
+def osName = System.getProperty("os.name") match {
+  case n if n.startsWith("Linux")   => "linux"
+  case n if n.startsWith("Mac")     => "mac"
+  case n if n.startsWith("Windows") => "win"
+  case _                            => throw new Exception("Unknown platform!")
+}
+
+def llvmInclude = {
+  osName match {
+    case "linux" => List("/usr/lib/llvm-10/include/")
+    case "mac"   => List("/opt/homebrew/opt/llvm/include")
+  }
+}.map(s => s"-I$s")
+
+def clangInclude = {
+  osName match {
+    case "linux" => List("/usr/lib/llvm-10/include/")
+    case "mac" =>
+      List("/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
+  }
+}.map(s => s"-I$s")
+
+def llvmLib = {
+  osName match {
+    case "linux" => List.empty
+    case "mac"   => List("/opt/homebrew/opt/llvm/lib")
+
+  }
+}.map(lib => s"-L$lib")
 
 lazy val examples = project
   .in(file("examples"))
@@ -35,17 +65,10 @@ lazy val examples = project
           .withLinkingOptions(
             conf.linkingOptions ++ Seq(
               "-lclang",
-              "-lraylib",
-              "-L/opt/homebrew/opt/llvm/lib"
-            )
+              "-lraylib"
+            ) ++ llvmLib
           )
-          .withCompileOptions(
-            conf.compileOptions ++ Seq(
-              "-I/opt/homebrew/opt/llvm/include"
-              /* "-I/Users/velvetbaldmime/projects/libclang-scala3/examples/libraries", */
-              /* "-DNK_IMPLEMENTATION=1" */
-            )
-          )
+          .withCompileOptions(conf.compileOptions ++ llvmInclude)
       }
     }
   })
@@ -106,22 +129,22 @@ lazy val examples = project
           "libclang",
           "clang",
           List("clang-c/Index.h"),
-          List("-I/opt/homebrew/opt/llvm/include")
+          llvmInclude
         ),
         define(
           "raylib.h",
           "libraylib",
           "raylib",
           List("raylib.h"),
-          List("-I/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
-        ),
-        define(
-          "nuklear.h",
-          "libnuklear",
-          "nuklear",
-          List("nuklear.h"),
-          List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1")
+          clangInclude
         )
+        /* define( */
+        /*   "nuklear.h", */
+        /*   "libnuklear", */
+        /*   "nuklear", */
+        /*   List("nuklear.h"), */
+        /*   List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1") */
+        /* ) */
         /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
       )
 
