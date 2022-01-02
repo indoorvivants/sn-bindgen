@@ -1,21 +1,5 @@
-package bindgen.rendering
-
-import bindgen.*
-
-// def isIllegalFunction(returnType: CType, parameters: List[CType])(using
-//     AliasResolver
-// ) =
-//   def isDirectStructAccess(typ: CType): Boolean =
-//     import CType.*
-//     typ match
-//       case _: Struct       => true
-//       case _: Pointer      => false
-//       case Typedef(name)   => isDirectStructAccess(aliasResolver(name))
-//       case RecordRef(name) => isDirectStructAccess(aliasResolver(name))
-//       case _               => false
-
-//   isDirectStructAccess(returnType) || parameters.exists(isDirectStructAccess)
-// end isIllegalFunction
+package bindgen
+package rendering
 
 import scala.collection.mutable.ListBuffer
 
@@ -69,7 +53,8 @@ def functionRewriter(badFunction: Def.Function)(using
           badFunction.name
         ),
         originalCType =
-          if isReturnTypeAStruct then OriginalCType(badFunction.returnType, "void")
+          if isReturnTypeAStruct then
+            OriginalCType(badFunction.returnType, "void")
           else badFunction.originalCType
       )
     end externed

@@ -1,6 +1,5 @@
-package bindgen.rendering
-
-import bindgen.*
+package bindgen
+package rendering
 
 def enumeration(model: Def.Enum, line: Appender)(using
     Config,
@@ -37,4 +36,3 @@ def enumeration(model: Def.Enum, line: Appender)(using
     }
   }
 end enumeration
-

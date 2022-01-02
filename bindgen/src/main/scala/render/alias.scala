@@ -1,4 +1,5 @@
-package bindgen.rendering
+package bindgen
+package rendering
 
 import bindgen.*
 

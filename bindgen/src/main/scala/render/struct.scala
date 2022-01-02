@@ -1,6 +1,5 @@
-package bindgen.rendering
-
-import bindgen.*
+package bindgen
+package rendering
 
 def struct(model: Def.Struct, line: Appender)(using Config, AliasResolver) =
   val (struct, rewriteFields) =
@@ -27,8 +26,7 @@ def struct(model: Def.Struct, line: Appender)(using Config, AliasResolver) =
       struct.fields.map { case (n, ct) =>
         if !rewriteFields.contains(n) then
           applyArgList.addOne(s"${escape(n)}: ${scalaType(ct)}")
-        else
-          applyArgList.addOne(s"${escape(n)}: Ptr[$structName]")
+        else applyArgList.addOne(s"${escape(n)}: Ptr[$structName]")
       }
 
       line(
@@ -38,9 +36,9 @@ def struct(model: Def.Struct, line: Appender)(using Config, AliasResolver) =
         line(s"val ____ptr = apply()")
         struct.fields.foreach { case (n, _) =>
           // if !rewriteFields.contains(n) then
-            line(s"(!____ptr).${escape(n)} = ${escape(n)}")
-          // else 
-          //   line(s"(!ptr).${escape(n)} = ${escape(n)}.asInstanceOf[Ptr[$structName]]")
+          line(s"(!____ptr).${escape(n)} = ${escape(n)}")
+        // else
+        //   line(s"(!ptr).${escape(n)} = ${escape(n)}.asInstanceOf[Ptr[$structName]]")
         }
         line(s"____ptr")
       }

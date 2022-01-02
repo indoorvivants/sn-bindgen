@@ -19,12 +19,11 @@ case class error(msg: String) extends Exception(msg)
 import scala.scalanative.unsafe.*
 import scalanative.unsigned.*
 
-
 def indent(using c: Config): String =
-  (" " * (c.indentSize * c.indents))
+  (" " * (c.indentSize.value * c.indents.value))
 
 def nest(f: Config ?=> Unit)(using config: Config) =
-  f(using config.copy(indents = config.indents + 1))
+  f(using config.copy(indents = config.indents.map(_ + 1)))
 
 def to(sb: StringBuilder)(using config: Config): Appender =
   line => sb.append(indent(using config) + line + "\n")
@@ -32,19 +31,7 @@ def to(sb: StringBuilder)(using config: Config): Appender =
 def aliasResolver(name: String)(using ar: AliasResolver): CType =
   ar(name)
 
-def packageName(using conf: Config): String = conf.packageName
+def packageName(using conf: Config): String = conf.packageName.value
 
 type Appender = Config ?=> String => Unit
 type AliasResolver = String => CType
-
-case class Config(
-    packageName: String,
-    linkName: Option[String],
-    indentSize: Int,
-    indents: Int = 0,
-    lang: Lang,
-    cImports: List[String]
-)
-
-enum Lang:
-  case Scala, C

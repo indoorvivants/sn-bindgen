@@ -23,19 +23,19 @@ inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
     lang: String
 ) =
   zone {
-    val b = analyse(file)
     val language = if (lang.toLowerCase == "scala") then Lang.Scala else Lang.C
+    given Config = Config(
+      indentSize = IndentationSize(2),
+      packageName = PackageName(packageName),
+      linkName = Some(LinkName(linkName)),
+      lang = language,
+      cImports = cImports.split(",").toList.map(CImport.apply)
+    )
+    val b = analyse(file)
 
     val scalaOutput = StringBuilder()
     val cOutput = StringBuilder()
 
-    given Config = Config(
-      indentSize = 2,
-      packageName = packageName,
-      linkName = Some(linkName),
-      lang = language,
-      cImports = cImports.split(",").toList
-    )
     binding(b, scalaOutput, cOutput)
 
     language match

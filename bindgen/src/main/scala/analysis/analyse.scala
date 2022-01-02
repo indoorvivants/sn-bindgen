@@ -16,7 +16,7 @@ def addBuiltin(binding: Def.Binding): Def.Binding =
       .addOne(Def.Alias("__builtin_va_list", CType.Pointer(CType.Byte)))
   )
 
-def analyse(file: String)(using Zone): Def.Binding =
+def analyse(file: String)(using Zone, Config): Def.Binding =
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
   val l = List.newBuilder[String]
