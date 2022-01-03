@@ -74,6 +74,8 @@ lazy val examples = project
   })
   .settings(
     regenerate := {
+      import complete.DefaultParsers.*
+      val args: Seq[String] = spaceDelimited("<arg>").parsed
       case class Binding(
           headerFile: File,
           packageName: String,
@@ -137,19 +139,23 @@ lazy val examples = project
           "raylib",
           List("raylib.h"),
           clangInclude
+        ),
+        define(
+          "nuklear.h",
+          "libnuklear",
+          "nuklear",
+          List("nuklear.h"),
+          List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1")
         )
-        /* define( */
-        /*   "nuklear.h", */
-        /*   "libnuklear", */
-        /*   "nuklear", */
-        /*   List("nuklear.h"), */
-        /*   List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1") */
-        /* ) */
         /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
       )
 
+      val requested =
+        mapping
+          .filter(binding => args.isEmpty || args.contains(binding.packageName))
+
       List("scala", "c").foreach { lang =>
-        mapping.foreach { binding =>
+        requested.foreach { binding =>
           import scala.sys.process.Process
 
           val destination =
@@ -172,7 +178,7 @@ lazy val examples = project
     }
   )
 
-val regenerate = taskKey[Unit]("Regenerate known bindings")
+val regenerate = inputKey[Unit]("Regenerate known bindings")
 // --------------SETTINGS-------------------------
 lazy val nativeCommon = Seq(
   resolvers += Resolver.sonatypeRepo("snapshots"),

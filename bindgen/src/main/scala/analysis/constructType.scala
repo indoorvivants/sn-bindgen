@@ -94,7 +94,7 @@ def constructType(typ: CXType)(using
     case CXType_Double     => CType.NumericReal(FloatingBase.Double)
     case CXType_LongDouble => CType.NumericReal(FloatingBase.LongDouble)
 
-    case other => System.err.println(s"Unknown type: $spelling"); CType.Void;
+    case other => errln(s"Unknown type: $spelling"); CType.Void;
   end match
 
 end constructType
