@@ -43,7 +43,6 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
   var errors = 0
 
   (0 until clang_getNumDiagnostics(unit).toInt).foreach { diagId =>
-    errln(diagId)
     val diag = clang_getDiagnostic(unit, diagId.toUInt)
 
     import CXDiagnosticDisplayOptions as flags
@@ -55,7 +54,10 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
         ).string
     )
 
-    errors += 1
+    val severity = clang_getDiagnosticSeverity(diag)
+
+    if severity == CXDiagnosticSeverity.CXDiagnostic_Error || severity == CXDiagnosticSeverity.CXDiagnostic_Fatal then
+      errors += 1
   }
 
   if errors != 0 then

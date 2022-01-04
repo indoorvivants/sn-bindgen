@@ -11,7 +11,9 @@ def scalaType(typ: CType)(using AliasResolver): String =
       to match
         case Void       => "Ptr[Byte]" // there's no void type on SN
         case CType.Byte => "CString"
-        case other      => s"Ptr[${scalaType(other)}]"
+        // a pointer to a function should be collapsed to CFuncPtr
+        case f: Function => scalaType(f)
+        case other       => s"Ptr[${scalaType(other)}]"
     case NumericReal(base) =>
       base match
         case FloatingBase.Float      => "Float"

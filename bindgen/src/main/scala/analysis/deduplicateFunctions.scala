@@ -15,10 +15,10 @@ private def readabilityScore(func: Def.Function): Int =
 def deduplicateFunctions(res: mutable.Set[Def.Function])(using
     Config
 ): mutable.Set[Def.Function] =
+  info(s"Deduplicating ${res.size} functions")
   val toRemove = mutable.Set.empty[Def.Function]
   val vec = res.toArray.sortBy(_.name)
 
-  info(s"Deduplication ${vec.size} functions")
 
   vec.zipWithIndex.foreach { case (func, i) =>
     if (i != vec.length - 1) then
@@ -29,6 +29,7 @@ def deduplicateFunctions(res: mutable.Set[Def.Function])(using
         else toRemove.add(next)
     end if
   }
+  info(s"After deduplication ${toRemove.size} functions will be removed")
 
   mutable.Set.from(res) -- toRemove
 end deduplicateFunctions

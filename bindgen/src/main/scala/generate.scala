@@ -31,8 +31,9 @@ object Generate:
 
           binding(b, scalaOutput, cOutput)
 
-          config.lang match
-            case Lang.Scala => println(scalaOutput.result)
-            case Lang.C     => println(cOutput.result)
+          if config.quiet == Quiet.No then
+            config.lang match
+              case Lang.Scala => println(scalaOutput.result)
+              case Lang.C     => println(cOutput.result)
     }
 end Generate

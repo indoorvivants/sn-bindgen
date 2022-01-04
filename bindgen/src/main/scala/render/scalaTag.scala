@@ -43,8 +43,8 @@ def scalaTag(typ: CType)(using AliasResolver): String =
         case FloatingBase.Float => "Tag.Float"
         case _                  => "Tag.Double"
 
-    case Pointer(Void) => s"Tag.Ptr(Tag.Byte)"
-
+    case Pointer(Void)           => s"Tag.Ptr(Tag.Byte)"
+    case Pointer(func: Function) => scalaTag(func)
     case Pointer(of) =>
       s"Tag.Ptr[${scalaType(of)}](${scalaTag(of)})"
 

@@ -76,47 +76,68 @@ def binding(
   end commentException
 
   scalaOutput.append("object types:\n")
+  def renderAll[A <: Def](
+      defs: Seq[A],
+      out: StringBuilder,
+      how: (A, Appender) => Unit
+  ) =
+    defs.zipWithIndex.foreach { case (en, idx) =>
+      try how(
+        en,
+        to(out)
+      )
+      catch exc => to(out)(commentException(en, exc))
+      if idx != defs.size - 1 then out.append("\n")
+    }
+
   nest {
     to(scalaOutput)("import predef.*")
-    binding.enums.toList
-      .sortBy(_.name)
-      .filter(_.name.isDefined)
-      .zipWithIndex
-      .foreach { case (en, idx) =>
-        try enumeration(
-          en,
-          to(scalaOutput)
-        )
-        catch exc => to(scalaOutput)(commentException(en, exc))
-        if idx != binding.enums.size - 1 then scalaOutput.append("\n")
-      }
-    binding.aliases.toList.sortBy(_.name).zipWithIndex.foreach {
-      case (en, idx) =>
-        try alias(
-          en,
-          to(scalaOutput)
-        )
-        catch exc => to(scalaOutput)(commentException(en, exc))
-        if idx != binding.aliases.size - 1 then scalaOutput.append("\n")
-    }
-    binding.structs.toList.sortBy(_.name).zipWithIndex.foreach {
-      case (en, idx) =>
-        try struct(
-          en,
-          to(scalaOutput)
-        )
-        catch exc => to(scalaOutput)(commentException(en, exc))
-        if idx != binding.structs.size - 1 then scalaOutput.append("\n")
-    }
-    binding.unions.toList.sortBy(_.name).zipWithIndex.foreach {
-      case (en, idx) =>
-        try union(
-          en,
-          to(scalaOutput)
-        )
-        catch exc => to(scalaOutput)(commentException(en, exc))
-        if idx != binding.unions.size - 1 then scalaOutput.append("\n")
-    }
+    renderAll(
+      binding.enums.toList
+        .sortBy(_.name)
+        .filter(_.name.isDefined),
+      scalaOutput,
+      enumeration
+    )
+    // .zipWithIndex
+    // .foreach { case (en, idx) =>
+    //   try enumeration(
+    //     en,
+    //     to(scalaOutput)
+    //   )
+    //   catch exc => to(scalaOutput)(commentException(en, exc))
+    //   if idx != binding.enums.size - 1 then scalaOutput.append("\n")
+    // }
+    renderAll(binding.aliases.toList.sortBy(_.name), scalaOutput, alias)
+    // binding.aliases.toList.sortBy(_.name).zipWithIndex.foreach {
+    //   case (en, idx) =>
+    //     try alias(
+    //       en,
+    //       to(scalaOutput)
+    //     )
+    //     catch exc => to(scalaOutput)(commentException(en, exc))
+    //     if idx != binding.aliases.size - 1 then scalaOutput.append("\n")
+    // }
+    renderAll(binding.structs.toList.sortBy(_.name), scalaOutput, struct)
+    // binding.structs.toList.sortBy(_.name).zipWithIndex.foreach {
+    //   case (en, idx) =>
+    //     try struct(
+    //       en,
+    //       to(scalaOutput)
+    //     )
+    //     catch exc => to(scalaOutput)(commentException(en, exc))
+    //     if idx != binding.structs.size - 1 then scalaOutput.append("\n")
+    // }
+    renderAll(binding.unions.toList.sortBy(_.name), scalaOutput, union)
+    // binding.unions.toList.sortBy(_.name).zipWithIndex.foreach {
+    //   case (en, idx) =>
+    //     try union(
+    //       en,
+    //       to(scalaOutput)
+    //     )
+    //     catch exc => to(scalaOutput)(commentException(en, exc))
+    //     if idx != binding.unions.size - 1 then scalaOutput.append("\n")
+    // }
   }
 
   val resolvedFunctions = deduplicateFunctions(
@@ -139,29 +160,31 @@ def binding(
     )
     nest {
       to(scalaOutput)("import types.*\n")
-      externFunctions.toList.sortBy(_.name).zipWithIndex.foreach {
-        case (func, idx) =>
-          try function(
-            func,
-            to(scalaOutput)
-          )
-          catch exc => to(scalaOutput)(commentException(func, exc))
-          if idx != externFunctions.size - 1 then scalaOutput.append("\n")
-      }
+      renderAll(externFunctions.toList.sortBy(_.name), scalaOutput, function)
+      // externFunctions.toList.sortBy(_.name).zipWithIndex.foreach {
+      //   case (func, idx) =>
+      //     try function(
+      //       func,
+      //       to(scalaOutput)
+      //     )
+      //     catch exc => to(scalaOutput)(commentException(func, exc))
+      //     if idx != externFunctions.size - 1 then scalaOutput.append("\n")
+      // }
     }
     scalaOutput.append(s"\nobject functions: \n")
     nest {
       to(scalaOutput)("import types.*, extern_functions.*\n")
       to(scalaOutput)("export extern_functions.*\n")
-      regularFunctions.toList.sortBy(_.name).zipWithIndex.foreach {
-        case (func, idx) =>
-          try function(
-            func,
-            to(scalaOutput)
-          )
-          catch exc => to(scalaOutput)(commentException(func, exc))
-          if idx != regularFunctions.size - 1 then scalaOutput.append("\n")
-      }
+      renderAll(regularFunctions.toList.sortBy(_.name), scalaOutput, function)
+      // regularFunctions.toList.sortBy(_.name).zipWithIndex.foreach {
+      //   case (func, idx) =>
+      //     try function(
+      //       func,
+      //       to(scalaOutput)
+      //     )
+      //     catch exc => to(scalaOutput)(commentException(func, exc))
+      //     if idx != regularFunctions.size - 1 then scalaOutput.append("\n")
+      // }
     }
 
     val cFunctions =
@@ -175,14 +198,15 @@ def binding(
       }
       to(cOutput)("\n")
 
-    cFunctions.toList.sortBy(_.name).zipWithIndex.foreach { case (func, idx) =>
-      try cFunctionForwarder(
-        func,
-        to(cOutput)
-      )
-      catch exc => to(cOutput)(commentException(func, exc))
-      if idx != cFunctions.size - 1 then scalaOutput.append("\n")
-    }
+      renderAll(cFunctions.toList.sortBy(_.name), cOutput, cFunctionForwarder)
+    // cFunctions.toList.sortBy(_.name).zipWithIndex.foreach { case (func, idx) =>
+    //   try cFunctionForwarder(
+    //     func,
+    //     to(cOutput)
+    //   )
+    //   catch exc => to(cOutput)(commentException(func, exc))
+    //   if idx != cFunctions.size - 1 then scalaOutput.append("\n")
+    // }
 
   end if
 end binding

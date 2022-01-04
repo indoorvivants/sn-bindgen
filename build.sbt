@@ -1,3 +1,4 @@
+import scala.scalanative.build.LTO
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 // --------------MODULES-------------------------
@@ -10,7 +11,9 @@ lazy val bindgen = project
   .settings(nativeCommon)
   .settings(nativeConfig ~= { conf =>
     conf
-      .withDump(true)
+      .withOptimize(false)
+      .withLTO(LTO.none)
+      /* .withDump(true) */
       .withLinkingOptions(Seq("-lclang") ++ llvmLib)
       .withCompileOptions(llvmInclude)
   })
@@ -73,9 +76,12 @@ lazy val examples = project
     }
   })
   .settings(
-    regenerate := {
+    bindings := {
       import complete.DefaultParsers.*
-      val args: Seq[String] = spaceDelimited("<arg>").parsed
+      val rawArgs = spaceDelimited("<arg>").parsed
+      val cmd = rawArgs.head
+      val args = rawArgs.tail
+
       case class Binding(
           headerFile: File,
           packageName: String,
@@ -96,6 +102,8 @@ lazy val examples = project
           clangFlags.foreach { clangFlag =>
             sb.append(s"--clang $clangFlag ")
           }
+
+          sb.append(" --info ")
 
           sb.result
         }
@@ -126,6 +134,7 @@ lazy val examples = project
 
       val mapping = List(
         define("cJSON.h", "libcjson", "cjson", List("cJSON.h")),
+        define("test.h", "libtest", "test", List("test.h")),
         define(
           "Clang-Index.h",
           "libclang",
@@ -150,35 +159,50 @@ lazy val examples = project
         /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
       )
 
+      val argsWithoutRemoved = args.filterNot(_.startsWith("-"))
+
       val requested =
         mapping
-          .filter(binding => args.isEmpty || args.contains(binding.packageName))
+          .filter(binding =>
+            argsWithoutRemoved.isEmpty &&
+              !args.contains(s"-${binding.packageName}") ||
+              args
+                .contains(binding.packageName)
+          )
 
       List("scala", "c").foreach { lang =>
         requested.foreach { binding =>
-          import scala.sys.process.Process
+          if (cmd.trim.toLowerCase == "gen") {
+            import scala.sys.process.Process
 
-          val destination =
-            if (lang == "scala") binding.scalaFile else binding.cFile
+            val destination =
+              if (lang == "scala") binding.scalaFile else binding.cFile
 
-          val cmd = binary.toString + " " + binding.toCommand + s" --$lang"
+            val cmd = binary.toString + " " + binding.toCommand + s" --$lang"
 
-          println(s"Executing $cmd")
+            println(s"Executing $cmd")
 
-          val result =
-            (Process(cmd) #> file(destination.toString)) !
+            val result =
+              (Process(cmd) #> file(destination.toString)) !
 
-          if (result == 0)
-            println(
-              s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
-            )
+            if (result == 0)
+              println(
+                s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
+              )
+          } else if (cmd.trim.toLowerCase == "clean") {
+            val toDelete =
+              if (lang == "scala") binding.scalaFile else binding.cFile
+            println(s"Deleting $toDelete: ${toDelete.delete()}")
+          }
         }
       }
 
     }
   )
 
-val regenerate = inputKey[Unit]("Regenerate known bindings")
+val Samples = new {}
+
+val bindings = inputKey[Unit]("Regenerate known bindings")
 // --------------SETTINGS-------------------------
 lazy val nativeCommon = Seq(
   resolvers += Resolver.sonatypeRepo("snapshots"),

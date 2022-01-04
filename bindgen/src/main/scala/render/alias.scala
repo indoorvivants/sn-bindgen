@@ -2,6 +2,7 @@ package bindgen
 package rendering
 
 import bindgen.*
+import scala.scalanative.unsafe.CFuncPtr
 
 def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
   val underlyingType = scalaType(model.underlying)
@@ -9,6 +10,12 @@ def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
   val isOpaque = model.underlying match
     case _: Typedef | _: RecordRef | _: Function | Void => false
     case _                                              => true
+
+  model.underlying match
+    case Pointer(Function(retType, params)) =>
+      info(s"Checking $model for cycles: ")
+      info(isCyclical(model.underlying, model.name))
+    case _ =>
 
   val modifier = if isOpaque then "opaque " else ""
   line(s"${modifier}type ${model.name} = $underlyingType")
@@ -20,4 +27,3 @@ def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
   }
 
 end alias
-

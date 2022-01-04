@@ -2,21 +2,21 @@
 /*    const void *ptr_data[2]; */
 /*    unsigned int_data; */
 /*  } CXType; */
- 
-/* typedef enum CXIdxDeclInfoFlags { CXIdxDeclFlag_Skipped = 0x1 } CXIdxDeclInfoFlags; */
+
+/* typedef enum CXIdxDeclInfoFlags { CXIdxDeclFlag_Skipped = 0x1 }
+ * CXIdxDeclInfoFlags; */
 /* enum CXTLSKind { CXTLS_None = 0, CXTLS_Dynamic, CXTLS_Static }; */
 
 /* typedef struct CXUnsavedFile { */
-   
+
 /*   const char *Filename; */
-   
+
 /*   const char *Contents; */
-  
+
 /*   unsigned long Length; */
 
 /*   signed char hello; */
 /* } CXUnsavedFile; */
-
 
 /* enum { */
 /*    X = 1, */
@@ -76,26 +76,40 @@
 /*     int twentySix; */
 /* } bigStruct; */
 
-  
- /**
-  * Retrieve the type of a CXCursor (if any).
-  */
- /* CXType clang_getCursorType(size_t hel, CXCursor C, CXType *types[3], long double *idx); */
- /* CXTypeKind clang_getCursorKing(size_t hel, CXCursor C, CXType *types[3], long double *idx); */
+/**
+ * Retrieve the type of a CXCursor (if any).
+ */
+/* CXType clang_getCursorType(size_t hel, CXCursor C, CXType *types[3], long
+ * double *idx); */
+/* CXTypeKind clang_getCursorKing(size_t hel, CXCursor C, CXType *types[3], long
+ * double *idx); */
 
- /* CXTypeKind clang_getCursorKing(size_t hel, CXType *types[3], long double *idx); */
-// Boolean type
-#if defined(__STDC__) && __STDC_VERSION__ >= 199901L
-    #include <stdbool.h>
-    /* #define bool _Bool */
-#elif !defined(__cplusplus) && !defined(bool)
-    typedef enum bool { false, true } bool;
-    #define RL_BOOL_TYPE
-#endif
+/* CXTypeKind clang_getCursorKing(size_t hel, CXType *types[3], long double
+ * *idx); */
 
-// check if hello
-bool IsKeyPressed(int key);                             // Check if a key has been pressed once
-bool IsKeyDown(int key);                                // Check if a key is being pressed
-bool IsKeyReleased(int key);                            // Check if a key has been released once
-bool IsKeyUp(int key);                                  // Check if a key is NOT being pressed
-void SetExitKey(int key);                               // Set a custom key to exit program (default is ESC)
+
+typedef struct Hello2 Hello2;
+typedef struct Hello1 Hello1;
+
+typedef void(*hello_func)(struct Hello1*);
+
+typedef struct Hello1 {
+  struct Hello2 *hello2;
+  char *str;
+} Hello1;
+
+typedef struct Hello {
+  hello_func handler;
+  int two;
+} Hello;
+
+typedef struct Hello2 {
+  Hello *hello;
+  double d;
+} Hello2;
+
+
+typedef struct Simple {
+  struct Simple *hello;
+  double d;
+} Simple;
