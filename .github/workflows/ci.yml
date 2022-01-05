@@ -27,6 +27,7 @@ jobs:
             sudo apt install clang llvm llvm-dev libclang-dev
 
       - name: Tests
-        env: JAVA_OPTS="-Xmx2G"
-        run: sbt compile examples/regenerate examples/compile
+        env: 
+          JAVA_OPTS: "-Xmx2G"
+        run: sbt bindgen/nativeLink 'examples/bindings gen' examples/compile
 
