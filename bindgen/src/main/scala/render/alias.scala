@@ -13,8 +13,8 @@ def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
 
   model.underlying match
     case Pointer(Function(retType, params)) =>
-      info(s"Checking $model for cycles: ")
-      info(isCyclical(model.underlying, model.name))
+      trace(s"Checking $model for cycles: ")
+      trace(isCyclical(model.underlying, model.name))
     case _ =>
 
   val modifier = if isOpaque then "opaque " else ""

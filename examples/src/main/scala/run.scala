@@ -18,6 +18,26 @@ import scalanative.unsigned.*
 
 end hello_cjson
 
+@main def hello_curl =
+  import libcurl.functions.*
+  import libcurl.types.*
+
+  Zone { implicit z =>
+
+    val curl = curl_easy_init()
+    if curl != null then
+      Curl_vsetopt(
+        curl,
+        CURLoption.CURLOPT_URL,
+        toCVarArgList(c"http://google.com")
+      )
+      val res: CURLcode = curl_easy_perform(curl)
+      curl_easy_cleanup(curl)
+      println(res)
+    end if
+  }
+end hello_curl
+
 @main def hello_raylib =
   val screenWidth = 800
   val screenHeight = 450

@@ -17,7 +17,11 @@ enum Def:
       var name: Option[String],
       var intType: Option[CType.NumericIntegral]
   )
-  case Struct(var fields: ListBuffer[(String, CType)], var name: String)
+  case Struct(
+      var fields: ListBuffer[(String, CType)],
+      var name: String,
+      var anonymous: ListBuffer[Def.Union | Def.Struct]
+  )
   case Union(var fields: ListBuffer[(String, CType)], var name: String)
   case Function(
       var name: String,
@@ -28,6 +32,9 @@ enum Def:
   )
   case Alias(name: String, underlying: CType)
 
+end Def
+
+object Def:
   def typeOf(d: Function): CType.Function =
     CType.Function(
       d.returnType,
@@ -35,6 +42,10 @@ enum Def:
         Parameter(Some(fp.name), fp.typ)
       }.toList
     )
+  def typeOf(d: Union): CType.Union =
+    CType.Union(d.fields.map(_._2).toList)
+  def typeOf(d: Struct): CType.Struct =
+    CType.Struct(d.fields.map(_._2).toList)
 end Def
 
 case class FunctionParameter(

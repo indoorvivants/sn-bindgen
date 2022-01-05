@@ -88,28 +88,50 @@
  * *idx); */
 
 
-typedef struct Hello2 Hello2;
-typedef struct Hello1 Hello1;
+/* typedef struct Hello2 Hello2; */
+/* typedef struct Hello1 Hello1; */
 
-typedef void(*hello_func)(struct Hello1*);
+/* typedef void(*hello_func)(struct Hello1*); */
 
-typedef struct Hello1 {
-  struct Hello2 *hello2;
-  char *str;
-} Hello1;
+/* typedef struct Hello1 { */
+/*   struct Hello2 *hello2; */
+/*   char *str; */
+/* } Hello1; */
 
-typedef struct Hello {
-  hello_func handler;
-  int two;
-} Hello;
+/* typedef struct Hello { */
+/*   hello_func handler; */
+/*   int two; */
+/* } Hello; */
 
-typedef struct Hello2 {
-  Hello *hello;
-  double d;
-} Hello2;
+/* typedef struct Hello2 { */
+/*   Hello *hello; */
+/*   double d; */
+/* } Hello2; */
 
 
-typedef struct Simple {
-  struct Simple *hello;
-  double d;
-} Simple;
+/* typedef struct Recursive { */
+/*   struct Recursive *hello; */
+/*   double d; */
+/* } Recursive; */
+
+
+typedef enum CURLMSG {
+  OK=1, NOK=2
+} CURLMSG;
+
+typedef int CURLcode;
+
+struct CURLMsg {
+  CURLMSG msg;       /* what this message means */
+  void *easy_handle; /* the handle it concerns */
+  union {
+    void *whatever;    /* message-specific data */
+    CURLcode result;   /* return code for transfer */
+  } union_data;
+
+  struct {
+    void *test;    /* message-specific data */
+    CURLMSG msg_code;   /* return code for transfer */
+  } struct_data;
+};
+typedef struct CURLMsg CURLMsg;

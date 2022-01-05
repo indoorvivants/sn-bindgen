@@ -121,7 +121,7 @@ Main goals of the project are:
 ### usage
 
 ```
-Usage: bindgen --package <string> --header <string> [--link-name <string>] [--indentation-size <integer>] [--scala] [--c] [--c-import <string>]... [--clang <string>]...
+Usage: bindgen --package <string> --header <string> [--link-name <string>] [--indentation-size <integer>] [--scala] [--c] [--c-import <string>]... [--clang <string>]... [--quiet] [--trace | --info | --warning | --error]
 
 Generate Scala 3 native bindings from C header files
 
@@ -145,12 +145,22 @@ Options and flags:
     --c-import <string>
         List of C imports to add to generated C file (at the very least you will need the header file for the library itself)
     --clang <string>
-        List of flags to pass directly to clang
+        List of flags to pass directly to Clang
+    --quiet
+        Don't output the binding to STDOUT (if you are debugging, for example)
+    --trace
+        Output 'trace' log messages or above
+    --info
+        Output 'info' log messages or above
+    --warning
+        Output 'warning' log messages or above (this is the default)
+    --error
+        Output 'error' log messages or above
 ```
 
 Some bindings have both Scala and C code that you will need, so make sure you run the command with both `--scala` and `--c`.
 
-If you want to see examples of those commands, run `sbt examples/regenerate`.
+If you want to see examples of those commands, run `sbt 'examples/bindings gen'`.
 
 You can see the rest of examples in the `examples` folder, with both bindings and usage
 

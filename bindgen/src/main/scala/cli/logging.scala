@@ -1,15 +1,15 @@
 package bindgen
 
-def trace(msg: Any)(using Config) =
+inline def trace(inline msg: Any)(using Config) =
   log(LogLevel.trace, msg)
 
-def info(msg: Any)(using Config) =
+inline def info(inline msg: Any)(using Config) =
   log(LogLevel.info, msg)
 
-def warning(msg: Any)(using Config) =
+inline def warning(inline msg: Any)(using Config) =
   log(LogLevel.warning, msg)
 
-def error(msg: Any)(using Config) =
+inline def error(msg: Any)(using Config) =
   log(LogLevel.error, msg)
 
 private def log(level: LogLevel, msg: Any)(using Config) =

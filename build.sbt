@@ -150,6 +150,15 @@ lazy val examples = project
           clangInclude
         ),
         define(
+          "curl.h",
+          "libcurl",
+          "curl",
+          List("curl.h"),
+          clangInclude ++ List(
+            "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/curl"
+          )
+        ),
+        define(
           "nuklear.h",
           "libnuklear",
           "nuklear",

@@ -156,6 +156,8 @@ object defs:
     def clang_getDiagnosticSeverity(unit: CXDiagnostic): CXDiagnosticSeverity =
       extern
 
+    def clang_isFunctionTypeVariadic(typ: CXType): CUnsignedInt = extern
+
     private[libclang] def wrap_getNullCursor(ptr: CXCursor): Unit = extern
 
     private[libclang] def wrap_getCursorSpelling(

@@ -23,7 +23,11 @@ def constructType(typ: CXType)(using
 
   typekind match
     case CXType_Record =>
-      val name = clang_getCursorSpelling(clang_getTypeDeclaration(typ))
+      val decl = clang_getTypeDeclaration(typ)
+      // errln(clang_getCursorKindSpelling(decl.kind).string)
+      // errln(clang_Cursor_isAnonymous(decl))
+      // errln(clang_Cursor_isAnonymousRecordDecl(decl))
+      val name = clang_getCursorSpelling(decl)
 
       CType.RecordRef(name.string)
     case CXType_Elaborated =>

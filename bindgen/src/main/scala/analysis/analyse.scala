@@ -25,6 +25,7 @@ def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
     case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
 
 def analyse(file: String)(using Zone, Config): Def.Binding =
+  info(s"Using following clang flags: ${summon[Config].clangFlags}")
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
   val l = List.newBuilder[String]
