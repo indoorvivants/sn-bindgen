@@ -13,7 +13,9 @@ jobs:
     name: Compile
     strategy:
       fail-fast: false
-    runs-on: ubuntu-latest
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v3      
@@ -21,12 +23,18 @@ jobs:
         with:
           java-version: adopt@1.8
 
-      - name: Setup Scala Native environment
+      - name: Setup Scala Native environment (ubuntu)
         run: |
             sudo apt-get update
             sudo apt install clang llvm llvm-dev libclang-dev
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+      
+      - name: Setup Scala Native environment (mac os)
+        run: |
+            brew install llvm
+        if: ${{ matrix.os == 'macos-latest' }}
 
       - name: Tests
         env: JAVA_OPTS="-Xmx2G"
-        run: sbt compile examples/regenerate examples/compile
+        run: sbt 'examples/bindings gen' examples/compile
 

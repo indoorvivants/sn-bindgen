@@ -5113,10 +5113,10 @@ private[libnuklear] object extern_functions:
   private[libnuklear] def __sn_wrap_nk_hsv_f(h: Float, s: Float, v: Float, __return: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_hsv_fv")
-  private[libnuklear] def __sn_wrap_nk_hsv_fv(c: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+  private[libnuklear] def __sn_wrap_nk_hsv_fv(hsv: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_hsv_iv")
-  private[libnuklear] def __sn_wrap_nk_hsv_iv(hsv: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+  private[libnuklear] def __sn_wrap_nk_hsv_iv(c: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_hsva")
   private[libnuklear] def __sn_wrap_nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt, __return: Ptr[nk_color]): Unit = extern
@@ -5134,7 +5134,7 @@ private[libnuklear] object extern_functions:
   private[libnuklear] def __sn_wrap_nk_hsva_f(h: Float, s: Float, v: Float, a: Float, __return: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_hsva_fv")
-  private[libnuklear] def __sn_wrap_nk_hsva_fv(c: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
+  private[libnuklear] def __sn_wrap_nk_hsva_fv(hsva: Ptr[Float], __return: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_hsva_iv")
   private[libnuklear] def __sn_wrap_nk_hsva_iv(c: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
@@ -5305,7 +5305,7 @@ private[libnuklear] object extern_functions:
   private[libnuklear] def __sn_wrap_nk_rectiv(r: Ptr[CInt], __return: Ptr[nk_rect]): Unit = extern
 
   @name("__sn_wrap_nk_rectv")
-  private[libnuklear] def __sn_wrap_nk_rectv(xywh: Ptr[Float], __return: Ptr[nk_rect]): Unit = extern
+  private[libnuklear] def __sn_wrap_nk_rectv(r: Ptr[Float], __return: Ptr[nk_rect]): Unit = extern
 
   @name("__sn_wrap_nk_rgb")
   private[libnuklear] def __sn_wrap_nk_rgb(r: CInt, g: CInt, b: CInt, __return: Ptr[nk_color]): Unit = extern
@@ -5326,7 +5326,7 @@ private[libnuklear] object extern_functions:
   private[libnuklear] def __sn_wrap_nk_rgb_hex(rgb: CString, __return: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_rgb_iv")
-  private[libnuklear] def __sn_wrap_nk_rgb_iv(rgb: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
+  private[libnuklear] def __sn_wrap_nk_rgb_iv(c: Ptr[CInt], __return: Ptr[nk_color]): Unit = extern
 
   @name("__sn_wrap_nk_rgba")
   private[libnuklear] def __sn_wrap_nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt, __return: Ptr[nk_color]): Unit = extern
@@ -5713,9 +5713,9 @@ private[libnuklear] object extern_functions:
 
   def nk_find_window(ctx: Ptr[nk_context], hash: nk_hash, name: CString): Ptr[nk_window] = extern
 
-  def nk_finish(ctx: Ptr[nk_context], w: Ptr[nk_window]): Unit = extern
+  def nk_finish(ctx: Ptr[nk_context], win: Ptr[nk_window]): Unit = extern
 
-  def nk_finish_buffer(ctx: Ptr[nk_context], buffer: Ptr[nk_command_buffer]): Unit = extern
+  def nk_finish_buffer(ctx: Ptr[nk_context], b: Ptr[nk_command_buffer]): Unit = extern
 
   def nk_finish_popup(ctx: Ptr[nk_context], win: Ptr[nk_window]): Unit = extern
 
@@ -5879,7 +5879,7 @@ private[libnuklear] object extern_functions:
 
   def nk_murmur_hash(key: Ptr[Byte], len: CInt, seed: nk_hash): nk_hash = extern
 
-  def nk_nine_slice_is_sub9slice(slice: Ptr[nk_nine_slice]): CInt = extern
+  def nk_nine_slice_is_sub9slice(img: Ptr[nk_nine_slice]): CInt = extern
 
   def nk_option_label(ctx: Ptr[nk_context], label: CString, active: nk_bool): nk_bool = extern
 
@@ -5995,7 +5995,7 @@ private[libnuklear] object extern_functions:
 
   def nk_start(ctx: Ptr[nk_context], win: Ptr[nk_window]): Unit = extern
 
-  def nk_start_buffer(ctx: Ptr[nk_context], b: Ptr[nk_command_buffer]): Unit = extern
+  def nk_start_buffer(ctx: Ptr[nk_context], buffer: Ptr[nk_command_buffer]): Unit = extern
 
   def nk_start_popup(ctx: Ptr[nk_context], win: Ptr[nk_window]): Unit = extern
 
@@ -6945,9 +6945,9 @@ object functions:
     __sn_wrap_nk_hsv_fv(hsv, _ptr_return)
     !_ptr_return
 
-  def nk_hsv_iv(hsv: Ptr[CInt])(using Zone): nk_color = 
+  def nk_hsv_iv(c: Ptr[CInt])(using Zone): nk_color = 
     val _ptr_return = alloc[nk_color](1)
-    __sn_wrap_nk_hsv_iv(hsv, _ptr_return)
+    __sn_wrap_nk_hsv_iv(c, _ptr_return)
     !_ptr_return
 
   def nk_hsva(h: CInt, s: CInt, v: CInt, a: CInt)(using Zone): nk_color = 
@@ -6980,9 +6980,9 @@ object functions:
     __sn_wrap_nk_hsva_fv(c, _ptr_return)
     !_ptr_return
 
-  def nk_hsva_iv(hsva: Ptr[CInt])(using Zone): nk_color = 
+  def nk_hsva_iv(c: Ptr[CInt])(using Zone): nk_color = 
     val _ptr_return = alloc[nk_color](1)
-    __sn_wrap_nk_hsva_iv(hsva, _ptr_return)
+    __sn_wrap_nk_hsva_iv(c, _ptr_return)
     !_ptr_return
 
   def nk_image(ctx: Ptr[nk_context], img: nk_image)(using Zone): Unit = 
@@ -7300,9 +7300,9 @@ object functions:
     __sn_wrap_nk_rectiv(r, _ptr_return)
     !_ptr_return
 
-  def nk_rectv(xywh: Ptr[Float])(using Zone): nk_rect = 
+  def nk_rectv(r: Ptr[Float])(using Zone): nk_rect = 
     val _ptr_return = alloc[nk_rect](1)
-    __sn_wrap_nk_rectv(xywh, _ptr_return)
+    __sn_wrap_nk_rectv(r, _ptr_return)
     !_ptr_return
 
   def nk_rgb(r: CInt, g: CInt, b: CInt)(using Zone): nk_color = 
@@ -7337,9 +7337,9 @@ object functions:
     __sn_wrap_nk_rgb_hex(rgb, _ptr_return)
     !_ptr_return
 
-  def nk_rgb_iv(c: Ptr[CInt])(using Zone): nk_color = 
+  def nk_rgb_iv(rgb: Ptr[CInt])(using Zone): nk_color = 
     val _ptr_return = alloc[nk_color](1)
-    __sn_wrap_nk_rgb_iv(c, _ptr_return)
+    __sn_wrap_nk_rgb_iv(rgb, _ptr_return)
     !_ptr_return
 
   def nk_rgba(r: CInt, g: CInt, b: CInt, a: CInt)(using Zone): nk_color = 

@@ -41,9 +41,14 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     flags.CXTranslationUnit_None
   )
 
-  var errors = 0
+  trace("Successfully created a translation unit")
 
-  (0 until clang_getNumDiagnostics(unit).toInt).foreach { diagId =>
+  var errors = 0
+  val numDiagnostics = clang_getNumDiagnostics(unit).toInt
+
+  trace(s"Clang reported $numDiagnostics diagnostics")
+
+  (0 until numDiagnostics).foreach { diagId =>
     val diag = clang_getDiagnostic(unit, diagId.toUInt)
 
     import CXDiagnosticDisplayOptions as flags
@@ -66,7 +71,7 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
       s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
     )
 
-  val bindingMem = stackalloc[Def.Binding](1)
+  val bindingMem = alloc[Def.Binding](1)
   !bindingMem = Def.Binding(
     enums = mutable.Set.empty,
     structs = mutable.Set.empty,
@@ -75,12 +80,37 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     aliases = mutable.Set.empty
   )
 
+  trace(s"Allocated bindings: ${!bindingMem}")
+
+  val translationUnitCursor = clang_getTranslationUnitCursor(unit)
+
+  trace(s"Translation unit cursor: ${translationUnitCursor}")
+  trace(s"Translation unit cursor kind: ${translationUnitCursor.kind}")
+  val nullCursor = clang_getNullCursor()
+
+  trace(s"Null cursor: $nullCursor")
+  trace(s"Null cursor kind : ${nullCursor.kind}")
+
+  trace(s"Binding pointer: $bindingMem")
+
   clang_visitChildren(
-    clang_getTranslationUnitCursor(unit),
-    CXCursorVisitor {
+    translationUnitCursor,
+    CXCursorVisitor.apply {
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
         zone {
+          errln(
+            s"Top-level: visiting (cursor ptr) $cursor, $parent, $data"
+          )
+          // errln(
+          //   s"Top-level: visiting (cursor kind)${cursor.kind}"
+          // )
+          // errln(
+          //   s"Top-level: visiting ${clang_getCursorSpelling(cursor).string}"
+          // )
+          // errln(s"Current binding state, $data")
           val binding = !(data.unwrap[Def.Binding])
+          // errln(s"$binding")
+
           val loc = clang_getCursorLocation(cursor)
           val isFromMainFile =
             true // clang_Location_isFromMainFile(loc) == 1.toUInt

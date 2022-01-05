@@ -1,3 +1,5 @@
+import sbt.io.Using
+import scala.sys.process.ProcessLogger
 import scala.scalanative.build.LTO
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -14,7 +16,7 @@ lazy val bindgen = project
       .withOptimize(false)
       .withLTO(LTO.none)
       /* .withDump(true) */
-      .withLinkingOptions(Seq("-lclang") ++ llvmLib)
+      .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
       .withCompileOptions(llvmInclude)
   })
   .settings(
@@ -37,7 +39,8 @@ def osName = System.getProperty("os.name") match {
 def llvmInclude = {
   osName match {
     case "linux" => List("/usr/lib/llvm-10/include/")
-    case "mac"   => List("/opt/homebrew/opt/llvm/include")
+    case "mac" =>
+      List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
   }
 }.map(s => s"-I$s")
 
@@ -52,7 +55,11 @@ def clangInclude = {
 def llvmLib = {
   osName match {
     case "linux" => List.empty
-    case "mac"   => List("/opt/homebrew/opt/llvm/lib")
+    case "mac" =>
+      if (System.getProperty("os.arch").contains("x86"))
+        List("/usr/local/opt/llvm/lib")
+      else
+        List("/opt/homebrew/opt/llvm/lib")
 
   }
 }.map(lib => s"-L$lib")
@@ -103,7 +110,7 @@ lazy val examples = project
             sb.append(s"--clang $clangFlag ")
           }
 
-          sb.append(" --info ")
+          sb.append(" --trace ")
 
           sb.result
         }
@@ -191,13 +198,21 @@ lazy val examples = project
 
             println(s"Executing $cmd")
 
-            val result =
-              (Process(cmd) #> file(destination.toString)) !
-
-            if (result == 0)
-              println(
-                s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
+            Using.fileWriter()(destination) { wr =>
+              val logger = ProcessLogger.apply(
+                (o: String) => wr.write(o + "\n"),
+                (e: String) => println(e)
               )
+
+              val result = Process(cmd).run(logger).exitValue()
+
+              if (result == 0)
+                println(
+                  s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
+                )
+              else
+                throw new Exception(s"Process failed with code $result")
+            }
           } else if (cmd.trim.toLowerCase == "clean") {
             val toDelete =
               if (lang == "scala") binding.scalaFile else binding.cFile
