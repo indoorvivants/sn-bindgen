@@ -35,6 +35,6 @@ jobs:
         if: ${{ matrix.os == 'macos-latest' }}
 
       - name: Tests
-        env: JAVA_OPTS="-Xmx2G"
-        run: sbt 'examples/bindings gen' examples/compile
-
+        env: 
+          JAVA_OPTS: "-Xmx2G"
+        run: sbt bindgen/nativeLink 'examples/bindings gen' examples/compile
