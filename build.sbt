@@ -137,26 +137,29 @@ lazy val examples = project
       val binary = (bindgen / Compile / nativeLink).value
       val headerFilesBase = baseDirectory.value / "libraries"
       val destinationScalaBase =
-        baseDirectory.value / "src" / "main" / "scala" / "bindings"
+        (Compile / managedSourceDirectories).value.head / "bindings"
       val destinationCBase =
-        baseDirectory.value / "src" / "main" / "resources" / "scala-native"
+        (Compile / managedResourceDirectories).value.head / "scala-native"
 
       def define(
           headerFile: String,
           packageName: String,
           linkName: String,
           cImports: List[String],
-          clangFlags: List[String] = Nil
+          clangFlags: List[String] = Nil,
+          platformTest: String => Boolean = _ => true
       ) =
-        Binding(
-          headerFile = headerFilesBase / headerFile,
-          packageName = packageName,
-          linkName = linkName,
-          cFile = destinationCBase / s"$packageName.c",
-          scalaFile = destinationScalaBase / s"$packageName.scala",
-          cImports = cImports,
-          clangFlags = clangFlags
-        )
+        Option(
+          Binding(
+            headerFile = headerFilesBase / headerFile,
+            packageName = packageName,
+            linkName = linkName,
+            cFile = destinationCBase / s"$packageName.c",
+            scalaFile = destinationScalaBase / s"$packageName.scala",
+            cImports = cImports,
+            clangFlags = clangFlags
+          )
+        ).filter(_ => platformTest(osName))
 
       val mapping = List(
         define("cJSON.h", "libcjson", "cjson", List("cJSON.h")),
@@ -173,7 +176,8 @@ lazy val examples = project
           "libraylib",
           "raylib",
           List("raylib.h"),
-          llvmInclude(10 to 13) ++ clangInclude(10 to 13)
+          llvmInclude(10 to 13) ++ clangInclude(10 to 13),
+          platformTest = _ != "mac"
         ),
         define(
           "curl.h",
@@ -181,7 +185,8 @@ lazy val examples = project
           "curl",
           List("curl.h"),
           clangInclude(10 to 13) ++
-            includes(ifMac = List("/opt/homebrew/opt/curl/include"))
+            includes(ifMac = List("/opt/homebrew/opt/curl/include")),
+          platformTest = _ != "linux"
         ),
         define(
           "nuklear.h",
@@ -191,7 +196,7 @@ lazy val examples = project
           List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1")
         )
         /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
-      )
+      ).flatten
 
       val argsWithoutRemoved = args.filterNot(_.startsWith("-"))
 
