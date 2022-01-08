@@ -1,6 +1,6 @@
 #include "clang-c/Index.h"
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
 void wrap_getNullCursor(CXCursor *curs) {
   CXCursor c = clang_getNullCursor();
@@ -12,21 +12,17 @@ void wrap_getTranslationUnitCursor(CXCursor *curs, CXTranslationUnit unit) {
   memcpy(curs, &c, sizeof(CXCursor));
 }
 
-unsigned wrap_hashCursor(CXCursor *curs) {
-  return clang_hashCursor(*curs);
-}
+unsigned wrap_hashCursor(CXCursor *curs) { return clang_hashCursor(*curs); }
 
-const char* wrap_getCString(CXString *cxs) {
-  return clang_getCString(*cxs);
-}
+const char *wrap_getCString(CXString *cxs) { return clang_getCString(*cxs); }
 
-void wrap_disposeString(CXString *cxs) {
-  return clang_disposeString(*cxs);
-}
+void wrap_disposeString(CXString *cxs) { return clang_disposeString(*cxs); }
 
-
-unsigned wrap_visitChildren(CXCursor *curs, CXCursorVisitor vis, CXClientData cdata) {
+unsigned wrap_visitChildren(CXCursor *curs, CXCursorVisitor vis,
+                            CXClientData cdata) {
+  fprintf(stderr, " Hello with %ld, %ld, %ld\n", curs, vis, cdata);
   return clang_visitChildren(*curs, vis, cdata);
+  return 1;
 }
 
 void wrap_getCursorSpelling(CXCursor *curs, CXString *cxstr) {
@@ -63,13 +59,9 @@ long long wrap_getEnumConstantDeclValue(CXCursor *curs) {
   return clang_getEnumConstantDeclValue(*curs);
 }
 
-int wrap_getNumArgTypes(CXType *curs) {
-  return clang_getNumArgTypes(*curs);
-}
+int wrap_getNumArgTypes(CXType *curs) { return clang_getNumArgTypes(*curs); }
 
-int wrap_getArraySize(CXType *curs) {
-  return clang_getArraySize(*curs);
-}
+int wrap_getArraySize(CXType *curs) { return clang_getArraySize(*curs); }
 
 void wrap_getResultType(CXType *functionType, CXType *resultType) {
   CXType cs = clang_getResultType(*functionType);
@@ -90,7 +82,6 @@ void wrap_getArgType(CXType *functionType, CXType *argType, int idx) {
   CXType cs = clang_getArgType(*functionType, idx);
   memcpy(argType, &cs, sizeof(CXType));
 }
-
 
 void wrap_getTypeSpelling(CXType *cxtype, CXString *cxs) {
   CXString cs = clang_getTypeSpelling(*cxtype);

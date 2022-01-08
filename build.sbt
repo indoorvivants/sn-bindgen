@@ -38,7 +38,8 @@ def osName = System.getProperty("os.name") match {
 
 def llvmInclude = {
   osName match {
-    case "linux" => List("/usr/lib/llvm-10/include/")
+    case "linux" =>
+      List("/usr/lib/llvm-10/include/", "/usr/lib/llvm-11/include/")
     case "mac" =>
       List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
   }
@@ -46,7 +47,11 @@ def llvmInclude = {
 
 def clangInclude = {
   osName match {
-    case "linux" => List("/usr/lib/llvm-10/include/")
+    case "linux" =>
+      List(
+        "/usr/lib/llvm-10/include/",
+        "/usr/lib/llvm-11/include/"
+      )
     case "mac" =>
       List("/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
   }
