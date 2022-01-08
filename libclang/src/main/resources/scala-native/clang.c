@@ -24,7 +24,7 @@ void output(const char *prefix, CXString cxs) {
 }
 
 enum CXChildVisitResult visit(CXCursor c, CXCursor parent, CXClientData cd) {
-  fprintf(stderr, " C-defined visitor: %12X, %12X, %12X\n", &c, &parent, cd);
+  /* fprintf(stderr, " C-defined visitor: %12X, %12X, %12X\n", &c, &parent, cd); */
   return CXChildVisit_Recurse;
 }
 typedef enum CXChildVisitResult (*CXCursorVisitorPtr)(CXCursor *cursor,
@@ -39,7 +39,7 @@ typedef struct CDataWrapper {
 // TODO: somehow this name sounds creepy
 enum CXChildVisitResult special_visitor(CXCursor c, CXCursor parent, CXClientData cd) {
   struct CDataWrapper *unpacked = (CDataWrapper*) cd;
-  fprintf(stderr, "In special visitor: %12X, parent: %12X, data: %12X\n", &c, &parent, cd);
+  /* fprintf(stderr, "In special visitor: %12X, parent: %12X, data: %12X\n", &c, &parent, cd); */
   return (*unpacked).original_visitor(&c, &parent, (*unpacked).original_cdata);
 }
 
