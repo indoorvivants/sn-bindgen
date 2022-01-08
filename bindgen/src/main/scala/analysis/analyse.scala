@@ -80,36 +80,14 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     aliases = mutable.Set.empty
   )
 
-  trace(s"Allocated bindings: ${!bindingMem}")
-
   val translationUnitCursor = clang_getTranslationUnitCursor(unit)
-
-  trace(s"Translation unit cursor: ${translationUnitCursor}")
-  trace(s"Translation unit cursor kind: ${translationUnitCursor.kind}")
-  val nullCursor = clang_getNullCursor()
-
-  trace(s"Null cursor: $nullCursor")
-  trace(s"Null cursor kind : ${nullCursor.kind}")
-
-  trace(s"Binding pointer: $bindingMem")
 
   clang_visitChildren(
     translationUnitCursor,
     CXCursorVisitor.apply {
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
         zone {
-          errln(
-            s"Top-level: visiting (cursor ptr) $cursor, $parent, $data"
-          )
-          // errln(
-          //   s"Top-level: visiting (cursor kind)${cursor.kind}"
-          // )
-          // errln(
-          //   s"Top-level: visiting ${clang_getCursorSpelling(cursor).string}"
-          // )
-          // errln(s"Current binding state, $data")
           val binding = !(data.unwrap[Def.Binding])
-          // errln(s"$binding")
 
           val loc = clang_getCursorLocation(cursor)
           val isFromMainFile =
@@ -180,3 +158,11 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
 
   addBuiltin(!bindingMem)
 end analyse
+extension (seq: Seq[String])
+  private[bindgen] def toCArray(using Zone): Ptr[CString] =
+    val mem = alloc[CString](seq.size)
+    (0 until seq.size).foreach { i =>
+      mem(i) = toCString(seq(i))
+    }
+
+    mem

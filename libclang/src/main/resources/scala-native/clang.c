@@ -18,11 +18,39 @@ const char *wrap_getCString(CXString *cxs) { return clang_getCString(*cxs); }
 
 void wrap_disposeString(CXString *cxs) { return clang_disposeString(*cxs); }
 
-unsigned wrap_visitChildren(CXCursor *curs, CXCursorVisitor vis,
+void output(const char *prefix, CXString cxs) {
+  fprintf(stderr, "%s %s\n", prefix, clang_getCString(cxs));
+  clang_disposeString(cxs);
+}
+
+enum CXChildVisitResult visit(CXCursor c, CXCursor parent, CXClientData cd) {
+  fprintf(stderr, " C-defined visitor: %12X, %12X, %12X\n", &c, &parent, cd);
+  return CXChildVisit_Recurse;
+}
+typedef enum CXChildVisitResult (*CXCursorVisitorPtr)(CXCursor *cursor,
+                                                   CXCursor *parent,
+                                                   CXClientData client_data);
+
+typedef struct CDataWrapper {
+  CXCursorVisitorPtr original_visitor;
+  CXClientData original_cdata;
+} CDataWrapper;
+
+// TODO: somehow this name sounds creepy
+enum CXChildVisitResult special_visitor(CXCursor c, CXCursor parent, CXClientData cd) {
+  struct CDataWrapper *unpacked = (CDataWrapper*) cd;
+  fprintf(stderr, "In special visitor: %12X, parent: %12X, data: %12X\n", &c, &parent, cd);
+  return (*unpacked).original_visitor(&c, &parent, (*unpacked).original_cdata);
+}
+
+unsigned wrap_visitChildren(CXCursor *curs, CXCursorVisitorPtr scala_visitor,
                             CXClientData cdata) {
-  fprintf(stderr, " Hello with %ld, %ld, %ld\n", curs, vis, cdata);
-  return clang_visitChildren(*curs, vis, cdata);
-  return 1;
+
+  struct CDataWrapper wrapper;
+
+  wrapper.original_visitor = scala_visitor;
+  wrapper.original_cdata = cdata;
+  return clang_visitChildren(*curs, &special_visitor, &wrapper);
 }
 
 void wrap_getCursorSpelling(CXCursor *curs, CXString *cxstr) {

@@ -88,31 +88,31 @@
  * *idx); */
 
 
-/* typedef struct Hello2 Hello2; */
-/* typedef struct Hello1 Hello1; */
+typedef struct Hello2 Hello2;
+typedef struct Hello1 Hello1;
 
-/* typedef void(*hello_func)(struct Hello1*); */
+typedef void(*hello_func)(struct Hello1*);
 
-/* typedef struct Hello1 { */
-/*   struct Hello2 *hello2; */
-/*   char *str; */
-/* } Hello1; */
+typedef struct Hello1 {
+  struct Hello2 *hello2;
+  char *str;
+} Hello1;
 
-/* typedef struct Hello { */
-/*   hello_func handler; */
-/*   int two; */
-/* } Hello; */
+typedef struct Hello {
+  hello_func handler;
+  int two;
+} Hello;
 
-/* typedef struct Hello2 { */
-/*   Hello *hello; */
-/*   double d; */
-/* } Hello2; */
+typedef struct Hello2 {
+  Hello *hello;
+  double d;
+} Hello2;
 
 
-/* typedef struct Recursive { */
-/*   struct Recursive *hello; */
-/*   double d; */
-/* } Recursive; */
+typedef struct Recursive {
+  struct Recursive *hello;
+  double d;
+} Recursive;
 
 
 typedef enum CURLMSG {
