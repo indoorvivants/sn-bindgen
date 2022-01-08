@@ -17,7 +17,7 @@ lazy val bindgen = project
       .withLTO(LTO.none)
       /* .withDump(true) */
       .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
-      .withCompileOptions(llvmInclude)
+      .withCompileOptions(llvmInclude(10 to 13))
   })
   .settings(
     libraryDependencies += ("com.monovore" %%% "decline" % "2.2.0" cross CrossVersion.for3Use2_13)
@@ -36,22 +36,19 @@ def osName = System.getProperty("os.name") match {
   case _                            => throw new Exception("Unknown platform!")
 }
 
-def llvmInclude = {
+def llvmInclude(versions: Seq[Int]): List[String] = {
   osName match {
     case "linux" =>
-      List("/usr/lib/llvm-10/include/", "/usr/lib/llvm-11/include/")
+      versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/"))
     case "mac" =>
       List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
   }
 }.map(s => s"-I$s")
 
-def clangInclude = {
+def clangInclude(versions: Seq[Int]): List[String] = {
   osName match {
     case "linux" =>
-      List(
-        "/usr/lib/llvm-10/include/",
-        "/usr/lib/llvm-11/include/"
-      )
+      versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/"))
     case "mac" =>
       List("/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
   }
@@ -83,7 +80,7 @@ lazy val examples = project
               "-lraylib"
             ) ++ llvmLib
           )
-          .withCompileOptions(conf.compileOptions ++ llvmInclude)
+          .withCompileOptions(conf.compileOptions ++ llvmInclude(10 to 13))
       }
     }
   })
@@ -152,21 +149,21 @@ lazy val examples = project
           "libclang",
           "clang",
           List("clang-c/Index.h"),
-          llvmInclude
+          llvmInclude(10 to 13)
         ),
         define(
           "raylib.h",
           "libraylib",
           "raylib",
           List("raylib.h"),
-          clangInclude
+          clangInclude(10 to 13)
         ),
         define(
           "curl.h",
           "libcurl",
           "curl",
           List("curl.h"),
-          clangInclude ++ List(
+          clangInclude(10 to 13) ++ List(
             "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/curl"
           )
         ),
