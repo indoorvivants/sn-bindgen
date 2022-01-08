@@ -36,35 +36,52 @@ def osName = System.getProperty("os.name") match {
   case _                            => throw new Exception("Unknown platform!")
 }
 
+def includes(
+    ifLinux: List[String] = Nil,
+    ifMac: List[String] = Nil,
+    ifWindows: List[String] = Nil
+): List[String] = {
+  osName match {
+    case "linux" => ifLinux
+    case "mac"   => ifMac
+    case "win"   => ifWindows
+  }
+}.map(s => s"-I$s")
+
+def linking(
+    ifLinux: List[String] = Nil,
+    ifMac: List[String] = Nil,
+    ifWindows: List[String] = Nil
+): List[String] = {
+  osName match {
+    case "linux" => ifLinux
+    case "mac"   => ifMac
+    case "win"   => ifWindows
+  }
+}.map(s => s"-L$s")
+
 def llvmInclude(versions: Seq[Int]): List[String] = {
-  osName match {
-    case "linux" =>
-      versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/"))
-    case "mac" =>
+  includes(
+    ifLinux = versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
+    ifMac =
       List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
-  }
-}.map(s => s"-I$s")
+  )
+}
 
-def clangInclude(versions: Seq[Int]): List[String] = {
-  osName match {
-    case "linux" =>
-      versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/"))
-    case "mac" =>
-      List("/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
-  }
-}.map(s => s"-I$s")
+def clangInclude(versions: Seq[Int]): List[String] =
+  includes(
+    ifLinux = versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
+    ifMac =
+      List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
+  )
 
-def llvmLib = {
-  osName match {
-    case "linux" => List.empty
-    case "mac" =>
-      if (System.getProperty("os.arch").contains("x86"))
-        List("/usr/local/opt/llvm/lib")
-      else
-        List("/opt/homebrew/opt/llvm/lib")
-
-  }
-}.map(lib => s"-L$lib")
+def llvmLib =
+  linking(ifMac =
+    if (System.getProperty("os.arch").contains("x86"))
+      List("/usr/local/opt/llvm/lib")
+    else
+      List("/opt/homebrew/opt/llvm/lib")
+  )
 
 lazy val examples = project
   .in(file("examples"))
@@ -156,16 +173,15 @@ lazy val examples = project
           "libraylib",
           "raylib",
           List("raylib.h"),
-          clangInclude(10 to 13)
+          llvmInclude(10 to 13) ++ clangInclude(10 to 13)
         ),
         define(
           "curl.h",
           "libcurl",
           "curl",
           List("curl.h"),
-          clangInclude(10 to 13) ++ List(
-            "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/curl"
-          )
+          clangInclude(10 to 13) ++
+            includes(ifMac = List("/opt/homebrew/opt/curl/include"))
         ),
         define(
           "nuklear.h",
