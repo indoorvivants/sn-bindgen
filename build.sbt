@@ -112,7 +112,7 @@ lazy val examples = project
             sb.append(s"--clang $clangFlag ")
           }
 
-          sb.append(" --trace ")
+          sb.append(" --info ")
 
           sb.result
         }
