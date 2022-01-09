@@ -79,4 +79,5 @@ jobs:
 
       - name: Generate examples
         run: |
+          chmod +x $BINARY
           $BINARY --help
