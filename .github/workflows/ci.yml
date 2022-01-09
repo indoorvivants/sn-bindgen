@@ -8,6 +8,9 @@ on:
   release:
     types: [published]
 
+env: 
+  JAVA_OPTS: "-Xmx2G"
+
 jobs:
   build:
     name: Compile
@@ -35,6 +38,55 @@ jobs:
         if: ${{ matrix.os == 'macos-latest' }}
 
       - name: Tests
-        env: 
-          JAVA_OPTS: "-Xmx2G"
-        run: sbt bindgen/nativeLink 'examples/bindings gen' examples/compile
+        run: sbt bindgen/nativeLink 'examples/bindings gen'
+
+  native_binaries:
+    name: Build native binaries
+    needs: [build]
+    if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        include:
+          - os: macOS-latest
+            uploaded_filename: sn-bindgen-x86_64-apple-darwin
+            local_path: bindgen/target/scala-3.1.0/sn-bindgen-out
+          - os: ubuntu-latest
+            uploaded_filename: sn-bindgen-x86_64-pc-linux
+            local_path: bindgen/target/scala-3.1.0/sn-bindgen-out
+    steps:
+      - uses: actions/checkout@v2
+      - uses: olafurpg/setup-scala@v13
+      - run: git fetch --tags || true
+      - name: Setup Scala Native environment
+        run: |
+            sudo apt-get update
+            sudo apt install clang llvm llvm-dev libclang-dev
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+
+      - name: Setup Scala Native environment
+        run: brew install llvm
+        if: ${{ matrix.os == 'macos-latest' }}
+
+      - run: sbt bindgen/nativeLink
+
+      - run: echo $(pwd)
+        shell: bash
+
+      - uses: actions/upload-artifact@master
+        with:
+          path: ${{ matrix.local_path }}
+          name: ${{ matrix.uploaded_filename }}
+
+      - name: Upload release
+        uses: actions/upload-release-asset@v1.0.2
+        if: github.event_name == 'release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ matrix.local_path }}
+          asset_name: ${{ matrix.uploaded_filename }}
+          asset_content_type: application/zip

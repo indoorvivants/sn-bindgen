@@ -185,7 +185,7 @@ lazy val examples = project
           "curl",
           List("curl.h"),
           clangInclude(10 to 13) ++
-            includes(ifMac = List("/opt/homebrew/opt/curl/include")),
+            includes(ifMac = List("/opt/homebrew/opt/curl/include/curl")),
           platformTest = _ != "linux"
         ),
         define(
