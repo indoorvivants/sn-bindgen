@@ -54,10 +54,10 @@ jobs:
         include:
           - os: macos-latest
             uploaded_filename: sn-bindgen-x86_64-apple-darwin
-            local_path: bindgen/target/scala-3.1.0/sn-bindgen-out
+            # local_path: bindgen/target/scala-3.1.0/bindgen-out
           - os: ubuntu-latest
             uploaded_filename: sn-bindgen-x86_64-pc-linux
-            local_path: bindgen/target/scala-3.1.0/sn-bindgen-out
+            # local_path: bindgen/target/scala-3.1.0/bindgen-out
     steps:
       - uses: actions/checkout@v2
       - uses: olafurpg/setup-scala@v13
@@ -79,7 +79,7 @@ jobs:
 
       - uses: actions/upload-artifact@master
         with:
-          path: ${{ matrix.local_path }}
+          path: bindgen/target/scala-3.1.0/bindgen-out 
           name: ${{ matrix.uploaded_filename }}
 
       - name: Upload release
