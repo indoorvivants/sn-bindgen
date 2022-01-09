@@ -11,16 +11,6 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 // --------------MODULES-------------------------
 lazy val root = project.in(file(".")).aggregate(bindgen, libclang)
 
-def environmentConfiguration(conf: NativeConfig): NativeConfig = {
-  if (sys.env.contains("SN_RELEASE")) conf.withMode(Mode.releaseFast)
-  else conf
-}
-
-def usesLibClang(conf: NativeConfig) =
-  conf
-    .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
-    .withCompileOptions(llvmInclude(10 to 13))
-
 lazy val bindgen = project
   .in(file("bindgen"))
   .dependsOn(libclang)
@@ -91,14 +81,77 @@ lazy val bindgen = project
   )
   .settings(Test / nativeConfig ~= usesLibClang)
 
-lazy val watchedHeaders =
-  taskKey[Seq[String]]("Header files watched by bindgen's tests")
-
 lazy val libclang = project
   .in(file("libclang"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= usesLibClang)
+
+lazy val examples = project
+  .in(file("examples"))
+  .enablePlugins(ScalaNativePlugin)
+  .settings(nativeCommon)
+  .settings(nativeConfig ~= usesLibClang)
+  .settings(
+    Compile / sourceGenerators += Def.taskIf {
+      if (sys.env.contains("BINARY")) {
+        generateExampleBindings(
+          (Compile / sourceManaged).value,
+          baseDirectory.value,
+          new File(sys.env("BINARY")),
+          BindingLang.Scala
+        )
+      } else
+        generateExampleBindings(
+          (Compile / sourceManaged).value,
+          baseDirectory.value,
+          (bindgen / Compile / nativeLink).value,
+          BindingLang.Scala
+        )
+    },
+    Compile / resourceGenerators += Def.taskIf {
+      if (sys.env.contains("BINARY")) {
+        generateExampleBindings(
+          (Compile / resourceManaged).value / "scala-native",
+          baseDirectory.value,
+          new File(sys.env("BINARY")),
+          BindingLang.C
+        )
+      } else
+        generateExampleBindings(
+          (Compile / resourceManaged).value / "scala-native",
+          baseDirectory.value,
+          (bindgen / Compile / nativeLink).value,
+          BindingLang.C
+        )
+    }
+  )
+
+// --------------HELPERS-------------------------
+
+def generateExampleBindings(
+    destination: File,
+    base: File,
+    binary: File,
+    lang: BindingLang
+): Seq[File] = {
+
+  val builder = new BindingBuilder(binary)
+
+  sampleBindings(base / "libraries", builder)
+
+  builder.generate(destination, lang)
+}
+
+def environmentConfiguration(conf: NativeConfig): NativeConfig = {
+  if (sys.env.contains("SN_RELEASE")) conf.withMode(Mode.releaseFast)
+  else conf
+}
+
+def usesLibClang(conf: NativeConfig) =
+  conf
+    .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
+    .withCompileOptions(llvmInclude(10 to 13))
 
 def osName = System.getProperty("os.name") match {
   case n if n.startsWith("Linux")   => "linux"
@@ -154,44 +207,6 @@ def llvmLib =
       List("/opt/homebrew/opt/llvm/lib")
   )
 
-lazy val examples = project
-  .in(file("examples"))
-  .enablePlugins(ScalaNativePlugin)
-  .settings(nativeCommon)
-  .settings(nativeConfig ~= usesLibClang)
-  .settings(
-    Compile / sourceGenerators += Def.task {
-      val scalaFiles = (Compile / sourceManaged).value
-      val binary = new File(
-        sys.env.getOrElse(
-          "BINARY",
-          throw new Exception("BINARY environment variable is not set")
-        )
-      )
-
-      val builder = new BindingBuilder(binary)
-
-      sampleBindings(baseDirectory.value / "libraries", builder)
-
-      builder.generate(scalaFiles, BindingLang.Scala)
-    },
-    Compile / resourceGenerators += Def.task {
-      val cFiles = (Compile / resourceManaged).value / "scala-native"
-      val binary = new File(
-        sys.env.getOrElse(
-          "BINARY",
-          throw new Exception("BINARY environment variable is not set")
-        )
-      )
-
-      val builder = new BindingBuilder(binary)
-
-      sampleBindings(baseDirectory.value / "libraries", builder)
-
-      builder.generate(cFiles, BindingLang.C)
-    }
-  )
-
 def sampleBindings(location: File, builder: BindingBuilder) = {
   import builder.define
   define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
@@ -240,10 +255,11 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
   /* ) */
 }
 
-val bindings = inputKey[Unit]("Regenerate known bindings")
 // --------------SETTINGS-------------------------
 lazy val nativeCommon = Seq(
   resolvers += Resolver.sonatypeRepo("snapshots"),
   scalaVersion := "3.1.0"
-  /* libraryDependencies += ("org.scalameta" %%% "munit" % "1.0.0-M1" cross CrossVersion.for3Use2_13) % Test */
 )
+
+lazy val watchedHeaders =
+  taskKey[Seq[String]]("Header files watched by bindgen's tests")

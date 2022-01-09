@@ -11,8 +11,6 @@ on:
 env: 
   JAVA_OPTS: "-Xmx2G"
   SN_RELEASE: fast
-  MAC_BINARY: sn-bindgen-x86_64-apple-darwin
-  LINUX_BINARY: sn-bindgen-x86_64-pc-linux
 
 jobs:
   build:
