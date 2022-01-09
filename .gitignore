@@ -4,6 +4,9 @@
 .bloop
 .bsp
 .sbt
+*.gch
+.cache
+*.out
 
 **/target/**
 project/project

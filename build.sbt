@@ -1,8 +1,17 @@
+import scala.scalanative.build.Mode
+import scala.scalanative.build.NativeConfig
+import sbt.io.Using
+import scala.sys.process.ProcessLogger
 import scala.scalanative.build.LTO
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 // --------------MODULES-------------------------
 lazy val root = project.in(file(".")).aggregate(bindgen, libclang, examples)
+
+def environmentConfiguration(conf: NativeConfig): NativeConfig = {
+  if (sys.env.contains("SN_RELEASE")) conf.withMode(Mode.releaseFast)
+  else conf
+}
 
 lazy val bindgen = project
   .in(file("bindgen"))
@@ -10,12 +19,9 @@ lazy val bindgen = project
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= { conf =>
-    conf
-      .withOptimize(false)
-      .withLTO(LTO.none)
-      /* .withDump(true) */
-      .withLinkingOptions(Seq("-lclang") ++ llvmLib)
-      .withCompileOptions(llvmInclude)
+    environmentConfiguration(conf)
+      .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
+      .withCompileOptions(llvmInclude(10 to 13))
   })
   .settings(
     libraryDependencies += ("com.monovore" %%% "decline" % "2.2.0" cross CrossVersion.for3Use2_13)
@@ -34,28 +40,52 @@ def osName = System.getProperty("os.name") match {
   case _                            => throw new Exception("Unknown platform!")
 }
 
-def llvmInclude = {
+def includes(
+    ifLinux: List[String] = Nil,
+    ifMac: List[String] = Nil,
+    ifWindows: List[String] = Nil
+): List[String] = {
   osName match {
-    case "linux" => List("/usr/lib/llvm-10/include/")
-    case "mac"   => List("/opt/homebrew/opt/llvm/include")
+    case "linux" => ifLinux
+    case "mac"   => ifMac
+    case "win"   => ifWindows
   }
 }.map(s => s"-I$s")
 
-def clangInclude = {
+def linking(
+    ifLinux: List[String] = Nil,
+    ifMac: List[String] = Nil,
+    ifWindows: List[String] = Nil
+): List[String] = {
   osName match {
-    case "linux" => List("/usr/lib/llvm-10/include/")
-    case "mac" =>
-      List("/opt/homebrew/Cellar/llvm/13.0.0_2/lib/clang/13.0.0/include")
+    case "linux" => ifLinux
+    case "mac"   => ifMac
+    case "win"   => ifWindows
   }
-}.map(s => s"-I$s")
+}.map(s => s"-L$s")
 
-def llvmLib = {
-  osName match {
-    case "linux" => List.empty
-    case "mac"   => List("/opt/homebrew/opt/llvm/lib")
+def llvmInclude(versions: Seq[Int]): List[String] = {
+  includes(
+    ifLinux = versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
+    ifMac =
+      List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
+  )
+}
 
-  }
-}.map(lib => s"-L$lib")
+def clangInclude(versions: Seq[Int]): List[String] =
+  includes(
+    ifLinux = versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
+    ifMac =
+      List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
+  )
+
+def llvmLib =
+  linking(ifMac =
+    if (System.getProperty("os.arch").contains("x86"))
+      List("/usr/local/opt/llvm/lib")
+    else
+      List("/opt/homebrew/opt/llvm/lib")
+  )
 
 lazy val examples = project
   .in(file("examples"))
@@ -71,7 +101,7 @@ lazy val examples = project
               "-lraylib"
             ) ++ llvmLib
           )
-          .withCompileOptions(conf.compileOptions ++ llvmInclude)
+          .withCompileOptions(conf.compileOptions ++ llvmInclude(10 to 13))
       }
     }
   })
@@ -111,26 +141,29 @@ lazy val examples = project
       val binary = (bindgen / Compile / nativeLink).value
       val headerFilesBase = baseDirectory.value / "libraries"
       val destinationScalaBase =
-        baseDirectory.value / "src" / "main" / "scala" / "bindings"
+        (Compile / managedSourceDirectories).value.head / "bindings"
       val destinationCBase =
-        baseDirectory.value / "src" / "main" / "resources" / "scala-native"
+        (Compile / managedResourceDirectories).value.head / "scala-native"
 
       def define(
           headerFile: String,
           packageName: String,
           linkName: String,
           cImports: List[String],
-          clangFlags: List[String] = Nil
+          clangFlags: List[String] = Nil,
+          platformTest: String => Boolean = _ => true
       ) =
-        Binding(
-          headerFile = headerFilesBase / headerFile,
-          packageName = packageName,
-          linkName = linkName,
-          cFile = destinationCBase / s"$packageName.c",
-          scalaFile = destinationScalaBase / s"$packageName.scala",
-          cImports = cImports,
-          clangFlags = clangFlags
-        )
+        Option(
+          Binding(
+            headerFile = headerFilesBase / headerFile,
+            packageName = packageName,
+            linkName = linkName,
+            cFile = destinationCBase / s"$packageName.c",
+            scalaFile = destinationScalaBase / s"$packageName.scala",
+            cImports = cImports,
+            clangFlags = clangFlags
+          )
+        ).filter(_ => platformTest(osName))
 
       val mapping = List(
         define("cJSON.h", "libcjson", "cjson", List("cJSON.h")),
@@ -140,23 +173,29 @@ lazy val examples = project
           "libclang",
           "clang",
           List("clang-c/Index.h"),
-          llvmInclude
+          llvmInclude(10 to 13)
         ),
         define(
           "raylib.h",
           "libraylib",
           "raylib",
           List("raylib.h"),
-          clangInclude
+          llvmInclude(10 to 13) ++ clangInclude(10 to 13),
+          platformTest = _ != "mac"
         ),
         define(
           "curl.h",
           "libcurl",
           "curl",
           List("curl.h"),
-          clangInclude ++ List(
-            "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/curl"
-          )
+          clangInclude(10 to 13) ++
+            includes(ifMac =
+              List(
+                "/opt/homebrew/opt/curl/include/curl",
+                "/usr/local/opt/curl/include/curl"
+              )
+            ),
+          platformTest = _ != "linux"
         ),
         define(
           "nuklear.h",
@@ -166,7 +205,7 @@ lazy val examples = project
           List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1")
         )
         /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
-      )
+      ).flatten
 
       val argsWithoutRemoved = args.filterNot(_.startsWith("-"))
 
@@ -191,13 +230,21 @@ lazy val examples = project
 
             println(s"Executing $cmd")
 
-            val result =
-              (Process(cmd) #> file(destination.toString)) !
-
-            if (result == 0)
-              println(
-                s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
+            Using.fileWriter()(destination) { wr =>
+              val logger = ProcessLogger.apply(
+                (o: String) => wr.write(o + "\n"),
+                (e: String) => println(e)
               )
+
+              val result = Process(cmd).run(logger).exitValue()
+
+              if (result == 0)
+                println(
+                  s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
+                )
+              else
+                throw new Exception(s"Process failed with code $result")
+            }
           } else if (cmd.trim.toLowerCase == "clean") {
             val toDelete =
               if (lang == "scala") binding.scalaFile else binding.cFile

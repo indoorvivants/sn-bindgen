@@ -87,8 +87,7 @@ object types:
   object CXCursorVisitor:
     inline def apply(
         inline f: (CXCursor, CXCursor, CXClientData) => CXChildVisitResult
-    ): CXCursorVisitor = CFuncPtr3
-      .fromScalaFunction(f)
+    ): CXCursorVisitor = CFuncPtr3.fromScalaFunction(f)
 
   opaque type CXErrorCode = Int
   object CXErrorCode extends CEnum[CXErrorCode]:

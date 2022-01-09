@@ -1,6 +1,6 @@
 #include "clang-c/Index.h"
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
 void wrap_getNullCursor(CXCursor *curs) {
   CXCursor c = clang_getNullCursor();
@@ -12,21 +12,45 @@ void wrap_getTranslationUnitCursor(CXCursor *curs, CXTranslationUnit unit) {
   memcpy(curs, &c, sizeof(CXCursor));
 }
 
-unsigned wrap_hashCursor(CXCursor *curs) {
-  return clang_hashCursor(*curs);
+unsigned wrap_hashCursor(CXCursor *curs) { return clang_hashCursor(*curs); }
+
+const char *wrap_getCString(CXString *cxs) { return clang_getCString(*cxs); }
+
+void wrap_disposeString(CXString *cxs) { return clang_disposeString(*cxs); }
+
+void output(const char *prefix, CXString cxs) {
+  fprintf(stderr, "%s %s\n", prefix, clang_getCString(cxs));
+  clang_disposeString(cxs);
 }
 
-const char* wrap_getCString(CXString *cxs) {
-  return clang_getCString(*cxs);
+enum CXChildVisitResult visit(CXCursor c, CXCursor parent, CXClientData cd) {
+  /* fprintf(stderr, " C-defined visitor: %12X, %12X, %12X\n", &c, &parent, cd); */
+  return CXChildVisit_Recurse;
+}
+typedef enum CXChildVisitResult (*CXCursorVisitorPtr)(CXCursor *cursor,
+                                                   CXCursor *parent,
+                                                   CXClientData client_data);
+
+typedef struct CDataWrapper {
+  CXCursorVisitorPtr original_visitor;
+  CXClientData original_cdata;
+} CDataWrapper;
+
+// TODO: somehow this name sounds creepy
+enum CXChildVisitResult special_visitor(CXCursor c, CXCursor parent, CXClientData cd) {
+  struct CDataWrapper *unpacked = (CDataWrapper*) cd;
+  /* fprintf(stderr, "In special visitor: %12X, parent: %12X, data: %12X\n", &c, &parent, cd); */
+  return (*unpacked).original_visitor(&c, &parent, (*unpacked).original_cdata);
 }
 
-void wrap_disposeString(CXString *cxs) {
-  return clang_disposeString(*cxs);
-}
+unsigned wrap_visitChildren(CXCursor *curs, CXCursorVisitorPtr scala_visitor,
+                            CXClientData cdata) {
 
+  struct CDataWrapper wrapper;
 
-unsigned wrap_visitChildren(CXCursor *curs, CXCursorVisitor vis, CXClientData cdata) {
-  return clang_visitChildren(*curs, vis, cdata);
+  wrapper.original_visitor = scala_visitor;
+  wrapper.original_cdata = cdata;
+  return clang_visitChildren(*curs, &special_visitor, &wrapper);
 }
 
 void wrap_getCursorSpelling(CXCursor *curs, CXString *cxstr) {
@@ -63,13 +87,9 @@ long long wrap_getEnumConstantDeclValue(CXCursor *curs) {
   return clang_getEnumConstantDeclValue(*curs);
 }
 
-int wrap_getNumArgTypes(CXType *curs) {
-  return clang_getNumArgTypes(*curs);
-}
+int wrap_getNumArgTypes(CXType *curs) { return clang_getNumArgTypes(*curs); }
 
-int wrap_getArraySize(CXType *curs) {
-  return clang_getArraySize(*curs);
-}
+int wrap_getArraySize(CXType *curs) { return clang_getArraySize(*curs); }
 
 void wrap_getResultType(CXType *functionType, CXType *resultType) {
   CXType cs = clang_getResultType(*functionType);
@@ -90,7 +110,6 @@ void wrap_getArgType(CXType *functionType, CXType *argType, int idx) {
   CXType cs = clang_getArgType(*functionType, idx);
   memcpy(argType, &cs, sizeof(CXType));
 }
-
 
 void wrap_getTypeSpelling(CXType *cxtype, CXString *cxs) {
   CXString cs = clang_getTypeSpelling(*cxtype);

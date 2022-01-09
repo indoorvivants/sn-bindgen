@@ -41,9 +41,14 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     flags.CXTranslationUnit_None
   )
 
-  var errors = 0
+  trace("Successfully created a translation unit")
 
-  (0 until clang_getNumDiagnostics(unit).toInt).foreach { diagId =>
+  var errors = 0
+  val numDiagnostics = clang_getNumDiagnostics(unit).toInt
+
+  trace(s"Clang reported $numDiagnostics diagnostics")
+
+  (0 until numDiagnostics).foreach { diagId =>
     val diag = clang_getDiagnostic(unit, diagId.toUInt)
 
     import CXDiagnosticDisplayOptions as flags
@@ -66,7 +71,7 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
       s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
     )
 
-  val bindingMem = stackalloc[Def.Binding](1)
+  val bindingMem = alloc[Def.Binding](1)
   !bindingMem = Def.Binding(
     enums = mutable.Set.empty,
     structs = mutable.Set.empty,
@@ -75,12 +80,15 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     aliases = mutable.Set.empty
   )
 
+  val translationUnitCursor = clang_getTranslationUnitCursor(unit)
+
   clang_visitChildren(
-    clang_getTranslationUnitCursor(unit),
-    CXCursorVisitor {
+    translationUnitCursor,
+    CXCursorVisitor.apply {
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
         zone {
           val binding = !(data.unwrap[Def.Binding])
+
           val loc = clang_getCursorLocation(cursor)
           val isFromMainFile =
             true // clang_Location_isFromMainFile(loc) == 1.toUInt
@@ -150,3 +158,11 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
 
   addBuiltin(!bindingMem)
 end analyse
+extension (seq: Seq[String])
+  private[bindgen] def toCArray(using Zone): Ptr[CString] =
+    val mem = alloc[CString](seq.size)
+    (0 until seq.size).foreach { i =>
+      mem(i) = toCString(seq(i))
+    }
+
+    mem
