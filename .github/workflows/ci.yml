@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - uses: coursier/cache-action@v3      
+      - uses: coursier/cache-action@v6      
       - uses: olafurpg/setup-scala@v13
         with:
           java-version: adopt@1.8
@@ -58,10 +58,10 @@ jobs:
             binary: sn-bindgen-x86_64-pc-linux
     runs-on: ${{ matrix.os }}
     env: 
-      BINARY: /tmp/binaries/${{ matrix.binary }}
+      BINARY: /tmp/binaries/${{ matrix.binary }}/bindgen-out
     steps:
       - uses: actions/checkout@v2
-      - uses: coursier/cache-action@v3      
+      - uses: coursier/cache-action@v6
       - uses: olafurpg/setup-scala@v13
         with:
           java-version: adopt@1.8
