@@ -22,9 +22,9 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            uploaded_filename: ${{ env.MAC_BINARY }}
+            uploaded_filename: sn-bindgen-x86_64-apple-darwin
           - os: ubuntu-latest
-            uploaded_filename: ${{ env.LINUX_BINARY }}
+            uploaded_filename: sn-bindgen-x86_64-pc-linux
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -53,9 +53,9 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            binary: ${{ env.MAC_BINARY }}
+            binary: sn-bindgen-x86_64-apple-darwin
           - os: ubuntu-latest
-            binary: ${{ env.LINUX_BINARY }}
+            binary: sn-bindgen-x86_64-pc-linux
     runs-on: ${{ matrix.os }}
     env: 
       BINARY: /tmp/binaries/${{matrix.binary}
