@@ -11,6 +11,8 @@ on:
 env: 
   JAVA_OPTS: "-Xmx2G"
   SN_RELEASE: fast
+  MAC_BINARY: sn-bindgen-x86_64-apple-darwin
+  LINUX_BINARY: sn-bindgen-x86_64-pc-linux
 
 jobs:
   build:
@@ -18,12 +20,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
         include:
           - os: macos-latest
-            uploaded_filename: sn-bindgen-x86_64-apple-darwin
+            uploaded_filename: ${{ env.MAC_BINARY }}
           - os: ubuntu-latest
-            uploaded_filename: sn-bindgen-x86_64-pc-linux
+            uploaded_filename: ${{ env.LINUX_BINARY }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -43,6 +44,61 @@ jobs:
         with:
           path: bindgen/target/scala-3.1.0/bindgen-out 
           name: ${{ matrix.uploaded_filename }}
+
+  examples:
+    needs: [build]
+    name: Examples
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            binary: ${{ env.MAC_BINARY }}
+          - os: ubuntu-latest
+            binary: {{ env.LINUX_BINARY }}
+    runs-on: ${{ matrix.os }}
+    env: 
+      BINARY: /tmp/binaries/${{matrix.binary}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: coursier/cache-action@v3      
+      - uses: olafurpg/setup-scala@v13
+        with:
+          java-version: adopt@1.8
+
+      - name: Download binaries
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp/binaries
+
+      - run: |
+          ls -la /tmp/binaries
+
+      - name: Setup
+        run: ./build/setup_unix.sh
+
+      - name: Generate examples
+        run: |
+          $BINARY --help
+
+  # release:
+  #   needs: [build, examples]
+  #   if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+  #   name: Release
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [macos-latest, ubuntu-latest]
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: coursier/cache-action@v3      
+  #     - uses: olafurpg/setup-scala@v13
+  #       with:
+  #         java-version: adopt@1.8
+
+  #     - name: Setup
+  #       run: ./build/setup_unix.sh
 
   # native_binaries:
   #   name: Build native binaries
