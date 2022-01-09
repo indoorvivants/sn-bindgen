@@ -37,7 +37,7 @@ jobs:
         run: ./build/setup_unix.sh
 
       - name: Tests
-        run: sbt bindgen/nativeLink bindgen/test
+        run: sbt bindgen/nativeLink
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
