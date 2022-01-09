@@ -7,6 +7,9 @@
 *.gch
 .cache
 *.out
+c-playground
+compile_commands.json
+target
 
 **/target/**
 project/project

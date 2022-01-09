@@ -3,10 +3,11 @@ import scala.scalanative.build.NativeConfig
 import sbt.io.Using
 import scala.sys.process.ProcessLogger
 import scala.scalanative.build.LTO
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 // --------------MODULES-------------------------
-lazy val root = project.in(file(".")).aggregate(bindgen, libclang, examples)
+lazy val root = project.in(file(".")).aggregate(bindgen, libclang)
 
 def environmentConfiguration(conf: NativeConfig): NativeConfig = {
   if (sys.env.contains("SN_RELEASE")) conf.withMode(Mode.releaseFast)

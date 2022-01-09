@@ -10,6 +10,7 @@ on:
 
 env: 
   JAVA_OPTS: "-Xmx2G"
+  SN_RELEASE: fast
 
 jobs:
   build:
@@ -18,6 +19,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
+        include:
+          - os: macos-latest
+            uploaded_filename: sn-bindgen-x86_64-apple-darwin
+          - os: ubuntu-latest
+            uploaded_filename: sn-bindgen-x86_64-pc-linux
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -26,69 +32,67 @@ jobs:
         with:
           java-version: adopt@1.8
 
-      - name: Setup Scala Native environment (ubuntu)
-        run: |
-            sudo apt-get update
-            sudo apt install clang llvm llvm-dev libclang-dev
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-      
-      - name: Setup Scala Native environment (mac os)
-        run: |
-            brew install llvm
-        if: ${{ matrix.os == 'macos-latest' }}
+      - name: Setup
+        run: ./build/setup_unix.sh
 
       - name: Tests
-        run: sbt bindgen/nativeLink 'examples/bindings gen'
+        run: sbt bindgen/nativeLink bindgen/test
 
-  native_binaries:
-    name: Build native binaries
-    # needs: [build]
-    # if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
-    runs-on: ${{ matrix.os }}
-    env: 
-      SN_RELEASE: fast
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, ubuntu-latest]
-        include:
-          - os: macos-latest
-            uploaded_filename: sn-bindgen-x86_64-apple-darwin
-            # local_path: bindgen/target/scala-3.1.0/bindgen-out
-          - os: ubuntu-latest
-            uploaded_filename: sn-bindgen-x86_64-pc-linux
-            # local_path: bindgen/target/scala-3.1.0/bindgen-out
-    steps:
-      - uses: actions/checkout@v2
-      - uses: olafurpg/setup-scala@v13
-      - run: git fetch --tags || true
-      - name: Setup Scala Native environment
-        run: |
-            sudo apt-get update
-            sudo apt install clang llvm llvm-dev libclang-dev
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-
-      - name: Setup Scala Native environment
-        run: brew install llvm
-        if: ${{ matrix.os == 'macos-latest' }}
-
-      - run: sbt bindgen/nativeLink
-
-      - run: echo $(pwd)
-        shell: bash
-
-      - uses: actions/upload-artifact@master
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
         with:
           path: bindgen/target/scala-3.1.0/bindgen-out 
           name: ${{ matrix.uploaded_filename }}
 
-      - name: Upload release
-        uses: actions/upload-release-asset@v1.0.2
-        if: github.event_name == 'release'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ matrix.local_path }}
-          asset_name: ${{ matrix.uploaded_filename }}
-          asset_content_type: application/zip
+  # native_binaries:
+  #   name: Build native binaries
+  #   # needs: [build]
+  #   # if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+  #   runs-on: ${{ matrix.os }}
+  #   env: 
+  #     SN_RELEASE: fast
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [macos-latest, ubuntu-latest]
+  #       include:
+  #         - os: macos-latest
+  #           uploaded_filename: sn-bindgen-x86_64-apple-darwin
+  #           # local_path: bindgen/target/scala-3.1.0/bindgen-out
+  #         - os: ubuntu-latest
+  #           uploaded_filename: sn-bindgen-x86_64-pc-linux
+  #           # local_path: bindgen/target/scala-3.1.0/bindgen-out
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: olafurpg/setup-scala@v13
+  #     - run: git fetch --tags || true
+  #     - name: Setup Scala Native environment
+  #       run: |
+  #           sudo apt-get update
+  #           sudo apt install clang llvm llvm-dev libclang-dev
+  #       if: ${{ matrix.os == 'ubuntu-latest' }}
+
+  #     - name: Setup Scala Native environment
+  #       run: brew install llvm
+  #       if: ${{ matrix.os == 'macos-latest' }}
+
+  #     - run: sbt bindgen/nativeLink
+
+  #     - run: echo $(pwd)
+  #       shell: bash
+
+  #     - uses: actions/upload-artifact@master
+  #       with:
+  #         path: bindgen/target/scala-3.1.0/bindgen-out 
+  #         name: ${{ matrix.uploaded_filename }}
+
+  #     - name: Upload release
+  #       uses: actions/upload-release-asset@v1.0.2
+  #       if: github.event_name == 'release'
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ github.event.release.upload_url }}
+  #         asset_path: ${{ matrix.local_path }}
+  #         asset_name: ${{ matrix.uploaded_filename }}
+  #         asset_content_type: application/zip
