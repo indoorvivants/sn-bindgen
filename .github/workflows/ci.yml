@@ -74,13 +74,10 @@ jobs:
         with:
           path: /tmp/binaries
 
-      - run: |
-          ls -la /tmp/binaries
-
       - name: Setup
         run: ./build/setup_unix.sh
 
-      - name: Generate examples
+      - name: Generate and compile examples
         run: |
           chmod +x $BINARY
-          $BINARY --help
+          sbt examples/compile

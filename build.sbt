@@ -158,172 +158,87 @@ lazy val examples = project
   .in(file("examples"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
-  .settings({
-    nativeConfig ~= {
-      { conf =>
-        conf
-          .withLinkingOptions(
-            conf.linkingOptions ++ Seq(
-              "-lclang",
-              "-lraylib"
-            ) ++ llvmLib
-          )
-          .withCompileOptions(conf.compileOptions ++ llvmInclude(10 to 13))
-      }
-    }
-  })
+  .settings(nativeConfig ~= usesLibClang)
   .settings(
-    bindings := {
-      import complete.DefaultParsers.*
-      val rawArgs = spaceDelimited("<arg>").parsed
-      val cmd = rawArgs.head
-      val args = rawArgs.tail
-
-      case class Binding(
-          headerFile: File,
-          packageName: String,
-          scalaFile: File,
-          cFile: File,
-          linkName: String,
-          cImports: List[String],
-          clangFlags: List[String]
-      ) {
-        def toCommand: String = {
-          val sb = new StringBuilder
-          sb.append(s"--header $headerFile ")
-          sb.append(s"--package $packageName ")
-          sb.append(s"--link-name $linkName ")
-          cImports.foreach { cimp =>
-            sb.append(s"--c-import $cimp ")
-          }
-          clangFlags.foreach { clangFlag =>
-            sb.append(s"--clang $clangFlag ")
-          }
-
-          sb.append(" --info ")
-
-          sb.result
-        }
-      }
-      val binary = (bindgen / Compile / nativeLink).value
-      val headerFilesBase = baseDirectory.value / "libraries"
-      val destinationScalaBase =
-        (Compile / managedSourceDirectories).value.head / "bindings"
-      val destinationCBase =
-        (Compile / managedResourceDirectories).value.head / "scala-native"
-
-      def define(
-          headerFile: String,
-          packageName: String,
-          linkName: String,
-          cImports: List[String],
-          clangFlags: List[String] = Nil,
-          platformTest: String => Boolean = _ => true
-      ) =
-        Option(
-          Binding(
-            headerFile = headerFilesBase / headerFile,
-            packageName = packageName,
-            linkName = linkName,
-            cFile = destinationCBase / s"$packageName.c",
-            scalaFile = destinationScalaBase / s"$packageName.scala",
-            cImports = cImports,
-            clangFlags = clangFlags
-          )
-        ).filter(_ => platformTest(osName))
-
-      val mapping = List(
-        define("cJSON.h", "libcjson", "cjson", List("cJSON.h")),
-        define("test.h", "libtest", "test", List("test.h")),
-        define(
-          "Clang-Index.h",
-          "libclang",
-          "clang",
-          List("clang-c/Index.h"),
-          llvmInclude(10 to 13)
-        ),
-        define(
-          "raylib.h",
-          "libraylib",
-          "raylib",
-          List("raylib.h"),
-          llvmInclude(10 to 13) ++ clangInclude(10 to 13),
-          platformTest = _ != "mac"
-        ),
-        define(
-          "curl.h",
-          "libcurl",
-          "curl",
-          List("curl.h"),
-          clangInclude(10 to 13) ++
-            includes(ifMac =
-              List(
-                "/opt/homebrew/opt/curl/include/curl",
-                "/usr/local/opt/curl/include/curl"
-              )
-            ),
-          platformTest = _ != "linux"
-        ),
-        define(
-          "nuklear.h",
-          "libnuklear",
-          "nuklear",
-          List("nuklear.h"),
-          List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1")
+    Compile / sourceGenerators += Def.task {
+      val scalaFiles = (Compile / sourceManaged).value
+      val binary = new File(
+        sys.env.getOrElse(
+          "BINARY",
+          throw new Exception("BINARY environment variable is not set")
         )
-        /* define("sokol_gfx.h", "libsokol", "sokol", List("sokol_gfx.h")) */
-      ).flatten
+      )
 
-      val argsWithoutRemoved = args.filterNot(_.startsWith("-"))
+      val builder = new BindingBuilder(binary)
 
-      val requested =
-        mapping
-          .filter(binding =>
-            argsWithoutRemoved.isEmpty &&
-              !args.contains(s"-${binding.packageName}") ||
-              args
-                .contains(binding.packageName)
-          )
+      sampleBindings(baseDirectory.value / "libraries", builder)
 
-      List("scala", "c").foreach { lang =>
-        requested.foreach { binding =>
-          if (cmd.trim.toLowerCase == "gen") {
-            import scala.sys.process.Process
+      builder.generate(scalaFiles, BindingLang.Scala)
+    },
+    Compile / resourceGenerators += Def.task {
+      val cFiles = (Compile / resourceManaged).value / "scala-native"
+      val binary = new File(
+        sys.env.getOrElse(
+          "BINARY",
+          throw new Exception("BINARY environment variable is not set")
+        )
+      )
 
-            val destination =
-              if (lang == "scala") binding.scalaFile else binding.cFile
+      val builder = new BindingBuilder(binary)
 
-            val cmd = binary.toString + " " + binding.toCommand + s" --$lang"
+      sampleBindings(baseDirectory.value / "libraries", builder)
 
-            println(s"Executing $cmd")
-
-            Using.fileWriter()(destination) { wr =>
-              val logger = ProcessLogger.apply(
-                (o: String) => wr.write(o + "\n"),
-                (e: String) => println(e)
-              )
-
-              val result = Process(cmd).run(logger).exitValue()
-
-              if (result == 0)
-                println(
-                  s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
-                )
-              else
-                throw new Exception(s"Process failed with code $result")
-            }
-          } else if (cmd.trim.toLowerCase == "clean") {
-            val toDelete =
-              if (lang == "scala") binding.scalaFile else binding.cFile
-            println(s"Deleting $toDelete: ${toDelete.delete()}")
-          }
-        }
-      }
-
+      builder.generate(cFiles, BindingLang.C)
     }
   )
 
-val Samples = new {}
+def sampleBindings(location: File, builder: BindingBuilder) = {
+  import builder.define
+  define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
+  define(location / "test.h", "libtest", Some("test"), List("test.h"))
+  define(
+    location /
+      "Clang-Index.h",
+    "libclang",
+    Some("clang"),
+    List("clang-c/Index.h"),
+    llvmInclude(10 to 13)
+  )
+  if (osName != "mac")
+    define(
+      location /
+        "raylib.h",
+      "libraylib",
+      Some("raylib"),
+      List("raylib.h"),
+      llvmInclude(10 to 13) ++ clangInclude(10 to 13)
+    )
+
+  if (osName != "linux")
+    define(
+      location /
+        "curl.h",
+      "libcurl",
+      Some("curl"),
+      List("curl.h"),
+      clangInclude(10 to 13) ++
+        includes(ifMac =
+          List(
+            "/opt/homebrew/opt/curl/include/curl",
+            "/usr/local/opt/curl/include/curl"
+          )
+        )
+    )
+  // Compiling this monster crashes the compiler :shrug:
+  /* define( */
+  /*   location / */
+  /*     "nuklear.h", */
+  /*   "libnuklear", */
+  /*   Some("nuklear"), */
+  /*   List("nuklear.h"), */
+  /*   List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1") */
+  /* ) */
+}
 
 val bindings = inputKey[Unit]("Regenerate known bindings")
 // --------------SETTINGS-------------------------
