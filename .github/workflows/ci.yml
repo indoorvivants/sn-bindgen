@@ -58,7 +58,7 @@ jobs:
             binary: sn-bindgen-x86_64-pc-linux
     runs-on: ${{ matrix.os }}
     env: 
-      BINARY: /tmp/binaries/${{matrix.binary}
+      BINARY: /tmp/binaries/${{ matrix.binary }}
     steps:
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v3      
