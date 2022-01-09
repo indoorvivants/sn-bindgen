@@ -1,3 +1,5 @@
+import java.util.stream.Collectors
+import java.nio.file.Files
 import scala.scalanative.build.Mode
 import scala.scalanative.build.NativeConfig
 import sbt.io.Using
@@ -14,25 +16,89 @@ def environmentConfiguration(conf: NativeConfig): NativeConfig = {
   else conf
 }
 
+def usesLibClang(conf: NativeConfig) =
+  conf
+    .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
+    .withCompileOptions(llvmInclude(10 to 13))
+
 lazy val bindgen = project
   .in(file("bindgen"))
   .dependsOn(libclang)
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
-  .settings(nativeConfig ~= { conf =>
-    environmentConfiguration(conf)
-      .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
-      .withCompileOptions(llvmInclude(10 to 13))
-  })
+  .settings(nativeConfig ~= environmentConfiguration)
+  .settings(nativeConfig ~= usesLibClang)
   .settings(
     libraryDependencies += ("com.monovore" %%% "decline" % "2.2.0" cross CrossVersion.for3Use2_13)
-      .excludeAll(ExclusionRule("org.scala-native"))
+      .excludeAll(ExclusionRule("org.scala-native")),
+    libraryDependencies += "org.scala-native" %%% "junit-runtime" % "0.4.3-RC1",
+    addCompilerPlugin(
+      "org.scala-native" % "junit-plugin" % "0.4.3-RC1" cross CrossVersion.full
+    ),
+    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
+    Test / watchedHeaders / fileInputs +=
+      baseDirectory.value.toGlob / "src" / "test" / "resources" / "scala-native" / "*.h",
+    Test / watchedHeaders := {
+      val path =
+        baseDirectory.value / "src" / "test" / "resources" / "scala-native"
+      val glob = path.toGlob / "*.h"
+
+      import scala.collection.JavaConverters.*
+      Files
+        .walk(path.toPath, 1)
+        .collect(Collectors.toList())
+        .asScala
+        .filter(glob.matches)
+        .map(h => path.toPath.relativize(h).toString)
+        .map(_.dropRight(2)) // remove ".h"
+        .toSeq
+    },
+    Test / sourceGenerators += Def.task {
+      val scalaFiles = (Test / sourceManaged).value
+      val path =
+        baseDirectory.value / "src" / "test" / "resources" / "scala-native"
+      val binary = (Compile / nativeLink).value
+
+      val builder = new BindingBuilder(binary)
+
+      (Test / watchedHeaders).value.foreach { header =>
+        builder.define(path / s"$header.h", s"lib_test_$header")
+      }
+
+      builder.generate(scalaFiles, BindingLang.Scala)
+    },
+    Test / resourceGenerators += Def.task {
+      val cFiles = (Test / resourceManaged).value / "scala-native"
+      val path =
+        baseDirectory.value / "src" / "test" / "resources" / "scala-native"
+      val binary = (Compile / nativeLink).value
+
+      val builder = new BindingBuilder(binary)
+
+      (Test / watchedHeaders).value.foreach { header =>
+        builder.define(
+          path / s"$header.h",
+          s"lib_test_$header",
+          cImports = List(s"$header.h")
+        )
+      }
+
+      builder.generate(cFiles, BindingLang.C)
+    }
   )
+  .settings(
+    Test / nativeLink / artifactPath := crossTarget.value / "test-bindgen-out"
+  )
+  .settings(Test / nativeConfig ~= usesLibClang)
+
+lazy val watchedHeaders =
+  taskKey[Seq[String]]("Header files watched by bindgen's tests")
 
 lazy val libclang = project
   .in(file("libclang"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
+  .settings(nativeConfig ~= usesLibClang)
 
 def osName = System.getProperty("os.name") match {
   case n if n.startsWith("Linux")   => "linux"

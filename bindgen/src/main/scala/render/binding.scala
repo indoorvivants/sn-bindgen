@@ -194,7 +194,7 @@ def binding(
     if cFunctions.nonEmpty then
       to(cOutput)("#include <string.h>")
       summon[Config].cImports.foreach { s =>
-        to(cOutput)(s"#include <$s>")
+        to(cOutput)(s"#include \"$s\"")
       }
       to(cOutput)("\n")
 
