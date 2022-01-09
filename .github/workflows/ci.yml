@@ -42,8 +42,8 @@ jobs:
 
   native_binaries:
     name: Build native binaries
-    needs: [build]
-    if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+    # needs: [build]
+    # if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
     runs-on: ${{ matrix.os }}
     env: 
       SN_RELEASE: fast
@@ -52,7 +52,7 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest]
         include:
-          - os: macOS-latest
+          - os: macos-latest
             uploaded_filename: sn-bindgen-x86_64-apple-darwin
             local_path: bindgen/target/scala-3.1.0/sn-bindgen-out
           - os: ubuntu-latest
