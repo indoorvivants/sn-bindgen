@@ -1,3 +1,5 @@
+import scala.scalanative.build.Mode
+import scala.scalanative.build.NativeConfig
 import sbt.io.Using
 import scala.sys.process.ProcessLogger
 import scala.scalanative.build.LTO
@@ -6,16 +8,18 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 // --------------MODULES-------------------------
 lazy val root = project.in(file(".")).aggregate(bindgen, libclang, examples)
 
+def environmentConfiguration(conf: NativeConfig): NativeConfig = {
+  if (sys.env.contains("SN_RELEASE")) conf.withMode(Mode.releaseFast)
+  else conf
+}
+
 lazy val bindgen = project
   .in(file("bindgen"))
   .dependsOn(libclang)
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= { conf =>
-    conf
-      .withOptimize(false)
-      .withLTO(LTO.none)
-      /* .withDump(true) */
+    environmentConfiguration(conf)
       .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
       .withCompileOptions(llvmInclude(10 to 13))
   })
@@ -185,7 +189,12 @@ lazy val examples = project
           "curl",
           List("curl.h"),
           clangInclude(10 to 13) ++
-            includes(ifMac = List("/opt/homebrew/opt/curl/include/curl")),
+            includes(ifMac =
+              List(
+                "/opt/homebrew/opt/curl/include/curl",
+                "/usr/local/opt/curl/include/curl"
+              )
+            ),
           platformTest = _ != "linux"
         ),
         define(
