@@ -2,14 +2,33 @@ import java.util.stream.Collectors
 import java.nio.file.Files
 import scala.scalanative.build.Mode
 import scala.scalanative.build.NativeConfig
-import sbt.io.Using
-import scala.sys.process.ProcessLogger
 import scala.scalanative.build.LTO
+import commandmatrix.extra.*
+
+import _root_.bindgen.interface.{BindingBuilder, BindingLang}
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
+lazy val Versions = new {
+  val decline = "2.2.0"
+  val scalaNative = "0.4.3-RC1"
+
+  val Scala2 = List("2.12.15", "2.13.8")
+  val Scala3 = List("3.1.0")
+}
+
 // --------------MODULES-------------------------
-lazy val root = project.in(file(".")).aggregate(bindgen, libclang)
+lazy val root = project
+  .in(file("."))
+  .aggregate(bindgen, libclang)
+  .aggregate(iface.projectRefs*)
+
+lazy val iface = projectMatrix
+  .in(file("interface"))
+  .someVariations(
+    Versions.Scala2 ++ Versions.Scala3,
+    List(VirtualAxis.jvm) // todo may be publish native interfaces as well
+  )(MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"))
 
 lazy val bindgen = project
   .in(file("bindgen"))
@@ -19,11 +38,11 @@ lazy val bindgen = project
   .settings(nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
-    libraryDependencies += ("com.monovore" %%% "decline" % "2.2.0" cross CrossVersion.for3Use2_13)
+    libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
       .excludeAll(ExclusionRule("org.scala-native")),
-    libraryDependencies += "org.scala-native" %%% "junit-runtime" % "0.4.3-RC1",
+    libraryDependencies += "org.scala-native" %%% "junit-runtime" % Versions.scalaNative,
     addCompilerPlugin(
-      "org.scala-native" % "junit-plugin" % "0.4.3-RC1" cross CrossVersion.full
+      "org.scala-native" % "junit-plugin" % Versions.scalaNative cross CrossVersion.full
     ),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     Test / watchedHeaders / fileInputs +=
