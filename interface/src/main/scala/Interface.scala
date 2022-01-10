@@ -5,6 +5,11 @@ import java.nio.file.Paths
 import java.io.FileWriter
 import scala.util.control.NonFatal
 import scala.sys.process.ProcessLogger
+import java.nio.file.Files
+import java.io.BufferedWriter
+import java.io.OutputStreamWriter
+import java.io.FileOutputStream
+import java.io.Writer
 
 sealed trait BindingLang extends Product with Serializable
 object BindingLang {
@@ -17,17 +22,26 @@ import BindingLang.*
 class BindingBuilder(binary: File) {
 
   private implicit class FileOps(val f: File) {
-    def /(other: String): File =
-      Paths.get(f.toPath.toString, other).toFile
+    def /(other: String): File = {
+      val result = Paths.get(f.toPath.toString, other).toFile
+      Files.createDirectories(f.toPath())
+      result
+    }
   }
-  def fileWriter(destination: File)(f: FileWriter => Unit) = {
-    var fw: Option[FileWriter] = None
+  def fileWriter(destination: File)(f: Writer => Unit) = {
+    var fw: Option[BufferedWriter] = None
     try {
-      fw = Option(new FileWriter(destination))
+      fw = Option(
+        new BufferedWriter(
+          new OutputStreamWriter(new FileOutputStream(destination))
+        )
+      )
 
       fw.foreach(f)
     } catch {
       case NonFatal(ex) => fw.foreach(_.close()); throw ex
+    } finally {
+      fw.foreach(_.close())
     }
   }
 
@@ -104,6 +118,7 @@ class BindingBuilder(binary: File) {
       val cmd = binary.toString + " " + binding.toCommand(lang)
 
       System.err.println(s"Executing $cmd")
+      System.err.println(s"Writing to $destination")
 
       fileWriter(destination) { wr =>
         val logger = ProcessLogger.apply(
