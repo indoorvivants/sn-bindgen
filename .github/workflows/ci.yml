@@ -43,8 +43,8 @@ jobs:
           path: bindgen/target/scala-3.1.0/bindgen-out 
           name: ${{ matrix.uploaded_filename }}
       
-      - name: Run bindgen tests
-        run: sbt bindgen/test
+      - name: Run tests
+        run: sbt test
 
   examples:
     needs: [build]

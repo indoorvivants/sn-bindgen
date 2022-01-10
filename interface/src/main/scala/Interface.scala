@@ -18,17 +18,15 @@ object BindingLang {
 }
 
 import BindingLang.*
-
-class BindingBuilder(binary: File) {
-
-  private implicit class FileOps(val f: File) {
+object Utils {
+  private[interface] implicit class FileOps(val f: File) extends AnyVal {
     def /(other: String): File = {
       val result = Paths.get(f.toPath.toString, other).toFile
       Files.createDirectories(f.toPath())
       result
     }
   }
-  def fileWriter(destination: File)(f: Writer => Unit) = {
+  private[interface] def fileWriter(destination: File)(f: Writer => Unit) = {
     var fw: Option[BufferedWriter] = None
     try {
       fw = Option(
@@ -44,6 +42,11 @@ class BindingBuilder(binary: File) {
       fw.foreach(_.close())
     }
   }
+}
+
+import Utils.*
+
+class BindingBuilder(binary: File) {
 
   private val bindings = List.newBuilder[Binding]
 
@@ -101,7 +104,7 @@ class BindingBuilder(binary: File) {
     this
   }
 
-  def generate(to: File, lang: BindingLang) = {
+  def generate(to: File, lang: BindingLang): Seq[File] = {
 
     val files = Seq.newBuilder[File]
 
