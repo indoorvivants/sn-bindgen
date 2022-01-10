@@ -6,6 +6,7 @@ import java.io.File
 import java.nio.file.Files
 import Utils.*
 import scala.util.Try
+import scala.util.Success
 
 class TestFunctions {
   private def builder = new BindingBuilder(new File(sys.env("BINARY")))
@@ -76,13 +77,33 @@ class TestFunctions {
   }
 
   @Test def adds_clang_flags(): Unit = isolate { probe =>
+    // Explanation: we test a file which references our global headers file
+    val customCFile = probe.cFiles / "test.h"
+    fileWriter(customCFile) { fw =>
+      fw.write("#include \"headers.h\"")
+    }
+
+    // without any clang flags, this file won't be found and clang will fail
     val opt = Try(
       builder
-        .define(headerFile, "lib_check", clangFlags = List("-stdlib=asdasdasd"))
+        .define(customCFile, "lib_check")
         .generate(probe.scalaFiles, BindingLang.Scala)
     )
 
     assertTrue(opt.isFailure)
+
+    // if we add additional `-I` flag with correct location, it should succeed
+    val optFixed = Try(
+      builder
+        .define(
+          customCFile,
+          "lib_check",
+          clangFlags = List(s"-I${headerFile.getParentFile()}")
+        )
+        .generate(probe.scalaFiles, BindingLang.Scala)
+    )
+
+    assertEquals(Success(Seq(probe.scalaFiles / "lib_check.scala")), optFixed)
   }
 
   private def exists(f: File) = Files.exists(f.toPath())
@@ -98,10 +119,21 @@ class TestFunctions {
   }
 
   private val headerFile = {
-    val file = File.createTempFile("test", ".c")
+    val dir = Files.createTempDirectory("bla").toFile
+    val file = dir / "headers.h"
+    // File.createTempFile("test", ".c")
 
     fileWriter(file) { fw =>
       fw.write(c_code)
+    }
+    file
+  }
+
+  private def createFile(content: String, ext: String = "c") = {
+    val file = File.createTempFile("test", s".$ext")
+
+    fileWriter(file) { fw =>
+      fw.write(content)
     }
     file
   }
