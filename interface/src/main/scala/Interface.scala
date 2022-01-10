@@ -1,16 +1,60 @@
-import sbt.File
-import sbt.*
-import sbt.io.Using
+package bindgen.interface
+
+import java.io.File
+import java.nio.file.Paths
+import java.io.FileWriter
+import scala.util.control.NonFatal
 import scala.sys.process.ProcessLogger
-import BindingLang.Scala
-import BindingLang.C
+import java.nio.file.Files
+import java.io.BufferedWriter
+import java.io.OutputStreamWriter
+import java.io.FileOutputStream
+import java.io.Writer
 
 sealed trait BindingLang extends Product with Serializable
 object BindingLang {
   case object Scala extends BindingLang
   case object C extends BindingLang
 }
+
+import BindingLang.*
+object Utils {
+  private[interface] implicit class FileOps(val f: File) extends AnyVal {
+    def /(other: String): File = {
+      val result = Paths.get(f.toPath.toString, other).toFile
+      Files.createDirectories(f.toPath())
+      result
+    }
+  }
+  private[interface] def fileWriter(destination: File)(f: Writer => Unit) = {
+    var fw: Option[BufferedWriter] = None
+    try {
+      fw = Option(
+        new BufferedWriter(
+          new OutputStreamWriter(new FileOutputStream(destination))
+        )
+      )
+
+      fw.foreach(f)
+    } catch {
+      case NonFatal(ex) => fw.foreach(_.close()); throw ex
+    } finally {
+      fw.foreach(_.close())
+    }
+  }
+}
+
+import Utils.*
+
 class BindingBuilder(binary: File) {
+  assert(
+    Files.exists(binary.toPath),
+    s"Bindgen: specified binary [$binary] doesn't exist!"
+  )
+  assert(
+    Files.isRegularFile(binary.toPath),
+    s"Bindgen: specified binary [$binary] is not a regular file!"
+  )
 
   private val bindings = List.newBuilder[Binding]
 
@@ -68,7 +112,7 @@ class BindingBuilder(binary: File) {
     this
   }
 
-  def generate(to: File, lang: BindingLang) = {
+  def generate(to: File, lang: BindingLang): Seq[File] = {
 
     val files = Seq.newBuilder[File]
 
@@ -85,8 +129,9 @@ class BindingBuilder(binary: File) {
       val cmd = binary.toString + " " + binding.toCommand(lang)
 
       System.err.println(s"Executing $cmd")
+      System.err.println(s"Writing to $destination")
 
-      Using.fileWriter()(destination) { wr =>
+      fileWriter(destination) { wr =>
         val logger = ProcessLogger.apply(
           (o: String) => wr.write(o + "\n"),
           (e: String) => println(e)
