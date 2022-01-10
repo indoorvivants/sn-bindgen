@@ -20,6 +20,15 @@ class TestFunctions {
       | void naughty(Hello st);
       """.stripMargin.trim
 
+  @Test def checks_binary_path(): Unit = isolate { probe =>
+    // passing a folder
+    assertTrue(Try(new BindingBuilder(probe.scalaFiles)).isFailure)
+    // passing a non-existent path
+    assertTrue(
+      Try(new BindingBuilder(probe.scalaFiles / "asdasdasd.exe")).isFailure
+    )
+  }
+
   @Test def writes_scala_file(): Unit = isolate { probe =>
     builder
       .define(headerFile, "lib_check")
@@ -121,7 +130,6 @@ class TestFunctions {
   private val headerFile = {
     val dir = Files.createTempDirectory("bla").toFile
     val file = dir / "headers.h"
-    // File.createTempFile("test", ".c")
 
     fileWriter(file) { fw =>
       fw.write(c_code)

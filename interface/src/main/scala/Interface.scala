@@ -47,6 +47,14 @@ object Utils {
 import Utils.*
 
 class BindingBuilder(binary: File) {
+  assert(
+    Files.exists(binary.toPath),
+    s"Bindgen: specified binary [$binary] doesn't exist!"
+  )
+  assert(
+    Files.isRegularFile(binary.toPath),
+    s"Bindgen: specified binary [$binary] is not a regular file!"
+  )
 
   private val bindings = List.newBuilder[Binding]
 
