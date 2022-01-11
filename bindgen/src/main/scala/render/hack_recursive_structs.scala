@@ -50,8 +50,12 @@ def isCyclical(typ: CType, name: String)(using AliasResolver, Config): Boolean =
   go(typ, Set(name), 0)
 end isCyclical
 
-
-case class ParameterRewrite(name: String, originalType: CType, newRawType: CType, newRichType: CType)
+case class ParameterRewrite(
+    name: String,
+    originalType: CType,
+    newRawType: CType,
+    newRichType: CType
+)
 
 def hack_recursive_structs(
     struct: Def.Struct
@@ -64,49 +68,42 @@ def hack_recursive_structs(
 
   val isPointerRecursive: Boolean = cyclicalParameters.exists(_ == true)
 
-  def rewrite(name: String, originalType: CType): Option[ParameterRewrite] = 
+  def rewrite(name: String, originalType: CType): Option[ParameterRewrite] =
     if !isCyclical(originalType, structName) then None
-    else 
+    else
       import CType.*
-      def result(newType: CType) = Some(ParameterRewrite(
-        name = name,
-        originalType = originalType,
-        newRawType = Pointer(Void),
-        newRichType = newType
-      ))
+      def result(newType: CType) = Some(
+        ParameterRewrite(
+          name = name,
+          originalType = originalType,
+          newRawType = Pointer(Void),
+          newRichType = newType
+        )
+      )
 
       originalType match
-        case Pointer(Typedef(name)) => result(Pointer(Typedef(name)))
+        case Pointer(Typedef(name))   => result(Pointer(Typedef(name)))
         case Pointer(RecordRef(name)) => result(Pointer(RecordRef(name)))
-        case Typedef(name) => 
+        case Typedef(name) =>
           aliasResolver(name) match
             case Pointer(_: Function) => result(Typedef(name))
-            case other => throw Error(s"Expected '$name' to point to a function pointer, got $other instead")
+            case other =>
+              throw Error(
+                s"Expected '$name' to point to a function pointer, got $other instead"
+              )
+      end match
 
     end if
-
+  end rewrite
 
   if !isPointerRecursive then Map.empty
   else
     info(s"Struct '$structName' was detected as having cycles")
 
-    struct.fields.zipWithIndex.flatMap {case ((name, typ), idx) => 
-      rewrite(name, typ).map {rule => 
+    struct.fields.zipWithIndex.flatMap { case ((name, typ), idx) =>
+      rewrite(name, typ).map { rule =>
         idx -> rule
       }
     }.toMap
-    
-    // val rewrite = struct.fields.zip(cyclicalParameters).collect {
-    //   case ((name, typ), cyclical) if cyclical => name
-    // }
-
-    // val newfields = struct.fields.zip(cyclicalParameters).map {
-    //   case ((name, typ), cyclical) if cyclical =>
-    //     name -> CType.Pointer(CType.Void)
-    //   case (param, _) => param
-    // }
-
-    // struct.copy(newfields) -> rewrite.toSet
-
   end if
 end hack_recursive_structs

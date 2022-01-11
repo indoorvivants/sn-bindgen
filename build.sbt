@@ -8,8 +8,6 @@ import commandmatrix.extra.*
 
 import _root_.bindgen.interface.{BindingBuilder, BindingLang}
 
-Global / onChangedBuildSource := ReloadOnSourceChanges
-
 lazy val Versions = new {
   val decline = "2.2.0"
   val scalaNative = "0.4.3-RC1"
@@ -24,6 +22,10 @@ lazy val root = project
   .in(file("."))
   .aggregate(bindgen, libclang)
   .aggregate(iface.projectRefs*)
+  .settings(
+    publish / skip := true,
+    publishLocal / skip := true
+  )
 
 lazy val iface = projectMatrix
   .in(file("interface"))
@@ -32,11 +34,11 @@ lazy val iface = projectMatrix
     List(VirtualAxis.jvm) // todo may be publish native interfaces as well
   )(MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"))
   .settings(
+    moduleName := "bindgen-interface",
     libraryDependencies += "com.novocode" % "junit-interface" % Versions.junit % Test,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     Test / fork := true,
     Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString
-
   )
 
 lazy val bindgen = project
@@ -47,13 +49,21 @@ lazy val bindgen = project
   .settings(nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
+    moduleName := "bindgen",
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
       .excludeAll(ExclusionRule("org.scala-native")),
+    // test settings for Scala Native
     libraryDependencies += "org.scala-native" %%% "junit-runtime" % Versions.scalaNative,
     addCompilerPlugin(
       "org.scala-native" % "junit-plugin" % Versions.scalaNative cross CrossVersion.full
     ),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
+    // Scala 3 hack around the issue with docs
+    packageDoc / publishArtifact := false,
+    Compile / doc / scalacOptions ~= { opts =>
+      opts.filterNot(_.contains("-Xplugin"))
+    },
+    // end of Scala 3 hack around the issue with docs
     Test / watchedHeaders / fileInputs +=
       baseDirectory.value.toGlob / "src" / "test" / "resources" / "scala-native" / "*.h",
     Test / watchedHeaders := {
@@ -108,12 +118,28 @@ lazy val bindgen = project
     Test / nativeLink / artifactPath := crossTarget.value / "test-bindgen-out"
   )
   .settings(Test / nativeConfig ~= usesLibClang)
+  .settings {
+    val detected = detectBinaryArtifacts
+    detected
+      .map { case (_, (artifact, file)) =>
+        addArtifact(Def.setting(artifact), Def.task(file))
+      }
+      .toSeq
+      .flatten
+  }
 
 lazy val libclang = project
   .in(file("libclang"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= usesLibClang)
+  .settings(
+    moduleName := "bindgen-libclang",
+    packageDoc / publishArtifact := false,
+    Compile / doc / scalacOptions ~= { opts =>
+      opts.filterNot(_.contains("-Xplugin"))
+    }
+  )
 
 lazy val examples = project
   .in(file("examples"))
@@ -157,6 +183,34 @@ lazy val examples = project
   )
 
 // --------------HELPERS-------------------------
+
+def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
+  sys.env.contains("BINARIES")
+) {
+  val folder = new File(sys.env("BINARIES"))
+
+  val apple_x86 = folder / "sn-bindgen-x86_64-apple-darwin" / "bindgen-out"
+  val linux_x86 = folder / "sn-bindgen-x86_64-pc-linux" / "bindgen-out"
+
+  val builder = Map.newBuilder[String, (Artifact, File)]
+
+  def build(classifier: String, file: File): (String, (Artifact, File)) = {
+    val artif = Artifact("bindgen", classifier)
+      .withExtension("exe")
+      .withType("exe")
+      .withConfigurations(Vector(Compile))
+
+    classifier -> (artif, file)
+  }
+
+  if (apple_x86.exists())
+    builder += build("osx-x86_64", apple_x86)
+
+  if (linux_x86.exists())
+    builder += build("linux-x86_64", linux_x86)
+
+  builder.result()
+} else Map.empty
 
 def generateExampleBindings(
     destination: File,
@@ -292,3 +346,28 @@ lazy val nativeCommon = Seq(
 
 lazy val watchedHeaders =
   taskKey[Seq[String]]("Header files watched by bindgen's tests")
+
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
+addCommandAlias("ci", "scalafmtCheckAll; scalafmtSbtCheck; test")
+addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
+
+inThisBuild(
+  Seq(
+    organization := "com.indoorvivants",
+    organizationName := "Anton Sviridov",
+    homepage := Some(url("https://github.com/indoorvivants/sn-bindgen")),
+    startYear := Some(2022),
+    licenses := List(
+      "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
+    ),
+    developers := List(
+      Developer(
+        "keynmol",
+        "Anton Sviridov",
+        "velvetbaldmime@protonmail.com",
+        url("https://blog.indoorvivants.com")
+      )
+    )
+  )
+)

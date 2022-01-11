@@ -19,7 +19,6 @@ def deduplicateFunctions(res: mutable.Set[Def.Function])(using
   val toRemove = mutable.Set.empty[Def.Function]
   val vec = res.toArray.sortBy(_.name)
 
-
   vec.zipWithIndex.foreach { case (func, i) =>
     if (i != vec.length - 1) then
       val next = vec(i + 1)
