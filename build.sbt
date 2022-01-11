@@ -81,7 +81,6 @@ lazy val bindgen = project
     ),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     // Scala 3 hack around the issue with docs
-    packageDoc / publishArtifact := false,
     Compile / doc / scalacOptions ~= { opts =>
       opts.filterNot(_.contains("-Xplugin"))
     },
@@ -199,7 +198,6 @@ lazy val libclang = project
   .settings(nativeConfig ~= usesLibClang)
   .settings(
     moduleName := "bindgen-libclang",
-    packageDoc / publishArtifact := false,
     Compile / doc / scalacOptions ~= { opts =>
       opts.filterNot(_.contains("-Xplugin"))
     }
