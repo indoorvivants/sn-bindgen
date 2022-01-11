@@ -146,6 +146,30 @@ lazy val bindgen = project
       .flatten
   }
 
+lazy val localBindgenArtifact = project
+  .in(file("local-bindgen"))
+  .enablePlugins(ScalaNativePlugin)
+  .dependsOn(bindgen, libclang)
+  .settings(nativeCommon)
+  .settings(
+    packageBin / publishArtifact := false,
+    packageDoc / publishArtifact := false,
+    packageSrc / publishArtifact := false,
+    moduleName := "bindgen"
+  )
+  .settings {
+
+    def build(classifier: String) =
+      Artifact("bindgen", classifier)
+        .withExtension("jar")
+        .withType("jar")
+        .withConfigurations(Vector(Compile))
+    addArtifact(
+      Def.setting(build(Platform.artifactSuffix)),
+      Def.task { (bindgen / Compile / nativeLink).value }
+    )
+  }
+
 lazy val plugin = projectMatrix
   .in(file("sbt-plugin"))
   .defaultAxes(VirtualAxis.scalaABIVersion(Versions.Scala212), VirtualAxis.jvm)
@@ -153,9 +177,20 @@ lazy val plugin = projectMatrix
   .dependsOn(iface)
   .settings(
     sbtPlugin := true,
-    pluginCrossBuild / sbtVersion := "1.4.4",
-    moduleName := "sbt-plugin"
+    pluginCrossBuild / sbtVersion := "1.5.7",
+    moduleName := "bindgen-sbt-plugin",
+    scriptedLaunchOpts := {
+      scriptedLaunchOpts.value ++
+        Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+    },
+    scriptedBufferLog := false,
+    publishLocal := publishLocal
+      .dependsOn(
+        localBindgenArtifact / publishLocal
+      )
+      .value
   )
+  .enablePlugins(ScriptedPlugin, SbtPlugin)
 /* .settings( */
 /*   fetchedBinary := { */
 /*     val version = "0.0.0+47-5be3a81a+20220111-2032-SNAPSHOT" */
@@ -432,7 +467,6 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
 
 // --------------SETTINGS-------------------------
 lazy val nativeCommon = Seq(
-  resolvers += Resolver.sonatypeRepo("snapshots"),
   scalaVersion := "3.1.0"
 )
 

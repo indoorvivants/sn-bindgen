@@ -20,6 +20,7 @@ object BindgenPlugin extends AutoPlugin {
 
   override def projectSettings = Seq(
     Bindgen.generatorVersion := Platform.BuildInfo.version,
+    Bindgen.bindings := identity,
     Bindgen.binary := {
       val res = dependencyResolution.value
       def getJars(mid: ModuleID) = {
@@ -39,13 +40,22 @@ object BindgenPlugin extends AutoPlugin {
           .map(_.allFiles)
           .fold(uw => throw uw.resolveException, identity)
       }
-      getJars(
+
+      def fallback(suffix: String) = suffix match {
+        case "osx_aarch64" => "osx_x86-64"
+        case _             => suffix
+      }
+      val file = getJars(
         ModuleID(
           "com.indoorvivants",
           "bindgen_native0.4_3",
           Bindgen.generatorVersion.value
-        ).intransitive().classifier("osx-x86_64")
+        ).intransitive().classifier(fallback(Platform.artifactSuffix))
       ).head
+
+      file.setExecutable(true)
+
+      file
 
     },
     Compile / sourceGenerators += Def.task {
