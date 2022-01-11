@@ -164,5 +164,3 @@ end CLI
 
 //   val maxPriority = priority(LogLevel.trace)
 // end LogLevel
-
-

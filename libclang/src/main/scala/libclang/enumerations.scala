@@ -43,6 +43,7 @@ object enumerations:
     val CXCompletionChunk_Equal: CXCompletionChunkKind = 18
     val CXCompletionChunk_HorizontalSpace: CXCompletionChunkKind = 19
     val CXCompletionChunk_VerticalSpace: CXCompletionChunkKind = 20
+  end CXCompletionChunkKind
 
   opaque type CXCursorKind = Int
   object CXCursorKind extends CEnum[CXCursorKind]:
@@ -240,8 +241,10 @@ object enumerations:
     val CXCursor_OMPTeamsDistributeParallelForDirective: CXCursorKind = 274
     val CXCursor_OMPTargetTeamsDirective: CXCursorKind = 275
     val CXCursor_OMPTargetTeamsDistributeDirective: CXCursorKind = 276
-    val CXCursor_OMPTargetTeamsDistributeParallelForDirective: CXCursorKind = 277
-    val CXCursor_OMPTargetTeamsDistributeParallelForSimdDirective: CXCursorKind = 278
+    val CXCursor_OMPTargetTeamsDistributeParallelForDirective: CXCursorKind =
+      277
+    val CXCursor_OMPTargetTeamsDistributeParallelForSimdDirective
+        : CXCursorKind = 278
     val CXCursor_OMPTargetTeamsDistributeSimdDirective: CXCursorKind = 279
     val CXCursor_BuiltinBitCastExpr: CXCursorKind = 280
     val CXCursor_OMPMasterTaskLoopDirective: CXCursorKind = 281
@@ -319,6 +322,7 @@ object enumerations:
     val CXCursor_FirstExtraDecl: CXCursorKind = 600
     val CXCursor_LastExtraDecl: CXCursorKind = 603
     val CXCursor_OverloadCandidate: CXCursorKind = 700
+  end CXCursorKind
 
   opaque type CXReparse_Flags = Int
   object CXReparse_Flags extends CEnum[CXReparse_Flags]:
@@ -327,25 +331,34 @@ object enumerations:
   opaque type CXTranslationUnit_Flags = Int
   object CXTranslationUnit_Flags extends CEnum[CXTranslationUnit_Flags]:
     val CXTranslationUnit_None: CXTranslationUnit_Flags = 0
-    val CXTranslationUnit_DetailedPreprocessingRecord: CXTranslationUnit_Flags = 1
+    val CXTranslationUnit_DetailedPreprocessingRecord: CXTranslationUnit_Flags =
+      1
     val CXTranslationUnit_Incomplete: CXTranslationUnit_Flags = 2
     val CXTranslationUnit_PrecompiledPreamble: CXTranslationUnit_Flags = 4
     val CXTranslationUnit_CacheCompletionResults: CXTranslationUnit_Flags = 8
     val CXTranslationUnit_ForSerialization: CXTranslationUnit_Flags = 16
     val CXTranslationUnit_CXXChainedPCH: CXTranslationUnit_Flags = 32
     val CXTranslationUnit_SkipFunctionBodies: CXTranslationUnit_Flags = 64
-    val CXTranslationUnit_IncludeBriefCommentsInCodeCompletion: CXTranslationUnit_Flags = 128
-    val CXTranslationUnit_CreatePreambleOnFirstParse: CXTranslationUnit_Flags = 256
+    val CXTranslationUnit_IncludeBriefCommentsInCodeCompletion
+        : CXTranslationUnit_Flags = 128
+    val CXTranslationUnit_CreatePreambleOnFirstParse: CXTranslationUnit_Flags =
+      256
     val CXTranslationUnit_KeepGoing: CXTranslationUnit_Flags = 512
     val CXTranslationUnit_SingleFileParse: CXTranslationUnit_Flags = 1024
-    val CXTranslationUnit_LimitSkipFunctionBodiesToPreamble: CXTranslationUnit_Flags = 2048
+    val CXTranslationUnit_LimitSkipFunctionBodiesToPreamble
+        : CXTranslationUnit_Flags = 2048
     val CXTranslationUnit_IncludeAttributedTypes: CXTranslationUnit_Flags = 4096
-    val CXTranslationUnit_VisitImplicitAttributes: CXTranslationUnit_Flags = 8192
-    val CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles: CXTranslationUnit_Flags = 16384
-    val CXTranslationUnit_RetainExcludedConditionalBlocks: CXTranslationUnit_Flags = 32768
-    
+    val CXTranslationUnit_VisitImplicitAttributes: CXTranslationUnit_Flags =
+      8192
+    val CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles
+        : CXTranslationUnit_Flags = 16384
+    val CXTranslationUnit_RetainExcludedConditionalBlocks
+        : CXTranslationUnit_Flags = 32768
+
     extension (d: CXTranslationUnit_Flags)
-      def `|`(other: CXTranslationUnit_Flags): CXTranslationUnit_Flags = d | other
+      def `|`(other: CXTranslationUnit_Flags): CXTranslationUnit_Flags =
+        d | other
+  end CXTranslationUnit_Flags
 
   opaque type CXLoadDiag_Error = Int
   object CXLoadDiag_Error extends CEnum[CXLoadDiag_Error]:
@@ -501,6 +514,7 @@ object enumerations:
     val CXType_OCLIntelSubgroupAVCImeDualRefStreamin: CXTypeKind = 175
     val CXType_ExtVector: CXTypeKind = 176
     val CXType_Atomic: CXTypeKind = 177
+  end CXTypeKind
 
   opaque type CXVisibilityKind = Int
   object CXVisibilityKind extends CEnum[CXVisibilityKind]:
@@ -538,6 +552,7 @@ object enumerations:
     val CXIdxEntity_CXXConversionFunction: CXIdxEntityKind = 24
     val CXIdxEntity_CXXTypeAlias: CXIdxEntityKind = 25
     val CXIdxEntity_CXXInterface: CXIdxEntityKind = 26
+  end CXIdxEntityKind
 
   opaque type CXDiagnosticDisplayOptions = Int
   object CXDiagnosticDisplayOptions extends CEnum[CXDiagnosticDisplayOptions]:
@@ -571,6 +586,7 @@ object enumerations:
     val CXCallingConv_SwiftAsync: CXCallingConv = 17
     val CXCallingConv_Invalid: CXCallingConv = 100
     val CXCallingConv_Unexposed: CXCallingConv = 200
+  end CXCallingConv
 
   opaque type CXEvalResultKind = Int
   object CXEvalResultKind extends CEnum[CXEvalResultKind]:
@@ -609,6 +625,7 @@ object enumerations:
     val CXCompletionContext_NaturalLanguage: CXCompletionContext = 2097152
     val CXCompletionContext_IncludedFile: CXCompletionContext = 4194304
     val CXCompletionContext_Unknown: CXCompletionContext = 8388607
+  end CXCompletionContext
 
   opaque type CX_StorageClass = Int
   object CX_StorageClass extends CEnum[CX_StorageClass]:
@@ -625,7 +642,8 @@ object enumerations:
   object CXIdxEntityCXXTemplateKind extends CEnum[CXIdxEntityCXXTemplateKind]:
     val CXIdxEntity_NonTemplate: CXIdxEntityCXXTemplateKind = 0
     val CXIdxEntity_Template: CXIdxEntityCXXTemplateKind = 1
-    val CXIdxEntity_TemplatePartialSpecialization: CXIdxEntityCXXTemplateKind = 2
+    val CXIdxEntity_TemplatePartialSpecialization: CXIdxEntityCXXTemplateKind =
+      2
     val CXIdxEntity_TemplateSpecialization: CXIdxEntityCXXTemplateKind = 3
 
   opaque type CXTypeLayoutError = Int
@@ -645,18 +663,24 @@ object enumerations:
     val CXTUResourceUsage_GlobalCompletionResults: CXTUResourceUsageKind = 4
     val CXTUResourceUsage_SourceManagerContentCache: CXTUResourceUsageKind = 5
     val CXTUResourceUsage_AST_SideTables: CXTUResourceUsageKind = 6
-    val CXTUResourceUsage_SourceManager_Membuffer_Malloc: CXTUResourceUsageKind = 7
-    val CXTUResourceUsage_SourceManager_Membuffer_MMap: CXTUResourceUsageKind = 8
-    val CXTUResourceUsage_ExternalASTSource_Membuffer_Malloc: CXTUResourceUsageKind = 9
-    val CXTUResourceUsage_ExternalASTSource_Membuffer_MMap: CXTUResourceUsageKind = 10
+    val CXTUResourceUsage_SourceManager_Membuffer_Malloc
+        : CXTUResourceUsageKind = 7
+    val CXTUResourceUsage_SourceManager_Membuffer_MMap: CXTUResourceUsageKind =
+      8
+    val CXTUResourceUsage_ExternalASTSource_Membuffer_Malloc
+        : CXTUResourceUsageKind = 9
+    val CXTUResourceUsage_ExternalASTSource_Membuffer_MMap
+        : CXTUResourceUsageKind = 10
     val CXTUResourceUsage_Preprocessor: CXTUResourceUsageKind = 11
     val CXTUResourceUsage_PreprocessingRecord: CXTUResourceUsageKind = 12
-    val CXTUResourceUsage_SourceManager_DataStructures: CXTUResourceUsageKind = 13
+    val CXTUResourceUsage_SourceManager_DataStructures: CXTUResourceUsageKind =
+      13
     val CXTUResourceUsage_Preprocessor_HeaderSearch: CXTUResourceUsageKind = 14
     val CXTUResourceUsage_MEMORY_IN_BYTES_BEGIN: CXTUResourceUsageKind = 1
     val CXTUResourceUsage_MEMORY_IN_BYTES_END: CXTUResourceUsageKind = 14
     val CXTUResourceUsage_First: CXTUResourceUsageKind = 1
     val CXTUResourceUsage_Last: CXTUResourceUsageKind = 14
+  end CXTUResourceUsageKind
 
   opaque type CXTypeNullabilityKind = Int
   object CXTypeNullabilityKind extends CEnum[CXTypeNullabilityKind]:
@@ -686,18 +710,29 @@ object enumerations:
     val CXGlobalOpt_ThreadBackgroundPriorityForAll: CXGlobalOptFlags = 3
 
   opaque type CXCursor_ExceptionSpecificationKind = Int
-  object CXCursor_ExceptionSpecificationKind extends CEnum[CXCursor_ExceptionSpecificationKind]:
-    val CXCursor_ExceptionSpecificationKind_None: CXCursor_ExceptionSpecificationKind = 0
-    val CXCursor_ExceptionSpecificationKind_DynamicNone: CXCursor_ExceptionSpecificationKind = 1
-    val CXCursor_ExceptionSpecificationKind_Dynamic: CXCursor_ExceptionSpecificationKind = 2
-    val CXCursor_ExceptionSpecificationKind_MSAny: CXCursor_ExceptionSpecificationKind = 3
-    val CXCursor_ExceptionSpecificationKind_BasicNoexcept: CXCursor_ExceptionSpecificationKind = 4
-    val CXCursor_ExceptionSpecificationKind_ComputedNoexcept: CXCursor_ExceptionSpecificationKind = 5
-    val CXCursor_ExceptionSpecificationKind_Unevaluated: CXCursor_ExceptionSpecificationKind = 6
-    val CXCursor_ExceptionSpecificationKind_Uninstantiated: CXCursor_ExceptionSpecificationKind = 7
-    val CXCursor_ExceptionSpecificationKind_Unparsed: CXCursor_ExceptionSpecificationKind = 8
-    val CXCursor_ExceptionSpecificationKind_NoThrow: CXCursor_ExceptionSpecificationKind = 9
-
+  object CXCursor_ExceptionSpecificationKind
+      extends CEnum[CXCursor_ExceptionSpecificationKind]:
+    val CXCursor_ExceptionSpecificationKind_None
+        : CXCursor_ExceptionSpecificationKind = 0
+    val CXCursor_ExceptionSpecificationKind_DynamicNone
+        : CXCursor_ExceptionSpecificationKind = 1
+    val CXCursor_ExceptionSpecificationKind_Dynamic
+        : CXCursor_ExceptionSpecificationKind = 2
+    val CXCursor_ExceptionSpecificationKind_MSAny
+        : CXCursor_ExceptionSpecificationKind = 3
+    val CXCursor_ExceptionSpecificationKind_BasicNoexcept
+        : CXCursor_ExceptionSpecificationKind = 4
+    val CXCursor_ExceptionSpecificationKind_ComputedNoexcept
+        : CXCursor_ExceptionSpecificationKind = 5
+    val CXCursor_ExceptionSpecificationKind_Unevaluated
+        : CXCursor_ExceptionSpecificationKind = 6
+    val CXCursor_ExceptionSpecificationKind_Uninstantiated
+        : CXCursor_ExceptionSpecificationKind = 7
+    val CXCursor_ExceptionSpecificationKind_Unparsed
+        : CXCursor_ExceptionSpecificationKind = 8
+    val CXCursor_ExceptionSpecificationKind_NoThrow
+        : CXCursor_ExceptionSpecificationKind = 9
+  end CXCursor_ExceptionSpecificationKind
 
   // opaque type CXErrorCode = Int
   // object CXErrorCode extends CEnum[CXErrorCode]:
@@ -734,11 +769,14 @@ object enumerations:
     val CXPrintingPolicy_SuppressScope: CXPrintingPolicyProperty = 4
     val CXPrintingPolicy_SuppressUnwrittenScope: CXPrintingPolicyProperty = 5
     val CXPrintingPolicy_SuppressInitializers: CXPrintingPolicyProperty = 6
-    val CXPrintingPolicy_ConstantArraySizeAsWritten: CXPrintingPolicyProperty = 7
+    val CXPrintingPolicy_ConstantArraySizeAsWritten: CXPrintingPolicyProperty =
+      7
     val CXPrintingPolicy_AnonymousTagLocations: CXPrintingPolicyProperty = 8
     val CXPrintingPolicy_SuppressStrongLifetime: CXPrintingPolicyProperty = 9
-    val CXPrintingPolicy_SuppressLifetimeQualifiers: CXPrintingPolicyProperty = 10
-    val CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors: CXPrintingPolicyProperty = 11
+    val CXPrintingPolicy_SuppressLifetimeQualifiers: CXPrintingPolicyProperty =
+      10
+    val CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors
+        : CXPrintingPolicyProperty = 11
     val CXPrintingPolicy_Bool: CXPrintingPolicyProperty = 12
     val CXPrintingPolicy_Restrict: CXPrintingPolicyProperty = 13
     val CXPrintingPolicy_Alignof: CXPrintingPolicyProperty = 14
@@ -754,6 +792,7 @@ object enumerations:
     val CXPrintingPolicy_SuppressImplicitBase: CXPrintingPolicyProperty = 24
     val CXPrintingPolicy_FullyQualifiedName: CXPrintingPolicyProperty = 25
     val CXPrintingPolicy_LastProperty: CXPrintingPolicyProperty = 25
+  end CXPrintingPolicyProperty
 
   opaque type CXObjCDeclQualifierKind = Int
   object CXObjCDeclQualifierKind extends CEnum[CXObjCDeclQualifierKind]:
@@ -805,6 +844,7 @@ object enumerations:
     val CXSymbolRole_Dynamic: CXSymbolRole = 64
     val CXSymbolRole_AddressOf: CXSymbolRole = 128
     val CXSymbolRole_Implicit: CXSymbolRole = 256
+  end CXSymbolRole
 
   opaque type CX_CXXAccessSpecifier = Int
   object CX_CXXAccessSpecifier extends CEnum[CX_CXXAccessSpecifier]:
@@ -833,6 +873,7 @@ object enumerations:
     val CXObjCPropertyAttr_strong: CXObjCPropertyAttrKind = 1024
     val CXObjCPropertyAttr_unsafe_unretained: CXObjCPropertyAttrKind = 2048
     val CXObjCPropertyAttr_class: CXObjCPropertyAttrKind = 4096
+  end CXObjCPropertyAttrKind
 
   opaque type CXRefQualifierKind = Int
   object CXRefQualifierKind extends CEnum[CXRefQualifierKind]:
@@ -852,6 +893,7 @@ object enumerations:
     val CXTemplateArgumentKind_Expression: CXTemplateArgumentKind = 7
     val CXTemplateArgumentKind_Pack: CXTemplateArgumentKind = 8
     val CXTemplateArgumentKind_Invalid: CXTemplateArgumentKind = 9
+  end CXTemplateArgumentKind
 
   opaque type CXIdxEntityRefKind = Int
   object CXIdxEntityRefKind extends CEnum[CXIdxEntityRefKind]:
@@ -871,4 +913,4 @@ object enumerations:
     val CXIdxAttr_IBAction: CXIdxAttrKind = 1
     val CXIdxAttr_IBOutlet: CXIdxAttrKind = 2
     val CXIdxAttr_IBOutletCollection: CXIdxAttrKind = 3
-  
+end enumerations

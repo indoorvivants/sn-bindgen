@@ -44,7 +44,7 @@ jobs:
           name: ${{ matrix.uploaded_filename }}
       
       - name: Run tests
-        run: sbt test
+        run: sbt ci
 
   examples:
     needs: [build]

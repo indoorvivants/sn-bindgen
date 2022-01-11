@@ -45,7 +45,7 @@ def functionRewriter(badFunction: Def.Function)(using
         parameters = badFunction.parameters.map { case original =>
           if (isDirectStructAccess(original.typ)) then
             original.copy(typ = CType.Pointer(original.typ))
-            // FunctionParameter(original.name, CType.Pointer(original.typ), original.originalTyp)
+          // FunctionParameter(original.name, CType.Pointer(original.typ), original.originalTyp)
           else original
           end if
         } ++ tail,

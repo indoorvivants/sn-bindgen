@@ -8,8 +8,6 @@ import commandmatrix.extra.*
 
 import _root_.bindgen.interface.{BindingBuilder, BindingLang}
 
-Global / onChangedBuildSource := ReloadOnSourceChanges
-
 lazy val Versions = new {
   val decline = "2.2.0"
   val scalaNative = "0.4.3-RC1"
@@ -42,37 +40,6 @@ lazy val iface = projectMatrix
     Test / fork := true,
     Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString
   )
-
-def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
-  sys.env.contains("BINARIES")
-) {
-  val folder = new File(sys.env("BINARIES"))
-
-  val apple_x86 = folder / "sn-bindgen-x86_64-apple-darwin" / "bindgen-out"
-  val linux_x86 = folder / "sn-bindgen-x86_64-pc-linux" / "bindgen-out"
-
-  val builder = Map.newBuilder[String, (Artifact, File)]
-
-  def build(classifier: String, file: File): (String, (Artifact, File)) = {
-    val artif = Artifact("bindgen", classifier)
-      .withExtension("exe")
-      .withType("exe")
-      .withConfigurations(Vector(Compile))
-
-    classifier -> (artif, file)
-  }
-
-  if (apple_x86.exists())
-    builder += build("osx-x86_64", apple_x86)
-
-  if (linux_x86.exists())
-    builder += build("linux-x86_64", linux_x86)
-
-  builder.result()
-} else Map.empty
-
-lazy val detectOSXArtifact = taskKey[File]("")
-lazy val detectLinuxArtifact = taskKey[File]("")
 
 lazy val bindgen = project
   .in(file("bindgen"))
@@ -217,6 +184,34 @@ lazy val examples = project
 
 // --------------HELPERS-------------------------
 
+def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
+  sys.env.contains("BINARIES")
+) {
+  val folder = new File(sys.env("BINARIES"))
+
+  val apple_x86 = folder / "sn-bindgen-x86_64-apple-darwin" / "bindgen-out"
+  val linux_x86 = folder / "sn-bindgen-x86_64-pc-linux" / "bindgen-out"
+
+  val builder = Map.newBuilder[String, (Artifact, File)]
+
+  def build(classifier: String, file: File): (String, (Artifact, File)) = {
+    val artif = Artifact("bindgen", classifier)
+      .withExtension("exe")
+      .withType("exe")
+      .withConfigurations(Vector(Compile))
+
+    classifier -> (artif, file)
+  }
+
+  if (apple_x86.exists())
+    builder += build("osx-x86_64", apple_x86)
+
+  if (linux_x86.exists())
+    builder += build("linux-x86_64", linux_x86)
+
+  builder.result()
+} else Map.empty
+
 def generateExampleBindings(
     destination: File,
     base: File,
@@ -351,6 +346,11 @@ lazy val nativeCommon = Seq(
 
 lazy val watchedHeaders =
   taskKey[Seq[String]]("Header files watched by bindgen's tests")
+
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
+addCommandAlias("ci", "scalafmtCheckAll; scalafmtSbtCheck; test")
+addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
 
 inThisBuild(
   Seq(
