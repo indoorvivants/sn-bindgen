@@ -28,11 +28,16 @@ object Platform {
   }
 
   lazy val arch = normalise(sys.props.getOrElse("os.arch", "")) match {
-    case "amd64" | "x64" => "x86_64"
-    case "aarch64"       => "aarch_64"
+    case "amd64" | "x64" | "x8664" => "x86_64"
+    case "aarch64"                 => "aarch_64"
   }
 
   lazy val artifactSuffix = os + "-" + arch
+
+  def artifactSuffixFallback(suffix: String) = suffix match {
+    case "osx_aarch64" => "osx_x86-64"
+    case _             => suffix
+  }
 
   private def normalise(s: String) =
     s.toLowerCase(java.util.Locale.US).replaceAll("[^a-z0-9]+", "")

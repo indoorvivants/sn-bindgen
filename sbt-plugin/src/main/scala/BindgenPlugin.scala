@@ -25,9 +25,9 @@ object BindgenPlugin extends AutoPlugin {
       val res = dependencyResolution.value
       def getJars(mid: ModuleID) = {
 
-        val depRes = dependencyResolution.in(update).value
-        val updc = updateConfiguration.in(update).value
-        val uwconfig = unresolvedWarningConfiguration.in(update).value
+        val depRes = (update / dependencyResolution).value
+        val updc = (update / updateConfiguration).value
+        val uwconfig = (update / unresolvedWarningConfiguration).value
         val modDescr = depRes.wrapDependencyInModule(mid)
 
         depRes
@@ -41,17 +41,22 @@ object BindgenPlugin extends AutoPlugin {
           .fold(uw => throw uw.resolveException, identity)
       }
 
-      def fallback(suffix: String) = suffix match {
-        case "osx_aarch64" => "osx_x86-64"
-        case _             => suffix
+      def find(platform: String) = {
+        getJars(
+          ModuleID(
+            "com.indoorvivants",
+            "bindgen_native0.4_3",
+            Bindgen.generatorVersion.value
+          ).intransitive().classifier(platform)
+        ).headOption
       }
-      val file = getJars(
-        ModuleID(
-          "com.indoorvivants",
-          "bindgen_native0.4_3",
-          Bindgen.generatorVersion.value
-        ).intransitive().classifier(fallback(Platform.artifactSuffix))
-      ).head
+
+      val file = {
+        find(Platform.artifactSuffix) orElse
+          find(Platform.artifactSuffixFallback(Platform.artifactSuffix))
+      }.getOrElse(
+        throw new Exception("Could not download the binary for bindgen")
+      )
 
       file.setExecutable(true)
 
