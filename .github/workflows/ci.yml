@@ -11,6 +11,7 @@ on:
 env: 
   JAVA_OPTS: "-Xmx2G"
   SN_RELEASE: fast
+  JABBA_INDEX: 'https://github.com/typelevel/jdk-index/raw/main/index.json'
 
 jobs:
   build:
@@ -29,7 +30,7 @@ jobs:
       - uses: coursier/cache-action@v6      
       - uses: olafurpg/setup-scala@v13
         with:
-          java-version: adopt@1.8
+          java-version: graalvm-ce-java17
 
       - name: Setup
         run: ./build/setup_unix.sh
@@ -65,7 +66,7 @@ jobs:
       - uses: coursier/cache-action@v6
       - uses: olafurpg/setup-scala@v13
         with:
-          java-version: adopt@1.8
+          java-version: graalvm-ce-java17
 
       - name: Download binaries
         uses: actions/download-artifact@v2
@@ -92,7 +93,7 @@ jobs:
       - uses: coursier/cache-action@v6
       - uses: olafurpg/setup-scala@v13
         with:
-          java-version: adopt@1.8
+          java-version: graalvm-ce-java17
 
       - name: Download binaries
         uses: actions/download-artifact@v2
