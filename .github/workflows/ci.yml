@@ -81,7 +81,7 @@ jobs:
           sbt examples/compile
 
   release:
-    needs: [build]
+    needs: [build, examples]
     name: Release
     runs-on: ubuntu-latest
     env: 
@@ -100,5 +100,5 @@ jobs:
 
       - name: Publish
         run: |
-          sbt publishLocal
+          sbt ci-release
 
