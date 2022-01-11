@@ -1,3 +1,6 @@
+import _root_.bindgen.interface.Platform
+import coursierapi.ResolutionParams
+import coursierapi.Repository
 import sbt.io.Using
 import java.util.stream.Collectors
 import java.nio.file.Files
@@ -13,7 +16,9 @@ lazy val Versions = new {
   val scalaNative = "0.4.3-RC1"
   val junit = "0.11"
 
-  val Scala2 = List("2.12.15", "2.13.8")
+  val Scala212 = "2.12.15"
+  val Scala213 = "2.13.8"
+  val Scala2 = List(Scala212, "2.13.8")
   val Scala3 = List("3.1.0")
 }
 
@@ -22,6 +27,7 @@ lazy val root = project
   .in(file("."))
   .aggregate(bindgen, libclang)
   .aggregate(iface.projectRefs*)
+  .aggregate(plugin.projectRefs*)
   .settings(
     publish / skip := true,
     publishLocal / skip := true
@@ -38,7 +44,19 @@ lazy val iface = projectMatrix
     libraryDependencies += "com.novocode" % "junit-interface" % Versions.junit % Test,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     Test / fork := true,
-    Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString
+    Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString,
+    Compile / resourceGenerators += Def.task {
+      val out =
+        (Compile / managedResourceDirectories).value.head / "sn-bindgen.properties"
+
+      val props = new java.util.Properties()
+
+      props.setProperty("sn-bindgen.version", version.value)
+
+      IO.write(props, "SN bindgen properites file", out)
+
+      List(out)
+    }
   )
 
 lazy val bindgen = project
@@ -128,6 +146,80 @@ lazy val bindgen = project
       .flatten
   }
 
+lazy val plugin = projectMatrix
+  .in(file("sbt-plugin"))
+  .defaultAxes(VirtualAxis.scalaABIVersion(Versions.Scala212), VirtualAxis.jvm)
+  .allVariations(List(Versions.Scala212), List(VirtualAxis.jvm))
+  .dependsOn(iface)
+  .settings(
+    sbtPlugin := true,
+    pluginCrossBuild / sbtVersion := "1.4.4",
+    moduleName := "sbt-plugin"
+  )
+/* .settings( */
+/*   fetchedBinary := { */
+/*     val version = "0.0.0+47-5be3a81a+20220111-2032-SNAPSHOT" */
+/*     /1* /2* val d1 = dep"com.indoorvivants:bindgen_native0.4_3" *2/ *1/ */
+/*     /1* /2* .withVersion(v1) *2/ *1/ */
+/*     /1* /2* .withPublication( *2/ *1/ */
+/*     /1* /2*   "bindgen_native0.4_3", *2/ *1/ */
+/*     /1* /2*   Type("jar"), *2/ *1/ */
+/*     /1* /2*   Extension("exe"), *2/ *1/ */
+/*     /1* /2*   Classifier("osx-x86_64") *2/ *1/ */
+/*     /1* /2* ) *2/ *1/ */
+/*     /1* import coursierapi.{Dependency, Fetch} *1/ */
+/*     /1* val dep = Dependency *1/ */
+/*     /1*   .of("com.indoorvivants", "bindgen_native0.4_3", version) *1/ */
+/*     /1*   .withType("exe") *1/ */
+/*     /1*   .withClassifier("osx-x86_64") *1/ */
+/*     /1*   .withTransitive(false) *1/ */
+/*     /1* println(dep) *1/ */
+/*     /1* val fetch = *1/ */
+/*     /1*   Fetch *1/ */
+/*     /1*     .create() *1/ */
+/*     /1*     .addDependencies(dep) *1/ */
+/*     /1*     .withResolutionParams( *1/ */
+/*     /1*       ResolutionParams.create().forceProperty("extension", "exe") *1/ */
+/*     /1*     ) *1/ */
+/*     /1*     .addRepositories( *1/ */
+/*     /1*       coursierapi.MavenRepository *1/ */
+/*     /1*         .of("https://oss.sonatype.org/content/repositories/snapshots/") *1/ */
+/*     /1*     ) *1/ */
+/*     /1* /2* .addRepositories(Resolver.sonatypeRepo("snapshots")) *2/ *1/ */
+/*     /1* println(fetch.fetch().forEach(println)) *1/ */
+/*     val res = dependencyResolution.value */
+/*     def getJars(mid: ModuleID) = { */
+
+/*       val depRes = dependencyResolution.in(update).value */
+/*       val updc = updateConfiguration.in(update).value */
+/*       val uwconfig = unresolvedWarningConfiguration.in(update).value */
+/*       val modDescr = depRes.wrapDependencyInModule(mid) */
+
+/*       depRes */
+/*         .update( */
+/*           modDescr, */
+/*           updc, */
+/*           uwconfig, */
+/*           streams.value.log */
+/*         ) */
+/*         .map(_.allFiles) */
+/*         .fold(uw => throw uw.resolveException, identity) */
+/*     } */
+
+/*     println( */
+/*       Platform.artifactSuffix */
+/*     ) */
+
+/*     getJars( */
+/*       ModuleID( */
+/*         "com.indoorvivants", */
+/*         "bindgen_native0.4_3", */
+/*         version */
+/*       ).intransitive().classifier(Platform.artifactSuffix) */
+/*     ).foreach(println) */
+/*   } */
+/* ) */
+
 lazy val libclang = project
   .in(file("libclang"))
   .enablePlugins(ScalaNativePlugin)
@@ -196,8 +288,8 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
 
   def build(classifier: String, file: File): (String, (Artifact, File)) = {
     val artif = Artifact("bindgen", classifier)
-      .withExtension("exe")
-      .withType("exe")
+      .withExtension("jar")
+      .withType("jar")
       .withConfigurations(Vector(Compile))
 
     classifier -> (artif, file)
@@ -371,3 +463,5 @@ inThisBuild(
     )
   )
 )
+
+lazy val fetchedBinary = taskKey[Unit]("")
