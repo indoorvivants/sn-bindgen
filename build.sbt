@@ -46,8 +46,12 @@ lazy val bindgen = project
   .dependsOn(libclang)
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
-  .settings(nativeConfig ~= environmentConfiguration)
-  .settings(nativeConfig ~= usesLibClang)
+  .settings(Compile / nativeConfig ~= environmentConfiguration)
+  .settings(Compile / nativeConfig ~= usesLibClang)
+  .settings(Test / nativeConfig ~= usesLibClang)
+  .settings(
+    Test / nativeLink / artifactPath := crossTarget.value / "test-bindgen-out"
+  )
   .settings(
     moduleName := "bindgen",
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
@@ -114,10 +118,6 @@ lazy val bindgen = project
       builder.generate(cFiles, BindingLang.C)
     }
   )
-  .settings(
-    Test / nativeLink / artifactPath := crossTarget.value / "test-bindgen-out"
-  )
-  .settings(Test / nativeConfig ~= usesLibClang)
   .settings {
     val detected = detectBinaryArtifacts
     detected
