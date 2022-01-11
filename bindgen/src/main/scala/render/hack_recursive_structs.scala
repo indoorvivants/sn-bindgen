@@ -105,18 +105,5 @@ def hack_recursive_structs(
         idx -> rule
       }
     }.toMap
-
-  // val rewrite = struct.fields.zip(cyclicalParameters).collect {
-  //   case ((name, typ), cyclical) if cyclical => name
-  // }
-
-  // val newfields = struct.fields.zip(cyclicalParameters).map {
-  //   case ((name, typ), cyclical) if cyclical =>
-  //     name -> CType.Pointer(CType.Void)
-  //   case (param, _) => param
-  // }
-
-  // struct.copy(newfields) -> rewrite.toSet
-
   end if
 end hack_recursive_structs

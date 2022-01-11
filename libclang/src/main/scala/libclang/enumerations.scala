@@ -734,9 +734,6 @@ object enumerations:
         : CXCursor_ExceptionSpecificationKind = 9
   end CXCursor_ExceptionSpecificationKind
 
-  // opaque type CXErrorCode = Int
-  // object CXErrorCode extends CEnum[CXErrorCode]:
-
   opaque type CXAvailabilityKind = Int
   object CXAvailabilityKind extends CEnum[CXAvailabilityKind]:
     val CXAvailability_Available: CXAvailabilityKind = 0
