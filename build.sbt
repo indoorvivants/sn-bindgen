@@ -1,3 +1,6 @@
+import _root_.bindgen.interface.Platform
+import coursierapi.ResolutionParams
+import coursierapi.Repository
 import sbt.io.Using
 import java.util.stream.Collectors
 import java.nio.file.Files
@@ -10,10 +13,12 @@ import _root_.bindgen.interface.{BindingBuilder, BindingLang}
 
 lazy val Versions = new {
   val decline = "2.2.0"
-  val scalaNative = "0.4.3-RC1"
+  val scalaNative = "0.4.3-RC2"
   val junit = "0.11"
 
-  val Scala2 = List("2.12.15", "2.13.8")
+  val Scala212 = "2.12.15"
+  val Scala213 = "2.13.8"
+  val Scala2 = List(Scala212, Scala213)
   val Scala3 = List("3.1.0")
 }
 
@@ -22,6 +27,7 @@ lazy val root = project
   .in(file("."))
   .aggregate(bindgen, libclang)
   .aggregate(iface.projectRefs*)
+  .aggregate(plugin.projectRefs*)
   .settings(
     publish / skip := true,
     publishLocal / skip := true
@@ -38,7 +44,19 @@ lazy val iface = projectMatrix
     libraryDependencies += "com.novocode" % "junit-interface" % Versions.junit % Test,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     Test / fork := true,
-    Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString
+    Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString,
+    Compile / resourceGenerators += Def.task {
+      val out =
+        (Compile / managedResourceDirectories).value.head / "sn-bindgen.properties"
+
+      val props = new java.util.Properties()
+
+      props.setProperty("sn-bindgen.version", version.value)
+
+      IO.write(props, "SN bindgen properites file", out)
+
+      List(out)
+    }
   )
 
 lazy val bindgen = project
@@ -128,6 +146,52 @@ lazy val bindgen = project
       .flatten
   }
 
+lazy val localBindgenArtifact = project
+  .in(file("local-bindgen"))
+  .enablePlugins(ScalaNativePlugin)
+  .dependsOn(bindgen, libclang)
+  .settings(nativeCommon)
+  .settings(
+    packageBin / publishArtifact := false,
+    packageDoc / publishArtifact := false,
+    packageSrc / publishArtifact := false,
+    moduleName := "bindgen"
+  )
+  .settings {
+
+    def build(classifier: String) =
+      Artifact("bindgen", classifier)
+        .withExtension("jar")
+        .withType("jar")
+        .withConfigurations(Vector(Compile))
+    addArtifact(
+      Def.setting(build(Platform.artifactSuffix)),
+      Def.task { (bindgen / Compile / nativeLink).value }
+    )
+  }
+
+lazy val plugin = projectMatrix
+  .in(file("sbt-plugin"))
+  .defaultAxes(VirtualAxis.scalaABIVersion(Versions.Scala212), VirtualAxis.jvm)
+  .allVariations(List(Versions.Scala212), List(VirtualAxis.jvm))
+  .dependsOn(iface)
+  .settings(
+    sbtPlugin := true,
+    pluginCrossBuild / sbtVersion := "1.5.7",
+    moduleName := "bindgen-sbt-plugin",
+    scriptedLaunchOpts := {
+      scriptedLaunchOpts.value ++
+        Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+    },
+    scriptedBufferLog := false,
+    publishLocal := publishLocal
+      .dependsOn(
+        localBindgenArtifact / publishLocal
+      )
+      .value
+  )
+  .enablePlugins(ScriptedPlugin, SbtPlugin)
+
 lazy val libclang = project
   .in(file("libclang"))
   .enablePlugins(ScalaNativePlugin)
@@ -196,8 +260,8 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
 
   def build(classifier: String, file: File): (String, (Artifact, File)) = {
     val artif = Artifact("bindgen", classifier)
-      .withExtension("exe")
-      .withType("exe")
+      .withExtension("jar")
+      .withType("jar")
       .withConfigurations(Vector(Compile))
 
     classifier -> (artif, file)
@@ -340,7 +404,6 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
 
 // --------------SETTINGS-------------------------
 lazy val nativeCommon = Seq(
-  resolvers += Resolver.sonatypeRepo("snapshots"),
   scalaVersion := "3.1.0"
 )
 
@@ -349,7 +412,10 @@ lazy val watchedHeaders =
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-addCommandAlias("ci", "scalafmtCheckAll; scalafmtSbtCheck; test")
+addCommandAlias(
+  "ci",
+  "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted"
+)
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
 
 inThisBuild(
@@ -371,3 +437,5 @@ inThisBuild(
     )
   )
 )
+
+lazy val fetchedBinary = taskKey[Unit]("")
