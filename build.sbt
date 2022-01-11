@@ -13,12 +13,12 @@ import _root_.bindgen.interface.{BindingBuilder, BindingLang}
 
 lazy val Versions = new {
   val decline = "2.2.0"
-  val scalaNative = "0.4.3-RC1"
+  val scalaNative = "0.4.3-RC2"
   val junit = "0.11"
 
   val Scala212 = "2.12.15"
   val Scala213 = "2.13.8"
-  val Scala2 = List(Scala212, "2.13.8")
+  val Scala2 = List(Scala212, Scala213)
   val Scala3 = List("3.1.0")
 }
 
