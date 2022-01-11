@@ -191,69 +191,6 @@ lazy val plugin = projectMatrix
       .value
   )
   .enablePlugins(ScriptedPlugin, SbtPlugin)
-/* .settings( */
-/*   fetchedBinary := { */
-/*     val version = "0.0.0+47-5be3a81a+20220111-2032-SNAPSHOT" */
-/*     /1* /2* val d1 = dep"com.indoorvivants:bindgen_native0.4_3" *2/ *1/ */
-/*     /1* /2* .withVersion(v1) *2/ *1/ */
-/*     /1* /2* .withPublication( *2/ *1/ */
-/*     /1* /2*   "bindgen_native0.4_3", *2/ *1/ */
-/*     /1* /2*   Type("jar"), *2/ *1/ */
-/*     /1* /2*   Extension("exe"), *2/ *1/ */
-/*     /1* /2*   Classifier("osx-x86_64") *2/ *1/ */
-/*     /1* /2* ) *2/ *1/ */
-/*     /1* import coursierapi.{Dependency, Fetch} *1/ */
-/*     /1* val dep = Dependency *1/ */
-/*     /1*   .of("com.indoorvivants", "bindgen_native0.4_3", version) *1/ */
-/*     /1*   .withType("exe") *1/ */
-/*     /1*   .withClassifier("osx-x86_64") *1/ */
-/*     /1*   .withTransitive(false) *1/ */
-/*     /1* println(dep) *1/ */
-/*     /1* val fetch = *1/ */
-/*     /1*   Fetch *1/ */
-/*     /1*     .create() *1/ */
-/*     /1*     .addDependencies(dep) *1/ */
-/*     /1*     .withResolutionParams( *1/ */
-/*     /1*       ResolutionParams.create().forceProperty("extension", "exe") *1/ */
-/*     /1*     ) *1/ */
-/*     /1*     .addRepositories( *1/ */
-/*     /1*       coursierapi.MavenRepository *1/ */
-/*     /1*         .of("https://oss.sonatype.org/content/repositories/snapshots/") *1/ */
-/*     /1*     ) *1/ */
-/*     /1* /2* .addRepositories(Resolver.sonatypeRepo("snapshots")) *2/ *1/ */
-/*     /1* println(fetch.fetch().forEach(println)) *1/ */
-/*     val res = dependencyResolution.value */
-/*     def getJars(mid: ModuleID) = { */
-
-/*       val depRes = dependencyResolution.in(update).value */
-/*       val updc = updateConfiguration.in(update).value */
-/*       val uwconfig = unresolvedWarningConfiguration.in(update).value */
-/*       val modDescr = depRes.wrapDependencyInModule(mid) */
-
-/*       depRes */
-/*         .update( */
-/*           modDescr, */
-/*           updc, */
-/*           uwconfig, */
-/*           streams.value.log */
-/*         ) */
-/*         .map(_.allFiles) */
-/*         .fold(uw => throw uw.resolveException, identity) */
-/*     } */
-
-/*     println( */
-/*       Platform.artifactSuffix */
-/*     ) */
-
-/*     getJars( */
-/*       ModuleID( */
-/*         "com.indoorvivants", */
-/*         "bindgen_native0.4_3", */
-/*         version */
-/*       ).intransitive().classifier(Platform.artifactSuffix) */
-/*     ).foreach(println) */
-/*   } */
-/* ) */
 
 lazy val libclang = project
   .in(file("libclang"))
@@ -475,7 +412,10 @@ lazy val watchedHeaders =
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-addCommandAlias("ci", "scalafmtCheckAll; scalafmtSbtCheck; test")
+addCommandAlias(
+  "ci",
+  "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted"
+)
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
 
 inThisBuild(
