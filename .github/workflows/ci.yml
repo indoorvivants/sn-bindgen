@@ -5,8 +5,6 @@ on:
     tags: ["v*"]
   pull_request:
     branches: ["*"]
-  # release:
-  #   types: [published]
 
 env: 
   JAVA_OPTS: "-Xmx2G"
@@ -49,40 +47,6 @@ jobs:
       
       - name: Compile examples
         run: sbt examples/compile
-
-  # examples:
-  #   needs: [build]
-  #   name: Examples
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - os: macos-latest
-  #           binary: sn-bindgen-x86_64-apple-darwin
-  #         - os: ubuntu-latest
-  #           binary: sn-bindgen-x86_64-pc-linux
-  #   runs-on: ${{ matrix.os }}
-  #   env: 
-  #     BINARY: /tmp/binaries/${{ matrix.binary }}/bindgen-out
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: coursier/cache-action@v6
-  #     - uses: olafurpg/setup-scala@v13
-  #       with:
-  #         java-version: graalvm-ce-java17
-
-  #     - name: Download binaries
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         path: /tmp/binaries
-
-  #     - name: Setup
-  #       run: ./build/setup_unix.sh
-
-  #     - name: Generate and compile examples
-  #       run: |
-  #         chmod +x $BINARY
-  #         sbt examples/compile
 
   release:
     needs: [build]
