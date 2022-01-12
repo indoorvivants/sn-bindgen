@@ -34,7 +34,7 @@ jobs:
         run: ./build/setup_unix.sh
 
       - name: Build native binary
-        run: sbt bindgen/nativeLink
+        run: sbt --client bindgen/nativeLink
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
@@ -43,10 +43,10 @@ jobs:
           name: ${{ matrix.uploaded_filename }}
       
       - name: Run tests
-        run: sbt ci
+        run: sbt --client ci
       
       - name: Compile examples
-        run: sbt examples/compile
+        run: sbt --client examples/compile
 
   release:
     needs: [build]
