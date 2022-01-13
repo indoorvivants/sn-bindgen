@@ -10,7 +10,8 @@ enum Def:
       var structs: mutable.Set[Struct],
       var unions: mutable.Set[Union],
       var functions: mutable.Set[Function],
-      var aliases: mutable.Set[Alias]
+      var aliases: mutable.Set[Alias],
+      var mainFileNames: mutable.Set[String]
   )
   case Enum(
       var values: ListBuffer[(String, Long)],

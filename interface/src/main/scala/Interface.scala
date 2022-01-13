@@ -17,6 +17,16 @@ object BindingLang {
   case object C extends BindingLang
 }
 
+sealed abstract class LogLevel(val str: String)
+    extends Product
+    with Serializable
+object LogLevel {
+  case object Trace extends LogLevel("trace")
+  case object Info extends LogLevel("info")
+  case object Warn extends LogLevel("warn")
+  case object Error extends LogLevel("error")
+}
+
 import BindingLang.*
 object Utils {
   private[interface] implicit class FileOps(val f: File) extends AnyVal {
@@ -57,6 +67,7 @@ class BindingBuilder(binary: File) {
   )
 
   private val bindings = List.newBuilder[Binding]
+  private var level = LogLevel.Info
 
   private case class Binding(
       headerFile: File,
@@ -81,7 +92,7 @@ class BindingBuilder(binary: File) {
         sb += s"--clang $clangFlag"
       }
 
-      sb += " --info"
+      sb += s" --${level.str}"
       if (lang == BindingLang.Scala)
         sb += "--scala"
       else
@@ -111,6 +122,9 @@ class BindingBuilder(binary: File) {
 
     this
   }
+
+  def withLogLevel(level: LogLevel) =
+    this.level = level
 
   def generate(to: File, lang: BindingLang): Seq[File] = {
 
