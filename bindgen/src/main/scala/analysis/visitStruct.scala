@@ -41,7 +41,9 @@ def visitStruct(cursor: CXCursor, name: String)(using
             case un: Def.Union  => un.name
             case st: Def.Struct => st.name
           builder.fields.addOne(
-            fieldName -> CType.Reference(Name.Model(s"${builder.name}.$nestedName"))
+            fieldName -> CType.Reference(
+              Name.Model(s"${builder.name}.$nestedName")
+            )
           )
           collector.numAnonymous += 1
         else

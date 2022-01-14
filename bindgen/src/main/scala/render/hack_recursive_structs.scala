@@ -75,7 +75,8 @@ def hack_recursive_structs(
       )
 
       originalType match
-        case Pointer(Reference(Name.Model(name)))   => result(Pointer(Reference(Name.Model(name))))
+        case Pointer(Reference(Name.Model(name))) =>
+          result(Pointer(Reference(Name.Model(name))))
         case Reference(Name.Model(name)) =>
           aliasResolver(name) match
             case Pointer(_: Function) => result(Reference(Name.Model(name)))
