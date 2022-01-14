@@ -41,9 +41,9 @@ def alignment(typ: CType)(using AliasResolver): CSize =
     case Pointer(_)                => staticSize(typ)
     case Struct(fields) =>
       fields.map(alignment).maxOption.getOrElse(1.toULong)
-    case Bool            => 1.toULong
-    case Typedef(name)   => alignment(aliasResolver(name))
-    case RecordRef(name) => alignment(aliasResolver(name))
+    case Bool                          => 1.toULong
+    case Reference(Name.Model(name))   => alignment(aliasResolver(name))
+    case Reference(Name.BuiltIn(name)) => name.alignment
     case Union(fields) =>
       1.toULong // TODO: are unions aligned at all?
   end match
@@ -78,9 +78,9 @@ def staticSize(typ: CType)(using AliasResolver): CSize =
     case Union(fields) =>
       // TODO: are unions aligned on any boundary?
       fields.map(staticSize).max
-    case Typedef(name)   => staticSize(aliasResolver(name))
-    case RecordRef(name) => staticSize(aliasResolver(name))
-    case Bool            => 1.toULong
+    case Reference(Name.Model(name))   => staticSize(aliasResolver(name))
+    case Reference(Name.BuiltIn(name)) => name.size
+    case Bool                          => 1.toULong
 
   end match
 end staticSize

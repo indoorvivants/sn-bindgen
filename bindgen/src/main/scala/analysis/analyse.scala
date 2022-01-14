@@ -5,17 +5,12 @@ import scala.scalanative.unsigned.*
 import scalanative.libc.*
 import libclang.defs.*
 import libclang.types.*
+import libclang.fluent.*
 import libclang.enumerations.*
 import scala.collection.mutable
 import java.nio.file.Files
 import java.io.FileWriter
 import cats.data.NestedInstances0
-
-def addBuiltin(binding: Def.Binding): Def.Binding =
-  binding.copy(aliases =
-    binding.aliases
-      .addOne(Def.Alias("__builtin_va_list", CType.Pointer(CType.Byte)))
-  )
 
 def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
   import CXDiagnosticSeverity as sev
@@ -24,7 +19,7 @@ def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
     case sev.CXDiagnostic_Warning                         => warning(_)
     case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
 
-def analyse(file: String)(using Zone, Config): Def.Binding =
+def analyse(file: String)(using Zone, Config): Binding =
   info(s"Using following clang flags: ${summon[Config].clangFlags}")
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
@@ -70,10 +65,11 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     throw Exception(
       s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
     )
-  type Data = (Def.Binding, Config, Zone)
+  type Data = (Binding, Config, Zone)
+  CVarArgList
 
-  val cxClientData = Captured.allocate[Def.Binding](
-    Def.Binding(
+  val cxClientData = Captured.allocate[Binding](
+    Binding(
       enums = mutable.Set.empty,
       structs = mutable.Set.empty,
       unions = mutable.Set.empty,
@@ -89,71 +85,85 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     translationUnitCursor,
     CXCursorVisitor.apply {
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
-        val (binding, zone, conf) = !(data.unwrap[Captured[Def.Binding]])
+        val (binding, zone, conf) = !(data.unwrap[Captured[Binding]])
 
         given Config = conf
         given Zone = zone
 
-        val loc = clang_getCursorLocation(cursor)
-        val isFromMainFile =
-          true // clang_Location_isFromMainFile(loc) == 1.toUInt
-        trace(
-          s"Cursor ${clang_getCursorSpelling(cursor).string}, from main file: $isFromMainFile"
-        )
-        if isFromMainFile then
-          if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
-            val function = visitFunction(cursor)
-            binding.functions.addOne(function)
-          end if
-
-          if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-            val typ = clang_getTypedefDeclUnderlyingType(cursor)
-            val name = clang_getCursorSpelling(cursor).string
-            val referencedType = clang_Type_getNamedType(typ)
-            val typeDecl = clang_getTypeDeclaration(referencedType)
-            if (referencedType.kind == CXTypeKind.CXType_Enum) then
-              binding.enums.addOne(visitEnum(typeDecl, true))
-            else if (referencedType.kind == CXTypeKind.CXType_Record) then
-              val struct = visitStruct(typeDecl, name)
-              if clang_getTypeSpelling(typ).string.startsWith("union ") then
-                binding.unions.addOne(Def.Union(struct.fields, struct.name))
-              else if name != "" then
-                binding.structs.filterInPlace(_.name != name)
-                binding.structs.addOne(visitStruct(typeDecl, name))
-            else binding.aliases.addOne(Def.Alias(name, constructType(typ)))
-            end if
-          end if
-
-          if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
-            val name = clang_getCursorSpelling(cursor).string
-            if name != "" then
-              val struct = visitStruct(cursor, name)
-
-              binding.unions.addOne(Def.Union(struct.fields, struct.name))
-
-          if cursor.kind == CXCursorKind.CXCursor_StructDecl then
-            val name = clang_getCursorSpelling(cursor).string
-            if name != "" then
-              binding.structs.filterInPlace(_.name != name)
-              binding.structs.addOne(visitStruct(cursor, name))
-
-          if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
-            binding.enums.addOne(
-              visitEnum(
-                cursor,
-                clang_getCursorType(
-                  parent
-                ).kind == CXTypeKind.CXType_Typedef
-              )
-            )
-          end if
-
-          if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-            CXChildVisitResult.CXChildVisit_Continue
-          else CXChildVisitResult.CXChildVisit_Recurse
-        else CXChildVisitResult.CXChildVisit_Continue
+        val loc = cursor.location
+        if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
+          val function = visitFunction(cursor)
+          if cursor.location.isFromMainFile then
+            definitionClosure(function).foreach(binding.mainFileNames.add)
+          binding.functions.addOne(function)
         end if
 
+        if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+          val typ = clang_getTypedefDeclUnderlyingType(cursor)
+          val name = cursor.spelling
+          val referencedType = clang_Type_getNamedType(typ)
+          val typeDecl = clang_getTypeDeclaration(referencedType)
+          if (referencedType.kind == CXTypeKind.CXType_Enum) then
+            val en = visitEnum(typeDecl, true)
+            if cursor.location.isFromMainFile then
+              definitionClosure(en).foreach(binding.mainFileNames.add)
+            binding.enums.addOne(en)
+          else if (referencedType.kind == CXTypeKind.CXType_Record) then
+            val struct = visitStruct(typeDecl, name)
+
+            if cursor.location.isFromMainFile then
+              definitionClosure(struct).foreach(binding.mainFileNames.add)
+
+            if clang_getTypeSpelling(typ).string.startsWith("union ") then
+              binding.unions.addOne(Def.Union(struct.fields, struct.name))
+            else if name != "" then
+              binding.structs.filterInPlace(_.name != name)
+              binding.structs.addOne(visitStruct(typeDecl, name))
+          else
+            val alias: Def.Alias =
+              Def.Alias(name, constructType(typ))
+
+            if cursor.location.isFromMainFile then
+              definitionClosure(alias).foreach(binding.mainFileNames.add)
+
+            binding.aliases.addOne(alias)
+          end if
+        end if
+
+        if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
+          val name = clang_getCursorSpelling(cursor).string
+          if name != "" then
+            val en = visitStruct(cursor, name)
+            if cursor.location.isFromMainFile then
+              definitionClosure(en).foreach(binding.mainFileNames.add)
+
+            binding.unions.addOne(Def.Union(en.fields, en.name))
+
+        if cursor.kind == CXCursorKind.CXCursor_StructDecl then
+          val name = clang_getCursorSpelling(cursor).string
+          if name != "" then
+            binding.structs.filterInPlace(_.name != name)
+            val en = visitStruct(cursor, name)
+            if cursor.location.isFromMainFile then
+              definitionClosure(en).foreach(binding.mainFileNames.add)
+            binding.structs.addOne(en)
+
+        if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
+          val en = visitEnum(
+            cursor,
+            clang_getCursorType(
+              parent
+            ).kind == CXTypeKind.CXType_Typedef
+          )
+
+          if cursor.location.isFromMainFile then
+            definitionClosure(en).foreach(binding.mainFileNames.add)
+          binding.enums.addOne(en)
+        end if
+
+        if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+          CXChildVisitResult.CXChildVisit_Continue
+        else CXChildVisitResult.CXChildVisit_Recurse
     },
     CXClientData.wrap(cxClientData)
   )
@@ -161,10 +171,60 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
   clang_disposeTranslationUnit(unit)
   clang_disposeIndex(index)
 
-  val binding = !cxClientData
+  val binding = (!cxClientData)._1
 
-  addBuiltin(binding._1)
+  trace(s"Defined or used in main file: ${binding.mainFileNames}")
+
+  def allowed(f: Def) =
+    f.defName.isEmpty || f.defName.exists { nm =>
+      !BuiltIn.aliasNames.contains(nm) && binding.mainFileNames.contains(nm)
+    }
+
+  binding.functions.filterInPlace(allowed)
+  binding.aliases.filterInPlace(allowed)
+  binding.structs.filterInPlace(allowed)
+  binding.enums.filterInPlace(allowed)
+  binding.unions.filterInPlace(allowed)
+
+  trace("Binding information:")
+  binding.aliases.foreach { a =>
+    trace(s"alias $a")
+  }
+
+  BuiltIn.add(binding)
 end analyse
+
+object BuiltIn:
+  def add(binding: Binding): Binding =
+    aliases.foldLeft[Binding](binding) { case (b, alias) =>
+      if b.mainFileNames.contains(alias.name) then
+        b.aliases.addOne(alias)
+        b
+      else b
+    }
+
+  // val structs: Set[Def.Alias] = Map(
+  //   // "FILE" -> "scala.scalanative.libc.stdio.FILE",
+  //   // "fpos_t" -> "scala.scalanative.libc.stdio.fpos_t",
+  //   // "size_t" -> "scala.scalanative.unsafe.CSize",
+  //   // "ssize_t" -> "scala.scalanative.unsafe.CSSize",
+  //   // "time_t" -> "scala.scalanative.posix.time.time_t",
+  //   // "va_list" -> "scala.scalanative.unsafe.CVarArgList"
+  // )
+
+  // val aliases: Set[Def.Alias] = structs ++
+  //   Set[Def.Alias](
+  //     Def.Alias("__builtin_va_list", CType.Pointer(CType.Byte))
+  //   )
+  //
+  val aliases: Set[Def.Alias] = BuiltinType.all
+    .map[Def.Alias] { tpe =>
+      Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
+    }
+    .toSet
+  val aliasNames = aliases.map(_.name)
+end BuiltIn
+
 extension (seq: Seq[String])
   private[bindgen] def toCArray(using Zone): Ptr[CString] =
     val mem = alloc[CString](seq.size)

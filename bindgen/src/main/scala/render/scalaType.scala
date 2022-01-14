@@ -5,8 +5,8 @@ import bindgen.*
 def scalaType(typ: CType)(using AliasResolver): String =
   import CType.*
   typ match
-    case Typedef(name)   => name
-    case RecordRef(name) => name
+    case Reference(Name.Model(name))   => name
+    case Reference(Name.BuiltIn(name)) => name.full
     case Pointer(to) =>
       to match
         case Void       => "Ptr[Byte]" // there's no void type on SN

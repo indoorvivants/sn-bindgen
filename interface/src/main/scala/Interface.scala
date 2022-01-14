@@ -67,7 +67,7 @@ class BindingBuilder(binary: File) {
   )
 
   private val bindings = List.newBuilder[Binding]
-  private var level = LogLevel.Info
+  private var level: LogLevel = LogLevel.Info
 
   private case class Binding(
       headerFile: File,

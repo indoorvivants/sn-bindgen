@@ -3,16 +3,19 @@ package bindgen
 import scala.collection.mutable.ListBuffer
 import bindgen.CType.Parameter
 import scala.collection.mutable
+import Def.*
+import scala.scalanative.unsigned.ULong
+import scala.scalanative.unsafe.Tag
 
+case class Binding(
+    var enums: mutable.Set[Enum],
+    var structs: mutable.Set[Struct],
+    var unions: mutable.Set[Union],
+    var functions: mutable.Set[Function],
+    var aliases: mutable.Set[Alias],
+    var mainFileNames: mutable.Set[String]
+)
 enum Def:
-  case Binding(
-      var enums: mutable.Set[Enum],
-      var structs: mutable.Set[Struct],
-      var unions: mutable.Set[Union],
-      var functions: mutable.Set[Function],
-      var aliases: mutable.Set[Alias],
-      var mainFileNames: mutable.Set[String]
-  )
   case Enum(
       var values: ListBuffer[(String, Long)],
       var name: Option[String],
@@ -32,6 +35,14 @@ enum Def:
       val originalCType: OriginalCType
   )
   case Alias(name: String, underlying: CType)
+
+  def defName: Option[String] =
+    this match
+      case Alias(name, _) => Some(name)
+      case Union(_, name) => Some(name)
+      case f: Function    => Some(f.name)
+      case s: Struct      => Some(s.name)
+      case e: Enum        => e.name
 
 end Def
 
@@ -78,18 +89,89 @@ enum CType:
   case NumericReal(base: FloatingBase)
   case NumericComplex(base: FloatingBase)
 
-  case Typedef(name: String)
-  case RecordRef(name: String)
+  case Reference(name: Name)
 end CType
+
+enum Name:
+  case Model(value: String)
+  case BuiltIn(value: BuiltinType)
 
 import CType.*
 
+private def integral(base: IntegralBase, st: SignType) =
+  NumericIntegral(base, st)
+
+private def _unsafe(typ: String) = s"scala.scalanative.unsafe.$typ"
+
 // TODO: this will not work on a 32 architecture. Need to reference UWord somehow.
+//
+// "FILE" -> "scala.scalanative.libc.stdio.FILE",
+// "fpos_t" -> "scala.scalanative.libc.stdio.fpos_t",
+// "size_t" -> "scala.scalanative.unsafe.CSize",
+// "ssize_t" -> "scala.scalanative.unsafe.CSSize",
+// "time_t" -> "scala.scalanative.posix.time.time_t",
+// "va_list" -> "scala.scalanative.unsafe.CVarArgList"
+private def size[T](using t: Tag[T]) = t.size
+private def alignment[T](using t: Tag[T]) = t.alignment
+
+import scala.scalanative.unsafe.*
+import scala.scalanative.posix.time.*
+import scala.scalanative.libc.stdio.*
+import scala.scalanative.posix.sys.socket.*
+
+case class BuiltinType(
+    short: String,
+    full: String,
+    size: ULong,
+    alignment: ULong
+)
+
 object BuiltinType:
-  val size_t = NumericIntegral(IntegralBase.Long, SignType.Unsigned)
-  val ssize_t = NumericIntegral(IntegralBase.Long, SignType.Signed)
-  val uint32_t = NumericIntegral(IntegralBase.Int, SignType.Unsigned)
-  val uint8_t = NumericIntegral(IntegralBase.Char, SignType.Unsigned)
+  val all = List(
+    BuiltinType(
+      "FILE",
+      "scala.scalanative.libc.stdio.FILE",
+      size[FILE],
+      alignment[FILE]
+    ),
+    BuiltinType(
+      "fpos_t",
+      "scala.scalanative.libc.stdio.fpos_t",
+      size[fpos_t],
+      alignment[fpos_t]
+    ),
+    BuiltinType(
+      "va_list",
+      _unsafe("CVarArgList"),
+      size[CVarArgList],
+      alignment[CVarArgList]
+    ),
+    BuiltinType(
+      "size_t",
+      _unsafe("CSize"),
+      size[CSize],
+      alignment[CSize]
+    ),
+    BuiltinType(
+      "ssize_t",
+      _unsafe("CSSize"),
+      size[CSSize],
+      alignment[CSSize]
+    ),
+    BuiltinType(
+      "time_t",
+      "scala.scalanative.posix.time.time_t",
+      size[time_t],
+      alignment[time_t]
+    ),
+    BuiltinType(
+      "sockaddr",
+      "scala.scalanative.posix.sys.socket.sockaddr",
+      size[sockaddr],
+      alignment[sockaddr]
+    )
+  )
+end BuiltinType
 
 enum SignType:
   case Signed, Unsigned

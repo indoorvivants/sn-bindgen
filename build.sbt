@@ -9,7 +9,7 @@ import scala.scalanative.build.NativeConfig
 import scala.scalanative.build.LTO
 import commandmatrix.extra.*
 
-import _root_.bindgen.interface.{BindingBuilder, BindingLang}
+import _root_.bindgen.interface.{BindingBuilder, BindingLang, LogLevel}
 
 lazy val Versions = new {
   val decline = "2.2.0"
@@ -103,6 +103,7 @@ lazy val bindgen = project
         .toSeq
     },
     Test / sourceGenerators += Def.task {
+
       val scalaFiles = (Test / sourceManaged).value
       val path =
         baseDirectory.value / "src" / "test" / "resources" / "scala-native"
@@ -354,16 +355,16 @@ def llvmLib =
 
 def sampleBindings(location: File, builder: BindingBuilder) = {
   import builder.define
-  /* define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h")) */
-  /* define(location / "test.h", "libtest", Some("test"), List("test.h")) */
-  /* define( */
-  /*   location / */
-  /*     "Clang-Index.h", */
-  /*   "libclang", */
-  /*   Some("clang"), */
-  /*   List("clang-c/Index.h"), */
-  /*   llvmInclude(10 to 13) */
-  /* ) */
+  define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
+  define(location / "test.h", "libtest", Some("test"), List("test.h"))
+  define(
+    location /
+      "Clang-Index.h",
+    "libclang",
+    Some("clang"),
+    List("clang-c/Index.h"),
+    llvmInclude(10 to 13)
+  )
   define(
     location /
       "tree-sitter.h",
@@ -375,31 +376,33 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
       "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"
     )
   )
-  if (osName != "mac")
+  define(
+    location /
+      "raylib.h",
+    "libraylib",
+    Some("raylib"),
+    List("raylib.h"),
+    llvmInclude(10 to 13) ++ clangInclude(10 to 13) ++ List(
+      "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1",
+      "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"
+    )
+  )
+
+  if (osName != "linux")
     define(
       location /
-        "raylib.h",
-      "libraylib",
-      Some("raylib"),
-      List("raylib.h"),
-      llvmInclude(10 to 13) ++ clangInclude(10 to 13)
+        "curl.h",
+      "libcurl",
+      Some("curl"),
+      List("curl.h"),
+      clangInclude(10 to 13) ++
+        includes(ifMac =
+          List(
+            "/opt/homebrew/opt/curl/include/curl",
+            "/usr/local/opt/curl/include/curl"
+          )
+        )
     )
-
-  /* if (osName != "linux") */
-  /*   define( */
-  /*     location / */
-  /*       "curl.h", */
-  /*     "libcurl", */
-  /*     Some("curl"), */
-  /*     List("curl.h"), */
-  /*     clangInclude(10 to 13) ++ */
-  /*       includes(ifMac = */
-  /*         List( */
-  /*           "/opt/homebrew/opt/curl/include/curl", */
-  /*           "/usr/local/opt/curl/include/curl" */
-  /*         ) */
-  /*       ) */
-  /*   ) */
   // Compiling this monster crashes the compiler :shrug:
   /* define( */
   /*   location / */

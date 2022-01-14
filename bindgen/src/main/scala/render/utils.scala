@@ -1,7 +1,7 @@
 package bindgen.rendering
 import bindgen.*
 
-import bindgen.Def.Binding
+import bindgen.Binding
 import scala.scalanative.unsafe.Tag
 import scala.scalanative.annotation.alwaysinline
 import scala.collection.mutable.ListBuffer
@@ -30,7 +30,9 @@ def aliasResolver(name: String)(using ar: AliasResolver): CType =
 def packageName(using conf: Config): String = conf.packageName.value
 
 type Appender = Config ?=> String => Unit
+
 type AliasResolver = String => CType
+
 object AliasResolver:
   def create(aliases: Seq[Def]): AliasResolver = s =>
     aliases
