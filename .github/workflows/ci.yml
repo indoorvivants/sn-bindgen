@@ -33,6 +33,12 @@ jobs:
       - name: Setup
         run: ./build/setup_unix.sh
 
+      - name: Compile dummy C file
+        run: |
+          FILENAME=$(mktemp)
+          echo '#include "stdbool.h"' > $FILENAME
+          clang -v $FILENAME
+
       - name: Build native binary
         run: sbt bindgen/nativeLink
 

@@ -29,19 +29,15 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
   clang_visitChildren(
     functionCursor,
     CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
-      // zone {
       val (builder, zone, config) = (!d.unwrap[Captured[Def.Function]])
       given Zone = zone
       given Config = config
-      // errln(builder.name)
       if cursor.kind == CXCursorKind.CXCursor_ParmDecl then
         val origParamName = Option(clang_getCursorSpelling(cursor).string)
           .filter(_.nonEmpty)
 
         val parameterName = origParamName
           .getOrElse(s"_${builder.parameters.size}")
-
-        // errln(s"    $parameterName")
 
         val parameterType = constructType(clang_getCursorType(cursor))
         val parameterTypeRendered =
@@ -56,15 +52,8 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
           )
         )
         CXChildVisitResult.CXChildVisit_Continue
-      else
-        // errln(
-        //   s"    Not a parmdecl, but ${clang_getCursorKindSpelling(
-        //     cursor.kind
-        //   ).string} === ${clang_getCursorSpelling(cursor).string}"
-        // )
-        CXChildVisitResult.CXChildVisit_Recurse
+      else CXChildVisitResult.CXChildVisit_Recurse
       end if
-    // }
     },
     CXClientData.wrap(mem)
   )

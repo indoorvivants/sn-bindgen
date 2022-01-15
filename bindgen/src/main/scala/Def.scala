@@ -10,12 +10,6 @@ import scala.scalanative.unsafe.Tag
 case class BindingDefinition(item: Def, isFromMainFile: Boolean)
 
 case class Binding(
-    // var enums: mutable.Set[Enum] = mutable.Set.empty,
-    // var structs: mutable.Set[Struct] = mutable.Set.empty,
-    // var unions: mutable.Set[Union] = mutable.Set.empty,
-    // var functions: mutable.Set[Function] = mutable.Set.empty,
-    // var aliases: mutable.Set[Alias] = mutable.Set.empty,
-    // var mainFileNames: mutable.Set[String] = mutable.Set.empty,
     var named: mutable.Map[String, BindingDefinition] = mutable.Map.empty
 ):
   def add(item: Def, isFromMainFile: Boolean) =
