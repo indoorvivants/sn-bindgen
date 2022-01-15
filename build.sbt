@@ -364,9 +364,27 @@ def llvmInclude: List[String] = {
     }
 }
 
+def macosHeaderFolders: List[String] =
+  if (Platform.os == Platform.OS.MacOS) {
+    if (Platform.target.arch == Platform.Arch.x86_64)
+      List(
+        // on X86 macs
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+      )
+    else
+      List(
+        // on M1 macs
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
+        "/Library/Developer/CommandLineTools/usr/include"
+      )
+
+  } else Nil
+
 def clangInclude: List[String] =
   Platform.clang
-    .map(cl => List("-I" + cl.clangInclude.toString))
+    .map(cl => List(cl.clangInclude.toString) ++ macosHeaderFolders)
+    .map(_.map("-I" + _))
     .getOrElse {
       val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
       includes(
@@ -390,9 +408,21 @@ def clangInclude: List[String] =
       )
     }
 
+def macosLibFolders: List[String] = {
+  if (Platform.os == Platform.OS.MacOS) {
+    List(
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib",
+      "/Library/Developer/CommandLineTools/usr/lib",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib"
+    )
+  } else Nil
+}
+
 def llvmLib =
   Platform.clang
-    .map(ll => List("-L" + ll.llvmLib.toString))
+    .map(ll => List(ll.llvmLib.toString) ++ macosLibFolders)
+    .map(_.map("-L" + _))
     .getOrElse {
       val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
       linking(
@@ -429,7 +459,7 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
       "tree-sitter.h",
     "libtreesitter",
     Some("treesitter"),
-    cImports = List("tree_sitter/api.h"),
+    cImports = List("tree_sitter/api.h")
     /* llvmInclude ++ */
     /*   clangInclude ++ */
     /*   List("-std=gnu99") */
