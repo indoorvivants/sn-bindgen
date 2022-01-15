@@ -85,7 +85,7 @@ jobs:
         run: |
           cd build 
           wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.clang_version }}/clang+llvm-${{ matrix.clang_version }}-${{ matrix.architecture }}-${{ matrix.os_id }}.tar.xz
-          tar vxf *.xz
+          tar vxf *.xz 2> /dev/null
 
 
       - name: Compile dummy C file
