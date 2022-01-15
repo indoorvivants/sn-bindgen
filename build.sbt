@@ -216,6 +216,7 @@ lazy val examples = project
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= usesLibClang)
+  .settings(nativeConfig ~= toolchainConfiguration)
   .settings(
     Compile / sourceGenerators += Def.taskIf {
       Using.fileWriter()
