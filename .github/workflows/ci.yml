@@ -73,7 +73,7 @@ jobs:
             clang_version: 13.0.0
     runs-on: ${{ matrix.os }}
     env:
-      CUSTOM_LLVM_PATH: ${{ env.PWD }}/build/clang+llvm-${{ matrix.clang_version }}-${{ matrix.architecture }}-${{ matrix.os_id }}
+      CUSTOM_LLVM_PATH: ./build/clang+llvm-${{ matrix.clang_version }}-${{ matrix.architecture }}-${{ matrix.os_id }}
     steps:
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v6      
