@@ -376,8 +376,7 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
     llvmInclude(10 to 13) ++ clangInclude(10 to 13) ++ List(
       "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1",
       "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include",
-      "-std=gnu99",
-      "-I/home/velvetbaldmime/projects/tree-sitter/lib/include"
+      "-std=gnu99"
     )
   )
   define(
@@ -392,21 +391,21 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
     )
   )
 
-  /* if (osName != "linux") */
-  /*   define( */
-  /*     location / */
-  /*       "curl.h", */
-  /*     "libcurl", */
-  /*     Some("curl"), */
-  /*     List("curl.h"), */
-  /*     clangInclude(10 to 13) ++ */
-  /*       includes(ifMac = */
-  /*         List( */
-  /*           "/opt/homebrew/opt/curl/include/curl", */
-  /*           "/usr/local/opt/curl/include/curl" */
-  /*         ) */
-  /*       ) */
-  /*   ) */
+  if (osName != "linux")
+    define(
+      location /
+        "curl.h",
+      "libcurl",
+      Some("curl"),
+      List("curl.h"),
+      clangInclude(10 to 13) ++
+        includes(ifMac =
+          List(
+            "/opt/homebrew/opt/curl/include/curl",
+            "/usr/local/opt/curl/include/curl"
+          )
+        )
+    )
   // Compiling this monster crashes the compiler :shrug:
   /* define( */
   /*   location / */
