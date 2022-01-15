@@ -35,9 +35,8 @@ jobs:
 
       - name: Compile dummy C file
         run: |
-          FILENAME=$(mktemp)
-          echo '#include "stdbool.h"' > $FILENAME
-          clang -v $FILENAME
+          echo '#include "stdbool.h"' > dummy.c
+          clang -v dummy.c
 
       - name: Build native binary
         run: sbt bindgen/nativeLink
