@@ -253,33 +253,32 @@ lazy val examples = project
 
 // --------------HELPERS-------------------------
 
-def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
-  sys.env.contains("BINARIES")
-) {
-  val folder = new File(sys.env("BINARIES"))
+def detectBinaryArtifacts: Map[String, (Artifact, File)] =
+  if (sys.env.contains("BINARIES")) {
+    val folder = new File(sys.env("BINARIES"))
 
-  val apple_x86 = folder / "sn-bindgen-x86_64-apple-darwin" / "bindgen-out"
-  val linux_x86 = folder / "sn-bindgen-x86_64-pc-linux" / "bindgen-out"
+    val apple_x86 = folder / "sn-bindgen-x86_64-apple-darwin" / "bindgen-out"
+    val linux_x86 = folder / "sn-bindgen-x86_64-pc-linux" / "bindgen-out"
 
-  val builder = Map.newBuilder[String, (Artifact, File)]
+    val builder = Map.newBuilder[String, (Artifact, File)]
 
-  def build(classifier: String, file: File): (String, (Artifact, File)) = {
-    val artif = Artifact("bindgen", classifier)
-      .withExtension("jar")
-      .withType("jar")
-      .withConfigurations(Vector(Compile))
+    def build(classifier: String, file: File): (String, (Artifact, File)) = {
+      val artif = Artifact("bindgen", classifier)
+        .withExtension("jar")
+        .withType("jar")
+        .withConfigurations(Vector(Compile))
 
-    classifier -> (artif, file)
-  }
+      classifier -> (artif, file)
+    }
 
-  if (apple_x86.exists())
-    builder += build("osx-x86_64", apple_x86)
+    if (apple_x86.exists())
+      builder += build("osx-x86_64", apple_x86)
 
-  if (linux_x86.exists())
-    builder += build("linux-x86_64", linux_x86)
+    if (linux_x86.exists())
+      builder += build("linux-x86_64", linux_x86)
 
-  builder.result()
-} else Map.empty
+    builder.result()
+  } else Map.empty
 
 def generateExampleBindings(
     destination: File,
@@ -312,7 +311,7 @@ def usesLibClang(conf: NativeConfig) = {
 
   conf
     .withLinkingOptions(conf.linkingOptions ++ llvmLibs)
-    .withCompileOptions(conf.compileOptions ++ llvmInclude ++ clangInclude)
+    .withCompileOptions(conf.compileOptions ++ llvmInclude)
 }
 
 def includes(
