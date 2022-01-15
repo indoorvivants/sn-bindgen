@@ -369,12 +369,14 @@ def macosHeaderFolders: List[String] =
     if (Platform.target.arch == Platform.Arch.x86_64)
       List(
         // on X86 macs
+        "/usr/local/include",
         "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
       )
     else
       List(
         // on M1 macs
+        "/usr/local/include",
         "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
         "/Library/Developer/CommandLineTools/usr/include"
       )
