@@ -19,18 +19,27 @@ def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
     case sev.CXDiagnostic_Warning                         => warning(_)
     case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
 
-def analyse(file: String)(using Zone, Config): Binding =
+def analyse(file: String)(using Zone)(using config: Config): Binding =
   info(s"Using following clang flags: ${summon[Config].clangFlags}")
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
   val l = List.newBuilder[String]
   import CXTranslationUnit_Flags as flags
 
+  val mem =
+    val seq = config.clangFlags
+    val ptr = alloc[CString](seq.size)
+    (0 until seq.size).foreach { i =>
+      ptr(i) = toCString(seq(i).value)
+    }
+
+    ptr
+
   val unit = clang_parseTranslationUnit(
     index,
     filename,
-    summon[Config].clangFlags.map(_.value).toCArray,
-    summon[Config].clangFlags.size.toUInt,
+    mem,
+    config.clangFlags.size.toUInt,
     null,
     0.toUInt,
     flags.CXTranslationUnit_None
@@ -122,6 +131,11 @@ def analyse(file: String)(using Zone, Config): Binding =
           else
             val alias: Def.Alias =
               Def.Alias(name, constructType(typ))
+            val canonical = clang_getCanonicalType(typ)
+
+            trace(
+              s"Alias $alias, aliased type is $typ, canonical type is ${canonical.spelling}"
+            )
 
             if cursor.location.isFromMainFile then
               definitionClosure(alias).foreach(binding.mainFileNames.add)
@@ -215,20 +229,6 @@ object BuiltIn:
       else b
     }
 
-  // val structs: Set[Def.Alias] = Map(
-  //   // "FILE" -> "scala.scalanative.libc.stdio.FILE",
-  //   // "fpos_t" -> "scala.scalanative.libc.stdio.fpos_t",
-  //   // "size_t" -> "scala.scalanative.unsafe.CSize",
-  //   // "ssize_t" -> "scala.scalanative.unsafe.CSSize",
-  //   // "time_t" -> "scala.scalanative.posix.time.time_t",
-  //   // "va_list" -> "scala.scalanative.unsafe.CVarArgList"
-  // )
-
-  // val aliases: Set[Def.Alias] = structs ++
-  //   Set[Def.Alias](
-  //     Def.Alias("__builtin_va_list", CType.Pointer(CType.Byte))
-  //   )
-  //
   val aliases: Set[Def.Alias] = BuiltinType.all
     .map[Def.Alias] { tpe =>
       Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))

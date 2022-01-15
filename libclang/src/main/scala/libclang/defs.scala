@@ -96,6 +96,10 @@ object defs:
       val ptr = CXType.allocate(1)
       wrap_Type_getNamedType(curs, ptr)
       ptr
+    def clang_getCanonicalType(curs: CXType)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getCanonicalType(curs, ptr)
+      ptr
 
     def clang_getTypeDeclaration(curs: CXType)(using Zone): CXCursor =
       val ptr = CXCursor.allocate(1)
@@ -221,6 +225,11 @@ object defs:
     ): Unit = extern
 
     private[libclang] def wrap_Type_getNamedType(
+        ptr: CXType,
+        unit: CXType
+    ): Unit = extern
+
+    private[libclang] def wrap_getCanonicalType(
         ptr: CXType,
         unit: CXType
     ): Unit = extern
