@@ -355,16 +355,18 @@ def llvmLib =
 
 def sampleBindings(location: File, builder: BindingBuilder) = {
   import builder.define
-  define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
-  define(location / "test.h", "libtest", Some("test"), List("test.h"))
-  define(
-    location /
-      "Clang-Index.h",
-    "libclang",
-    Some("clang"),
-    List("clang-c/Index.h"),
-    llvmInclude(10 to 13)
-  )
+
+  builder.withLogLevel(LogLevel.Trace)
+  /* define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h")) */
+  /* define(location / "test.h", "libtest", Some("test"), List("test.h")) */
+  /* define( */
+  /*   location / */
+  /*     "Clang-Index.h", */
+  /*   "libclang", */
+  /*   Some("clang"), */
+  /*   List("clang-c/Index.h"), */
+  /*   llvmInclude(10 to 13) */
+  /* ) */
   define(
     location /
       "tree-sitter.h",
@@ -373,36 +375,37 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
     List("tree-sitter"),
     llvmInclude(10 to 13) ++ clangInclude(10 to 13) ++ List(
       "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1",
-      "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"
+      "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include",
+      "-std=gnu99"
     )
   )
-  define(
-    location /
-      "raylib.h",
-    "libraylib",
-    Some("raylib"),
-    List("raylib.h"),
-    llvmInclude(10 to 13) ++ clangInclude(10 to 13) ++ List(
-      "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1",
-      "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"
-    )
-  )
+  /* define( */
+  /*   location / */
+  /*     "raylib.h", */
+  /*   "libraylib", */
+  /*   Some("raylib"), */
+  /*   List("raylib.h"), */
+  /*   llvmInclude(10 to 13) ++ clangInclude(10 to 13) ++ List( */
+  /*     "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1", */
+  /*     "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include" */
+  /*   ) */
+  /* ) */
 
-  if (osName != "linux")
-    define(
-      location /
-        "curl.h",
-      "libcurl",
-      Some("curl"),
-      List("curl.h"),
-      clangInclude(10 to 13) ++
-        includes(ifMac =
-          List(
-            "/opt/homebrew/opt/curl/include/curl",
-            "/usr/local/opt/curl/include/curl"
-          )
-        )
-    )
+  /* if (osName != "linux") */
+  /*   define( */
+  /*     location / */
+  /*       "curl.h", */
+  /*     "libcurl", */
+  /*     Some("curl"), */
+  /*     List("curl.h"), */
+  /*     clangInclude(10 to 13) ++ */
+  /*       includes(ifMac = */
+  /*         List( */
+  /*           "/opt/homebrew/opt/curl/include/curl", */
+  /*           "/usr/local/opt/curl/include/curl" */
+  /*         ) */
+  /*       ) */
+  /*   ) */
   // Compiling this monster crashes the compiler :shrug:
   /* define( */
   /*   location / */

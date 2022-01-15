@@ -102,15 +102,8 @@ private def integral(base: IntegralBase, st: SignType) =
   NumericIntegral(base, st)
 
 private def _unsafe(typ: String) = s"scala.scalanative.unsafe.$typ"
-
-// TODO: this will not work on a 32 architecture. Need to reference UWord somehow.
-//
-// "FILE" -> "scala.scalanative.libc.stdio.FILE",
-// "fpos_t" -> "scala.scalanative.libc.stdio.fpos_t",
-// "size_t" -> "scala.scalanative.unsafe.CSize",
-// "ssize_t" -> "scala.scalanative.unsafe.CSSize",
-// "time_t" -> "scala.scalanative.posix.time.time_t",
-// "va_list" -> "scala.scalanative.unsafe.CVarArgList"
+private def _libc(typ: String) = s"scala.scalanative.libc.$typ"
+private def _posix(typ: String) = s"scala.scalanative.posix.$typ"
 private def size[T](using t: Tag[T]) = t.size
 private def alignment[T](using t: Tag[T]) = t.alignment
 
@@ -118,60 +111,6 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.posix.time.*
 import scala.scalanative.libc.stdio.*
 import scala.scalanative.posix.sys.socket.*
-
-case class BuiltinType(
-    short: String,
-    full: String,
-    size: ULong,
-    alignment: ULong
-)
-
-object BuiltinType:
-  val all = List(
-    BuiltinType(
-      "FILE",
-      "scala.scalanative.libc.stdio.FILE",
-      size[FILE],
-      alignment[FILE]
-    ),
-    BuiltinType(
-      "fpos_t",
-      "scala.scalanative.libc.stdio.fpos_t",
-      size[fpos_t],
-      alignment[fpos_t]
-    ),
-    BuiltinType(
-      "va_list",
-      _unsafe("CVarArgList"),
-      size[CVarArgList],
-      alignment[CVarArgList]
-    ),
-    BuiltinType(
-      "size_t",
-      _unsafe("CSize"),
-      size[CSize],
-      alignment[CSize]
-    ),
-    BuiltinType(
-      "ssize_t",
-      _unsafe("CSSize"),
-      size[CSSize],
-      alignment[CSSize]
-    ),
-    BuiltinType(
-      "time_t",
-      "scala.scalanative.posix.time.time_t",
-      size[time_t],
-      alignment[time_t]
-    ),
-    BuiltinType(
-      "sockaddr",
-      "scala.scalanative.posix.sys.socket.sockaddr",
-      size[sockaddr],
-      alignment[sockaddr]
-    )
-  )
-end BuiltinType
 
 enum SignType:
   case Signed, Unsigned

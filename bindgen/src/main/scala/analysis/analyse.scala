@@ -190,6 +190,18 @@ def analyse(file: String)(using Zone, Config): Binding =
   binding.aliases.foreach { a =>
     trace(s"alias $a")
   }
+  binding.functions.foreach { a =>
+    trace(s"function $a")
+  }
+  binding.structs.foreach { a =>
+    trace(s"struct $a")
+  }
+  binding.enums.foreach { a =>
+    trace(s"enum $a")
+  }
+  binding.unions.foreach { a =>
+    trace(s"union $a")
+  }
 
   BuiltIn.add(binding)
 end analyse
