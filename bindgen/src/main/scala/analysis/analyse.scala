@@ -134,7 +134,9 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
             val canonical = clang_getCanonicalType(typ)
 
             trace(
-              s"Alias $alias, aliased type is $typ, canonical type is ${canonical.spelling}"
+              s"Alias $alias, " +
+                s"aliased type is ${typ.spelling} (constructed ${constructType(typ)}), " +
+                s"canonical type is ${canonical.spelling} (constructed(${constructType(canonical)})"
             )
 
             if cursor.location.isFromMainFile then
