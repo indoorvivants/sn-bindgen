@@ -353,8 +353,8 @@ def llvmInclude: List[String] = {
 def clangInclude: List[String] = {
   val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
   includes(
-    ifLinux =
-      List(s"/usr/lib/llvm-$majorVersion/lib/clang/$majorVersion.0.0/include"),
+    /* ifLinux = */
+    /*   List(s"/usr/lib/llvm-$majorVersion/lib/clang/$majorVersion.0.0/include"), */
     ifMac =
       if (Platform.target.arch == Platform.Arch.x86_64)
         List(
