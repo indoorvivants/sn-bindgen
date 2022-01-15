@@ -64,12 +64,12 @@ object Platform {
   }
 
   lazy val clang = sys.env.get("CUSTOM_LLVM_PATH").map { p =>
-    val path = Paths.get(p)
-    val clang = Paths.get(p, "bin", "clang")
+    val path = Paths.get(p).toAbsolutePath().toString
+    val clang = Paths.get(path, "bin", "clang")
 
-    val clangPP = Paths.get(p, "bin", "clang++")
-    val llvmInclude = Paths.get(p, "include")
-    val llvmLib = Paths.get(p, "lib")
+    val clangPP = Paths.get(path, "bin", "clang++")
+    val llvmInclude = Paths.get(path, "include")
+    val llvmLib = Paths.get(path, "lib")
 
     import scala.sys.process.Process
     val sb = new StringBuilder
@@ -96,7 +96,7 @@ object Platform {
     val clangVersion = version.get
 
     val clangInclude =
-      Paths.get(p, "lib", "clang", clangVersion, "include")
+      Paths.get(path, "lib", "clang", clangVersion, "include")
 
     assert(clang.toFile.exists(), s"Clang binary not found ($clang)")
     assert(clangPP.toFile.exists(), s"Clang++ binary not found ($clangPP)")

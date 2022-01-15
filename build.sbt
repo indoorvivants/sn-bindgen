@@ -203,6 +203,7 @@ lazy val libclang = project
   .in(file("libclang"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
+  .settings(nativeConfig ~= toolchainConfiguration)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
     moduleName := "bindgen-libclang",
