@@ -9,7 +9,13 @@ import scala.scalanative.build.NativeConfig
 import scala.scalanative.build.LTO
 import commandmatrix.extra.*
 
-import _root_.bindgen.interface.{BindingBuilder, BindingLang, LogLevel}
+import _root_.bindgen.interface.{
+  BindingBuilder,
+  BindingLang,
+  LogLevel,
+  Platform
+}
+import java.nio.file.Paths
 
 lazy val Versions = new {
   val decline = "2.2.0"
@@ -110,7 +116,6 @@ lazy val bindgen = project
       val binary = (Compile / nativeLink).value
 
       val builder = new BindingBuilder(binary)
-      builder.withLogLevel(LogLevel.Trace)
 
       (Test / watchedHeaders).value.foreach { header =>
         builder.define(path / s"$header.h", s"lib_test_$header")
@@ -166,7 +171,7 @@ lazy val localBindgenArtifact = project
         .withType("jar")
         .withConfigurations(Vector(Compile))
     addArtifact(
-      Def.setting(build(Platform.artifactSuffix)),
+      Def.setting(build(Platform.target.string)),
       Def.task { (bindgen / Compile / nativeLink).value }
     )
   }
@@ -298,57 +303,65 @@ def environmentConfiguration(conf: NativeConfig): NativeConfig = {
 def usesLibClang(conf: NativeConfig) =
   conf
     .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
-    .withCompileOptions(llvmInclude(10 to 13))
-
-def osName = System.getProperty("os.name") match {
-  case n if n.startsWith("Linux")   => "linux"
-  case n if n.startsWith("Mac")     => "mac"
-  case n if n.startsWith("Windows") => "win"
-  case _                            => throw new Exception("Unknown platform!")
-}
+    .withCompileOptions(llvmInclude)
 
 def includes(
     ifLinux: List[String] = Nil,
     ifMac: List[String] = Nil,
     ifWindows: List[String] = Nil
 ): List[String] = {
-  osName match {
-    case "linux" => ifLinux
-    case "mac"   => ifMac
-    case "win"   => ifWindows
+  Platform.target.os match {
+    case Platform.OS.Linux   => ifLinux
+    case Platform.OS.MacOS   => ifMac
+    case Platform.OS.Windows => ifWindows
+    case _                   => Nil
   }
-}.map(s => s"-I$s")
+}.filter(s => Paths.get(s).toFile.exists).map(s => s"-I$s")
 
 def linking(
     ifLinux: List[String] = Nil,
     ifMac: List[String] = Nil,
     ifWindows: List[String] = Nil
 ): List[String] = {
-  osName match {
-    case "linux" => ifLinux
-    case "mac"   => ifMac
-    case "win"   => ifWindows
+  Platform.target.os match {
+    case Platform.OS.Linux   => ifLinux
+    case Platform.OS.MacOS   => ifMac
+    case Platform.OS.Windows => ifWindows
+    case _                   => Nil
   }
 }.map(s => s"-L$s")
 
-def llvmInclude(versions: Seq[Int]): List[String] = {
+def llvmInclude: List[String] = {
   includes(
-    ifLinux = versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
+    ifLinux =
+      (10 to 13).toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
     ifMac =
       List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
   )
 }
 
-def clangInclude(versions: Seq[Int]): List[String] =
+def clangInclude: List[String] =
   includes(
-    ifLinux = versions.toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
     ifMac =
-      List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
+      if (Platform.target.arch == Platform.Arch.x86_64)
+        List(
+          // on X86 macs
+          "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+          "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+        )
+      else
+        List(
+          // on M1 macs
+          "/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include",
+          "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
+          "/Library/Developer/CommandLineTools/usr/include"
+        )
   )
 
 def llvmLib =
   linking(ifMac =
-    if (System.getProperty("os.arch").contains("x86"))
+    if (Platform.target.arch == Platform.Arch.x86_64)
       List("/usr/local/opt/llvm/lib")
     else
       List("/opt/homebrew/opt/llvm/lib")
@@ -365,40 +378,37 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
     "libclang",
     Some("clang"),
     List("clang-c/Index.h"),
-    llvmInclude(10 to 13)
+    llvmInclude
   )
+
   define(
     location /
       "tree-sitter.h",
     "libtreesitter",
     Some("treesitter"),
     cImports = List("tree_sitter/api.h"),
-    llvmInclude(10 to 13) ++ clangInclude(10 to 13) ++ List(
-      "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1",
-      "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include",
-      "-std=gnu99"
-    )
+    llvmInclude ++
+      clangInclude ++
+      List("-std=gnu99")
   )
+
   define(
     location /
       "raylib.h",
     "libraylib",
     Some("raylib"),
     List("raylib.h"),
-    llvmInclude(10 to 13) ++ clangInclude(10 to 13) ++ List(
-      "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1",
-      "-I/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"
-    )
+    llvmInclude ++ clangInclude
   )
 
-  if (osName != "linux")
+  if (Platform.target.os != Platform.OS.Linux)
     define(
       location /
         "curl.h",
       "libcurl",
       Some("curl"),
       List("curl.h"),
-      clangInclude(10 to 13) ++
+      clangInclude ++
         includes(ifMac =
           List(
             "/opt/homebrew/opt/curl/include/curl",
