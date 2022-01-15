@@ -71,6 +71,7 @@ lazy val bindgen = project
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
+  .settings(Compile / nativeConfig ~= toolchainConfiguration)
   .settings(Compile / nativeConfig ~= usesLibClang)
   .settings(Test / nativeConfig ~= usesLibClang)
   .settings(
@@ -294,6 +295,14 @@ def generateExampleBindings(
   builder.generate(destination, lang)
 }
 
+def toolchainConfiguration(conf: NativeConfig): NativeConfig = {
+  Platform.clang
+    .map { toolchain =>
+      conf.withClang(toolchain.clang).withClangPP(toolchain.clangPP)
+    }
+    .getOrElse(conf)
+}
+
 def environmentConfiguration(conf: NativeConfig): NativeConfig = {
   if (sys.env.contains("SN_RELEASE")) conf.withMode(Mode.releaseFast)
   else conf
@@ -341,48 +350,58 @@ def linking(
 }.map(s => s"-L$s")
 
 def llvmInclude: List[String] = {
-  includes(
-    ifLinux =
-      (10 to 13).toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
-    ifMac =
-      List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
-  )
+  Platform.clang
+    .map(cl => List("-I" + cl.llvmInclude.toString))
+    .getOrElse {
+      includes(
+        ifLinux =
+          (10 to 13).toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
+        ifMac =
+          List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
+      )
+    }
 }
 
-def clangInclude: List[String] = {
-  val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
-  includes(
-    /* ifLinux = */
-    /*   List(s"/usr/lib/llvm-$majorVersion/lib/clang/$majorVersion.0.0/include"), */
-    ifMac =
-      if (Platform.target.arch == Platform.Arch.x86_64)
-        List(
-          // on X86 macs
-          s"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/$majorVersion.0.0/include",
-          "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
-          "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
-        )
-      else
-        List(
-          // on M1 macs
-          s"/Library/Developer/CommandLineTools/usr/lib/clang/$majorVersion.0.0/include",
-          "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
-          "/Library/Developer/CommandLineTools/usr/include"
-        )
-  )
-}
+def clangInclude: List[String] =
+  Platform.clang
+    .map(cl => List("-I" + cl.clangInclude.toString))
+    .getOrElse {
+      val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
+      includes(
+        /* ifLinux = */
+        /*   List(s"/usr/lib/llvm-$majorVersion/lib/clang/$majorVersion.0.0/include"), */
+        ifMac =
+          if (Platform.target.arch == Platform.Arch.x86_64)
+            List(
+              // on X86 macs
+              s"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/$majorVersion.0.0/include",
+              "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+              "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+            )
+          else
+            List(
+              // on M1 macs
+              s"/Library/Developer/CommandLineTools/usr/lib/clang/$majorVersion.0.0/include",
+              "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
+              "/Library/Developer/CommandLineTools/usr/include"
+            )
+      )
+    }
 
-def llvmLib = {
-  val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
-  linking(
-    ifLinux = List(s"/usr/lib/llvm-$majorVersion/lib/"),
-    ifMac =
-      if (Platform.target.arch == Platform.Arch.x86_64)
-        List("/usr/local/opt/llvm/lib")
-      else
-        List("/opt/homebrew/opt/llvm/lib")
-  )
-}
+def llvmLib =
+  Platform.clang
+    .map(ll => List("-L" + ll.llvmLib.toString))
+    .getOrElse {
+      val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
+      linking(
+        ifLinux = List(s"/usr/lib/llvm-$majorVersion/lib/"),
+        ifMac =
+          if (Platform.target.arch == Platform.Arch.x86_64)
+            List("/usr/local/opt/llvm/lib")
+          else
+            List("/opt/homebrew/opt/llvm/lib")
+      )
+    }
 
 def sampleBindings(location: File, builder: BindingBuilder) = {
   import builder.define

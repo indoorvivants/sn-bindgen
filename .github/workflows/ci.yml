@@ -94,8 +94,8 @@ jobs:
           echo 'int main(){}' >> dummy.c
           $CUSTOM_LLVM_PATH/bin/clang -v dummy.c
 
-      # - name: Build native binary
-      #   run: sbt bindgen/nativeLink
+      - name: Build native binary
+        run: sbt 'show bindgen/nativeConfig' bindgen/nativeLink
 
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@master

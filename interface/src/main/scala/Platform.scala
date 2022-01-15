@@ -2,6 +2,9 @@ package bindgen.interface
 
 import java.util.Properties
 import java.io.File
+import java.nio.file.Paths
+import scala.sys.process.ProcessLogger
+import java.nio.file.Path
 
 object Platform {
   sealed abstract class OS(val string: String) extends Product with Serializable
@@ -27,7 +30,20 @@ object Platform {
     }
   }
 
-  case class Toolchain(clang: File, llvmInclude: File, clangInclude: File)
+  case class Toolchain(
+      clang: Path,
+      clangPP: Path,
+      llvmInclude: Path,
+      llvmLib: Path,
+      clangInclude: Path,
+      clangVersion: String
+  )
+
+  // object Toolchain{
+  //   def detectGlobal: Toolchain = {
+
+  //   }
+  // }
 
   object BuildInfo {
     def version: String =
@@ -47,6 +63,58 @@ object Platform {
     }
   }
 
+  lazy val clang = sys.env.get("CUSTOM_LLVM_PATH").map { p =>
+    val path = Paths.get(p)
+    val clang = Paths.get(p, "bin", "clang")
+
+    val clangPP = Paths.get(p, "bin", "clang++")
+    val llvmInclude = Paths.get(p, "include")
+    val llvmLib = Paths.get(p, "lib")
+
+    import scala.sys.process.Process
+    val sb = new StringBuilder
+    val logger = ProcessLogger.apply(str => sb.append(str + "\n"))
+    val proc = Process(Seq(clang.toString(), "--version"))
+      .run(logger)
+      .exitValue()
+
+    val rgx = raw"^clang version ((\d+).(\d+).(\d+)).*".r
+    var version: Option[String] = None
+
+    sb.result().linesIterator.toList.find { l =>
+      val matches = rgx.findAllIn(l)
+      if (matches.groupCount >= 1)
+        version = Some(matches.group(1))
+
+      matches.groupCount >= 1
+    }
+
+    assert(
+      version.nonEmpty,
+      s"Failed to parse clang version from the output. Lines: ${sb.result().linesIterator.toList}"
+    )
+    val clangVersion = version.get
+
+    val clangInclude =
+      Paths.get(p, "lib", "clang", clangVersion, "include")
+
+    assert(clang.toFile.exists(), s"Clang binary not found ($clang)")
+    assert(clangPP.toFile.exists(), s"Clang++ binary not found ($clangPP)")
+    assert(
+      llvmInclude.toFile.exists(),
+      s"LLVM Include folder not found ($llvmInclude)"
+    )
+    assert(
+      clangInclude.toFile.exists(),
+      s"Clang Include folder not found ($clangInclude)"
+    )
+    assert(
+      llvmLib.toFile.exists(),
+      s"LLVM lib folder not found ($llvmLib)"
+    )
+    Toolchain(clang, clangPP, llvmInclude, llvmLib, clangInclude, clangVersion)
+  } // .getOrElse(Toolchain.detectGlobal)
+
   lazy val os = normalise(sys.props.getOrElse("os.name", "")) match {
     case p if p.startsWith("linux")                         => OS.Linux
     case p if p.startsWith("osx") || p.startsWith("macosx") => OS.MacOS
@@ -62,4 +130,10 @@ object Platform {
 
   private def normalise(s: String) =
     s.toLowerCase(java.util.Locale.US).replaceAll("[^a-z0-9]+", "")
+}
+
+object Test extends App {
+
+  println(Platform.target)
+  println(Platform.clang)
 }
