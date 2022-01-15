@@ -46,20 +46,12 @@ def binding(
     }
     s"import ${filtered.map { sc => sc + ".*" }.mkString(", ")}"
 
-  given aliasResolver: AliasResolver =
-    AliasResolver.create(
-      (binding.aliases ++ binding.structs ++ binding.unions ++ binding.enums).toSeq
-    )
+  given AliasResolver =
+    AliasResolver.create(binding.named.values.toSeq.map(_.item))
+
   def commentException(element: Any, exc: Throwable) =
     val stackTrace =
       exc.getStackTrace.map("//    " + _.toString).mkString("\n")
-    // errln(s"""
-    // |// Failed to render:
-    // |//  $element
-    // |// Error:
-    // |//  $exc
-    // |$stackTrace\n
-    // """.stripMargin)
 
     throw exc
   end commentException

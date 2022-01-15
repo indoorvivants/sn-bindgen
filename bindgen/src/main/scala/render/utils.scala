@@ -31,9 +31,12 @@ def packageName(using conf: Config): String = conf.packageName.value
 
 type Appender = Config ?=> String => Unit
 
-type AliasResolver = String => CType
+opaque type AliasResolver = String => CType
 
 object AliasResolver:
+  extension (ar: AliasResolver) def apply(s: String) = ar(s)
+
+  inline def apply(inline f: String => CType): AliasResolver = f
   def create(aliases: Seq[Def]): AliasResolver = s =>
     aliases
       .collectFirst {
