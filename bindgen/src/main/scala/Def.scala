@@ -3,15 +3,39 @@ package bindgen
 import scala.collection.mutable.ListBuffer
 import bindgen.CType.Parameter
 import scala.collection.mutable
+import Def.*
+import scala.scalanative.unsigned.ULong
+import scala.scalanative.unsafe.Tag
+
+case class BindingDefinition(item: Def, isFromMainFile: Boolean)
+
+case class Binding(
+    var named: mutable.Map[String, BindingDefinition] = mutable.Map.empty
+):
+  def add(item: Def, isFromMainFile: Boolean) =
+    item.defName.foreach { n =>
+      named.addOne(n -> BindingDefinition(item, isFromMainFile))
+    }
+  def aliases: Set[Def.Alias] = named.collect {
+    case (k, BindingDefinition(item: Def.Alias, _)) => item
+  }.toSet
+
+  def unions: Set[Def.Union] = named.collect {
+    case (k, BindingDefinition(item: Def.Union, _)) => item
+  }.toSet
+  def structs: Set[Def.Struct] = named.collect {
+    case (k, BindingDefinition(item: Def.Struct, _)) => item
+  }.toSet
+  def enums: Set[Def.Enum] = named.collect {
+    case (k, BindingDefinition(item: Def.Enum, _)) => item
+  }.toSet
+
+  def functions: Set[Def.Function] = named.collect {
+    case (k, BindingDefinition(item: Def.Function, _)) => item
+  }.toSet
+end Binding
 
 enum Def:
-  case Binding(
-      var enums: mutable.Set[Enum],
-      var structs: mutable.Set[Struct],
-      var unions: mutable.Set[Union],
-      var functions: mutable.Set[Function],
-      var aliases: mutable.Set[Alias]
-  )
   case Enum(
       var values: ListBuffer[(String, Long)],
       var name: Option[String],
@@ -31,6 +55,14 @@ enum Def:
       val originalCType: OriginalCType
   )
   case Alias(name: String, underlying: CType)
+
+  def defName: Option[String] =
+    this match
+      case Alias(name, _) => Some(name)
+      case Union(_, name) => Some(name)
+      case f: Function    => Some(f.name)
+      case s: Struct      => Some(s.name)
+      case e: Enum        => e.name
 
 end Def
 
@@ -77,18 +109,14 @@ enum CType:
   case NumericReal(base: FloatingBase)
   case NumericComplex(base: FloatingBase)
 
-  case Typedef(name: String)
-  case RecordRef(name: String)
+  case Reference(name: Name)
 end CType
 
-import CType.*
+enum Name:
+  case Model(value: String)
+  case BuiltIn(value: BuiltinType)
 
-// TODO: this will not work on a 32 architecture. Need to reference UWord somehow.
-object BuiltinType:
-  val size_t = NumericIntegral(IntegralBase.Long, SignType.Unsigned)
-  val ssize_t = NumericIntegral(IntegralBase.Long, SignType.Signed)
-  val uint32_t = NumericIntegral(IntegralBase.Int, SignType.Unsigned)
-  val uint8_t = NumericIntegral(IntegralBase.Char, SignType.Unsigned)
+import CType.*
 
 enum SignType:
   case Signed, Unsigned

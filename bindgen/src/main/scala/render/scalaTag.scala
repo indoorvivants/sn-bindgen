@@ -29,9 +29,8 @@ def scalaTag(typ: CType)(using AliasResolver): String =
         case _        => ""
 
       s"Tag.$sign$base"
-    case Typedef(n) => s"$n._tag"
+    case Reference(Name.Model(n)) => s"$n._tag"
 
-    case RecordRef(n) => s"$n._tag"
     case Function(ret, params) =>
       val paramTypes =
         (params.map(_.of) ++ List(ret))

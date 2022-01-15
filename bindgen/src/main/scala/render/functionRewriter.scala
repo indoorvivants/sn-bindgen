@@ -6,11 +6,11 @@ import scala.collection.mutable.ListBuffer
 def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
   import CType.*
   typ match
-    case _: Struct       => true
-    case _: Pointer      => false
-    case Typedef(name)   => isDirectStructAccess(aliasResolver(name))
-    case RecordRef(name) => isDirectStructAccess(aliasResolver(name))
-    case _               => false
+    case _: Struct  => true
+    case _: Pointer => false
+    case Reference(Name.Model(name)) =>
+      isDirectStructAccess(aliasResolver(name))
+    case _ => false
 
 def functionRewriter(badFunction: Def.Function)(using
     AliasResolver

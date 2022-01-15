@@ -7,7 +7,7 @@ if [ $PLATFORM == "Darwin" ]; then
   brew install llvm
 else
   echo "It's a linux"
-  sudo apt-get update
+  sudo apt update
   sudo apt install clang llvm llvm-dev libclang-dev
 fi
 

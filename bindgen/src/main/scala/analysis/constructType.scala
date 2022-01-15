@@ -11,7 +11,8 @@ import libclang.types
 import scala.util.control.NoStackTrace
 
 def constructType(typ: CXType)(using
-    Zone
+    Zone,
+    Config
 ): CType =
   import CXTypeKind.*
   val typekind = typ.kind
@@ -24,12 +25,9 @@ def constructType(typ: CXType)(using
   typekind match
     case CXType_Record =>
       val decl = clang_getTypeDeclaration(typ)
-      // errln(clang_getCursorKindSpelling(decl.kind).string)
-      // errln(clang_Cursor_isAnonymous(decl))
-      // errln(clang_Cursor_isAnonymousRecordDecl(decl))
       val name = clang_getCursorSpelling(decl)
 
-      CType.RecordRef(name.string)
+      CType.Reference(Name.Model(name.string))
     case CXType_Elaborated =>
       val name = constructType(clang_Type_getNamedType(typ))
       name
@@ -39,7 +37,7 @@ def constructType(typ: CXType)(using
         clang_getTypeDeclaration(typ)
       ).string
 
-      CType.Typedef(enumName)
+      CType.Reference(Name.Model(enumName))
 
     case CXType_FunctionProto =>
       val resultType = clang_getResultType(typ)
@@ -59,7 +57,9 @@ def constructType(typ: CXType)(using
 
     case CXType_Typedef =>
       val definition = clang_getTypedefName(typ)
-      CType.Typedef(definition.string)
+      val str = definition.string
+      val declaration = clang_getTypeDeclaration(typ).kind
+      CType.Reference(Name.Model(str))
 
     case CXType_ConstantArray =>
       val elementType = clang_getArrayElementType(typ)

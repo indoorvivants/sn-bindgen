@@ -40,8 +40,7 @@ def cFunctionForwarder(model: Def.Function, line: Appender)(using
         )
       else
         val returnStructName = originalCType.typ match
-          case CType.RecordRef(name) => name
-          case CType.Typedef(name)   => name
+          case CType.Reference(Name.Model(name)) => name
           case _ =>
             throw Error(
               s"${originalCType.typ} should be a RecordRef or a TypeDef"

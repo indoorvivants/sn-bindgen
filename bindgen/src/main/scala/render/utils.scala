@@ -1,13 +1,13 @@
 package bindgen.rendering
 import bindgen.*
 
-import bindgen.Def.Binding
+import bindgen.Binding
 import scala.scalanative.unsafe.Tag
 import scala.scalanative.annotation.alwaysinline
 import scala.collection.mutable.ListBuffer
 
 def escape(name: String) =
-  val keywords = Set("type", "val", "class", "object", "null")
+  val keywords = Set("type", "val", "class", "object", "null", "match")
   if keywords.contains(name) then s"`$name`" else name
 
 case class Error(msg: String) extends Exception(msg)
@@ -30,8 +30,13 @@ def aliasResolver(name: String)(using ar: AliasResolver): CType =
 def packageName(using conf: Config): String = conf.packageName.value
 
 type Appender = Config ?=> String => Unit
-type AliasResolver = String => CType
+
+opaque type AliasResolver = String => CType
+
 object AliasResolver:
+  extension (ar: AliasResolver) def apply(s: String) = ar(s)
+
+  inline def apply(inline f: String => CType): AliasResolver = f
   def create(aliases: Seq[Def]): AliasResolver = s =>
     aliases
       .collectFirst {

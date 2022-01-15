@@ -5,17 +5,12 @@ import scala.scalanative.unsigned.*
 import scalanative.libc.*
 import libclang.defs.*
 import libclang.types.*
+import libclang.fluent.*
 import libclang.enumerations.*
 import scala.collection.mutable
 import java.nio.file.Files
 import java.io.FileWriter
 import cats.data.NestedInstances0
-
-def addBuiltin(binding: Def.Binding): Def.Binding =
-  binding.copy(aliases =
-    binding.aliases
-      .addOne(Def.Alias("__builtin_va_list", CType.Pointer(CType.Byte)))
-  )
 
 def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
   import CXDiagnosticSeverity as sev
@@ -24,18 +19,27 @@ def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
     case sev.CXDiagnostic_Warning                         => warning(_)
     case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
 
-def analyse(file: String)(using Zone, Config): Def.Binding =
+def analyse(file: String)(using Zone)(using config: Config): Binding =
   info(s"Using following clang flags: ${summon[Config].clangFlags}")
   val filename = toCString(file)
   val index = clang_createIndex(0, 0)
   val l = List.newBuilder[String]
   import CXTranslationUnit_Flags as flags
 
+  val mem =
+    val seq = config.clangFlags
+    val ptr = alloc[CString](seq.size)
+    (0 until seq.size).foreach { i =>
+      ptr(i) = toCString(seq(i).value)
+    }
+
+    ptr
+
   val unit = clang_parseTranslationUnit(
     index,
     filename,
-    summon[Config].clangFlags.map(_.value).toCArray,
-    summon[Config].clangFlags.size.toUInt,
+    mem,
+    config.clangFlags.size.toUInt,
     null,
     0.toUInt,
     flags.CXTranslationUnit_None
@@ -70,14 +74,11 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     throw Exception(
       s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
     )
+  type Data = (Binding, Config, Zone)
+  CVarArgList
 
-  val bindingMem = alloc[Def.Binding](1)
-  !bindingMem = Def.Binding(
-    enums = mutable.Set.empty,
-    structs = mutable.Set.empty,
-    unions = mutable.Set.empty,
-    functions = mutable.Set.empty,
-    aliases = mutable.Set.empty
+  val cxClientData = Captured.allocate[Binding](
+    Binding()
   )
 
   val translationUnitCursor = clang_getTranslationUnitCursor(unit)
@@ -86,83 +87,100 @@ def analyse(file: String)(using Zone, Config): Def.Binding =
     translationUnitCursor,
     CXCursorVisitor.apply {
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
-        zone {
-          val binding = !(data.unwrap[Def.Binding])
+        val (binding, zone, conf) = !(data.unwrap[Captured[Binding]])
 
-          val loc = clang_getCursorLocation(cursor)
-          val isFromMainFile =
-            true // clang_Location_isFromMainFile(loc) == 1.toUInt
-          if isFromMainFile then
-            if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
-              val function = visitFunction(cursor)
-              binding.functions.addOne(function)
-            end if
+        given Config = conf
+        given Zone = zone
 
-            if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-              val typ = clang_getTypedefDeclUnderlyingType(cursor)
-              val name = clang_getCursorSpelling(cursor).string
-              val referencedType = clang_Type_getNamedType(typ)
-              val typeDecl = clang_getTypeDeclaration(referencedType)
-              if (referencedType.kind == CXTypeKind.CXType_Enum) then
-                binding.enums.addOne(visitEnum(typeDecl, true))
-              else if (referencedType.kind == CXTypeKind.CXType_Record) then
-                val struct = visitStruct(typeDecl, name)
-                if clang_getTypeSpelling(typ).string.startsWith("union ") then
-                  binding.unions.addOne(Def.Union(struct.fields, struct.name))
-                else if name != "" then
-                  binding.structs.filterInPlace(_.name != name)
-                  binding.structs.addOne(visitStruct(typeDecl, name))
-              else binding.aliases.addOne(Def.Alias(name, constructType(typ)))
-              end if
-            end if
+        val loc = cursor.location
+        val isFromMainFile = loc.isFromMainFile
 
-            if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
-              val name = clang_getCursorSpelling(cursor).string
-              if name != "" then
-                val struct = visitStruct(cursor, name)
+        if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
+          val function = visitFunction(cursor)
+          binding.add(function, isFromMainFile)
+        end if
 
-                binding.unions.addOne(Def.Union(struct.fields, struct.name))
+        if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+          val typ = clang_getTypedefDeclUnderlyingType(cursor)
+          val name = cursor.spelling
+          val referencedType = clang_Type_getNamedType(typ)
+          val typeDecl = clang_getTypeDeclaration(referencedType)
+          if (referencedType.kind == CXTypeKind.CXType_Enum) then
+            val en = visitEnum(typeDecl, true)
+            binding.add(en, isFromMainFile)
+          else if (referencedType.kind == CXTypeKind.CXType_Record) then
+            val struct = visitStruct(typeDecl, name)
 
-            if cursor.kind == CXCursorKind.CXCursor_StructDecl then
-              val name = clang_getCursorSpelling(cursor).string
-              if name != "" then
-                binding.structs.filterInPlace(_.name != name)
-                binding.structs.addOne(visitStruct(cursor, name))
+            val item =
+              if typ.spelling.startsWith("union ") then
+                Def.Union(struct.fields, struct.name)
+              else struct
 
-            if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
-              binding.enums.addOne(
-                visitEnum(
-                  cursor,
-                  clang_getCursorType(
-                    parent
-                  ).kind == CXTypeKind.CXType_Typedef
-                )
-              )
-            end if
+            if name != "" then binding.add(item, isFromMainFile)
+          else
+            val alias: Def.Alias =
+              Def.Alias(name, constructType(typ))
+            val canonical = clang_getCanonicalType(typ)
 
-            if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-              CXChildVisitResult.CXChildVisit_Continue
-            else CXChildVisitResult.CXChildVisit_Recurse
-          else CXChildVisitResult.CXChildVisit_Continue
+            binding.add(alias, isFromMainFile)
           end if
-        }
+        end if
 
+        if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
+          val name = clang_getCursorSpelling(cursor).string
+          if name != "" then
+            val en = visitStruct(cursor, name)
+            val union = Def.Union(en.fields, en.name)
+            binding.add(union, isFromMainFile)
+        end if
+
+        if cursor.kind == CXCursorKind.CXCursor_StructDecl then
+          val name = cursor.spelling
+          if name != "" then
+            val en = visitStruct(cursor, name)
+            binding.add(en, isFromMainFile)
+        end if
+
+        if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
+          val en = visitEnum(
+            cursor,
+            clang_getCursorType(
+              parent
+            ).kind == CXTypeKind.CXType_Typedef
+          )
+
+          binding.add(en, isFromMainFile)
+        end if
+
+        if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+          CXChildVisitResult.CXChildVisit_Continue
+        else CXChildVisitResult.CXChildVisit_Recurse
     },
-    CXClientData.wrap(bindingMem)
+    CXClientData.wrap(cxClientData)
   )
 
   clang_disposeTranslationUnit(unit)
   clang_disposeIndex(index)
 
-  val binding = !bindingMem
+  val binding = (!cxClientData)._1
+  addBuiltInAliases(binding)
+  val closure = computeClosure(binding.named.toMap)
 
-  addBuiltin(!bindingMem)
+  trace(s"Defined or used in main file: ${closure}")
+
+  binding.named.filterInPlace((k, _) => closure.contains(k))
+
+  trace("Binding information:")
+  binding.named.toList.sortBy(_._1).foreach { case (k, v) =>
+    trace(s"'$k': $v")
+  }
+
+  binding
 end analyse
-extension (seq: Seq[String])
-  private[bindgen] def toCArray(using Zone): Ptr[CString] =
-    val mem = alloc[CString](seq.size)
-    (0 until seq.size).foreach { i =>
-      mem(i) = toCString(seq(i))
-    }
 
-    mem
+def addBuiltInAliases(binding: Binding): Binding =
+  BuiltinType.all.foreach { tpe =>
+    val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
+    binding.add(al, isFromMainFile = false)
+  }
+  binding

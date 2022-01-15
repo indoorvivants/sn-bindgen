@@ -10,6 +10,7 @@ env:
   JAVA_OPTS: "-Xmx2G"
   SN_RELEASE: fast
   JABBA_INDEX: 'https://github.com/typelevel/jdk-index/raw/main/index.json'
+  CLANG_VERSION: 12
 
 jobs:
   build:
@@ -33,8 +34,14 @@ jobs:
       - name: Setup
         run: ./build/setup_unix.sh
 
+      - name: Compile dummy C file
+        run: |
+          echo '#include "stdbool.h"' > dummy.c
+          echo 'int main(){}' >> dummy.c
+          clang -v dummy.c
+
       - name: Build native binary
-        run: sbt --client bindgen/nativeLink
+        run: sbt bindgen/nativeLink
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
@@ -43,10 +50,10 @@ jobs:
           name: ${{ matrix.uploaded_filename }}
       
       - name: Run tests
-        run: sbt --client ci
+        run: sbt ci
       
       - name: Compile examples
-        run: sbt --client examples/compile
+        run: sbt examples/compile
 
   release:
     needs: [build]

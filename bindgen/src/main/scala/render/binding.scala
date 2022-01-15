@@ -5,7 +5,7 @@ import bindgen.*
 import scala.collection.mutable.ListBuffer
 
 def binding(
-    binding: Def.Binding,
+    binding: Binding,
     scalaOutput: StringBuilder,
     cOutput: StringBuilder
 )(using
@@ -46,33 +46,14 @@ def binding(
     }
     s"import ${filtered.map { sc => sc + ".*" }.mkString(", ")}"
 
-  given aliasResolver: AliasResolver =
-    s =>
-      val alias = binding.aliases.find(_.name == s).map(_.underlying)
-      val struct = binding.structs
-        .find(_.name == s)
-        .map(_.fields.map(_._2).toList)
-        .map(CType.Struct.apply)
-      val union = binding.unions
-        .find(_.name == s)
-        .map(_.fields.map(_._2).toList)
-        .map(CType.Union.apply)
-      val _enum = binding.enums.find(_.name.contains(s)).flatMap(_._3)
-
-      alias.orElse(struct).orElse(_enum).orElse(union) match
-        case Some(resolved) => resolved
-        case None => throw Error(s"Failed to resolve aliased definition $s")
+  given AliasResolver =
+    AliasResolver.create(binding.named.values.toSeq.map(_.item))
 
   def commentException(element: Any, exc: Throwable) =
     val stackTrace =
       exc.getStackTrace.map("//    " + _.toString).mkString("\n")
-    s"""
-    |// Failed to render:
-    |//  $element
-    |// Error:
-    |//  $exc
-    |$stackTrace\n
-    """.stripMargin
+
+    throw exc
   end commentException
 
   scalaOutput.append("object types:\n")

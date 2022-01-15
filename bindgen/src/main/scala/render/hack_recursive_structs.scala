@@ -5,23 +5,16 @@ import bindgen.*
 def isCyclical(typ: CType, name: String)(using AliasResolver, Config): Boolean =
   def go(t: CType, visited: Set[String], level: Int): Boolean =
     import CType.*
-    trace((" " * level) + s"visiting $t with $visited")
+    // trace((" " * level) + s"visiting $t with $visited")
     val result =
       t match
-        case Typedef(name) =>
+        case Reference(Name.Model(name)) =>
           visited.contains(name) || go(
             aliasResolver(name),
             visited ++ Set(name),
             level + 1
           )
-        case Pointer(Typedef(name)) =>
-          visited.contains(name) || go(
-            aliasResolver(name),
-            visited ++ Set(name),
-            level + 1
-          )
-
-        case Pointer(RecordRef(name)) =>
+        case Pointer(Reference(Name.Model(name))) =>
           visited.contains(name) || go(
             aliasResolver(name),
             visited ++ Set(name),
@@ -44,7 +37,7 @@ def isCyclical(typ: CType, name: String)(using AliasResolver, Config): Boolean =
       end match
     end result
 
-    trace((" " * level) + s"result of $t is '$result', visited: $visited")
+    // trace((" " * level) + s"result of $t is '$result', visited: $visited")
     result
   end go
   go(typ, Set(name), 0)
@@ -82,11 +75,12 @@ def hack_recursive_structs(
       )
 
       originalType match
-        case Pointer(Typedef(name))   => result(Pointer(Typedef(name)))
-        case Pointer(RecordRef(name)) => result(Pointer(RecordRef(name)))
-        case Typedef(name) =>
+        case Pointer(Reference(Name.Model(name))) =>
+          result(Pointer(Reference(Name.Model(name))))
+        case Reference(Name.Model(name)) =>
           aliasResolver(name) match
-            case Pointer(_: Function) => result(Typedef(name))
+            case Pointer(_: Function) => result(Reference(Name.Model(name)))
+
             case other =>
               throw Error(
                 s"Expected '$name' to point to a function pointer, got $other instead"

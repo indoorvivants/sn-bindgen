@@ -12,7 +12,7 @@ private def functionsAreSame(a: Def.Function, b: Def.Function): Boolean =
 private def readabilityScore(func: Def.Function): Int =
   func.parameters.count(!_.generatedName)
 
-def deduplicateFunctions(res: mutable.Set[Def.Function])(using
+def deduplicateFunctions(res: Set[Def.Function])(using
     Config
 ): mutable.Set[Def.Function] =
   info(s"Deduplicating ${res.size} functions")

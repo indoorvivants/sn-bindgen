@@ -134,6 +134,11 @@ void wrap_Type_getNamedType(CXType *elaborated, CXType *underlying) {
   memcpy(underlying, &cs, sizeof(CXType));
 }
 
+void wrap_getCanonicalType(CXType *elaborated, CXType *underlying) {
+  CXType cs = clang_getCanonicalType(*elaborated);
+  memcpy(underlying, &cs, sizeof(CXType));
+}
+
 void wrap_getTypeDeclaration(CXType *tpe, CXCursor *declaration) {
   CXCursor cs = clang_getTypeDeclaration(*tpe);
   memcpy(declaration, &cs, sizeof(CXCursor));
