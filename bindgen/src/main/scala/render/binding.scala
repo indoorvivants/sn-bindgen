@@ -53,13 +53,13 @@ def binding(
   def commentException(element: Any, exc: Throwable) =
     val stackTrace =
       exc.getStackTrace.map("//    " + _.toString).mkString("\n")
-    errln(s"""
-    |// Failed to render:
-    |//  $element
-    |// Error:
-    |//  $exc
-    |$stackTrace\n
-    """.stripMargin)
+    // errln(s"""
+    // |// Failed to render:
+    // |//  $element
+    // |// Error:
+    // |//  $exc
+    // |$stackTrace\n
+    // """.stripMargin)
 
     throw exc
   end commentException

@@ -7,14 +7,40 @@ import Def.*
 import scala.scalanative.unsigned.ULong
 import scala.scalanative.unsafe.Tag
 
+case class BindingDefinition(item: Def, isFromMainFile: Boolean)
+
 case class Binding(
-    var enums: mutable.Set[Enum],
-    var structs: mutable.Set[Struct],
-    var unions: mutable.Set[Union],
-    var functions: mutable.Set[Function],
-    var aliases: mutable.Set[Alias],
-    var mainFileNames: mutable.Set[String]
-)
+    // var enums: mutable.Set[Enum] = mutable.Set.empty,
+    // var structs: mutable.Set[Struct] = mutable.Set.empty,
+    // var unions: mutable.Set[Union] = mutable.Set.empty,
+    // var functions: mutable.Set[Function] = mutable.Set.empty,
+    // var aliases: mutable.Set[Alias] = mutable.Set.empty,
+    // var mainFileNames: mutable.Set[String] = mutable.Set.empty,
+    var named: mutable.Map[String, BindingDefinition] = mutable.Map.empty
+):
+  def add(item: Def, isFromMainFile: Boolean) =
+    item.defName.foreach { n =>
+      named.addOne(n -> BindingDefinition(item, isFromMainFile))
+    }
+  def aliases: Set[Def.Alias] = named.collect {
+    case (k, BindingDefinition(item: Def.Alias, _)) => item
+  }.toSet
+
+  def unions: Set[Def.Union] = named.collect {
+    case (k, BindingDefinition(item: Def.Union, _)) => item
+  }.toSet
+  def structs: Set[Def.Struct] = named.collect {
+    case (k, BindingDefinition(item: Def.Struct, _)) => item
+  }.toSet
+  def enums: Set[Def.Enum] = named.collect {
+    case (k, BindingDefinition(item: Def.Enum, _)) => item
+  }.toSet
+
+  def functions: Set[Def.Function] = named.collect {
+    case (k, BindingDefinition(item: Def.Function, _)) => item
+  }.toSet
+end Binding
+
 enum Def:
   case Enum(
       var values: ListBuffer[(String, Long)],
@@ -97,20 +123,6 @@ enum Name:
   case BuiltIn(value: BuiltinType)
 
 import CType.*
-
-private def integral(base: IntegralBase, st: SignType) =
-  NumericIntegral(base, st)
-
-private def _unsafe(typ: String) = s"scala.scalanative.unsafe.$typ"
-private def _libc(typ: String) = s"scala.scalanative.libc.$typ"
-private def _posix(typ: String) = s"scala.scalanative.posix.$typ"
-private def size[T](using t: Tag[T]) = t.size
-private def alignment[T](using t: Tag[T]) = t.alignment
-
-import scala.scalanative.unsafe.*
-import scala.scalanative.posix.time.*
-import scala.scalanative.libc.stdio.*
-import scala.scalanative.posix.sys.socket.*
 
 enum SignType:
   case Signed, Unsigned

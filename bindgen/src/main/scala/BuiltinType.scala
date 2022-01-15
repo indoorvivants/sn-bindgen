@@ -1,16 +1,19 @@
 package bindgen
 
-import scala.collection.mutable.ListBuffer
-import bindgen.CType.Parameter
-import scala.collection.mutable
-import Def.*
-import scala.scalanative.unsigned.ULong
-import scala.scalanative.unsafe.Tag
-import CType.*
 import scala.scalanative.unsafe.*
+import scala.scalanative.unsigned.*
 import scala.scalanative.posix.time.*
 import scala.scalanative.libc.stdio.*
 import scala.scalanative.posix.sys.socket.*
+
+private def integral(base: IntegralBase, st: SignType) =
+  CType.NumericIntegral(base, st)
+
+private def _unsafe(typ: String) = s"scala.scalanative.unsafe.$typ"
+private def _libc(typ: String) = s"scala.scalanative.libc.$typ"
+private def _posix(typ: String) = s"scala.scalanative.posix.$typ"
+private def size[T](using t: Tag[T]) = t.size
+private def alignment[T](using t: Tag[T]) = t.alignment
 
 case class BuiltinType(
     short: String,

@@ -78,14 +78,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
   CVarArgList
 
   val cxClientData = Captured.allocate[Binding](
-    Binding(
-      enums = mutable.Set.empty,
-      structs = mutable.Set.empty,
-      unions = mutable.Set.empty,
-      functions = mutable.Set.empty,
-      aliases = mutable.Set.empty,
-      mainFileNames = mutable.Set.empty
-    )
+    Binding()
   )
 
   val translationUnitCursor = clang_getTranslationUnitCursor(unit)
@@ -100,11 +93,14 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
         given Zone = zone
 
         val loc = cursor.location
+        val isFromMainFile = loc.isFromMainFile
+
         if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
           val function = visitFunction(cursor)
-          if cursor.location.isFromMainFile then
-            definitionClosure(function).foreach(binding.mainFileNames.add)
-          binding.functions.addOne(function)
+          binding.add(function, isFromMainFile)
+        // if cursor.location.isFromMainFile then
+        //   definitionClosure(function).foreach(binding.mainFileNames.add)
+        // binding.functions.addOne(function)
         end if
 
         if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
@@ -114,20 +110,27 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
           val typeDecl = clang_getTypeDeclaration(referencedType)
           if (referencedType.kind == CXTypeKind.CXType_Enum) then
             val en = visitEnum(typeDecl, true)
-            if cursor.location.isFromMainFile then
-              definitionClosure(en).foreach(binding.mainFileNames.add)
-            binding.enums.addOne(en)
+            binding.add(en, isFromMainFile)
+          // if cursor.location.isFromMainFile then
+          //   definitionClosure(en).foreach(binding.mainFileNames.add)
+          // binding.enums.addOne(en)
           else if (referencedType.kind == CXTypeKind.CXType_Record) then
             val struct = visitStruct(typeDecl, name)
 
-            if cursor.location.isFromMainFile then
-              definitionClosure(struct).foreach(binding.mainFileNames.add)
+            val item =
+              if typ.spelling.startsWith("union ") then
+                Def.Union(struct.fields, struct.name)
+              else struct
 
-            if clang_getTypeSpelling(typ).string.startsWith("union ") then
-              binding.unions.addOne(Def.Union(struct.fields, struct.name))
-            else if name != "" then
-              binding.structs.filterInPlace(_.name != name)
-              binding.structs.addOne(visitStruct(typeDecl, name))
+            // if cursor.location.isFromMainFile then
+            //   definitionClosure(struct).foreach(binding.mainFileNames.add)
+            if name != "" then binding.add(item, isFromMainFile)
+
+          // if clang_getTypeSpelling(typ).string.startsWith("union ") then
+          //   binding.unions.addOne(Def.Union(struct.fields, struct.name))
+          // else if name != "" then
+          //   binding.structs.filterInPlace(_.name != name)
+          //   binding.structs.addOne(visitStruct(typeDecl, name))
           else
             val alias: Def.Alias =
               Def.Alias(name, constructType(typ))
@@ -139,10 +142,12 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                 s"canonical type is ${canonical.spelling} (constructed(${constructType(canonical)})"
             )
 
-            if cursor.location.isFromMainFile then
-              definitionClosure(alias).foreach(binding.mainFileNames.add)
+            binding.add(alias, isFromMainFile)
 
-            binding.aliases.addOne(alias)
+          // if cursor.location.isFromMainFile then
+          //   definitionClosure(alias).foreach(binding.mainFileNames.add)
+
+          // binding.aliases.addOne(alias)
           end if
         end if
 
@@ -150,19 +155,23 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
           val name = clang_getCursorSpelling(cursor).string
           if name != "" then
             val en = visitStruct(cursor, name)
-            if cursor.location.isFromMainFile then
-              definitionClosure(en).foreach(binding.mainFileNames.add)
+            val union = Def.Union(en.fields, en.name)
+            binding.add(union, isFromMainFile)
 
-            binding.unions.addOne(Def.Union(en.fields, en.name))
+        // binding.unions.addOne(Def.Union(en.fields, en.name))
+        end if
 
         if cursor.kind == CXCursorKind.CXCursor_StructDecl then
-          val name = clang_getCursorSpelling(cursor).string
+          // val name = clang_getCursorSpelling(cursor).string
+          val name = cursor.spelling
           if name != "" then
-            binding.structs.filterInPlace(_.name != name)
+            // binding.structs.filterInPlace(_.name != name)
             val en = visitStruct(cursor, name)
-            if cursor.location.isFromMainFile then
-              definitionClosure(en).foreach(binding.mainFileNames.add)
-            binding.structs.addOne(en)
+            binding.add(en, isFromMainFile)
+        // if cursor.location.isFromMainFile then
+        //   definitionClosure(en).foreach(binding.mainFileNames.add)
+        // binding.structs.addOne(en)
+        end if
 
         if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
           val en = visitEnum(
@@ -172,9 +181,11 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
             ).kind == CXTypeKind.CXType_Typedef
           )
 
-          if cursor.location.isFromMainFile then
-            definitionClosure(en).foreach(binding.mainFileNames.add)
-          binding.enums.addOne(en)
+          binding.add(en, isFromMainFile)
+
+        // if cursor.location.isFromMainFile then
+        //   definitionClosure(en).foreach(binding.mainFileNames.add)
+        // binding.enums.addOne(en)
         end if
 
         if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
@@ -188,19 +199,12 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
   clang_disposeIndex(index)
 
   val binding = (!cxClientData)._1
+  BuiltIn.add(binding)
+  val closure = computeClosure(binding.named.toMap)
 
-  trace(s"Defined or used in main file: ${binding.mainFileNames}")
+  trace(s"Defined or used in main file: ${closure}")
 
-  def allowed(f: Def) =
-    f.defName.isEmpty || f.defName.exists { nm =>
-      !BuiltIn.aliasNames.contains(nm) && binding.mainFileNames.contains(nm)
-    }
-
-  binding.functions.filterInPlace(allowed)
-  binding.aliases.filterInPlace(allowed)
-  binding.structs.filterInPlace(allowed)
-  binding.enums.filterInPlace(allowed)
-  binding.unions.filterInPlace(allowed)
+  binding.named.filterInPlace((k, _) => closure.contains(k))
 
   trace("Binding information:")
   binding.aliases.foreach { a =>
@@ -219,18 +223,15 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     trace(s"union $a")
   }
 
-  BuiltIn.add(binding)
+  binding
 end analyse
 
 object BuiltIn:
   def add(binding: Binding): Binding =
-    aliases.foldLeft[Binding](binding) { case (b, alias) =>
-      if b.mainFileNames.contains(alias.name) then
-        b.aliases.addOne(alias)
-        b
-      else b
+    aliases.foreach { al =>
+      binding.add(al, isFromMainFile = false)
     }
-
+    binding
   val aliases: Set[Def.Alias] = BuiltinType.all
     .map[Def.Alias] { tpe =>
       Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
@@ -238,12 +239,3 @@ object BuiltIn:
     .toSet
   val aliasNames = aliases.map(_.name)
 end BuiltIn
-
-extension (seq: Seq[String])
-  private[bindgen] def toCArray(using Zone): Ptr[CString] =
-    val mem = alloc[CString](seq.size)
-    (0 until seq.size).foreach { i =>
-      mem(i) = toCString(seq(i))
-    }
-
-    mem
