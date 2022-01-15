@@ -36,7 +36,8 @@ jobs:
 
       - name: Compile dummy C file
         run: |
-          echo "#include \"stdbool.h\"\nint main(){}" > dummy.c
+          echo '#include "stdbool.h"' > dummy.c
+          echo 'int main(){}' >> dummy.c
           clang -v dummy.c
 
       - name: Build native binary
