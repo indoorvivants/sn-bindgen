@@ -340,24 +340,26 @@ def llvmInclude: List[String] = {
   )
 }
 
-def clangInclude: List[String] =
+def clangInclude: List[String] = {
+  val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
   includes(
     ifMac =
       if (Platform.target.arch == Platform.Arch.x86_64)
         List(
           // on X86 macs
-          "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.0.0/include",
+          s"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/$majorVersion.0.0/include",
           "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
           "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
         )
       else
         List(
           // on M1 macs
-          "/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include",
+          s"/Library/Developer/CommandLineTools/usr/lib/clang/$majorVersion.0.0/include",
           "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
           "/Library/Developer/CommandLineTools/usr/include"
         )
   )
+}
 
 def llvmLib =
   linking(ifMac =

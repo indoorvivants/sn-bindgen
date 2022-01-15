@@ -10,6 +10,7 @@ env:
   JAVA_OPTS: "-Xmx2G"
   SN_RELEASE: fast
   JABBA_INDEX: 'https://github.com/typelevel/jdk-index/raw/main/index.json'
+  CLANG_VERSION: 12
 
 jobs:
   build:
