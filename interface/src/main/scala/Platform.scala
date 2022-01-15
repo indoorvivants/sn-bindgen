@@ -39,12 +39,6 @@ object Platform {
       clangVersion: String
   )
 
-  // object Toolchain{
-  //   def detectGlobal: Toolchain = {
-
-  //   }
-  // }
-
   object BuildInfo {
     def version: String =
       props.getProperty("sn-bindgen.version")

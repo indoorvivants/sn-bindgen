@@ -322,7 +322,7 @@ def usesLibClang(conf: NativeConfig) = {
 
   conf
     .withLinkingOptions(conf.linkingOptions ++ llvmLibs)
-    .withCompileOptions(conf.compileOptions ++ llvmInclude)
+    .withCompileOptions(conf.compileOptions ++ llvmInclude ++ clangInclude)
 }
 
 def includes(
@@ -430,19 +430,19 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
     "libtreesitter",
     Some("treesitter"),
     cImports = List("tree_sitter/api.h"),
-    llvmInclude ++
-      clangInclude ++
-      List("-std=gnu99")
+    /* llvmInclude ++ */
+    /*   clangInclude ++ */
+    /*   List("-std=gnu99") */
   )
 
-  define(
-    location /
-      "raylib.h",
-    "libraylib",
-    Some("raylib"),
-    List("raylib.h"),
-    llvmInclude ++ clangInclude
-  )
+  /* define( */
+  /*   location / */
+  /*     "raylib.h", */
+  /*   "libraylib", */
+  /*   Some("raylib"), */
+  /*   List("raylib.h"), */
+  /*   llvmInclude ++ clangInclude */
+  /* ) */
 
   if (Platform.target.os != Platform.OS.Linux)
     define(
