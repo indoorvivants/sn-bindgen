@@ -300,10 +300,20 @@ def environmentConfiguration(conf: NativeConfig): NativeConfig = {
   else conf
 }
 
-def usesLibClang(conf: NativeConfig) =
+def usesLibClang(conf: NativeConfig) = {
+  val llvmLibs =
+    if (sys.env.contains("LIBCLANG_STATIC"))
+      List(
+        "-Lbuild/libclang-static-build/lib",
+        "-lclang_bundled",
+        "-lz"
+      )
+    else llvmLib ++ List("-lclang")
+
   conf
-    .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
-    .withCompileOptions(llvmInclude)
+    .withLinkingOptions(conf.linkingOptions ++ llvmLibs)
+    .withCompileOptions(conf.compileOptions ++ llvmInclude ++ clangInclude)
+}
 
 def includes(
     ifLinux: List[String] = Nil,
@@ -343,6 +353,8 @@ def llvmInclude: List[String] = {
 def clangInclude: List[String] = {
   val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
   includes(
+    ifLinux =
+      List(s"/usr/lib/llvm-$majorVersion/lib/clang/$majorVersion.0.0/include"),
     ifMac =
       if (Platform.target.arch == Platform.Arch.x86_64)
         List(
@@ -361,26 +373,35 @@ def clangInclude: List[String] = {
   )
 }
 
-def llvmLib =
-  linking(ifMac =
-    if (Platform.target.arch == Platform.Arch.x86_64)
-      List("/usr/local/opt/llvm/lib")
-    else
-      List("/opt/homebrew/opt/llvm/lib")
+def llvmLib = {
+  val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
+  linking(
+    ifLinux = List(s"/usr/lib/llvm-$majorVersion/lib/"),
+    ifMac =
+      if (Platform.target.arch == Platform.Arch.x86_64)
+        List("/usr/local/opt/llvm/lib")
+      else
+        List("/opt/homebrew/opt/llvm/lib")
   )
+}
 
 def sampleBindings(location: File, builder: BindingBuilder) = {
   import builder.define
 
-  define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
-  define(location / "test.h", "libtest", Some("test"), List("test.h"))
+  define(
+    location / "cJSON.h",
+    "libcjson",
+    Some("cjson"),
+    List("cJSON.h"),
+    clangFlags = clangInclude
+  )
   define(
     location /
       "Clang-Index.h",
     "libclang",
     Some("clang"),
     List("clang-c/Index.h"),
-    llvmInclude
+    clangFlags = llvmInclude ++ clangInclude
   )
 
   define(

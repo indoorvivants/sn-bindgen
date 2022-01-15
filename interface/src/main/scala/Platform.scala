@@ -1,6 +1,7 @@
 package bindgen.interface
 
 import java.util.Properties
+import java.io.File
 
 object Platform {
   sealed abstract class OS(val string: String) extends Product with Serializable
@@ -25,6 +26,8 @@ object Platform {
       case _                        => None
     }
   }
+
+  case class Toolchain(clang: File, llvmInclude: File, clangInclude: File)
 
   object BuildInfo {
     def version: String =
