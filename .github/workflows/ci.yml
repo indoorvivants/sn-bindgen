@@ -57,7 +57,7 @@ jobs:
 
   nix-build:
     strategy:
-      fail-fase: false
+      fail-fast: false
       matrix: 
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
