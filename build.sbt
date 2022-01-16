@@ -152,6 +152,26 @@ lazy val bindgen = project
       .flatten
   }
 
+lazy val binaryArtifacts = project
+  .in(file("build/binary-artifacts"))
+  .enablePlugins(ScalaNativePlugin)
+  .settings(nativeCommon)
+  .settings(
+    packageBin / publishArtifact := false,
+    packageDoc / publishArtifact := false,
+    packageSrc / publishArtifact := false,
+    moduleName := "bindgen"
+  )
+  .settings {
+    val detected = detectBinaryArtifacts
+    detected
+      .map { case (_, (artifact, file)) =>
+        addArtifact(Def.setting(artifact), Def.task(file))
+      }
+      .toSeq
+      .flatten
+  }
+
 lazy val localBindgenArtifact = project
   .in(file("local-bindgen"))
   .enablePlugins(ScalaNativePlugin)

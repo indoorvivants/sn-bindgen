@@ -64,11 +64,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v6
-      - uses: olafurpg/setup-scala@v13
-        with:
-          java-version: graalvm-ce-java17
-
-      - run: git fetch --unshallow
 
       - name: Download binaries
         uses: actions/download-artifact@v2
@@ -77,13 +72,14 @@ jobs:
 
       - name: Check published artifacts
         run: |
-          sbt versionDump publishLocal
+          sbt versionDump binaryArtifacts/publishLocal iface3/publishLocal iface/publishLocal iface2_12/publishLocal
           curl -fLo cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
           chmod +x cs
           ./cs resolve com.indoorvivants:bindgen-interface_2.13:$(cat version)
           ./cs resolve com.indoorvivants:bindgen-interface_3:$(cat version)
-          ./cs resolve com.indoorvivants:bindgen-interface_2_12:$(cat version)
-
+          ./cs resolve com.indoorvivants:bindgen-interface_2.12:$(cat version)
+          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-x86_64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
 
   release:
     needs: [pre_release_check]
