@@ -20,9 +20,9 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            uploaded_filename: sn-bindgen-x86_64-apple-darwin
+            uploaded_filename: sn-bindgen-osx-x86_64
           - os: ubuntu-latest
-            uploaded_filename: sn-bindgen-x86_64-pc-linux
+            uploaded_filename: sn-bindgen-linux-x86_64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -54,9 +54,39 @@ jobs:
       
       - name: Compile examples
         run: sbt examples/compile
+  
+  pre_release_check:
+    needs: [build]
+    name: Check releasable artifacts
+    runs-on: ubuntu-latest
+    env: 
+      BINARIES: /tmp/binaries/
+    steps:
+      - uses: actions/checkout@v2
+      - uses: coursier/cache-action@v6
+      - uses: olafurpg/setup-scala@v13
+        with:
+          java-version: graalvm-ce-java17
+
+      - run: git fetch --unshallow
+
+      - name: Download binaries
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp/binaries
+
+      - name: Check published artifacts
+        run: |
+          sbt versionDump publishLocal
+          curl -fLo cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
+          chmod +x cs
+          ./cs resolve com.indoorvivants:bindgen-interface_2.13:$(cat version)
+          ./cs resolve com.indoorvivants:bindgen-interface_3:$(cat version)
+          ./cs resolve com.indoorvivants:bindgen-interface_2_12:$(cat version)
+
 
   release:
-    needs: [build]
+    needs: [pre_release_check]
     name: Release
     if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
