@@ -13,67 +13,54 @@ env:
   CLANG_VERSION: 12
 
 jobs:
-  # build:
-  #   name: CI
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - os: macos-latest
-  #           uploaded_filename: sn-bindgen-x86_64-apple-darwin
-  #         - os: ubuntu-latest
-  #           uploaded_filename: sn-bindgen-x86_64-pc-linux
-  #   runs-on: ${{ matrix.os }}
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: coursier/cache-action@v6      
-  #     - uses: olafurpg/setup-scala@v13
-  #       with:
-  #         java-version: graalvm-ce-java17
+  osx_build:
+    name: OS X build
+    strategy:
+      fail-fast: false
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: coursier/cache-action@v6      
+      - uses: olafurpg/setup-scala@v13
+        with:
+          java-version: graalvm-ce-java17
 
-  #     - name: Setup
-  #       run: ./build/setup_unix.sh
+      - name: Setup
+        run: ./build/setup_unix.sh
 
-  #     - name: Compile dummy C file
-  #       run: |
-  #         echo '#include "stdbool.h"' > dummy.c
-  #         echo 'int main(){}' >> dummy.c
-  #         clang -v dummy.c
+      - name: Compile dummy C file
+        run: |
+          echo '#include "stdbool.h"' > dummy.c
+          echo 'int main(){}' >> dummy.c
+          clang -v dummy.c
 
-  #     - name: Build native binary
-  #       run: sbt bindgen/nativeLink
+      - name: Build native binary
+        run: sbt bindgen/nativeLink
 
-  #     - name: Upload artifacts
-  #       uses: actions/upload-artifact@master
-  #       with:
-  #         path: bindgen/target/scala-3.1.0/bindgen-out 
-  #         name: ${{ matrix.uploaded_filename }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          path: bindgen/target/scala-3.1.0/bindgen-out 
+          name: sn-bindgen-x86_64-osx-clang-12
       
-  #     - name: Run tests
-  #       run: sbt ci
+      - name: Run tests
+        run: sbt ci
       
-  #     - name: Compile examples
-  #       run: sbt examples/compile
-  
-  build:
-    name: CI2
+      - name: Compile examples
+        run: sbt examples/compile
+
+  linux_build:
+    name: Linux build
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: macos-latest
-            architecture: x86_64
-            os_id: apple-darwin
-            clang_version: 13.0.0
-            # uploaded_filename: sn-bindgen-x86_64-apple-darwin
-          - os: ubuntu-latest
-            # uploaded_filename: sn-bindgen-x86_64-pc-linux
-            architecture: x86_64
-            os_id: linux-gnu-ubuntu-20.04
-            clang_version: 13.0.0
-    runs-on: ${{ matrix.os }}
+          - clang_major_version: 13
+            ubuntu_version: 20.04
+            clang_full_version: 13.0.0
+    runs-on: ubuntu-latest
     env:
-      CUSTOM_LLVM_PATH: build/clang+llvm-${{ matrix.clang_version }}-${{ matrix.architecture }}-${{ matrix.os_id }}
+      CUSTOM_LLVM_PATH: build/clang+llvm-${{ matrix.clang_full_version }}-x86_64-linux-gnu-ubuntu-${{ matrix.ubuntu_version }}
     steps:
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v6      
@@ -97,11 +84,11 @@ jobs:
       - name: Build native binary
         run: sbt 'show bindgen/nativeConfig' bindgen/nativeLink
 
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@master
-      #   with:
-      #     path: bindgen/target/scala-3.1.0/bindgen-out 
-      #     name: ${{ matrix.uploaded_filename }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          path: bindgen/target/scala-3.1.0/bindgen-out 
+          name: ${{ matrix.uploaded_filename }}
       
       # - name: Run tests
       #   run: sbt ci
@@ -110,8 +97,64 @@ jobs:
       #   run: sbt examples/compile
 
 
+  
+  # build:
+  #   name: CI2
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - os: macos-lates.sortedt
+  #           architecture: x86_64
+  #           os_id: apple-darwin
+  #           clang_version: 13.0.0
+  #           # uploaded_filename: sn-bindgen-x86_64-apple-darwin
+  #         - os: ubuntu-latest
+  #           # uploaded_filename: sn-bindgen-x86_64-pc-linux
+  #           architecture: x86_64
+  #           os_id: linux-gnu-ubuntu-20.04
+  #           clang_version: 13.0.0
+  #   runs-on: ${{ matrix.os }}
+  #   env:
+  #     CUSTOM_LLVM_PATH: build/clang+llvm-${{ matrix.clang_version }}-${{ matrix.architecture }}-${{ matrix.os_id }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: coursier/cache-action@v6      
+  #     - uses: olafurpg/setup-scala@v13
+  #       with:
+  #         java-version: graalvm-ce-java17
+
+  #     - name: Setup
+  #       run: |
+  #         cd build 
+  #         wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.clang_version }}/clang+llvm-${{ matrix.clang_version }}-${{ matrix.architecture }}-${{ matrix.os_id }}.tar.xz
+  #         tar vxf *.xz 2> /dev/null
+
+
+  #     - name: Compile dummy C file
+  #       run: |
+  #         echo '#include "stdbool.h"' > dummy.c
+  #         echo 'int main(){}' >> dummy.c
+  #         $CUSTOM_LLVM_PATH/bin/clang -v dummy.c
+
+  #     - name: Build native binary
+  #       run: sbt 'show bindgen/nativeConfig' bindgen/nativeLink
+
+  #     # - name: Upload artifacts
+  #     #   uses: actions/upload-artifact@master
+  #     #   with:
+  #     #     path: bindgen/target/scala-3.1.0/bindgen-out 
+  #     #     name: ${{ matrix.uploaded_filename }}
+      
+  #     # - name: Run tests
+  #     #   run: sbt ci
+      
+  #     # - name: Compile examples
+  #     #   run: sbt examples/compile
+
+
   release:
-    needs: [build]
+    needs: [linux_build, osx_build]
     name: Release
     if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
