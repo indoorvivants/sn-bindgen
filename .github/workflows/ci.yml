@@ -61,6 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CUSTOM_LLVM_PATH: build/clang+llvm-${{ matrix.clang_full_version }}-x86_64-linux-gnu-ubuntu-${{ matrix.ubuntu_version }}
+      LD_LIBRARY_PATH: build/clang+llvm-${{ matrix.clang_full_version }}-x86_64-linux-gnu-ubuntu-${{ matrix.ubuntu_version }}/lib
     steps:
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v6      
