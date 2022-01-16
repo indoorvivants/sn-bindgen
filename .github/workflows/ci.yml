@@ -13,74 +13,84 @@ env:
   CLANG_VERSION: 12
 
 jobs:
-  build:
-    name: CI
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: macos-latest
-            uploaded_filename: sn-bindgen-x86_64-apple-darwin
-          - os: ubuntu-latest
-            uploaded_filename: sn-bindgen-x86_64-pc-linux
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: coursier/cache-action@v6      
-      - uses: olafurpg/setup-scala@v13
-        with:
-          java-version: graalvm-ce-java17
+  # build:
+  #   name: CI
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - os: macos-latest
+  #           uploaded_filename: sn-bindgen-x86_64-apple-darwin
+  #         - os: ubuntu-latest
+  #           uploaded_filename: sn-bindgen-x86_64-pc-linux
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: coursier/cache-action@v6      
+  #     - uses: olafurpg/setup-scala@v13
+  #       with:
+  #         java-version: graalvm-ce-java17
 
-      - name: Setup
-        run: ./build/setup_unix.sh
+  #     - name: Setup
+  #       run: ./build/setup_unix.sh
 
-      - name: Compile dummy C file
-        run: |
-          echo '#include "stdbool.h"' > dummy.c
-          echo 'int main(){}' >> dummy.c
-          clang -v dummy.c
+  #     - name: Compile dummy C file
+  #       run: |
+  #         echo '#include "stdbool.h"' > dummy.c
+  #         echo 'int main(){}' >> dummy.c
+  #         clang -v dummy.c
 
-      - name: Build native binary
-        run: sbt bindgen/nativeLink
+  #     - name: Build native binary
+  #       run: sbt bindgen/nativeLink
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@master
-        with:
-          path: bindgen/target/scala-3.1.0/bindgen-out 
-          name: ${{ matrix.uploaded_filename }}
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@master
+  #       with:
+  #         path: bindgen/target/scala-3.1.0/bindgen-out 
+  #         name: ${{ matrix.uploaded_filename }}
       
-      - name: Run tests
-        run: sbt ci
+  #     - name: Run tests
+  #       run: sbt ci
       
-      - name: Compile examples
-        run: sbt examples/compile
+  #     - name: Compile examples
+  #       run: sbt examples/compile
 
-  release:
-    needs: [build]
-    name: Release
-    if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+  nix-build:
     runs-on: ubuntu-latest
-    env: 
-      BINARIES: /tmp/binaries/
     steps:
-      - uses: actions/checkout@v2
-      - uses: coursier/cache-action@v6
-      - uses: olafurpg/setup-scala@v13
-        with:
-          java-version: graalvm-ce-java17
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v16
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - run: nix-build
+    - run: nix-shell --run "echo OK"
 
-      - run: git fetch --unshallow
+  # release:
+  #   needs: [build]
+  #   name: Release
+  #   if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+  #   runs-on: ubuntu-latest
+  #   env: 
+  #     BINARIES: /tmp/binaries/
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: coursier/cache-action@v6
+  #     - uses: olafurpg/setup-scala@v13
+  #       with:
+  #         java-version: graalvm-ce-java17
 
-      - name: Download binaries
-        uses: actions/download-artifact@v2
-        with:
-          path: /tmp/binaries
+  #     - run: git fetch --unshallow
 
-      - name: Publish
-        run: |
-          sbt ci-release
-        env:
-          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-          PGP_SECRET: ${{ secrets.PGP_SECRET }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+  #     - name: Download binaries
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         path: /tmp/binaries
+
+  #     - name: Publish
+  #       run: |
+  #         sbt ci-release
+  #       env:
+  #         PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+  #         PGP_SECRET: ${{ secrets.PGP_SECRET }}
+  #         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+  #         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
