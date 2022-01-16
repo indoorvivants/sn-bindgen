@@ -71,7 +71,7 @@ jobs:
       - name: Setup
         run: |
           cd build 
-          wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.clang_version }}/clang+llvm-${{ matrix.clang_version }}-${{ matrix.architecture }}-${{ matrix.os_id }}.tar.xz
+          wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.clang_version }}/clang+llvm-${{ matrix.clang_full_version }}-x86_64-linux-gnu-ubuntu-${{ matrix.ubuntu_version }}.tar.xz
           tar vxf *.xz 2> /dev/null
 
 
@@ -88,13 +88,13 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           path: bindgen/target/scala-3.1.0/bindgen-out 
-          name: ${{ matrix.uploaded_filename }}
+          name: sn-bindgen-x86_64-linux-clang-${{ matrix.clang_major_version }}
       
-      # - name: Run tests
-      #   run: sbt ci
+      - name: Run tests
+        run: sbt ci
       
-      # - name: Compile examples
-      #   run: sbt examples/compile
+      - name: Compile examples
+        run: sbt examples/compile
 
 
   
