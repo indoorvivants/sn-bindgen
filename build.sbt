@@ -152,6 +152,26 @@ lazy val bindgen = project
       .flatten
   }
 
+lazy val binaryArtifacts = project
+  .in(file("build/binary-artifacts"))
+  .enablePlugins(ScalaNativePlugin)
+  .settings(nativeCommon)
+  .settings(
+    packageBin / publishArtifact := false,
+    packageDoc / publishArtifact := false,
+    packageSrc / publishArtifact := false,
+    moduleName := "bindgen"
+  )
+  .settings {
+    val detected = detectBinaryArtifacts
+    detected
+      .map { case (_, (artifact, file)) =>
+        addArtifact(Def.setting(artifact), Def.task(file))
+      }
+      .toSeq
+      .flatten
+  }
+
 lazy val localBindgenArtifact = project
   .in(file("local-bindgen"))
   .enablePlugins(ScalaNativePlugin)
@@ -258,11 +278,6 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
 ) {
   val folder = new File(sys.env("BINARIES"))
 
-  val apple_x86 = folder / "sn-bindgen-x86_64-apple-darwin" / "bindgen-out"
-  val linux_x86 = folder / "sn-bindgen-x86_64-pc-linux" / "bindgen-out"
-
-  val builder = Map.newBuilder[String, (Artifact, File)]
-
   def build(classifier: String, file: File): (String, (Artifact, File)) = {
     val artif = Artifact("bindgen", classifier)
       .withExtension("jar")
@@ -272,13 +287,15 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     classifier -> (artif, file)
   }
 
-  if (apple_x86.exists())
-    builder += build("osx-x86_64", apple_x86)
+  val artifacts = for {
+    os <- Platform.OS.all
+    arch <- Platform.Arch.all
+    target = Platform.Target(os, arch)
+    file = folder / s"sn-bindgen-${target.string}" / "bindgen-out"
+    if file.exists()
+  } yield build(target.string, file)
 
-  if (linux_x86.exists())
-    builder += build("linux-x86_64", linux_x86)
-
-  builder.result()
+  artifacts.toMap
 } else Map.empty
 
 def generateExampleBindings(
@@ -440,6 +457,14 @@ lazy val watchedHeaders =
   taskKey[Seq[String]]("Header files watched by bindgen's tests")
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
+
+lazy val versionDump =
+  taskKey[Unit]("Dumps the version in a file named version")
+
+versionDump := {
+  val file = (ThisBuild / baseDirectory).value / "version"
+  IO.write(file, (Compile / version).value)
+}
 
 addCommandAlias(
   "ci",

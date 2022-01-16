@@ -9,6 +9,8 @@ object Platform {
     case object MacOS extends OS("osx")
     case object Linux extends OS("linux")
     case object Unknown extends OS("unknown")
+
+    val all = List(Windows, MacOS, Linux, Unknown)
   }
   sealed abstract class Arch(val string: String)
       extends Product
@@ -16,10 +18,12 @@ object Platform {
   object Arch {
     case object x86_64 extends Arch("x86_64")
     case object aarch64 extends Arch("aarch_64")
+
+    val all = List(x86_64, aarch64)
   }
 
   case class Target(os: OS, arch: Arch) {
-    def string = os.string + "_" + arch.string
+    def string = os.string + "-" + arch.string
     def fallback = (os, arch) match {
       case (OS.MacOS, Arch.aarch64) => Some(Target(os, Arch.x86_64))
       case _                        => None
@@ -44,16 +48,19 @@ object Platform {
     }
   }
 
-  lazy val os = normalise(sys.props.getOrElse("os.name", "")) match {
+  def detectOs(osNameProp: String): OS = normalise(osNameProp) match {
     case p if p.startsWith("linux")                         => OS.Linux
     case p if p.startsWith("osx") || p.startsWith("macosx") => OS.MacOS
     case _                                                  => OS.Unknown
   }
-
-  lazy val arch = normalise(sys.props.getOrElse("os.arch", "")) match {
+  def detectArch(osArchProp: String): Arch = normalise(osArchProp) match {
     case "amd64" | "x64" | "x8664" => Arch.x86_64
     case "aarch64"                 => Arch.aarch64
   }
+
+  lazy val os = detectOs(sys.props.getOrElse("os.name", ""))
+
+  lazy val arch = detectArch(sys.props.getOrElse("os.arch", ""))
 
   lazy val target = Target(os, arch)
 
