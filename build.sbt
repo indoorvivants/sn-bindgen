@@ -362,11 +362,13 @@ def clangInclude: List[String] = {
 }
 
 def llvmLib =
-  linking(ifMac =
-    if (Platform.target.arch == Platform.Arch.x86_64)
-      List("/usr/local/opt/llvm/lib")
-    else
-      List("/opt/homebrew/opt/llvm/lib")
+  linking(
+    ifLinux = (10 to 13).toList.flatMap(v => List(s"/usr/lib/llvm-$v/lib/")),
+    ifMac =
+      if (Platform.target.arch == Platform.Arch.x86_64)
+        List("/usr/local/opt/llvm/lib")
+      else
+        List("/opt/homebrew/opt/llvm/lib")
   )
 
 def sampleBindings(location: File, builder: BindingBuilder) = {

@@ -41,7 +41,7 @@ jobs:
           clang -v dummy.c
 
       - name: Build native binary
-        run: sbt bindgen/nativeLink
+        run: sbt 'show nativeConfig' bindgen/nativeLink
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
