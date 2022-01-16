@@ -71,7 +71,7 @@ jobs:
       - name: Setup
         run: |
           cd build 
-          wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.clang_version }}/clang+llvm-${{ matrix.clang_full_version }}-x86_64-linux-gnu-ubuntu-${{ matrix.ubuntu_version }}.tar.xz
+          wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-${{ matrix.clang_major_version }}/clang+llvm-${{ matrix.clang_full_version }}-x86_64-linux-gnu-ubuntu-${{ matrix.ubuntu_version }}.tar.xz
           tar vxf *.xz 2> /dev/null
 
 
