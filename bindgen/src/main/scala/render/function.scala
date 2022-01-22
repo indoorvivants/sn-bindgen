@@ -9,8 +9,14 @@ def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
     AliasResolver
 ) =
   val arglist = f.arguments
-    .map(fp => s"${escape(fp.name)}: ${scalaType(fp.typ)}")
-    .mkString(", ")
+    .map { args =>
+      args
+        .map(fp => s"${escape(fp.name)}: ${scalaType(fp.typ)}")
+        .mkString(", ")
+    }
+    .mkString("(", ")(", ")")
+
+  val flatArguments = f.arguments.flatten
 
   val access =
     if f.public then "" else s"private[${summon[Config].packageName.value}] "
@@ -18,16 +24,20 @@ def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
   f.body match
     case ScalaFunctionBody.Extern =>
       line(
-        s"${access}def ${f.name}($arglist): ${scalaType(f.returnType)} = extern"
+        s"${access}def ${f.name}$arglist: ${scalaType(f.returnType)} = extern"
       )
-    case ScalaFunctionBody.Delegate(to, Allocations(indices, returnAsWell)) =>
+    case ScalaFunctionBody.Delegate(
+          to,
+          a @ Allocations(indices, returnAsWell)
+        ) =>
+      val hasZone = if a.hasAny then "(using Zone)" else ""
       line(
-        s"def ${f.name}($arglist)(using Zone): ${scalaType(f.returnType)} = "
+        s"def ${f.name}$arglist$hasZone: ${scalaType(f.returnType)} = "
       )
       def ptr_name(n: String) = s"_ptr_$n"
       nest {
         indices.toList.sorted.foreach { idx =>
-          val fp = f.arguments(idx)
+          val fp = flatArguments(idx)
           line(
             s"val ${ptr_name(idx.toString)} = alloc[${scalaType(fp.typ)}](1)"
           )
@@ -41,9 +51,8 @@ def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
         val delegateCallArgList =
           ListBuffer.empty[String]
 
-        (0 until f.arguments.size).foreach { i =>
-          if !indices.contains(i) then
-            delegateCallArgList.addOne(f.arguments(i).name)
+        flatArguments.zipWithIndex.foreach { (arg, i) =>
+          if !indices.contains(i) then delegateCallArgList.addOne(arg.name)
           else delegateCallArgList.addOne(ptr_name(i.toString))
         }
 

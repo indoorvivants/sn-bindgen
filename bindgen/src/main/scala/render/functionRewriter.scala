@@ -15,7 +15,8 @@ def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
 case class Allocations(
     params: Set[Int],
     returnValue: Boolean
-)
+):
+  def hasAny: Boolean = params.nonEmpty || returnValue
 
 enum ScalaFunctionBody:
   case Extern
@@ -28,7 +29,7 @@ enum GeneratedFunction:
   case ScalaFunction(
       name: String,
       returnType: CType,
-      arguments: List[FunctionParameter],
+      arguments: List[List[FunctionParameter]],
       body: ScalaFunctionBody,
       public: Boolean
   )
@@ -74,7 +75,7 @@ private def scalaForwarderFunction(
   GeneratedFunction.ScalaFunction(
     externFuncName(bad.name),
     returnType,
-    parameters.result,
+    List(parameters.result),
     ScalaFunctionBody.Extern,
     public = false
   )
@@ -88,7 +89,7 @@ private def scalaAllocatingFunction(bad: Def.Function)(using
   GeneratedFunction.ScalaFunction(
     bad.name,
     bad.returnType,
-    bad.parameters.toList,
+    List(bad.parameters.toList),
     ScalaFunctionBody.Delegate(
       invokes,
       Allocations(
@@ -103,6 +104,67 @@ private def scalaAllocatingFunction(bad: Def.Function)(using
     public = true
   )
 end scalaAllocatingFunction
+
+private def scalaPtrFunctions(bad: Def.Function)(using
+    Config,
+    AliasResolver
+): List[GeneratedFunction] =
+  val invokes = externFuncName(bad.name)
+  val returnAsWell = isDirectStructAccess(bad.returnType)
+
+  val gen = List.newBuilder[GeneratedFunction]
+  gen.addOne {
+    GeneratedFunction.ScalaFunction(
+      bad.name,
+      bad.returnType,
+      List(bad.parameters.toList.map { fp =>
+        if isDirectStructAccess(fp.typ) then
+          fp.copy(typ = CType.Pointer(fp.typ))
+        else fp
+      }),
+      ScalaFunctionBody.Delegate(
+        invokes,
+        Allocations(
+          params = Set.empty,
+          returnValue = returnAsWell
+        )
+      ),
+      public = true
+    )
+  }
+
+  if returnAsWell then
+    gen.addOne {
+      GeneratedFunction.ScalaFunction(
+        bad.name,
+        CType.Void,
+        List(bad.parameters.toList.map { fp =>
+          if isDirectStructAccess(fp.typ) then
+            fp.copy(typ = CType.Pointer(fp.typ))
+          else fp
+        }) :+ List(
+          FunctionParameter(
+            "__return",
+            CType.Pointer(bad.returnType),
+            OriginalCType(bad.returnType, ""),
+            true
+          )
+        ),
+        ScalaFunctionBody.Delegate(
+          invokes,
+          Allocations(
+            params = Set.empty,
+            returnValue = false
+          )
+        ),
+        public = true
+      )
+
+    }
+  end if
+
+  gen.result
+end scalaPtrFunctions
 
 private def cForwarderFunction(
     bad: Def.Function
@@ -137,6 +199,8 @@ def functionRewriter(badFunction: Def.Function)(using
     generated.addOne(scalaForwarderFunction(badFunction))
     // 2. a public Scala wrapper function, which leaves parameter types untouched
     generated.addOne(scalaAllocatingFunction(badFunction))
+    // 2.1. a public Scala wrapper function, which takes parameters by references
+    generated.addAll(scalaPtrFunctions(badFunction))
     // 3. a C forwarder function
     generated.addOne(cForwarderFunction(badFunction))
 
@@ -146,7 +210,7 @@ def functionRewriter(badFunction: Def.Function)(using
       GeneratedFunction.ScalaFunction(
         badFunction.name,
         badFunction.returnType,
-        badFunction.parameters.toList,
+        List(badFunction.parameters.toList),
         ScalaFunctionBody.Extern,
         public = true
       )
