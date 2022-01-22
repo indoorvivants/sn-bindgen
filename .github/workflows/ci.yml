@@ -46,7 +46,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          path: bindgen/target/scala-3.1.0/bindgen-out 
+          path: bindgen/target/scala-3.1.1/bindgen-out 
           name: ${{ matrix.uploaded_filename }}
       
       - name: Run tests

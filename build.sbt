@@ -19,13 +19,13 @@ import java.nio.file.Paths
 
 lazy val Versions = new {
   val decline = "2.2.0"
-  val scalaNative = "0.4.3-RC2"
+  val scalaNative = "0.4.3"
   val junit = "0.11"
 
   val Scala212 = "2.12.15"
   val Scala213 = "2.13.8"
   val Scala2 = List(Scala212, Scala213)
-  val Scala3 = List("3.1.0")
+  val Scala3 = "3.1.1"
 }
 
 // --------------MODULES-------------------------
@@ -42,7 +42,7 @@ lazy val root = project
 lazy val iface = projectMatrix
   .in(file("interface"))
   .someVariations(
-    Versions.Scala2 ++ Versions.Scala3,
+    Versions.Scala2 :+ Versions.Scala3,
     List(VirtualAxis.jvm) // todo may be publish native interfaces as well
   )(MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"))
   .settings(
@@ -81,7 +81,7 @@ lazy val bindgen = project
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
       .excludeAll(ExclusionRule("org.scala-native")),
     // test settings for Scala Native
-    libraryDependencies += "org.scala-native" %%% "junit-runtime" % Versions.scalaNative,
+    libraryDependencies += "org.scala-native" %%% "junit-runtime" % Versions.scalaNative % Test,
     addCompilerPlugin(
       "org.scala-native" % "junit-plugin" % Versions.scalaNative cross CrossVersion.full
     ),
@@ -450,7 +450,7 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
 
 // --------------SETTINGS-------------------------
 lazy val nativeCommon = Seq(
-  scalaVersion := "3.1.0"
+  scalaVersion := Versions.Scala3
 )
 
 lazy val watchedHeaders =

@@ -4,85 +4,52 @@ package rendering
 import bindgen.*
 import scala.collection.mutable.ListBuffer
 
-def function(model: Def.Function, line: Appender)(using
-    AliasResolver,
-    Config
-): Unit =
-  import model.*
-
-  val arglist = parameters
+def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
+    Config,
+    AliasResolver
+) =
+  val arglist = f.arguments
     .map(fp => s"${escape(fp.name)}: ${scalaType(fp.typ)}")
     .mkString(", ")
 
-  val privatise = model.tpe match
-    case f: CFunctionType.ExternRename => s"private[$packageName] "
-    case _                             => ""
+  val access =
+    if f.public then "" else s"private[${summon[Config].packageName.value}] "
 
-  val isFunctionRewrite =
-    model.tpe match
-      case CFunctionType.Extern => false
-      case _                    => true
-    end match
-
-  // if !isFunctionRewrite && isIllegalFunction(
-  //     model.returnType,
-  //     model.parameters.toList.map(_._2)
-  //   )
-  // then
-  //   val rewrites = functionRewriter(model)
-
-  //   line(s"object $name:")
-  //   nest {
-  //     rewrites.foreach { m =>
-  //       function(m, line)
-  //       line("")
-  //     }
-  //   }
-  // else
-  model.tpe match
-    case CFunctionType.Extern =>
+  f.body match
+    case ScalaFunctionBody.Extern =>
       line(
-        s"${privatise}def $name($arglist): ${scalaType(returnType)} = extern"
+        s"${access}def ${f.name}($arglist): ${scalaType(f.returnType)} = extern"
       )
-    case CFunctionType.ExternRename(name, _, _) =>
-      line(s"""@name("$name")""")
+    case ScalaFunctionBody.Delegate(to, Allocations(indices, returnAsWell)) =>
       line(
-        s"${privatise}def $name($arglist): ${scalaType(returnType)} = extern"
+        s"def ${f.name}($arglist)(using Zone): ${scalaType(f.returnType)} = "
       )
-    case CFunctionType.Delegate(rewrites, returnAsWell, delegateTo) =>
-      line(s"def $name($arglist)(using Zone): ${scalaType(returnType)} = ")
       def ptr_name(n: String) = s"_ptr_$n"
       nest {
-        rewrites.toList.sorted.foreach { idx =>
-          val fp = model.parameters(idx)
+        indices.toList.sorted.foreach { idx =>
+          val fp = f.arguments(idx)
           line(
             s"val ${ptr_name(idx.toString)} = alloc[${scalaType(fp.typ)}](1)"
           )
           line(s"!${ptr_name(idx.toString)} = ${escape(fp.name)}")
         }
-
         if returnAsWell then
           line(
-            s"val ${ptr_name("return")} = alloc[${scalaType(model.returnType)}](1)"
+            s"val ${ptr_name("return")} = alloc[${scalaType(f.returnType)}](1)"
           )
 
         val delegateCallArgList =
           ListBuffer.empty[String]
 
-        (0 until model.parameters.size).foreach { i =>
-          if !rewrites.contains(i) then
-            delegateCallArgList.addOne(model.parameters(i)._1)
+        (0 until f.arguments.size).foreach { i =>
+          if !indices.contains(i) then
+            delegateCallArgList.addOne(f.arguments(i).name)
           else delegateCallArgList.addOne(ptr_name(i.toString))
         }
 
         if returnAsWell then delegateCallArgList.addOne(ptr_name("return"))
-
-        line(s"$delegateTo(${delegateCallArgList.map(escape).mkString(", ")})")
-
+        line(s"$to(${delegateCallArgList.map(escape).mkString(", ")})")
         if returnAsWell then line(s"!${ptr_name("return")}")
       }
   end match
-
-// end if
-
 end function
