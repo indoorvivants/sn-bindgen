@@ -1,11 +1,13 @@
 package bindgen
 
-import scala.collection.mutable.ListBuffer
 import bindgen.CType.Parameter
+
 import scala.collection.mutable
-import Def.*
-import scala.scalanative.unsigned.ULong
+import scala.collection.mutable.ListBuffer
 import scala.scalanative.unsafe.Tag
+import scala.scalanative.unsigned.ULong
+
+import Def.*
 
 case class BindingDefinition(item: Def, isFromMainFile: Boolean)
 

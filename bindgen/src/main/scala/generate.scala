@@ -1,15 +1,17 @@
 package bindgen
 
+import bindgen.rendering.*
+import libclang.defs.*
+import libclang.enumerations.*
+import libclang.types.*
+
+import java.io.File
+import java.io.FileWriter
+import scala.collection.mutable
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
+
 import scalanative.libc.*
-import libclang.defs.*
-import libclang.types.*
-import libclang.enumerations.*
-import scala.collection.mutable
-import java.io.FileWriter
-import java.io.File
-import bindgen.rendering.*
 
 inline def errln(inline a: Any) = System.err.println(a)
 
@@ -23,17 +25,22 @@ object Generate:
           System.err.println(help)
           sys.exit(1)
         case Right(config) =>
-          given Config = config
-          val b = analyse(config.headerFile.value)
+          validateConfig(config) match
+            case None =>
+              given Config = config
+              val b = analyse(config.headerFile.value)
 
-          val scalaOutput = StringBuilder()
-          val cOutput = StringBuilder()
+              val scalaOutput = StringBuilder()
+              val cOutput = StringBuilder()
 
-          binding(b, scalaOutput, cOutput)
+              binding(b, scalaOutput, cOutput)
 
-          if config.quiet == Quiet.No then
-            config.lang match
-              case Lang.Scala => println(scalaOutput.result)
-              case Lang.C     => println(cOutput.result)
+              if config.quiet == Quiet.No then
+                config.lang match
+                  case Lang.Scala => println(scalaOutput.result)
+                  case Lang.C     => println(cOutput.result)
+            case Some(msg) =>
+              error(msg)(using LoggingConfig.default)
+              sys.exit(1)
     }
 end Generate

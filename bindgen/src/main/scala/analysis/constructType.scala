@@ -1,14 +1,16 @@
 package bindgen
 
+import libclang.defs.*
+import libclang.enumerations.*
+import libclang.types
+import libclang.types.*
+
+import scala.collection.mutable
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
-import scalanative.libc.*
-import libclang.defs.*
-import libclang.types.*
-import libclang.enumerations.*
-import scala.collection.mutable
-import libclang.types
 import scala.util.control.NoStackTrace
+
+import scalanative.libc.*
 
 def constructType(typ: CXType)(using
     Zone,
