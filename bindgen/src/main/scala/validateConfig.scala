@@ -10,4 +10,4 @@ private def fileExists(file: File) =
 
 def validateConfig(config: Config): Option[String] =
   None
-  // fileExists(new File(config.headerFile.value))
+// fileExists(new File(config.headerFile.value))
