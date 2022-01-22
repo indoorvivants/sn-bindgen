@@ -12,77 +12,145 @@ def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
       isDirectStructAccess(aliasResolver(name))
     case _ => false
 
-def functionRewriter(badFunction: Def.Function)(using
+case class Allocations(
+    params: Set[Int],
+    returnValue: Boolean
+)
+
+enum ScalaFunctionBody:
+  case Extern
+  case Delegate(to: String, allocations: Allocations)
+
+enum CFunctionBody:
+  case Delegate(to: String, dereference: Set[Int], returnAsWell: Boolean)
+
+enum GeneratedFunction:
+  case ScalaFunction(
+      name: String,
+      returnType: CType,
+      arguments: List[FunctionParameter],
+      body: ScalaFunctionBody,
+      public: Boolean
+  )
+
+  case CFunction(
+      name: String,
+      returnType: CType,
+      originalCType: OriginalCType,
+      arguments: List[FunctionParameter],
+      body: CFunctionBody
+  )
+end GeneratedFunction
+
+private def externFuncName(s: String)(using c: Config) =
+  s"__sn_wrap_${c.packageName.value}_" + s
+
+private def scalaForwarderFunction(
+    bad: Def.Function
+)(using AliasResolver, Config): GeneratedFunction.ScalaFunction =
+  val returnAsWell = isDirectStructAccess(bad.returnType)
+
+  val parameters = List.newBuilder[FunctionParameter]
+
+  bad.parameters.foreach { fp =>
+    if isDirectStructAccess(fp.typ) then
+      parameters.addOne(fp.copy(typ = CType.Pointer(fp.typ)))
+    else parameters.addOne(fp)
+  }
+
+  if returnAsWell then
+    parameters.addOne(
+      FunctionParameter(
+        "__return",
+        CType.Pointer(bad.returnType),
+        bad.originalCType,
+        generatedName = false
+      )
+    )
+  end if
+
+  val returnType = if returnAsWell then CType.Void else bad.returnType
+
+  GeneratedFunction.ScalaFunction(
+    externFuncName(bad.name),
+    returnType,
+    parameters.result,
+    ScalaFunctionBody.Extern,
+    public = false
+  )
+end scalaForwarderFunction
+
+private def scalaAllocatingFunction(bad: Def.Function)(using
+    Config,
     AliasResolver
-): Seq[Def.Function] =
+): GeneratedFunction.ScalaFunction =
+  val invokes = externFuncName(bad.name)
+  GeneratedFunction.ScalaFunction(
+    bad.name,
+    bad.returnType,
+    bad.parameters.toList,
+    ScalaFunctionBody.Delegate(
+      invokes,
+      Allocations(
+        params =
+          bad.parameters.map(_.typ).zipWithIndex.toSet.flatMap { (p, i) =>
+            if isDirectStructAccess(p) then Some(i)
+            else None
+          },
+        returnValue = isDirectStructAccess(bad.returnType)
+      )
+    ),
+    public = true
+  )
+end scalaAllocatingFunction
+
+private def cForwarderFunction(
+    bad: Def.Function
+)(using Config, AliasResolver): GeneratedFunction.CFunction =
+  GeneratedFunction.CFunction(
+    externFuncName(bad.name),
+    bad.returnType,
+    bad.originalCType,
+    bad.parameters.toList,
+    CFunctionBody.Delegate(
+      bad.name,
+      bad.parameters.map(_.typ).zipWithIndex.toSet.flatMap { (p, i) =>
+        if isDirectStructAccess(p) then Some(i)
+        else None
+      },
+      isDirectStructAccess(bad.returnType)
+    )
+  )
+
+def functionRewriter(badFunction: Def.Function)(using
+    AliasResolver,
+    Config
+): Seq[GeneratedFunction] =
   val isReturnTypeAStruct = isDirectStructAccess(badFunction.returnType)
   val anyParameterIsAStruct =
     badFunction.parameters.map(_._2).exists(isDirectStructAccess)
 
   if isReturnTypeAStruct || anyParameterIsAStruct then
+    // we will generate three functions
+    val generated = Seq.newBuilder[GeneratedFunction]
+    // 1. a private Scala forwarder function
+    generated.addOne(scalaForwarderFunction(badFunction))
+    // 2. a public Scala wrapper function, which leaves parameter types untouched
+    generated.addOne(scalaAllocatingFunction(badFunction))
+    // 3. a C forwarder function
+    generated.addOne(cForwarderFunction(badFunction))
 
-    // first rewrite - function maintaining all of its parameters intact, but allocating
-    // transparently for structs.
-    val externFuncName =
-      "__sn_wrap_" + badFunction.name
-    val externed: Def.Function =
-      val tail =
-        if isReturnTypeAStruct then
-          ListBuffer(
-            FunctionParameter(
-              "__return",
-              CType.Pointer(badFunction.returnType),
-              badFunction.originalCType,
-              generatedName = false
-            )
-          )
-        else ListBuffer.empty
-
-      Def.Function(
-        externFuncName,
-        returnType =
-          if isReturnTypeAStruct then CType.Void else badFunction.returnType,
-        parameters = badFunction.parameters.map { case original =>
-          if (isDirectStructAccess(original.typ)) then
-            original.copy(typ = CType.Pointer(original.typ))
-          else original
-          end if
-        } ++ tail,
-        tpe = CFunctionType.ExternRename(
-          externFuncName,
-          internal = true,
-          badFunction.name
-        ),
-        originalCType =
-          if isReturnTypeAStruct then
-            OriginalCType(badFunction.returnType, "void")
-          else badFunction.originalCType
-      )
-    end externed
-
-    val delegate: Def.Function =
-      val rewriteArgumentIndices = badFunction.parameters
-        .map(_._2)
-        .zipWithIndex
-        .collect {
-          case (typ, idx) if isDirectStructAccess(typ) => idx
-        }
-        .toSet
-
-      Def.Function(
+    generated.result
+  else
+    Seq(
+      GeneratedFunction.ScalaFunction(
         badFunction.name,
-        returnType = badFunction.returnType,
-        parameters = badFunction.parameters,
-        tpe = CFunctionType.Delegate(
-          rewriteArgumentIndices,
-          isReturnTypeAStruct,
-          externFuncName
-        ),
-        originalCType = badFunction.originalCType
+        badFunction.returnType,
+        badFunction.parameters.toList,
+        ScalaFunctionBody.Extern,
+        public = true
       )
-    end delegate
-
-    Seq(delegate, externed)
-  else Seq(badFunction)
+    )
   end if
+
 end functionRewriter

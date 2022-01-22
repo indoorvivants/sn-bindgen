@@ -25,7 +25,7 @@ lazy val Versions = new {
   val Scala212 = "2.12.15"
   val Scala213 = "2.13.8"
   val Scala2 = List(Scala212, Scala213)
-  val Scala3 = List("3.1.0")
+  val Scala3 = "3.1.1"
 }
 
 // --------------MODULES-------------------------
@@ -42,7 +42,7 @@ lazy val root = project
 lazy val iface = projectMatrix
   .in(file("interface"))
   .someVariations(
-    Versions.Scala2 ++ Versions.Scala3,
+    Versions.Scala2 :+ Versions.Scala3,
     List(VirtualAxis.jvm) // todo may be publish native interfaces as well
   )(MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"))
   .settings(
@@ -450,7 +450,7 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
 
 // --------------SETTINGS-------------------------
 lazy val nativeCommon = Seq(
-  scalaVersion := "3.1.0"
+  scalaVersion := Versions.Scala3
 )
 
 lazy val watchedHeaders =

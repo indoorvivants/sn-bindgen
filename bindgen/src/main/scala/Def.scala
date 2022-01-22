@@ -51,7 +51,6 @@ enum Def:
       var name: String,
       var returnType: CType,
       var parameters: ListBuffer[FunctionParameter],
-      var tpe: CFunctionType,
       val originalCType: OriginalCType
   )
   case Alias(name: String, underlying: CType)
@@ -88,11 +87,6 @@ case class FunctionParameter(
 )
 
 case class OriginalCType(typ: CType, s: String)
-
-enum CFunctionType:
-  case Extern
-  case ExternRename(name: String, internal: Boolean, original: String)
-  case Delegate(parameters: Set[Int], withReturn: Boolean, delegateTo: String)
 
 enum CType:
   case Arr(of: CType, size: Option[Int])

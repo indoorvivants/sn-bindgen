@@ -18,7 +18,6 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
       name = functionName,
       returnType = constructType(returnType),
       parameters = ListBuffer.empty,
-      tpe = CFunctionType.Extern,
       originalCType = OriginalCType(
         constructType(returnType),
         clang_getTypeSpelling(returnType).string

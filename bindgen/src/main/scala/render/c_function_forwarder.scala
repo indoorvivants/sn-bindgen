@@ -3,29 +3,23 @@ package rendering
 
 import scala.collection.mutable.ListBuffer
 
-def cFunctionForwarder(model: Def.Function, line: Appender)(using
+def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
     AliasResolver,
     Config
 ) =
-  model match
-    case Def.Function(
-          name,
-          returnType,
-          parameters,
-          CFunctionType.ExternRename(_, _, original),
-          originalCType
-        ) =>
-      val arglist = parameters
-        .map { case FunctionParameter(n, typ, oct, _) =>
-          if isDirectStructAccess(oct.typ) then s"${oct.s} *$n"
-          else s"${oct.s} $n"
+  f.body match
+    case CFunctionBody.Delegate(to, pointers, returnAsWell) =>
+      val arglist = List.newBuilder[String]
+      f.arguments.zipWithIndex
+        .foreach { case (fp, i) =>
+          arglist.addOne {
+            if pointers.contains(i) then s"${fp.originalTyp.s} *${fp.name}"
+            else s"${fp.originalTyp.s} ${fp.name}"
+          }
         }
-        .mkString(", ")
-
-      val returnIsOkay = originalCType.typ == returnType
 
       val delegateCallList = ListBuffer.empty[String]
-      parameters
+      f.arguments
         .map { case FunctionParameter(n, typ, oct, _) =>
           delegateCallList.addOne(
             if isDirectStructAccess(oct.typ) then s"*$n"
@@ -33,22 +27,29 @@ def cFunctionForwarder(model: Def.Function, line: Appender)(using
           )
         }
 
-      if returnIsOkay then
-        val returnKeyword = if returnType != CType.Void then "return " else ""
+      if !returnAsWell then
+        val returnKeyword = if f.returnType != CType.Void then "return " else ""
         line(
-          s"${originalCType.s} $name($arglist) {\n $returnKeyword$original(${delegateCallList.mkString(", ")});\n};\n"
+          s"${f.originalCType.s} ${f.name}(${arglist.result
+            .mkString(", ")}) {\n $returnKeyword$to(${delegateCallList.mkString(", ")});\n};\n"
         )
       else
-        val returnStructName = originalCType.typ match
+        val returnParamName = "____return"
+        val returnStructName = f.originalCType.typ match
           case CType.Reference(Name.Model(name)) => name
           case _ =>
             throw Error(
-              s"${originalCType.typ} should be a RecordRef or a TypeDef"
+              s"${f.originalCType.typ} should be a Reference"
             )
-        line(s"${originalCType.s} $name($arglist) {")
-        line(
-          s"  $returnStructName ____ret = $original(${delegateCallList.dropRight(1).mkString(", ")});"
+        arglist.addOne(
+          s"$returnStructName *$returnParamName"
         )
-        line(s"  memcpy(__return, &____ret, sizeof($returnStructName));")
+        line(s"void ${f.name}(${arglist.result.mkString(", ")}) {")
+        line(
+          s"  $returnStructName ____ret = $to(${delegateCallList.mkString(", ")});"
+        )
+        line(
+          s"  memcpy($returnParamName, &____ret, sizeof($returnStructName));"
+        )
         line("}\n")
       end if

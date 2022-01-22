@@ -57,7 +57,7 @@ def binding(
   end commentException
 
   scalaOutput.append("object types:\n")
-  def renderAll[A <: Def](
+  def renderAll[A <: (Def | GeneratedFunction)](
       defs: Seq[A],
       out: StringBuilder,
       how: (A, Appender) => Unit
@@ -85,16 +85,20 @@ def binding(
     renderAll(binding.unions.toList.sortBy(_.name), scalaOutput, union)
   }
 
-  val resolvedFunctions = deduplicateFunctions(
-    binding.functions.flatMap(functionRewriter)
-  )
+  val resolvedFunctions =
+    deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))
 
-  val externFunctions = resolvedFunctions.collect {
-    case f @ Def.Function(_, _, _, CFunctionType.Extern, _)          => f
-    case f @ Def.Function(_, _, _, _: CFunctionType.ExternRename, _) => f
+  val scalaExternFunctions = resolvedFunctions.collect {
+    case f: GeneratedFunction.ScalaFunction
+        if f.body == ScalaFunctionBody.Extern =>
+      f
   }
 
-  val regularFunctions = resolvedFunctions.filterNot(externFunctions.contains)
+  val scalaRegularFunctions = resolvedFunctions.collect {
+    case f: GeneratedFunction.ScalaFunction
+        if !scalaExternFunctions.contains(f) =>
+      f
+  }
 
   if binding.functions.nonEmpty then
     summon[Config].linkName.foreach { l =>
@@ -105,18 +109,26 @@ def binding(
     )
     nest {
       to(scalaOutput)("import types.*\n")
-      renderAll(externFunctions.toList.sortBy(_.name), scalaOutput, function)
+      renderAll(
+        scalaExternFunctions.toList.sortBy(_.name),
+        scalaOutput,
+        function
+      )
     }
     scalaOutput.append(s"\nobject functions: \n")
     nest {
       to(scalaOutput)("import types.*, extern_functions.*\n")
       to(scalaOutput)("export extern_functions.*\n")
-      renderAll(regularFunctions.toList.sortBy(_.name), scalaOutput, function)
+      renderAll(
+        scalaRegularFunctions.toList.sortBy(_.name),
+        scalaOutput,
+        function
+      )
     }
 
-    val cFunctions =
-      externFunctions
-        .filter(_.tpe.isInstanceOf[CFunctionType.ExternRename])
+    val cFunctions = resolvedFunctions.collect {
+      case f: GeneratedFunction.CFunction => f
+    }
 
     if cFunctions.nonEmpty then
       to(cOutput)("#include <string.h>")
