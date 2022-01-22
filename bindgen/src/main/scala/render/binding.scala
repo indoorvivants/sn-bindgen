@@ -47,7 +47,7 @@ def binding(
     s"import ${filtered.map { sc => sc + ".*" }.mkString(", ")}"
 
   given AliasResolver =
-    AliasResolver.create(binding.named.values.toSeq.map(_.item))
+    AliasResolver.create(binding.named.values.toList.map(_.item))
 
   def commentException(element: Any, exc: Throwable) =
     val stackTrace =

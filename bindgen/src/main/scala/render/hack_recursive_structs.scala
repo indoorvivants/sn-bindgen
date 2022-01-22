@@ -5,7 +5,7 @@ import bindgen.*
 def isCyclical(typ: CType, name: String)(using AliasResolver, Config): Boolean =
   def go(t: CType, visited: Set[String], level: Int): Boolean =
     import CType.*
-    // trace((" " * level) + s"visiting $t with $visited")
+    trace((" " * level) + s"visiting $t with $visited")
     val result =
       t match
         case Reference(Name.Model(name)) =>
@@ -37,7 +37,7 @@ def isCyclical(typ: CType, name: String)(using AliasResolver, Config): Boolean =
       end match
     end result
 
-    // trace((" " * level) + s"result of $t is '$result', visited: $visited")
+    trace((" " * level) + s"result of $t is '$result', visited: $visited")
     result
   end go
   go(typ, Set(name), 0)
