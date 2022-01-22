@@ -308,7 +308,6 @@ def generateExampleBindings(
   val builder = new BindingBuilder(binary)
 
   sampleBindings(base / "libraries", builder)
-  builder.withLogLevel(LogLevel.Trace)
 
   builder.generate(destination, lang)
 }
