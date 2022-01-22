@@ -34,23 +34,23 @@ jobs:
       - name: Setup
         run: ./build/setup_unix.sh
 
-      - name: Compile dummy C file
-        run: |
-          echo '#include "stdbool.h"' > dummy.c
-          echo 'int main(){}' >> dummy.c
-          clang -v dummy.c
+      # - name: Compile dummy C file
+      #   run: |
+      #     echo '#include "stdbool.h"' > dummy.c
+      #     echo 'int main(){}' >> dummy.c
+      #     clang -v dummy.c
 
-      - name: Build native binary
-        run: sbt 'show nativeConfig' bindgen/nativeLink
+      # - name: Build native binary
+      #   run: sbt 'show nativeConfig' bindgen/nativeLink
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@master
-        with:
-          path: bindgen/target/scala-3.1.1/bindgen-out 
-          name: ${{ matrix.uploaded_filename }}
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     path: bindgen/target/scala-3.1.1/bindgen-out 
+      #     name: ${{ matrix.uploaded_filename }}
       
-      - name: Run tests
-        run: sbt ci
+      # - name: Run tests
+      #   run: sbt ci
       
       - name: Compile examples
         run: sbt examples/compile

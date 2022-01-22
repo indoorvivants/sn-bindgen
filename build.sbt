@@ -19,7 +19,7 @@ import java.nio.file.Paths
 
 lazy val Versions = new {
   val decline = "2.2.0"
-  val scalaNative = "0.4.3-RC2"
+  val scalaNative = "0.4.3"
   val junit = "0.11"
 
   val Scala212 = "2.12.15"
@@ -81,7 +81,7 @@ lazy val bindgen = project
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
       .excludeAll(ExclusionRule("org.scala-native")),
     // test settings for Scala Native
-    libraryDependencies += "org.scala-native" %%% "junit-runtime" % Versions.scalaNative,
+    libraryDependencies += "org.scala-native" %%% "junit-runtime" % Versions.scalaNative % Test,
     addCompilerPlugin(
       "org.scala-native" % "junit-plugin" % Versions.scalaNative cross CrossVersion.full
     ),
