@@ -34,31 +34,67 @@ def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
       line(
         s"def ${f.name}$arglist$hasZone: ${scalaType(f.returnType)} = "
       )
-      def ptr_name(n: String) = s"_ptr_$n"
       nest {
-        indices.toList.sorted.foreach { idx =>
-          val fp = flatArguments(idx)
-          line(
-            s"val ${ptr_name(idx.toString)} = alloc[${scalaType(fp.typ)}](1)"
-          )
-          line(s"!${ptr_name(idx.toString)} = ${escape(fp.name)}")
-        }
-        if returnAsWell then
-          line(
-            s"val ${ptr_name("return")} = alloc[${scalaType(f.returnType)}](1)"
+        import scala.collection.mutable.Map as MutableMap
+
+        val allocationSizes: CType MutableMap Int =
+          MutableMap.from(
+            indices
+              .map(flatArguments.apply)
+              .groupBy(_.typ)
+              .map((tpe, params) => tpe -> params.size)
           )
 
+        if returnAsWell then
+          allocationSizes.update(
+            f.returnType,
+            allocationSizes.getOrElse(f.returnType, 0) + 1
+          )
+
+        val typeIndices = allocationSizes.keys.toList.zipWithIndex.toMap
+
+        val locations: Map[Int, String] =
+          val usedAllocations: MutableMap[CType, Int] =
+            allocationSizes.map((ct, _) => ct -> 0)
+
+          val params = indices.toList.sorted.map { i =>
+            val argType = flatArguments(i).typ
+            val block = s"__ptr_${typeIndices(argType)}"
+            val locationInBlock = usedAllocations(argType)
+            usedAllocations.update(argType, locationInBlock + 1)
+
+            i -> s"($block + $locationInBlock)"
+          }.toMap
+
+          if returnAsWell then
+            val block = s"__ptr_${typeIndices(f.returnType)}"
+            val locationInBlock = usedAllocations(f.returnType)
+            params ++ Map(-1 -> s"($block + $locationInBlock)")
+          else params
+        end locations
+
+        typeIndices.foreach { (ct, i) =>
+          line(
+            s"val __ptr_$i: Ptr[${scalaType(ct)}] = alloc[${scalaType(ct)}](${allocationSizes(ct)})"
+          )
+        }
+        indices.toList.sorted.foreach { idx =>
+          val fp = flatArguments(idx)
+          line(s"!${locations(idx)} = ${escape(fp.name)}")
+        }
         val delegateCallArgList =
           ListBuffer.empty[String]
 
         flatArguments.zipWithIndex.foreach { (arg, i) =>
           if !indices.contains(i) then delegateCallArgList.addOne(arg.name)
-          else delegateCallArgList.addOne(ptr_name(i.toString))
+          else delegateCallArgList.addOne(locations(i))
         }
 
-        if returnAsWell then delegateCallArgList.addOne(ptr_name("return"))
+        lazy val return_ptr = locations(-1)
+
+        if returnAsWell then delegateCallArgList.addOne(return_ptr)
         line(s"$to(${delegateCallArgList.map(escape).mkString(", ")})")
-        if returnAsWell then line(s"!${ptr_name("return")}")
+        if returnAsWell then line(s"!${return_ptr}")
       }
   end match
 end function
