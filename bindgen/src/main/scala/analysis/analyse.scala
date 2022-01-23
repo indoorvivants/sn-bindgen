@@ -87,14 +87,14 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
       s"Translation unit cursor is NULL, which indicates that libclang failed to do _something_ (there's no extra information)"
     )
 
-  if clang_getCursorKind(
-      translationUnitCursor
-    ) != CXCursorKind.CXCursor_TranslationUnit
-  then
-    throw Exception(
-      s"Translation unit cursor is of unexpected type: ${clang_getCursorKindSpelling(clang_getCursorKind(translationUnitCursor)).string}, " +
-        s"\n must be ${clang_getCursorKindSpelling(CXCursorKind.CXCursor_TranslationUnit).string}"
-    )
+  // if clang_getCursorKind(
+  //     translationUnitCursor
+  //   ) != CXCursorKind.CXCursor_TranslationUnit
+  // then
+  //   throw Exception(
+  //     s"Translation unit cursor is of unexpected type: ${clang_getCursorKindSpelling(clang_getCursorKind(translationUnitCursor)).string}, " +
+  //       s"\n must be ${clang_getCursorKindSpelling(CXCursorKind.CXCursor_TranslationUnit).string}"
+  //   )
 
   clang_visitChildren(
     translationUnitCursor,

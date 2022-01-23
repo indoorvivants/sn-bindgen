@@ -9,5 +9,4 @@ private def fileExists(file: File) =
   else Option(s"'$file' doesn't exist!")
 
 def validateConfig(config: Config): Option[String] =
-  None
-// fileExists(new File(config.headerFile.value))
+  fileExists(new File(config.headerFile.value))
