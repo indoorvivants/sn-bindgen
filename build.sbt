@@ -395,6 +395,14 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
 
   define(
     location /
+      "Clang-Index.h",
+    "libclang",
+    Some("clang"),
+    List("clang-c/Index.h"),
+    llvmInclude
+  )
+  define(
+    location /
       "tree-sitter.h",
     "libtreesitter",
     Some("treesitter"),
