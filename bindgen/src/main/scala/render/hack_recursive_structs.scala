@@ -1,11 +1,12 @@
 package bindgen.rendering
 
 import bindgen.*
+import scala.annotation.tailrec
 
 def isCyclical(typ: CType, name: String)(using AliasResolver, Config): Boolean =
   def go(t: CType, visited: Set[String], level: Int): Boolean =
     import CType.*
-    trace((" " * level) + s"visiting $t with $visited")
+    // trace((" " * level) + s"visiting $t with $visited")
     val result =
       t match
         case Reference(Name.Model(name)) =>
@@ -37,7 +38,7 @@ def isCyclical(typ: CType, name: String)(using AliasResolver, Config): Boolean =
       end match
     end result
 
-    trace((" " * level) + s"result of $t is '$result', visited: $visited")
+    // trace((" " * level) + s"result of $t is '$result', visited: $visited")
     result
   end go
   go(typ, Set(name), 0)
@@ -81,10 +82,10 @@ def hack_recursive_structs(
           aliasResolver(name) match
             case Pointer(_: Function) => result(Reference(Name.Model(name)))
 
-            case other =>
-              throw Error(
-                s"Expected '$name' to point to a function pointer, got $other instead"
-              )
+            case other => None
+      // throw Error(
+      //   s"Expected '$name' to point to a function pointer, got $other instead"
+      // )
       end match
 
     end if

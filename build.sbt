@@ -392,15 +392,6 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
   import builder.define
 
   define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
-  define(location / "test.h", "libtest", Some("test"), List("test.h"))
-  define(
-    location /
-      "Clang-Index.h",
-    "libclang",
-    Some("clang"),
-    List("clang-c/Index.h"),
-    llvmInclude
-  )
 
   define(
     location /
@@ -419,6 +410,14 @@ def sampleBindings(location: File, builder: BindingBuilder) = {
     "libraylib",
     Some("raylib"),
     List("raylib.h"),
+    llvmInclude ++ clangInclude
+  )
+  define(
+    location /
+      "sokol_gfx.h",
+    "sokol_gfx",
+    Some("sokol_gfx"),
+    List("sokol_gfx.h"),
     llvmInclude ++ clangInclude
   )
 

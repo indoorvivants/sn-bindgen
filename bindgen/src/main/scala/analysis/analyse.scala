@@ -172,10 +172,10 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
   trace(s"Defined or used in main file: ${closure}")
 
-  binding.named.filterInPlace((k, _) => closure.contains(k))
+  binding.named.filterInPlace((k, _) => closure.contains(k.n))
 
   trace("Binding information:")
-  binding.named.toList.sortBy(_._1).foreach { case (k, v) =>
+  binding.named.toList.sortBy(_._1.n).foreach { case (k, v) =>
     trace(s"'$k': $v")
   }
 
@@ -183,8 +183,13 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 end analyse
 
 def addBuiltInAliases(binding: Binding): Binding =
+  val replaceTypes = DefTag.all - DefTag.Function
   BuiltinType.all.foreach { tpe =>
     val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
+    replaceTypes.foreach { tg =>
+      binding.remove(DefName(tpe.short, tg))
+    }
     binding.add(al, isFromMainFile = false)
   }
   binding
+end addBuiltInAliases
