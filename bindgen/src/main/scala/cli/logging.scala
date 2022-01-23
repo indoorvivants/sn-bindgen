@@ -1,19 +1,24 @@
 package bindgen
 
-inline def trace(inline msg: Any)(using Config) =
+case class LoggingConfig(minLogPriority: MinLogPriority)
+object LoggingConfig:
+  val default = LoggingConfig(MinLogPriority(LogLevel.priority(LogLevel.info)))
+  given infer(using c: Config): LoggingConfig = LoggingConfig(c.minLogPriority)
+
+inline def trace(inline msg: Any)(using LoggingConfig) =
   log(LogLevel.trace, msg)
 
-inline def info(inline msg: Any)(using Config) =
+inline def info(inline msg: Any)(using LoggingConfig) =
   log(LogLevel.info, msg)
 
-inline def warning(inline msg: Any)(using Config) =
+inline def warning(inline msg: Any)(using LoggingConfig) =
   log(LogLevel.warning, msg)
 
-inline def error(msg: Any)(using Config) =
+inline def error(msg: Any)(using LoggingConfig) =
   log(LogLevel.error, msg)
 
-private def log(level: LogLevel, msg: Any)(using Config) =
-  if LogLevel.priority(level) >= summon[Config].minLogPriority.value then
+private def log(level: LogLevel, msg: Any)(using lc: LoggingConfig) =
+  if LogLevel.priority(level) >= lc.minLogPriority.value then
     errln(
       Console.BOLD + "[bindgen] " + Console.RESET +
         LogLevel

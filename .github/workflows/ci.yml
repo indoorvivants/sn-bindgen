@@ -40,8 +40,11 @@ jobs:
           echo 'int main(){}' >> dummy.c
           clang -v dummy.c
 
-      - name: Build native binary
-        run: sbt 'show nativeConfig' bindgen/nativeLink
+      - name: Run tests
+        run: sbt 'show nativeConfig' ci
+      
+      - name: Compile examples
+        run: sbt examples/compile
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
@@ -49,12 +52,6 @@ jobs:
           path: bindgen/target/scala-3.1.1/bindgen-out 
           name: ${{ matrix.uploaded_filename }}
       
-      - name: Run tests
-        run: sbt ci
-      
-      - name: Compile examples
-        run: sbt examples/compile
-  
   pre_release_check:
     needs: [build]
     name: Check releasable artifacts

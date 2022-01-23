@@ -45,6 +45,21 @@ class TestFunctions {
     assertTrue(exists(probe.cFiles / "lib_check.c"))
   }
 
+  @Test def checks_header_file_exists(): Unit = isolate { probe =>
+    def invoke = builder
+      .define(probe.cFiles / scala.util.Random.nextInt.toString, "bla")
+      .generate(probe.cFiles, BindingLang.C)
+
+    assertTrue(Try(invoke).isFailure)
+  }
+  @Test def checks_header_is_a_file(): Unit = isolate { probe =>
+    def invoke = builder
+      .define(probe.cFiles, "bla")
+      .generate(probe.cFiles, BindingLang.C)
+
+    assertTrue(Try(invoke).isFailure)
+  }
+
   @Test def adds_c_imports(): Unit = isolate { probe =>
     builder
       .define(headerFile, "lib_check", cImports = List("my_cool_library.h"))

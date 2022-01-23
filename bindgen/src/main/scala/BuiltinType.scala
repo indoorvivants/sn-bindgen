@@ -1,10 +1,10 @@
 package bindgen
 
-import scala.scalanative.unsafe.*
-import scala.scalanative.unsigned.*
-import scala.scalanative.posix.time.*
 import scala.scalanative.libc.stdio.*
 import scala.scalanative.posix.sys.socket.*
+import scala.scalanative.posix.time.*
+import scala.scalanative.unsafe.*
+import scala.scalanative.unsigned.*
 
 private def integral(base: IntegralBase, st: SignType) =
   CType.NumericIntegral(base, st)

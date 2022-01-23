@@ -1,16 +1,17 @@
 package bindgen
 
+import libclang.defs.*
+import libclang.enumerations.*
+import libclang.fluent.*
+import libclang.types.*
+
+import java.io.FileWriter
+import java.nio.file.Files
+import scala.collection.mutable
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
+
 import scalanative.libc.*
-import libclang.defs.*
-import libclang.types.*
-import libclang.fluent.*
-import libclang.enumerations.*
-import scala.collection.mutable
-import java.nio.file.Files
-import java.io.FileWriter
-import cats.data.NestedInstances0
 
 def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
   import CXDiagnosticSeverity as sev
@@ -74,14 +75,17 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     throw Exception(
       s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
     )
-  type Data = (Binding, Config, Zone)
-  CVarArgList
 
   val cxClientData = Captured.allocate[Binding](
     Binding()
   )
 
   val translationUnitCursor = clang_getTranslationUnitCursor(unit)
+
+  if translationUnitCursor == CXCursor.NULL then
+    throw Exception(
+      s"Translation unit cursor is NULL, which indicates that libclang failed to do _something_ (there's no extra information)"
+    )
 
   clang_visitChildren(
     translationUnitCursor,
