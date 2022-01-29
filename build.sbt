@@ -410,14 +410,14 @@ def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
     List("raylib.h"),
     llvmInclude ++ clangInclude
   )
-  define(
-    location /
-      "sokol_gfx.h",
-    "sokol_gfx",
-    Some("sokol_gfx"),
-    List("sokol_gfx.h"),
-    llvmInclude ++ clangInclude
-  )
+  /* define( */
+  /*   location / */
+  /*     "sokol_gfx.h", */
+  /*   "sokol_gfx", */
+  /*   Some("sokol_gfx"), */
+  /*   List("sokol_gfx.h"), */
+  /*   llvmInclude ++ clangInclude */
+  /* ) */
 
   if (Platform.target.os == Platform.OS.MacOS)
     define(
