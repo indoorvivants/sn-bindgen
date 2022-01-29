@@ -412,7 +412,7 @@ def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
     llvmInclude ++ clangInclude
   )
 
-  if (Platform.target.os != Platform.OS.Linux)
+  if (Platform.target.os == Platform.OS.MacOS)
     define(
       location /
         "curl.h",

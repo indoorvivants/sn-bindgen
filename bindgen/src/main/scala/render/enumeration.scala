@@ -29,7 +29,7 @@ def enumeration(model: Def.Enum, line: Appender)(using
       )
     end if
     model.values.foreach { case (constName, value) =>
-      val lhs = s"val $constName"
+      val lhs = s"val ${escape(constName)}"
       val rhs = "define(" + value.toString + ")"
 
       line(lhs + " = " + rhs)
