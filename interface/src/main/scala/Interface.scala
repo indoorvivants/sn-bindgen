@@ -149,7 +149,7 @@ class BindingBuilder(binary: File) {
 
       val destination = to / destinationFilename
 
-      val cmd = binary.toString + " " + binding.toCommand(lang)
+      val cmd = binary.toString :: binding.toCommand(lang)
 
       System.err.println(s"Executing $cmd")
       System.err.println(s"Writing to $destination")
