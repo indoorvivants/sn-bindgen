@@ -19,7 +19,7 @@ import java.nio.file.Paths
 
 lazy val Versions = new {
   val decline = "2.2.0"
-  val scalaNative = "0.4.3"
+  val scalaNative = nativeVersion
   val junit = "0.11"
 
   val Scala212 = "2.12.15"
@@ -318,10 +318,16 @@ def environmentConfiguration(conf: NativeConfig): NativeConfig = {
   else conf
 }
 
-def usesLibClang(conf: NativeConfig) =
+def usesLibClang(conf: NativeConfig) = {
+  val libraryName =
+    if (Platform.os == Platform.OS.Windows) "libclang" else "clang"
+
   conf
-    .withLinkingOptions(conf.linkingOptions ++ Seq("-lclang") ++ llvmLib)
+    .withLinkingOptions(
+      conf.linkingOptions ++ Seq("-l" + libraryName) ++ llvmLib
+    )
     .withCompileOptions(llvmInclude)
+}
 
 def includes(
     ifLinux: List[String] = Nil,

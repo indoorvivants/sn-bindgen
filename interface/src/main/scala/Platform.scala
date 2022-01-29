@@ -64,6 +64,7 @@ object Platform {
 
   def detectOs(osNameProp: String): OS = normalise(osNameProp) match {
     case p if p.startsWith("linux")                         => OS.Linux
+    case p if p.startsWith("windows")                       => OS.Windows
     case p if p.startsWith("osx") || p.startsWith("macosx") => OS.MacOS
     case _                                                  => OS.Unknown
   }
@@ -100,7 +101,10 @@ object ClangDetector {
       (e: String) => stderr += e
     )
 
-    scala.sys.process.Process(cmd).run(logger).exitValue()
+    val exitCode = scala.sys.process.Process(cmd).run(logger).exitValue()
+
+    if (exitCode != 0)
+      stderr.result().foreach(println)
 
     def addLLVMFolders(conf: Platform.ClangInfo) = Platform.os match {
       case MacOS =>
