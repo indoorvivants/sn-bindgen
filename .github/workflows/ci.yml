@@ -10,7 +10,6 @@ env:
   JAVA_OPTS: "-Xmx2G"
   SN_RELEASE: fast
   JABBA_INDEX: 'https://github.com/typelevel/jdk-index/raw/main/index.json'
-  CLANG_VERSION: 12
 
 jobs:
   build:
@@ -21,8 +20,11 @@ jobs:
         include:
           - os: macos-latest
             uploaded_filename: sn-bindgen-osx-x86_64
+            llvmBinPath: /usr/local/opt/llvm/bin
+
           - os: ubuntu-latest
             uploaded_filename: sn-bindgen-linux-x86_64
+            llvmBinPath: /usr/lib/llvm-13/bin
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -42,9 +44,13 @@ jobs:
 
       - name: Run tests
         run: sbt 'show nativeConfig' ci
+        env: 
+          LLVM_BIN: ${{ matrix.llvmBinPath }}
       
       - name: Compile examples
         run: sbt examples/compile
+        env: 
+          LLVM_BIN: ${{ matrix.llvmBinPath }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master

@@ -1,6 +1,14 @@
 package bindgen.interface
 
 import java.util.Properties
+import scala.sys.process.ProcessLogger
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.LinkOption
+import bindgen.interface.Platform.OS.Windows
+import bindgen.interface.Platform.OS.MacOS
+import bindgen.interface.Platform.OS.Linux
+import bindgen.interface.Platform.OS.Unknown
 
 object Platform {
   sealed abstract class OS(val string: String) extends Product with Serializable
@@ -30,6 +38,12 @@ object Platform {
     }
   }
 
+  case class ClangInfo(
+      includePaths: List[String],
+      llvmInclude: List[String],
+      llvmLib: List[String]
+  )
+
   object BuildInfo {
     def version: String =
       props.getProperty("sn-bindgen.version")
@@ -50,20 +64,106 @@ object Platform {
 
   def detectOs(osNameProp: String): OS = normalise(osNameProp) match {
     case p if p.startsWith("linux")                         => OS.Linux
+    case p if p.startsWith("windows")                       => OS.Windows
     case p if p.startsWith("osx") || p.startsWith("macosx") => OS.MacOS
     case _                                                  => OS.Unknown
   }
+
   def detectArch(osArchProp: String): Arch = normalise(osArchProp) match {
     case "amd64" | "x64" | "x8664" => Arch.x86_64
     case "aarch64"                 => Arch.aarch64
   }
 
+  def detectClangInfo(path: Path) = ClangDetector.detect(path)
+
   lazy val os = detectOs(sys.props.getOrElse("os.name", ""))
-
   lazy val arch = detectArch(sys.props.getOrElse("os.arch", ""))
-
   lazy val target = Target(os, arch)
+  lazy val clangInfo = detectClangInfo(Paths.get("clang"))
 
   private def normalise(s: String) =
     s.toLowerCase(java.util.Locale.US).replaceAll("[^a-z0-9]+", "")
+
+}
+
+object ClangDetector {
+
+  def detect(path: Path): Platform.ClangInfo = {
+    val destination =
+      if (Platform.os == Platform.OS.Windows) "nul" else "/dev/null"
+    val cmd = List(path.toString(), "-v", "-c", "-xc++", destination)
+
+    val stderr = List.newBuilder[String]
+    val stdout = List.newBuilder[String]
+
+    val logger = ProcessLogger.apply(
+      (o: String) => stdout += o,
+      (e: String) => stderr += e
+    )
+
+    val exitCode = scala.sys.process.Process(cmd).run(logger).exitValue()
+
+    if (exitCode != 0)
+      stderr.result().foreach(println)
+
+    def addLLVMFolders(conf: Platform.ClangInfo) = Platform.os match {
+      case MacOS =>
+        conf
+          .copy(
+            llvmInclude = List(
+              "/opt/homebrew/opt/llvm/include",
+              "/usr/local/opt/llvm/include"
+            ),
+            llvmLib =
+              List("/usr/local/opt/llvm/lib", "/opt/homebrew/opt/llvm/lib")
+          )
+      case Linux | Windows =>
+        // <llvm-path>/bin/clang
+        val realPath = path.toRealPath()
+        val binFolder = realPath.getParent()
+        val llvmFolder = binFolder.getParent()
+
+        if (llvmFolder.toFile.exists())
+          conf.copy(
+            llvmInclude = List(llvmFolder.resolve("include").toString),
+            llvmLib = List(llvmFolder.resolve("lib").toString)
+          )
+        else conf
+      case Unknown => conf
+    }
+
+    addLLVMFolders(
+      Platform.ClangInfo(
+        includePaths = extractSearchPaths(stderr.result()),
+        llvmInclude = Nil,
+        llvmLib = Nil
+      )
+    )
+  }
+
+  def extractSearchPaths(lines: List[String]) = {
+    val start1 = "#include <...> search starts here:"
+    val start2 = """#include "..." search starts here:"""
+    val end = "End of search list."
+
+    var currentState: String = null
+
+    val searchPaths = List.newBuilder[String]
+
+    lines.foreach { str =>
+      val trimmed = str.trim()
+      if (trimmed.equalsIgnoreCase(start1)) currentState = start1
+      else if (trimmed.equalsIgnoreCase(start2)) currentState = start2
+      else if (trimmed.equalsIgnoreCase(end)) currentState = end
+      else {
+        if (currentState == start1 || currentState == start2)
+          searchPaths += trimmed
+      }
+    }
+
+    searchPaths.result().filter { s =>
+      Paths.get(s).toFile().exists()
+    }
+
+  }
 }
