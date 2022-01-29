@@ -325,7 +325,8 @@ def usesLibClang(conf: NativeConfig) =
 def includes(
     ifLinux: List[String] = Nil,
     ifMac: List[String] = Nil,
-    ifWindows: List[String] = Nil
+    ifWindows: List[String] = Nil,
+    all: List[String] = Nil
 ): List[String] = {
   Platform.target.os match {
     case Platform.OS.Linux   => ifLinux
@@ -333,7 +334,7 @@ def includes(
     case Platform.OS.Windows => ifWindows
     case _                   => Nil
   }
-}.filter(s => Paths.get(s).toFile.exists).map(s => s"-I$s")
+}.++(all).filter(s => Paths.get(s).toFile.exists).map(s => s"-I$s")
 
 def linking(
     ifLinux: List[String] = Nil,
@@ -349,6 +350,7 @@ def linking(
 }.map(s => s"-L$s")
 
 def llvmInclude: List[String] = {
+  println(Platform.clangInfo)
   includes(
     ifLinux =
       (10 to 13).toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
@@ -358,23 +360,8 @@ def llvmInclude: List[String] = {
 }
 
 def clangInclude: List[String] = {
-  val majorVersion = sys.env.getOrElse("CLANG_VERSION", "13")
   includes(
-    ifMac =
-      if (Platform.target.arch == Platform.Arch.x86_64)
-        List(
-          // on X86 macs
-          s"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/$majorVersion.0.0/include",
-          "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
-          "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
-        )
-      else
-        List(
-          // on M1 macs
-          s"/Library/Developer/CommandLineTools/usr/lib/clang/$majorVersion.0.0/include",
-          "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
-          "/Library/Developer/CommandLineTools/usr/include"
-        )
+    all = Platform.clangInfo.includePaths
   )
 }
 
