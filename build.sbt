@@ -339,10 +339,13 @@ def usesLibClang(conf: NativeConfig) = {
 
   conf
     .withLinkingOptions(
-      conf.linkingOptions ++ Seq("-l" + libraryName) ++ detected.llvmLib
-        .map("-L" + _)
+      conf.linkingOptions ++
+        Seq("-l" + libraryName) ++
+        detected.llvmLib.map("-L" + _)
     )
-    .withCompileOptions(detected.llvmInclude.map("-I" + _))
+    .withCompileOptions(
+      conf.compileOptions ++ detected.llvmInclude.map("-I" + _)
+    )
 }
 
 def includes(
@@ -371,31 +374,6 @@ def linking(
     case _                   => Nil
   }
 }.map(s => s"-L$s")
-
-def llvmInclude: List[String] = {
-  includes(
-    ifLinux =
-      (10 to 13).toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
-    ifMac =
-      List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
-  )
-}
-
-/* def clangInclude: List[String] = { */
-/*   includes( */
-/*     all = Platform.clangInfo.includePaths */
-/*   ) */
-/* } */
-
-def llvmLib =
-  linking(
-    ifLinux = (10 to 13).toList.flatMap(v => List(s"/usr/lib/llvm-$v/lib/")),
-    ifMac =
-      if (Platform.target.arch == Platform.Arch.x86_64)
-        List("/usr/local/opt/llvm/lib")
-      else
-        List("/opt/homebrew/opt/llvm/lib")
-  )
 
 def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
   import builder.define
