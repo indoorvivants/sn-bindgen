@@ -78,27 +78,36 @@ class BindingBuilder(binary: File) {
       cImports: List[String],
       clangFlags: List[String]
   ) {
-    def toCommand(lang: BindingLang): String = {
+    def toCommand(lang: BindingLang): List[String] = {
       val sb = List.newBuilder[String]
-      sb += s"--header $headerFile"
-      sb += s"--package $packageName"
+
+      def arg(name: String, value: String) =
+        sb ++= Seq(s"--$name", value)
+
+      def flag(name: String) =
+        sb += s"--$name"
+
+      arg(
+        "header",
+        headerFile.toPath().toAbsolutePath().toString
+      )
+      arg("package", packageName)
       linkName.foreach { link =>
-        sb += s"--link-name $link"
+        arg("link-name", link)
       }
       cImports.foreach { cimp =>
-        sb += s"--c-import $cimp"
+        arg("c-import", cimp)
       }
       clangFlags.foreach { clangFlag =>
-        sb += s"--clang $clangFlag"
+        arg("clang", clangFlag)
       }
-
-      sb += s" --${level.str}"
+      flag(level.str)
       if (lang == BindingLang.Scala)
-        sb += "--scala"
+        flag("scala")
       else
-        sb += "--c"
+        flag("c")
 
-      sb.result.mkString(" ")
+      sb.result()
     }
   }
 
@@ -140,7 +149,7 @@ class BindingBuilder(binary: File) {
 
       val destination = to / destinationFilename
 
-      val cmd = binary.toString + " " + binding.toCommand(lang)
+      val cmd = binary.toString :: binding.toCommand(lang)
 
       System.err.println(s"Executing $cmd")
       System.err.println(s"Writing to $destination")
