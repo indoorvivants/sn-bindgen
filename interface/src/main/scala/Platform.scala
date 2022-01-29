@@ -108,9 +108,15 @@ object ClangDetector {
 
     def addLLVMFolders(conf: Platform.ClangInfo) = Platform.os match {
       case MacOS =>
-        conf.copy(llvmInclude =
-          List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
-        )
+        conf
+          .copy(
+            llvmInclude = List(
+              "/opt/homebrew/opt/llvm/include",
+              "/usr/local/opt/llvm/include"
+            ),
+            llvmLib =
+              List("/usr/local/opt/llvm/lib", "/opt/homebrew/opt/llvm/lib")
+          )
       case Linux | Windows =>
         // <llvm-path>/bin/clang
         val realPath = path.toRealPath()
