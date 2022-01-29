@@ -11,13 +11,26 @@ import Def.*
 
 case class BindingDefinition(item: Def, isFromMainFile: Boolean)
 
+enum DefTag:
+  case Union, Alias, Struct, Function, Enum
+object DefTag:
+  import DefTag.*
+  def all = Set(Union, Alias, Struct, Function, Enum)
+
+case class DefName(n: String, tg: DefTag)
+
 case class Binding(
-    var named: mutable.Map[String, BindingDefinition] = mutable.Map.empty
+    var named: mutable.Map[DefName, BindingDefinition] = mutable.Map.empty
 ):
   def add(item: Def, isFromMainFile: Boolean) =
     item.defName.foreach { n =>
       named.addOne(n -> BindingDefinition(item, isFromMainFile))
     }
+    this
+
+  def remove(name: DefName): Binding =
+    named.remove(name)
+    this
   def aliases: Set[Def.Alias] = named.collect {
     case (k, BindingDefinition(item: Def.Alias, _)) => item
   }.toSet
@@ -57,14 +70,13 @@ enum Def:
   )
   case Alias(name: String, underlying: CType)
 
-  def defName: Option[String] =
+  def defName: Option[DefName] =
     this match
-      case Alias(name, _) => Some(name)
-      case Union(_, name) => Some(name)
-      case f: Function    => Some(f.name)
-      case s: Struct      => Some(s.name)
-      case e: Enum        => e.name
-
+      case Alias(name, _) => Some(DefName(name, DefTag.Alias))
+      case Union(_, name) => Some(DefName(name, DefTag.Union))
+      case f: Function    => Some(DefName(f.name, DefTag.Function))
+      case s: Struct      => Some(DefName(s.name, DefTag.Struct))
+      case e: Enum        => e.name.map(DefName(_, DefTag.Enum))
 end Def
 
 object Def:

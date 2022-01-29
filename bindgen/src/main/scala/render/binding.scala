@@ -63,6 +63,15 @@ def binding(
       how: (A, Appender) => Unit
   ) =
     defs.zipWithIndex.foreach { case (en, idx) =>
+      en match
+        case df: Def =>
+          df.defName.foreach { name =>
+            trace(s"Rendering $name")
+          }
+        case sf: GeneratedFunction.ScalaFunction =>
+          trace(s"Rendering Scala function '${sf.name}'")
+        case sf: GeneratedFunction.CFunction =>
+          trace(s"Rendering C function '${sf.name}'")
       try how(
         en,
         to(out)

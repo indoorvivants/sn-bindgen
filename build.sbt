@@ -382,7 +382,7 @@ def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
   val llvmInclude = ci.llvmInclude.map("-I" + _)
 
   define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
-  define(location / "test.h", "libtest", Some("test"), List("test.h"))
+
   define(
     location /
       "Clang-Index.h",
@@ -391,7 +391,6 @@ def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
     List("clang-c/Index.h"),
     llvmInclude
   )
-
   define(
     location /
       "tree-sitter.h",
@@ -411,6 +410,14 @@ def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
     List("raylib.h"),
     llvmInclude ++ clangInclude
   )
+  /* define( */
+  /*   location / */
+  /*     "sokol_gfx.h", */
+  /*   "sokol_gfx", */
+  /*   Some("sokol_gfx"), */
+  /*   List("sokol_gfx.h"), */
+  /*   llvmInclude ++ clangInclude */
+  /* ) */
 
   if (Platform.target.os == Platform.OS.MacOS)
     define(

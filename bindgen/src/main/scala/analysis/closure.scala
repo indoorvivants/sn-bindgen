@@ -38,25 +38,30 @@ def definitionClosure(b: Def)(using Config): Set[String] =
   end match
 end definitionClosure
 
-def computeClosure(named: Map[String, BindingDefinition])(using
+def computeClosure(named: Map[DefName, BindingDefinition])(using
     Config
 ): Set[String] =
   import scala.collection.mutable
 
   def expand(visited: Set[String], result: Set[String]): Set[String] =
     val notVisited = result -- visited
-    trace(s"Closure computer: visited = $visited, result = $result")
+    // trace(s"Closure computer: visited = $visited, result = $result")
     if notVisited.isEmpty then result
     else
-      val grown = notVisited.flatMap(k =>
-        named.get(k).map(n => definitionClosure(n.item)).getOrElse(Set.empty)
-      )
-      trace(s"Closure computer: grown = $grown")
+      val grown = notVisited.flatMap { k =>
+        DefTag.all.flatMap { tg =>
+          named
+            .get(DefName(k, tg))
+            .map(n => definitionClosure(n.item))
+            .getOrElse(Set.empty)
+        }
+      }
+      // trace(s"Closure computer: grown = $grown")
       if (grown -- result).nonEmpty then
         expand(visited ++ notVisited, result ++ grown)
       else result
     end if
   end expand
 
-  expand(Set.empty, named.filter(_._2.isFromMainFile).keySet)
+  expand(Set.empty, named.filter(_._2.isFromMainFile).keySet.map(_.n))
 end computeClosure
