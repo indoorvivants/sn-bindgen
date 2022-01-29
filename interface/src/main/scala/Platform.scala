@@ -4,6 +4,11 @@ import java.util.Properties
 import scala.sys.process.ProcessLogger
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.LinkOption
+import bindgen.interface.Platform.OS.Windows
+import bindgen.interface.Platform.OS.MacOS
+import bindgen.interface.Platform.OS.Linux
+import bindgen.interface.Platform.OS.Unknown
 
 object Platform {
   sealed abstract class OS(val string: String) extends Product with Serializable
@@ -33,7 +38,11 @@ object Platform {
     }
   }
 
-  case class ClangInfo(includePaths: List[String])
+  case class ClangInfo(
+      includePaths: List[String],
+      llvmInclude: List[String],
+      llvmLib: List[String]
+  )
 
   object BuildInfo {
     def version: String =
@@ -64,12 +73,12 @@ object Platform {
     case "aarch64"                 => Arch.aarch64
   }
 
+  def detectClangInfo(path: Path) = ClangDetector.detect(path)
+
   lazy val os = detectOs(sys.props.getOrElse("os.name", ""))
-
   lazy val arch = detectArch(sys.props.getOrElse("os.arch", ""))
-
   lazy val target = Target(os, arch)
-  lazy val clangInfo = ClangDetector.detect(Paths.get("clang"))
+  lazy val clangInfo = detectClangInfo(Paths.get("clang"))
 
   private def normalise(s: String) =
     s.toLowerCase(java.util.Locale.US).replaceAll("[^a-z0-9]+", "")
@@ -93,7 +102,33 @@ object ClangDetector {
 
     scala.sys.process.Process(cmd).run(logger).exitValue()
 
-    Platform.ClangInfo(extractSearchPaths(stderr.result()))
+    def addLLVMFolders(conf: Platform.ClangInfo) = Platform.os match {
+      case MacOS =>
+        conf.copy(llvmInclude =
+          List("/opt/homebrew/opt/llvm/include", "/usr/local/opt/llvm/include")
+        )
+      case Linux | Windows =>
+        // <llvm-path>/bin/clang
+        val realPath = path.toRealPath()
+        val binFolder = realPath.getParent()
+        val llvmFolder = realPath.getParent()
+
+        if (llvmFolder.toFile.exists())
+          conf.copy(
+            llvmInclude = List(llvmFolder.resolve("include").toString),
+            llvmLib = List(llvmFolder.resolve("lib").toString)
+          )
+        else conf
+      case Unknown => conf
+    }
+
+    addLLVMFolders(
+      Platform.ClangInfo(
+        includePaths = extractSearchPaths(stderr.result()),
+        llvmInclude = Nil,
+        llvmLib = Nil
+      )
+    )
   }
 
   def extractSearchPaths(lines: List[String]) = {
@@ -116,7 +151,9 @@ object ClangDetector {
       }
     }
 
-    searchPaths.result()
+    searchPaths.result().filter { s =>
+      Paths.get(s).toFile().exists()
+    }
 
   }
 }

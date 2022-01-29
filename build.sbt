@@ -76,6 +76,7 @@ lazy val bindgen = project
   .settings(
     Test / nativeLink / artifactPath := crossTarget.value / "test-bindgen-out"
   )
+  .settings(clangDetection)
   .settings(
     moduleName := "bindgen",
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
@@ -350,7 +351,6 @@ def linking(
 }.map(s => s"-L$s")
 
 def llvmInclude: List[String] = {
-  println(Platform.clangInfo)
   includes(
     ifLinux =
       (10 to 13).toList.flatMap(v => List(s"/usr/lib/llvm-$v/include/")),
@@ -453,6 +453,14 @@ versionDump := {
   IO.write(file, (Compile / version).value)
 }
 
+lazy val clangInfo = taskKey[Platform.ClangInfo]("")
+
+lazy val clangDetection = Seq(clangInfo := {
+  val path = nativeClang.value.toPath()
+
+  Platform.detectClangInfo(path)
+})
+
 addCommandAlias(
   "ci",
   "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted"
@@ -478,5 +486,3 @@ inThisBuild(
     )
   )
 )
-
-lazy val fetchedBinary = taskKey[Unit]("")
