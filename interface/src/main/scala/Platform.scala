@@ -115,7 +115,7 @@ object ClangDetector {
         // <llvm-path>/bin/clang
         val realPath = path.toRealPath()
         val binFolder = realPath.getParent()
-        val llvmFolder = realPath.getParent()
+        val llvmFolder = binFolder.getParent()
 
         if (llvmFolder.toFile.exists())
           conf.copy(

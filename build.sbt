@@ -1,4 +1,5 @@
 import _root_.bindgen.interface.Platform
+import _root_.bindgen.interface.Platform.ClangInfo
 import coursierapi.ResolutionParams
 import coursierapi.Repository
 import sbt.io.Using
@@ -71,7 +72,7 @@ lazy val bindgen = project
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
-  .settings(Compile / nativeConfig ~= usesLibClang)
+  .settings(nativeConfig ~= usesLibClang)
   .settings(Test / nativeConfig ~= usesLibClang)
   .settings(
     Test / nativeLink / artifactPath := crossTarget.value / "test-bindgen-out"
@@ -223,6 +224,7 @@ lazy val libclang = project
   .in(file("libclang"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
+  .settings(clangDetection)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
     moduleName := "bindgen-libclang",
@@ -235,40 +237,50 @@ lazy val examples = project
   .in(file("examples"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
+  .settings(clangDetection)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
     Compile / sourceGenerators += Def.taskIf {
-      Using.fileWriter()
       if (sys.env.contains("BINARY")) {
+        val ci = clangInfo.value
         generateExampleBindings(
           (Compile / sourceManaged).value,
           baseDirectory.value,
           new File(sys.env("BINARY")),
-          BindingLang.Scala
+          BindingLang.Scala,
+          ci
         )
-      } else
+      } else {
+        val ci = clangInfo.value
         generateExampleBindings(
           (Compile / sourceManaged).value,
           baseDirectory.value,
           (bindgen / Compile / nativeLink).value,
-          BindingLang.Scala
+          BindingLang.Scala,
+          ci
         )
+      }
     },
     Compile / resourceGenerators += Def.taskIf {
       if (sys.env.contains("BINARY")) {
+        val ci = clangInfo.value
         generateExampleBindings(
           (Compile / resourceManaged).value / "scala-native",
           baseDirectory.value,
           new File(sys.env("BINARY")),
-          BindingLang.C
+          BindingLang.C,
+          ci
         )
-      } else
+      } else {
+        val ci = clangInfo.value
         generateExampleBindings(
           (Compile / resourceManaged).value / "scala-native",
           baseDirectory.value,
           (bindgen / Compile / nativeLink).value,
-          BindingLang.C
+          BindingLang.C,
+          ci
         )
+      }
     }
   )
 
@@ -303,12 +315,13 @@ def generateExampleBindings(
     destination: File,
     base: File,
     binary: File,
-    lang: BindingLang
+    lang: BindingLang,
+    ci: ClangInfo
 ): Seq[File] = {
 
   val builder = new BindingBuilder(binary)
 
-  sampleBindings(base / "libraries", builder)
+  sampleBindings(base / "libraries", builder, ci)
 
   builder.generate(destination, lang)
 }
@@ -322,11 +335,14 @@ def usesLibClang(conf: NativeConfig) = {
   val libraryName =
     if (Platform.os == Platform.OS.Windows) "libclang" else "clang"
 
+  val detected = Platform.detectClangInfo(conf.clang)
+
   conf
     .withLinkingOptions(
-      conf.linkingOptions ++ Seq("-l" + libraryName) ++ llvmLib
+      conf.linkingOptions ++ Seq("-l" + libraryName) ++ detected.llvmLib
+        .map("-L" + _)
     )
-    .withCompileOptions(llvmInclude)
+    .withCompileOptions(detected.llvmInclude.map("-I" + _))
 }
 
 def includes(
@@ -365,11 +381,11 @@ def llvmInclude: List[String] = {
   )
 }
 
-def clangInclude: List[String] = {
-  includes(
-    all = Platform.clangInfo.includePaths
-  )
-}
+/* def clangInclude: List[String] = { */
+/*   includes( */
+/*     all = Platform.clangInfo.includePaths */
+/*   ) */
+/* } */
 
 def llvmLib =
   linking(
@@ -381,8 +397,11 @@ def llvmLib =
         List("/opt/homebrew/opt/llvm/lib")
   )
 
-def sampleBindings(location: File, builder: BindingBuilder) = {
+def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
   import builder.define
+
+  val clangInclude = ci.includePaths.map("-I" + _)
+  val llvmInclude = ci.llvmInclude.map("-I" + _)
 
   define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
   define(location / "test.h", "libtest", Some("test"), List("test.h"))
