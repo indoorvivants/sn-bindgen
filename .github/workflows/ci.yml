@@ -90,13 +90,13 @@ jobs:
 
       - name: Run tests
         run: sbt 'show nativeConfig' ci
-        shell: pwsh
+        shell: cmd
         env: 
           LLVM_BIN: C:\Program Files\LLVM\bin
       
       - name: Compile examples
         run: sbt examples/compile
-        shell: pwsh
+        shell: cmd
         env: 
           LLVM_BIN: C:\Program Files\LLVM\bin
 
