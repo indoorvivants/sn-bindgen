@@ -471,12 +471,12 @@ lazy val clangDetection = Seq(clangInfo := {
   Platform.detectClangInfo(path)
 })
 
-/* addCommandAlias( */
-/*   "ci", */
-/*   "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted" */
-/* ) */
+addCommandAlias(
+  "ci",
+  "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted"
+)
 
-addCommandAlias("ci", "test; plugin/scripted")
+/* addCommandAlias("ci", "test; plugin/scripted") */
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
 
 inThisBuild(

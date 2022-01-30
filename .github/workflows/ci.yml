@@ -34,6 +34,10 @@ jobs:
             llvm_bin_path: C:\Program Files\LLVM\bin
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Setup git config
+        run: git config --global core.autocrlf false
+        if: runner.os == 'Windows'
+
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v6      
       - uses: olafurpg/setup-scala@v13
@@ -60,7 +64,7 @@ jobs:
         if: runner.os == 'Windows'
 
       - name: CI (unix-like)
-        run: sbt 'show nativeConfig' ci examples/compile
+        run: sbt "show nativeConfig" ci examples/compile
         if: runner.os != 'Windows'
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
@@ -68,7 +72,7 @@ jobs:
       # Can't make shell type come from a matrix parameter: 
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
       - name: CI (windows)
-        run: sbt 'show nativeConfig' ci examples/compile
+        run: sbt "show nativeConfig" ci examples/compile
         shell: cmd
         if: runner.os == 'Windows'
         env: 
