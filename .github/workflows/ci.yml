@@ -7,23 +7,22 @@ on:
     branches: ["*"]
 
 env: 
-  JAVA_OPTS: "-Xmx2G"
+  JAVA_OPTS: "-Xmx4G"
   SN_RELEASE: fast
   JABBA_INDEX: 'https://github.com/typelevel/jdk-index/raw/main/index.json'
 
 jobs:
   build:
-    name: CI
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: macos-latest
+          - os: macos-11
             output_filename: bindgen-out
             uploaded_filename: sn-bindgen-osx-x86_64
             llvm_bin_path: /usr/local/opt/llvm/bin
 
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             output_filename: bindgen-out
             uploaded_filename: sn-bindgen-linux-x86_64
             llvm_bin_path: /usr/lib/llvm-13/bin
@@ -32,8 +31,11 @@ jobs:
             output_filename: bindgen-out.exe
             uploaded_filename: sn-bindgen-windows-x86_64
             llvm_bin_path: C:\Program Files\LLVM\bin
+    name: CI on ${{ runner.os }}
     runs-on: ${{ matrix.os }}
     steps:
+      # This step is important to make sure scalafmt 
+      # checks don't fail
       - name: Setup git config
         run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
@@ -47,7 +49,9 @@ jobs:
       - name: Setup Unix-like
         run: ./build/setup_unix.sh
         if: runner.os != 'Windows'
-      
+
+      # See https://github.com/scala-native/scala-native/blob/master/.github/actions/windows-setup-env/action.yml#L14 
+      # for details
       - name: Configure Pagefile
         uses: al-cheb/configure-pagefile-action@v1.2
         with:
