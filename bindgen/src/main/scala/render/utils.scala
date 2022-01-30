@@ -8,8 +8,19 @@ import scala.collection.mutable.ListBuffer
 
 def escape(name: String) =
   val keywords =
-    Set("type", "val", "var", "class", "object", "null", "match", "true", "false")
+    Set(
+      "type",
+      "val",
+      "var",
+      "class",
+      "object",
+      "null",
+      "match",
+      "true",
+      "false"
+    )
   if keywords.contains(name) then s"`$name`" else name
+end escape
 
 case class Error(msg: String) extends Exception(msg)
 
