@@ -35,12 +35,17 @@ class TestStructs:
     }
   @Test def test_anonymous() =
     zone {
-      val st = !StructSimple(25, 150, c"howdy", c"yo")
+      val context = !StructAnonymous.Union0(25)
+      val header = !StructAnonymous.Struct1(c"k1", c"v1")
+      val struct = !StructAnonymous(25, context, header)
 
-      assertEquals(25, st.x)
-      assertEquals(150, st.y)
-      assertEquals("howdy", fromCString(st.s1))
-      assertEquals("yo", fromCString(st.s2))
+      assertEquals(25, context.num)
+      assertEquals(25, struct.context.num)
+
+      assertEquals("k1", fromCString(header.key))
+      assertEquals("v1", fromCString(header.value))
+      assertEquals("k1", fromCString(struct.header.key))
+      assertEquals("v1", fromCString(struct.header.value))
     }
 
 end TestStructs
