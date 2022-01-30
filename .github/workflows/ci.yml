@@ -83,15 +83,20 @@ jobs:
       - name: Assert clang installed and on path
         shell: pwsh
         run: clang --version
-      # - name: Run tests
-      #   run: sbt 'show nativeConfig' ci
-      #   env: 
-      #     LLVM_BIN: ${{ matrix.llvmBinPath }}
       
-      # - name: Compile examples
-      #   run: sbt examples/compile
-      #   env: 
-      #     LLVM_BIN: ${{ matrix.llvmBinPath }}
+      - name: Install SBT
+        shell: pwsh
+        run: choco install sbt --version=1.6.1
+
+      - name: Run tests
+        run: sbt 'show nativeConfig' ci
+        env: 
+          LLVM_BIN: C:\Program Files\LLVM\bin
+      
+      - name: Compile examples
+        run: sbt examples/compile
+        env: 
+          LLVM_BIN: C:\Program Files\LLVM\bin
 
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@master
