@@ -22,19 +22,16 @@ jobs:
             output_filename: bindgen-out
             uploaded_filename: sn-bindgen-osx-x86_64
             llvm_bin_path: /usr/local/opt/llvm/bin
-            sbt_shell: bash
 
           - os: ubuntu-latest
             output_filename: bindgen-out
             uploaded_filename: sn-bindgen-linux-x86_64
             llvm_bin_path: /usr/lib/llvm-13/bin
-            sbt_shell: bash
 
           - os: windows-2022
             output_filename: bindgen-out.exe
             uploaded_filename: sn-bindgen-windows-x86_64
             llvm_bin_path: C:\Program Files\LLVM\bin
-            sbt_shell: cmd
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -45,14 +42,14 @@ jobs:
 
       - name: Setup Unix-like
         run: ./build/setup_unix.sh
-        if: (!startsWith(matrix.os, "windows-"))
+        if: runner.os != 'Windows'
       
       - name: Configure Pagefile
         uses: al-cheb/configure-pagefile-action@v1.2
         with:
           minimum-size: 4GB
           maximum-size: 16GB
-        if: startsWith(matrix.os, "windows-")
+        if: runner.os == 'Windows'
 
       - name: Setup windows
         shell: pwsh
@@ -60,18 +57,20 @@ jobs:
           choco install llvm --version=13.0.0 --allow-downgrade
           choco install sbt --version=1.6.1
           clang --version
-        if: startsWith(matrix.os, "windows-")
+        if: runner.os == 'Windows'
 
-
-      - name: Run tests
-        run: sbt 'show nativeConfig' ci
-        shell: ${{ matrix.sbt_shell }}
+      - name: CI (unix-like)
+        run: sbt 'show nativeConfig' ci examples/compile
+        if: runner.os != 'Windows'
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
       
-      - name: Compile examples
-        run: sbt examples/compile
-        shell: ${{ matrix.sbt_shell }}
+      # Can't make shell type come from a matrix parameter: 
+      # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
+      - name: CI (windows)
+        run: sbt 'show nativeConfig' ci examples/compile
+        shell: cmd
+        if: runner.os == 'Windows'
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
 
@@ -81,48 +80,6 @@ jobs:
           path: bindgen/target/scala-3.1.1/${{ matrix.output_filename }}
           name: ${{ matrix.uploaded_filename }}
   
-  # build-windows:
-  #   name: Windows CI
-  #   strategy:
-  #     fail-fast: false
-  #   runs-on: windows-2022
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: coursier/cache-action@v6      
-  #     - uses: olafurpg/setup-scala@v13
-  #       with:
-  #         java-version: graalvm-ce-java17
-
-  #     - name: Configure Pagefile
-  #       uses: al-cheb/configure-pagefile-action@v1.2
-  #       with:
-  #         minimum-size: 4GB
-  #         maximum-size: 16GB
-
-  #     - name: Install LLVM
-  #       shell: pwsh
-  #       run: |
-  #         choco install llvm --version=13.0.0 --allow-downgrade
-  #         choco install sbt --version=1.6.1
-  #         clang --version
-
-  #     - name: Run tests
-  #       run: sbt "show nativeConfig" ci
-  #       shell: cmd
-  #       env: 
-  #         LLVM_BIN: C:\Program Files\LLVM\bin
-      
-  #     - name: Compile examples
-  #       run: sbt examples/compile
-  #       shell: cmd
-  #       env: 
-  #         LLVM_BIN: C:\Program Files\LLVM\bin
-
-  #     - name: Upload artifacts
-  #       uses: actions/upload-artifact@master
-  #       with:
-  #         path: bindgen/target/scala-3.1.1/bindgen-out.exe
-  #         name: sn-bindgen-windows-x86_64
       
   pre_release_check:
     needs: [build]
