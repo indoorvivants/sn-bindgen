@@ -7,56 +7,87 @@ on:
     branches: ["*"]
 
 env: 
-  JAVA_OPTS: "-Xmx2G"
+  JAVA_OPTS: "-Xmx4G"
   SN_RELEASE: fast
   JABBA_INDEX: 'https://github.com/typelevel/jdk-index/raw/main/index.json'
 
 jobs:
   build:
-    name: CI
+    name: CI on ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: macos-latest
+          - os: macos-11
+            output_filename: bindgen-out
             uploaded_filename: sn-bindgen-osx-x86_64
-            llvmBinPath: /usr/local/opt/llvm/bin
+            llvm_bin_path: /usr/local/opt/llvm/bin
 
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
+            output_filename: bindgen-out
             uploaded_filename: sn-bindgen-linux-x86_64
-            llvmBinPath: /usr/lib/llvm-13/bin
+            llvm_bin_path: /usr/lib/llvm-13/bin
+
+          - os: windows-2022
+            output_filename: bindgen-out.exe
+            uploaded_filename: sn-bindgen-windows-x86_64
+            llvm_bin_path: C:\Program Files\LLVM\bin
     runs-on: ${{ matrix.os }}
     steps:
+      # This step is important to make sure scalafmt 
+      # checks don't fail
+      - name: Setup git config
+        run: git config --global core.autocrlf false
+        if: runner.os == 'Windows'
+
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v6      
       - uses: olafurpg/setup-scala@v13
         with:
           java-version: graalvm-ce-java17
 
-      - name: Setup
+      - name: Setup Unix-like
         run: ./build/setup_unix.sh
+        if: runner.os != 'Windows'
 
-      - name: Compile dummy C file
+      # See https://github.com/scala-native/scala-native/blob/master/.github/actions/windows-setup-env/action.yml#L14 
+      # for details
+      - name: Configure Pagefile
+        uses: al-cheb/configure-pagefile-action@v1.2
+        with:
+          minimum-size: 4GB
+          maximum-size: 16GB
+        if: runner.os == 'Windows'
+
+      - name: Setup windows
+        shell: pwsh
         run: |
-          echo '#include "stdbool.h"' > dummy.c
-          echo 'int main(){}' >> dummy.c
-          clang -v dummy.c
+          choco install llvm --version=13.0.0 --allow-downgrade
+          choco install sbt --version=1.6.1
+          clang --version
+        if: runner.os == 'Windows'
 
-      - name: Run tests
-        run: sbt 'show nativeConfig' ci
+      - name: CI (unix-like)
+        run: sbt "show nativeConfig" ci examples/compile
+        if: runner.os != 'Windows'
         env: 
-          LLVM_BIN: ${{ matrix.llvmBinPath }}
+          LLVM_BIN: ${{ matrix.llvm_bin_path }}
       
-      - name: Compile examples
-        run: sbt examples/compile
+      # Can't make shell type come from a matrix parameter: 
+      # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
+      - name: CI (windows)
+        run: sbt "show nativeConfig" ci examples/compile
+        shell: cmd
+        if: runner.os == 'Windows'
         env: 
-          LLVM_BIN: ${{ matrix.llvmBinPath }}
+          LLVM_BIN: ${{ matrix.llvm_bin_path }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          path: bindgen/target/scala-3.1.1/bindgen-out 
+          path: bindgen/target/scala-3.1.1/${{ matrix.output_filename }}
           name: ${{ matrix.uploaded_filename }}
+  
       
   pre_release_check:
     needs: [build]
@@ -83,6 +114,7 @@ jobs:
           ./cs resolve com.indoorvivants:bindgen-interface_2.12:$(cat version)
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-x86_64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier windows-x86_64 --artifact-type jar
 
   release:
     needs: [pre_release_check]

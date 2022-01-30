@@ -475,6 +475,7 @@ addCommandAlias(
   "ci",
   "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted"
 )
+
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
 
 inThisBuild(
