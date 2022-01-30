@@ -62,7 +62,7 @@ jobs:
     name: Windows CI
     strategy:
       fail-fast: false
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
       - uses: coursier/cache-action@v6      
@@ -78,15 +78,10 @@ jobs:
 
       - name: Install LLVM
         shell: pwsh
-        run: choco install llvm --version=13.0.0 --allow-downgrade
-
-      - name: Assert clang installed and on path
-        shell: pwsh
-        run: clang --version
-      
-      - name: Install SBT
-        shell: pwsh
-        run: choco install sbt --version=1.6.1
+        run: |
+          choco install llvm --version=13.0.0 --allow-downgrade
+          choco install sbt --version=1.6.1
+          clang --version
 
       - name: Run tests
         run: sbt "show nativeConfig" ci
