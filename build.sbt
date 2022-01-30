@@ -1,4 +1,4 @@
-import _root_.bindgen.interface.Platform
+import _root_.bindgen.interface.Platform.OS.*
 import _root_.bindgen.interface.Platform.ClangInfo
 import coursierapi.ResolutionParams
 import coursierapi.Repository
@@ -304,7 +304,11 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     os <- Platform.OS.all
     arch <- Platform.Arch.all
     target = Platform.Target(os, arch)
-    file = folder / s"sn-bindgen-${target.string}" / "bindgen-out"
+    filename = os match {
+      case Windows => "bindgen-out.exe"
+      case _       => "bindgen-out"
+    }
+    file = folder / s"sn-bindgen-${target.string}" / filename
     if file.exists()
   } yield build(target.string, file)
 
