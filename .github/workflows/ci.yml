@@ -57,6 +57,47 @@ jobs:
         with:
           path: bindgen/target/scala-3.1.1/bindgen-out 
           name: ${{ matrix.uploaded_filename }}
+  
+  build-windows:
+    name: Windows CI
+    strategy:
+      fail-fast: false
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - uses: coursier/cache-action@v6      
+      - uses: olafurpg/setup-scala@v13
+        with:
+          java-version: graalvm-ce-java17
+
+      - name: Configure Pagefile
+        uses: al-cheb/configure-pagefile-action@v1.2
+        with:
+          minimum-size: 4GB
+          maximum-size: 16GB
+
+      - name: Install LLVM
+        shell: pwsh
+        run: choco install llvm --version=13.0.0 --allow-downgrade
+
+      - name: Assert clang installed and on path
+        shell: pwsh
+        run: clang --version
+      # - name: Run tests
+      #   run: sbt 'show nativeConfig' ci
+      #   env: 
+      #     LLVM_BIN: ${{ matrix.llvmBinPath }}
+      
+      # - name: Compile examples
+      #   run: sbt examples/compile
+      #   env: 
+      #     LLVM_BIN: ${{ matrix.llvmBinPath }}
+
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     path: bindgen/target/scala-3.1.1/bindgen-out 
+      #     name: ${{ matrix.uploaded_filename }}
       
   pre_release_check:
     needs: [build]
