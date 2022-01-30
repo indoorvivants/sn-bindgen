@@ -13,6 +13,7 @@ env:
 
 jobs:
   build:
+    name: CI on ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +32,6 @@ jobs:
             output_filename: bindgen-out.exe
             uploaded_filename: sn-bindgen-windows-x86_64
             llvm_bin_path: C:\Program Files\LLVM\bin
-    name: CI on ${{ runner.os }}
     runs-on: ${{ matrix.os }}
     steps:
       # This step is important to make sure scalafmt 
