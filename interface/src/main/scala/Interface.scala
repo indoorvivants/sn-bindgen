@@ -23,7 +23,7 @@ sealed abstract class LogLevel(val str: String)
 object LogLevel {
   case object Trace extends LogLevel("trace")
   case object Info extends LogLevel("info")
-  case object Warn extends LogLevel("warn")
+  case object Warn extends LogLevel("warning")
   case object Error extends LogLevel("error")
 }
 
@@ -132,8 +132,10 @@ class BindingBuilder(binary: File) {
     this
   }
 
-  def withLogLevel(level: LogLevel) =
+  def withLogLevel(level: LogLevel): BindingBuilder = {
     this.level = level
+    this
+  }
 
   def generate(to: File, lang: BindingLang): Seq[File] = {
 
@@ -151,9 +153,6 @@ class BindingBuilder(binary: File) {
 
       val cmd = binary.toString :: binding.toCommand(lang)
 
-      System.err.println(s"Executing $cmd")
-      System.err.println(s"Writing to $destination")
-
       fileWriter(destination) { wr =>
         val logger = ProcessLogger.apply(
           (o: String) => wr.write(o + "\n"),
@@ -168,8 +167,12 @@ class BindingBuilder(binary: File) {
           )
 
           files += destination
-        } else
+        } else {
+          System.err.println(
+            s"(FAILED) Executing [${cmd.mkString(" ")}] writing to $destination"
+          )
           throw new Exception(s"Process failed with code $result")
+        }
       }
     }
     files.result()

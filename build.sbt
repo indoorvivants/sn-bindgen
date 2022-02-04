@@ -118,6 +118,7 @@ lazy val bindgen = project
       val binary = (Compile / nativeLink).value
 
       val builder = new BindingBuilder(binary)
+      builder.withLogLevel(LogLevel.Warn)
 
       (Test / watchedHeaders).value.foreach { header =>
         builder.define(path / s"$header.h", s"lib_test_$header")
@@ -132,6 +133,7 @@ lazy val bindgen = project
       val binary = (Compile / nativeLink).value
 
       val builder = new BindingBuilder(binary)
+      builder.withLogLevel(LogLevel.Warn)
 
       (Test / watchedHeaders).value.foreach { header =>
         builder.define(

@@ -8,7 +8,10 @@ import libclang.types.*
 import libclang.enumerations.*
 import scala.collection.mutable
 
-def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using Zone, Config) =
+def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using
+    Zone,
+    Config
+): bindgen.Def.Enum =
   val mem = Captured.allocate[Def.Enum](
     Def.Enum(
       mutable.ListBuffer.empty,

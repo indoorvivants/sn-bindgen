@@ -5,13 +5,20 @@ import org.junit.Test
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
+import scala.scalanative.meta.LinktimeInfo.isWindows
 
 class TestEnums:
   import lib_test_enums.types.*
   @Test def test_basic_enums(): Unit =
-    assertEquals(1.toUInt, Enum1.ONE)
-    assertEquals(2.toUInt, Enum1.TWO)
-    assertEquals(3.toUInt, Enum1.THREE)
+    // On windows default type for enums seems to be int
+    if isWindows then
+      assertEquals(1, Enum1.ONE)
+      assertEquals(2, Enum1.TWO)
+      assertEquals(3, Enum1.THREE)
+    else
+      assertEquals(1.toUInt, Enum1.ONE)
+      assertEquals(2.toUInt, Enum1.TWO)
+      assertEquals(3.toUInt, Enum1.THREE)
 
   @Test def test_enum_extensions(): Unit =
     assertEquals(1, Enum1.ONE.int)

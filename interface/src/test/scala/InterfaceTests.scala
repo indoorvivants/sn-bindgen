@@ -9,7 +9,8 @@ import scala.util.Try
 import scala.util.Success
 
 class TestFunctions {
-  private def builder = new BindingBuilder(new File(sys.env("BINARY")))
+  private def builder =
+    new BindingBuilder(new File(sys.env("BINARY"))).withLogLevel(LogLevel.Warn)
 
   val c_code = """
       | unsigned run(int i, float h);
