@@ -46,6 +46,12 @@ class TestStructs:
       assertEquals("v1", fromCString(header.value))
       assertEquals("k1", fromCString(struct.header.key))
       assertEquals("v1", fromCString(struct.header.value))
+
+      struct.context.str = c"what"
+      println(context.str)
+      // TODO: this bad boy fails hard
+      // assertEquals("what", fromCString(context.str))
+      // assertEquals("what", fromCString(struct.context.str))
     }
 
 end TestStructs
