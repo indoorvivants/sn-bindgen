@@ -8,6 +8,8 @@ on:
 
 env: 
   JAVA_OPTS: "-Xmx4G"
+  JVM_OPTS: "-Xmx4G"
+  SBT_OPTS: "-Xmx4G"
   SN_RELEASE: fast
 
 jobs:
