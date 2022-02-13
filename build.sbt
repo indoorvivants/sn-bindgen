@@ -113,22 +113,22 @@ lazy val bindgen = project
     Test / sourceGenerators += Def.task {
 
       val scalaFiles = (Test / sourceManaged).value
-      val path =
+      val headersPath =
         baseDirectory.value / "src" / "test" / "resources" / "scala-native"
       val binary = (Compile / nativeLink).value
 
       val builder = new BindingBuilder(binary)
-      builder.withLogLevel(LogLevel.Warn)
+      /* builder.withLogLevel(LogLevel.Warn) */
 
       (Test / watchedHeaders).value.foreach { header =>
-        builder.define(path / s"$header.h", s"lib_test_$header")
+        builder.define(headersPath / s"$header.h", s"lib_test_$header")
       }
 
       builder.generate(scalaFiles, BindingLang.Scala)
     },
     Test / resourceGenerators += Def.task {
       val cFiles = (Test / resourceManaged).value / "scala-native"
-      val path =
+      val headersPath =
         baseDirectory.value / "src" / "test" / "resources" / "scala-native"
       val binary = (Compile / nativeLink).value
 
@@ -137,7 +137,7 @@ lazy val bindgen = project
 
       (Test / watchedHeaders).value.foreach { header =>
         builder.define(
-          path / s"$header.h",
+          headersPath / s"$header.h",
           s"lib_test_$header",
           cImports = List(s"$header.h")
         )

@@ -154,8 +154,12 @@ class BindingBuilder(binary: File) {
       val cmd = binary.toString :: binding.toCommand(lang)
 
       fileWriter(destination) { wr =>
+        val buf = List.newBuilder[String]
         val logger = ProcessLogger.apply(
-          (o: String) => wr.write(o + "\n"),
+          (o: String) => {
+            buf += o
+            wr.write(o + System.lineSeparator())
+          },
           (e: String) => println(e)
         )
 
@@ -168,10 +172,18 @@ class BindingBuilder(binary: File) {
 
           files += destination
         } else {
+          val code = destination.hashCode().toHexString.toUpperCase()
           System.err.println(
-            s"(FAILED) Executing [${cmd.mkString(" ")}] writing to $destination"
+            s"(FAILED [$code]) Executing [${cmd.mkString(" ")}] writing to $destination"
           )
-          throw new Exception(s"Process failed with code $result")
+
+          buf.result().foreach { l =>
+            System.err.println(s"/*$code*/  " + l + System.lineSeparator())
+          }
+
+          throw new Exception(
+            s"Process [${cmd.mkString(" ")}] failed with code $result"
+          )
         }
       }
     }
