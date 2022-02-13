@@ -79,7 +79,7 @@ jobs:
       # Can't make shell type come from a matrix parameter: 
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
       - name: CI (windows)
-        run: sbt "show nativeConfig" bindgen/test examples/compile
+        run: sbt "show nativeConfig" ci examples/compile
         shell: cmd
         if: runner.os == 'Windows'
         env: 
