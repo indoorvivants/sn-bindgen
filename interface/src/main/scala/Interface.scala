@@ -158,7 +158,8 @@ class BindingBuilder(binary: File) {
         val logger = ProcessLogger.apply(
           (o: String) => {
             buf += o
-            wr.write(o + System.lineSeparator())
+            // wr.write(o + System.lineSeparator())
+            wr.write(o + "\n")
           },
           (e: String) => println(e)
         )
