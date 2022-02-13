@@ -1,4 +1,5 @@
 package bindgen.rendering
+
 import bindgen.*
 
 import bindgen.Binding
@@ -33,8 +34,9 @@ def indent(using c: Config): String =
 def nest(f: Config ?=> Unit)(using config: Config) =
   f(using config.copy(indents = config.indents.map(_ + 1)))
 
-def to(sb: StringBuilder)(using config: Config): Appender =
-  line => sb.append(indent(using config) + line + "\n")
+def to(sb: LineBuilder)(using config: Config): Appender =
+  import LineBuilder.*
+  line => sb.appendLine(indent(using config) + line)
 
 def aliasResolver(name: String)(using ar: AliasResolver): CType =
   ar(name)
@@ -63,3 +65,14 @@ object AliasResolver:
       }
       .getOrElse(throw Error(s"Failed to resolve aliased definition $s"))
 end AliasResolver
+
+opaque type LineBuilder = StringBuilder
+object LineBuilder:
+  private val SEP = System.lineSeparator()
+  def apply(): LineBuilder = new StringBuilder
+  extension (lb: LineBuilder)
+    def result: String = lb.result
+    def appendLine(s: String): LineBuilder = lb.append(s + SEP)
+    def emptyLine: LineBuilder = lb.append(SEP)
+    def emptyLines(n: Int): LineBuilder = lb.append(SEP * n)
+    def append(s: String): LineBuilder = lb.append(s)

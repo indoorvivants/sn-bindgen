@@ -30,8 +30,8 @@ object Generate:
               given Config = config
               val b = analyse(config.headerFile.value)
 
-              val scalaOutput = StringBuilder()
-              val cOutput = StringBuilder()
+              val scalaOutput = LineBuilder()
+              val cOutput = LineBuilder()
 
               binding(b, scalaOutput, cOutput)
 

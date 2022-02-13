@@ -6,19 +6,20 @@ import scala.collection.mutable.ListBuffer
 
 def binding(
     binding: Binding,
-    scalaOutput: StringBuilder,
-    cOutput: StringBuilder
+    scalaOutput: LineBuilder,
+    cOutput: LineBuilder
 )(using
     Config
 ) =
-  scalaOutput.append(s"package $packageName\n\n")
+  scalaOutput.appendLine(s"package $packageName")
+  scalaOutput.emptyLine
   scalaOutput.append("""
     |import scala.scalanative.unsafe.*
     |import scala.scalanative.unsigned.*
     |import scalanative.libc.*
     """.stripMargin.trim)
-  scalaOutput.append("\n\n")
-  scalaOutput.append("object predef:")
+  scalaOutput.emptyLines(2)
+  scalaOutput.appendLine("object predef:")
   nest {
     val predef = """
     |abstract class CEnum[T](using eq: T =:= Int):
@@ -56,10 +57,10 @@ def binding(
     throw exc
   end commentException
 
-  scalaOutput.append("object types:\n")
+  scalaOutput.appendLine("object types:")
   def renderAll[A <: (Def | GeneratedFunction)](
       defs: Seq[A],
-      out: StringBuilder,
+      out: LineBuilder,
       how: (A, Appender) => Unit
   ) =
     defs.zipWithIndex.foreach { case (en, idx) =>
@@ -77,7 +78,7 @@ def binding(
         to(out)
       )
       catch exc => to(out)(commentException(en, exc))
-      if idx != defs.size - 1 then out.append("\n")
+      if idx != defs.size - 1 then out.emptyLine
     }
 
   nest {
@@ -144,7 +145,7 @@ def binding(
       summon[Config].cImports.foreach { s =>
         to(cOutput)(s"#include \"$s\"")
       }
-      to(cOutput)("\n")
+      cOutput.emptyLine
 
       renderAll(cFunctions.toList.sortBy(_.name), cOutput, cFunctionForwarder)
 
