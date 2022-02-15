@@ -10,6 +10,8 @@ private def integral(base: IntegralBase, st: SignType) =
   CType.NumericIntegral(base, st)
 
 private def _unsafe(typ: String) = s"scala.scalanative.unsafe.$typ"
+private def _scala(typ: String) = s"scala.$typ"
+private def _unsigned(typ: String) = s"scala.scalanative.unsigned.$typ"
 private def _libc(typ: String) = s"scala.scalanative.libc.$typ"
 private def _posix(typ: String) = s"scala.scalanative.posix.$typ"
 private def size[T](using t: Tag[T]) = t.size
@@ -54,6 +56,12 @@ object BuiltinType:
     apply[sockaddr](
       "sockaddr",
       "scala.scalanative.posix.sys.socket.sockaddr"
-    )
+    ),
+    apply[UByte]("uint8_t", _unsigned("UByte")),
+    apply[UShort]("uint16_t", _unsigned("UShort")),
+    apply[UInt]("uint32_t", _unsigned("UInt")),
+    apply[CChar]("int8_t", _unsafe("CChar")),
+    apply[Short]("int16_t", _scala("Short")),
+    apply[CInt]("int32_t", _unsafe("CInt"))
   )
 end BuiltinType

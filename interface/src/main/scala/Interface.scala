@@ -178,7 +178,7 @@ class BindingBuilder(binary: File) {
           )
 
           buf.result().foreach { l =>
-            System.err.println(s"/*$code*/  " + l + System.lineSeparator())
+            System.err.println(s"/*$code*/  " + l)
           }
 
           throw new Exception(
