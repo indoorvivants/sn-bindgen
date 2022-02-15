@@ -10,7 +10,6 @@ env:
   JAVA_OPTS: "-Xmx4G"
   JVM_OPTS: "-Xmx4G"
   SBT_OPTS: "-Xmx4G"
-  SCALANATIVE_MAX_SIZE: 2G
   SN_RELEASE: fast
 
 jobs:
