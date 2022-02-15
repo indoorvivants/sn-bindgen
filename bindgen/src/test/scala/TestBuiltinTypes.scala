@@ -22,4 +22,24 @@ class TestBuiltInTypes:
     summon[Test_time_t =:= time.time_t]
     summon[Test_fpos_t =:= libc.stdio.fpos_t]
   end correct_tags
+
+  @Test def consistent_uint_types(): Unit =
+    // this should compile
+    zone {
+      val st = !SpecialIntTypes(
+        i8 = -8.toByte,
+        i16 = -16.toShort,
+        i32 = -32,
+        u8 = 8.toUByte,
+        u16 = 16.toUShort,
+        u32 = 32.toUInt
+      )
+
+      assertEquals(-8, st.i8.toInt)
+      assertEquals(-16, st.i16.toInt)
+      assertEquals(-32, st.i32.toInt)
+      assertEquals(8, st.u8.toInt)
+      assertEquals(16, st.u16.toInt)
+      assertEquals(32, st.u32.toInt)
+    }
 end TestBuiltInTypes

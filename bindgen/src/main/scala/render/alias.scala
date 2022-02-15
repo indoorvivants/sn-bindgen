@@ -11,12 +11,6 @@ def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
     case _: Reference | _: Function | Void => false
     case _                                 => true
 
-  // model.underlying match
-  //   case Pointer(Function(retType, params)) =>
-  //     trace(s"Checking $model for cycles: ")
-  //     trace(isCyclical(model.underlying, model.name))
-  //   case _ =>
-
   val modifier = if isOpaque then "opaque " else ""
   line(s"${modifier}type ${model.name} = $underlyingType")
   line(s"object ${model.name}: ")

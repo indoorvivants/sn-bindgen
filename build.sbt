@@ -353,34 +353,6 @@ def usesLibClang(conf: NativeConfig) = {
       conf.compileOptions ++ detected.llvmInclude.map("-I" + _)
     )
 }
-
-def includes(
-    ifLinux: List[String] = Nil,
-    ifMac: List[String] = Nil,
-    ifWindows: List[String] = Nil,
-    all: List[String] = Nil
-): List[String] = {
-  Platform.target.os match {
-    case Platform.OS.Linux   => ifLinux
-    case Platform.OS.MacOS   => ifMac
-    case Platform.OS.Windows => ifWindows
-    case _                   => Nil
-  }
-}.++(all).filter(s => Paths.get(s).toFile.exists).map(s => s"-I$s")
-
-def linking(
-    ifLinux: List[String] = Nil,
-    ifMac: List[String] = Nil,
-    ifWindows: List[String] = Nil
-): List[String] = {
-  Platform.target.os match {
-    case Platform.OS.Linux   => ifLinux
-    case Platform.OS.MacOS   => ifMac
-    case Platform.OS.Windows => ifWindows
-    case _                   => Nil
-  }
-}.map(s => s"-L$s")
-
 def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
   import builder.define
 
@@ -425,21 +397,22 @@ def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
   /*   llvmInclude ++ clangInclude */
   /* ) */
 
-  if (Platform.target.os == Platform.OS.MacOS)
+  if (Platform.target.os == Platform.OS.MacOS) {
+    val curlIncludes =
+      if (Platform.arch == Platform.Arch.x86_64)
+        List("-I/usr/local/opt/curl/include/curl")
+      else
+        List("-I/opt/homebrew/opt/curl/include/curl")
+
     define(
       location /
         "curl.h",
       "libcurl",
       Some("curl"),
       List("curl.h"),
-      clangInclude ++
-        includes(ifMac =
-          List(
-            "/opt/homebrew/opt/curl/include/curl",
-            "/usr/local/opt/curl/include/curl"
-          )
-        )
+      clangInclude ++ curlIncludes
     )
+  }
   // Compiling this monster crashes the compiler :shrug:
   /* define( */
   /*   location / */
