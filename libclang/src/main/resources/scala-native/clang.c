@@ -153,6 +153,10 @@ unsigned wrap_Location_isFromMainFile(CXSourceLocation *location) {
   return clang_Location_isFromMainFile(*location);
 }
 
+unsigned wrap_Location_isInSystemHeader(CXSourceLocation *location) {
+  return clang_Location_isInSystemHeader(*location);
+}
+
 void wrap_formatDiagnostic(CXDiagnostic cxd, CXString *cxs, unsigned options) {
   CXString cs = clang_formatDiagnostic(cxd, options);
   memcpy(cxs, &cs, sizeof(CXString));

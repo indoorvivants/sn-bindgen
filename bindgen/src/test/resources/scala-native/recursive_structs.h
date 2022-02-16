@@ -21,3 +21,11 @@ typedef struct Recrusive_Simple {
   struct Recrusive_Simple *hello;
   double d;
 } Recrusive_Simple;
+
+struct Recursive_Func;
+
+typedef struct {
+  double d;
+  void (*free)(struct Recursive_Func *entry);
+  int freed;
+} Recursive_Func;

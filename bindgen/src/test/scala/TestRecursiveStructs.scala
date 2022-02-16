@@ -39,4 +39,35 @@ class TestRecursiveStructs:
       assertEquals('h', struct2.unary_!.str(0))
 
     }
+
+  @Test def test_recursive_function_pointer(): Unit =
+    zone {
+      val struct1 = Recursive_Func(0.5, (_: Ptr[Recursive_Func]) => (), 0)
+
+      assertEquals(0.5, (!struct1).d, 0.0001)
+      assertEquals(0, (!struct1).freed)
+
+      val struct2 = Recursive_Func(
+        0.0,
+        { (rec: Ptr[Recursive_Func]) =>
+          val deref = !rec
+          if deref.d != 0.5 then
+            throw new Exception(
+              "Something went wrong with passing function pointers - " +
+                s"expected 0.5, got ${deref.d} instead"
+            )
+
+          deref.freed = 1
+        },
+        0
+      )
+
+      (!struct2).free(struct1)
+
+      assertEquals(1, (!struct1).freed)
+
+      (!struct1).free(struct2)
+
+      assertEquals(0, (!struct2).freed)
+    }
 end TestRecursiveStructs
