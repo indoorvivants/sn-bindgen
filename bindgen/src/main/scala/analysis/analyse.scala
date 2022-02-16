@@ -46,6 +46,11 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     flags.CXTranslationUnit_None
   )
 
+  if unit == CXTranslationUnit.NULL then
+    throw new Exception(
+      "Translation unit is `null`, which is sort of a big problem"
+    )
+
   trace("Successfully created a translation unit")
 
   var errors = 0
@@ -97,11 +102,13 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
         given Zone = zone
 
         val loc = cursor.location
-        val isFromMainFile = loc.isFromMainFile
+        val shouldBeIncluded = loc.isFromMainFile || !loc.isFromSystemHeader
+
+        val spell = cursor.spelling
 
         if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
           val function = visitFunction(cursor)
-          binding.add(function, isFromMainFile)
+          binding.add(function, shouldBeIncluded)
         end if
 
         if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
@@ -111,7 +118,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
           val typeDecl = clang_getTypeDeclaration(referencedType)
           if (referencedType.kind == CXTypeKind.CXType_Enum) then
             val en = visitEnum(typeDecl, true)
-            binding.add(en, isFromMainFile)
+            binding.add(en, shouldBeIncluded)
           else if (referencedType.kind == CXTypeKind.CXType_Record) then
             val struct = visitStruct(typeDecl, name)
 
@@ -120,13 +127,13 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                 Def.Union(struct.fields, struct.name)
               else struct
 
-            if name != "" then binding.add(item, isFromMainFile)
+            if name != "" then binding.add(item, shouldBeIncluded)
           else
             val alias: Def.Alias =
               Def.Alias(name, constructType(typ))
             val canonical = clang_getCanonicalType(typ)
 
-            binding.add(alias, isFromMainFile)
+            binding.add(alias, shouldBeIncluded)
           end if
         end if
 
@@ -135,14 +142,14 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
           if name != "" then
             val en = visitStruct(cursor, name)
             val union = Def.Union(en.fields, en.name)
-            binding.add(union, isFromMainFile)
+            binding.add(union, shouldBeIncluded)
         end if
 
         if cursor.kind == CXCursorKind.CXCursor_StructDecl then
           val name = cursor.spelling
           if name != "" then
             val en = visitStruct(cursor, name)
-            binding.add(en, isFromMainFile)
+            binding.add(en, shouldBeIncluded)
         end if
 
         if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
@@ -153,7 +160,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
             ).kind == CXTypeKind.CXType_Typedef
           )
 
-          binding.add(en, isFromMainFile)
+          binding.add(en, shouldBeIncluded)
         end if
 
         if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then

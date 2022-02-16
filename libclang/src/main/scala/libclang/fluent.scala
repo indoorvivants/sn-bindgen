@@ -21,4 +21,6 @@ object fluent:
 
   extension (loc: CXSourceLocation)
     def isFromMainFile: Boolean = clang_Location_isFromMainFile(loc) == 1.toUInt
+    def isFromSystemHeader: Boolean =
+      clang_Location_isInSystemHeader(loc) == 1.toUInt
 end fluent
