@@ -42,4 +42,9 @@ class TestEnums:
     assertEquals(9, EnumKeywords.`var`.int)
   end test_reserved_keywords
 
+  @Test def test_tags(): Unit =
+    summon[Tag[Enum1]]
+    summon[Tag[Enum2]]
+    summon[Tag[EnumKeywords]]
+
 end TestEnums

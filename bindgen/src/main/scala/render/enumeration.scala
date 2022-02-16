@@ -14,6 +14,7 @@ def enumeration(model: Def.Enum, line: Appender)(using
   line(s"object $opaqueType extends CEnum$enumSuffix[$opaqueType]:")
 
   nest {
+    line(s"given _tag: Tag[$opaqueType] = ${scalaTag(numericType)}")
     if numericType.sign == SignType.Signed then
       line(
         s"inline def define(inline a: $underlyingTypeRender): $opaqueType = a"
