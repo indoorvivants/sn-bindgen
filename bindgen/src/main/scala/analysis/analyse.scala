@@ -102,7 +102,10 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
         given Zone = zone
 
         val loc = cursor.location
-        val shouldBeIncluded = loc.isFromMainFile || !loc.isFromSystemHeader
+        val shouldBeIncluded =
+          (loc.isFromMainFile || !loc.isFromSystemHeader) && (
+            cursor.spelling != "__gnuc_va_list"
+          )
 
         val spell = cursor.spelling
 
