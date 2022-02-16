@@ -62,13 +62,16 @@ def hack_recursive_structs(
 
   val isPointerRecursive: Boolean = cyclicalParameters.exists(_ == true)
 
-  def rewrite(name: String, originalType: CType): Option[ParameterRewrite] =
+  def rewrite(
+      parameterName: String,
+      originalType: CType
+  ): Option[ParameterRewrite] =
     if !isCyclical(originalType, structName) then None
     else
       import CType.*
       def result(newType: CType) = Some(
         ParameterRewrite(
-          name = name,
+          name = parameterName,
           originalType = originalType,
           newRawType = Pointer(Void),
           newRichType = newType
@@ -78,6 +81,40 @@ def hack_recursive_structs(
       originalType match
         case Pointer(Reference(Name.Model(name))) =>
           result(Pointer(Reference(Name.Model(name))))
+        case a @ Pointer(func @ Function(retType, params)) =>
+          val newFunctionType =
+            func.copy(
+              returnType = func.returnType match
+                case Pointer(of) if isCyclical(of, structName) => Pointer(Void)
+                case other if isCyclical(other, structName) =>
+                  throw Error(
+                    s"Return type of function pointer is '$other' which we cannot rewrite to avoid cycles"
+                  )
+                case other => other
+              ,
+              parameters = func.parameters.map { p =>
+                val newPType = p.of match
+                  case Pointer(of) if isCyclical(of, structName) =>
+                    Pointer(Void)
+                  case other if isCyclical(other, structName) =>
+                    throw Error(
+                      s"Return type of function pointer is '$other' which we cannot rewrite to avoid cycles"
+                    )
+                  case other => other
+
+                p.copy(of = newPType)
+              }
+            )
+
+          Some(
+            ParameterRewrite(
+              name = parameterName,
+              originalType = a,
+              newRawType = newFunctionType,
+              newRichType = a
+            )
+          )
+
         case Reference(Name.Model(name)) =>
           aliasResolver(name) match
             case Pointer(_: Function) => result(Reference(Name.Model(name)))

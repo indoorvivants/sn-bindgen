@@ -291,5 +291,9 @@ object defs:
     @name("wrap_Location_isFromMainFile")
     def clang_Location_isFromMainFile(curs: CXSourceLocation): CUnsignedInt =
       extern
+
+    @name("wrap_Location_isInSystemHeader")
+    def clang_Location_isInSystemHeader(curs: CXSourceLocation): CUnsignedInt =
+      extern
   end methods
 end defs

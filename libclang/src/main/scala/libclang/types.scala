@@ -8,7 +8,9 @@ import scala.annotation.compileTimeOnly
 object types:
   import enumerations.*
   opaque type CXIndex = Ptr[Byte]
-  opaque type CXTranslationUnit = Ptr[Byte] // TODO: refine
+  opaque type CXTranslationUnit = Ptr[Byte]
+  object CXTranslationUnit:
+    val NULL: CXTranslationUnit = null // TODO: refine
   opaque type CXUnsavedFile = CStruct3[CString, CString, ULong]
 
   object CXUnsafeFile:
