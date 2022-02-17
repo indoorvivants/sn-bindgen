@@ -127,7 +127,12 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
             val item =
               if typ.spelling.startsWith("union ") then
-                Def.Union(struct.fields, struct.name)
+                Def.Union(
+                  struct.fields.map { case (n, f) =>
+                    n.into(UnionParameterName) -> f
+                  },
+                  struct.name.into(UnionName)
+                )
               else struct
 
             if name != "" then binding.add(item, shouldBeIncluded)
@@ -144,7 +149,12 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
           val name = clang_getCursorSpelling(cursor).string
           if name != "" then
             val en = visitStruct(cursor, name)
-            val union = Def.Union(en.fields, en.name)
+            val union = Def.Union(
+              en.fields.map { case (n, f) =>
+                n.into(UnionParameterName) -> f
+              },
+              en.name.into(UnionName)
+            )
             binding.add(union, shouldBeIncluded)
         end if
 

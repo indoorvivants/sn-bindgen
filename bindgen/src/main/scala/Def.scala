@@ -50,20 +50,28 @@ case class Binding(
   }.toSet
 end Binding
 
+opaque type FunctionName = String
+object FunctionName extends OpaqueString[FunctionName]
+
+opaque type EnumName = String
+object EnumName extends OpaqueString[EnumName]
+
+opaque type StructName = String
+object StructName extends OpaqueString[StructName]
 enum Def:
   case Enum(
       var values: ListBuffer[(String, Long)],
-      var name: Option[String],
+      var name: Option[EnumName],
       var intType: Option[CType.NumericIntegral]
   )
   case Struct(
-      var fields: ListBuffer[(String, CType)],
-      var name: String,
+      var fields: ListBuffer[(StructParameterName, CType)],
+      var name: StructName,
       var anonymous: ListBuffer[Def.Union | Def.Struct]
   )
-  case Union(var fields: ListBuffer[(String, CType)], var name: String)
+  case Union(var fields: ListBuffer[(UnionParameterName, CType)], var name: UnionName)
   case Function(
-      var name: String,
+      var name: FunctionName,
       var returnType: CType,
       var parameters: ListBuffer[FunctionParameter],
       val originalCType: OriginalCType
@@ -73,10 +81,11 @@ enum Def:
   def defName: Option[DefName] =
     this match
       case Alias(name, _) => Some(DefName(name, DefTag.Alias))
-      case Union(_, name) => Some(DefName(name, DefTag.Union))
-      case f: Function    => Some(DefName(f.name, DefTag.Function))
-      case s: Struct      => Some(DefName(s.name, DefTag.Struct))
-      case e: Enum        => e.name.map(DefName(_, DefTag.Enum))
+      case Union(_, name) => Some(DefName(name.value, DefTag.Union))
+      case f: Function    => Some(DefName(f.name.value, DefTag.Function))
+      case s: Struct      => Some(DefName(s.name.value, DefTag.Struct))
+      case e: Enum =>
+        e.name.map(enumName => DefName(enumName.value, DefTag.Enum))
 end Def
 
 object Def:
@@ -84,7 +93,7 @@ object Def:
     CType.Function(
       d.returnType,
       d.parameters.map { case fp =>
-        Parameter(Some(fp.name), fp.typ)
+        Parameter(Some(ParameterName(fp.name)), fp.typ)
       }.toList
     )
   def typeOf(d: Union): CType.Union =
@@ -129,9 +138,20 @@ import CType.*
 enum SignType:
   case Signed, Unsigned
 
+opaque type StructParameterName = String
+object StructParameterName extends OpaqueString[StructParameterName]
+
+opaque type UnionParameterName = String
+object UnionParameterName extends OpaqueString[UnionParameterName]
+
+opaque type ParameterName = String
+object ParameterName extends OpaqueString[ParameterName]
+
+opaque type UnionName = String
+object UnionName extends OpaqueString[UnionName]
+
 object CType:
-  case class Parameter(name: Option[String], of: CType)
-  case class UnionPart(name: String, of: CType)
+  case class Parameter(name: Option[ParameterName], of: CType)
 
   val Int: NumericIntegral =
     CType.NumericIntegral(IntegralBase.Int, SignType.Signed)

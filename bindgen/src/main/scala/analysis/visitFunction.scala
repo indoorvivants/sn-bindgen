@@ -17,7 +17,7 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
 
   val mem = Captured.allocate[Def.Function](
     Def.Function(
-      name = functionName,
+      name = FunctionName(functionName),
       returnType = constructType(returnType),
       parameters = ListBuffer.empty,
       originalCType = OriginalCType(

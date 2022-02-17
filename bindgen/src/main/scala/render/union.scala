@@ -22,13 +22,13 @@ def union(model: Def.Union, line: Appender)(using Config, AliasResolver) =
       model.fields.foreach { case (fieldName, fieldType) =>
         val typ = scalaType(fieldType)
         line(
-          s"def apply(${escape(fieldName)}: $typ)(using Zone): Ptr[$structName] ="
+          s"def apply(${escape(fieldName.value)}: $typ)(using Zone): Ptr[$structName] ="
         )
         nest {
           line(s"val ___ptr = alloc[$structName](1)")
           line(s"val un = !___ptr")
           line(
-            s"un.at(0).asInstanceOf[Ptr[$typ]].update(0, ${escape(fieldName)})"
+            s"un.at(0).asInstanceOf[Ptr[$typ]].update(0, ${escape(fieldName.value)})"
           )
           line("___ptr")
         }
@@ -38,10 +38,10 @@ def union(model: Def.Union, line: Appender)(using Config, AliasResolver) =
         model.fields.foreach { case (fieldName, fieldType) =>
           val typ = scalaType(fieldType)
           line(
-            s"def ${escape(fieldName)}: $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
+            s"def ${escape(fieldName.value)}: $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
           )
           line(
-            s"def ${escape(fieldName)}_=(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
+            s"def ${escape(fieldName.value)}_=(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
           )
         }
       }

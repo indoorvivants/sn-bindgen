@@ -5,8 +5,13 @@ object LoggingConfig:
   val default = LoggingConfig(MinLogPriority(LogLevel.priority(LogLevel.info)))
   given infer(using c: Config): LoggingConfig = LoggingConfig(c.minLogPriority)
 
-inline def trace(inline msg: Any)(using LoggingConfig) =
+inline def trace[A](inline msg: A)(using LoggingConfig): Unit =
   log(LogLevel.trace, msg)
+
+inline def trace[A](inline msg: A, context: (String, Any)*)(using
+    LoggingConfig
+): Unit =
+  log(LogLevel.trace, msg, context)
 
 inline def info(inline msg: Any)(using LoggingConfig) =
   log(LogLevel.info, msg)
@@ -17,13 +22,28 @@ inline def warning(inline msg: Any)(using LoggingConfig) =
 inline def error(msg: Any)(using LoggingConfig) =
   log(LogLevel.error, msg)
 
-private def log(level: LogLevel, msg: Any)(using lc: LoggingConfig) =
+private inline def log[A](
+    level: LogLevel,
+    inline msg: A,
+    context: Seq[(String, Any)] = Seq.empty
+)(using
+    lc: LoggingConfig
+): Unit =
+  import scala.compiletime.erasedValue
   if LogLevel.priority(level) >= lc.minLogPriority.value then
     errln(
       Console.BOLD + "[bindgen] " + Console.RESET +
         LogLevel
           .color(level) + s"${LogLevel.name(level)} " + Console.RESET + msg.toString
     )
+    if context.nonEmpty then
+      val fMaxLength = context.map(_._1).maxBy(_.length).length
+      context.foreach { case (field, value) =>
+      val offset = " " * (fMaxLength - field.length)
+      errln("    " + offset + field + "  " + value)
+      }
+  end if
+end log
 
 enum LogLevel:
   case trace, info, warning, error

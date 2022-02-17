@@ -54,13 +54,13 @@ object AliasResolver:
   def create(aliases: Seq[Def]): AliasResolver = s =>
     aliases
       .collectFirst {
-        case Def.Struct(fields, name, _) if name == s =>
+        case Def.Struct(fields, name, _) if name.value == s =>
           CType.Struct(fields.map(_._2).toList)
-        case Def.Union(fields, name) if name == s =>
+        case Def.Union(fields, name) if name.value == s =>
           CType.Struct(fields.map(_._2).toList)
         case Def.Alias(name, underlying) if name == s =>
           underlying
-        case Def.Enum(_, Some(name), Some(tp)) if name == s =>
+        case Def.Enum(_, Some(name), Some(tp)) if name.value == s =>
           tp
       }
       .getOrElse(throw Error(s"Failed to resolve aliased definition $s"))

@@ -26,7 +26,7 @@ def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using
   val name = clang_getTypeSpelling(typ).string
   if clang_Cursor_isAnonymous(cursor) == 0.toUInt then
     (!mem)._1.name = Some(
-      if name.startsWith("enum ") then name.drop(5) else name
+      EnumName(if name.startsWith("enum ") then name.drop(5) else name)
     )
 
   clang_visitChildren(
