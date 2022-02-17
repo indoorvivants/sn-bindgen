@@ -39,8 +39,8 @@ private inline def log[A](
     if context.nonEmpty then
       val fMaxLength = context.map(_._1).maxBy(_.length).length
       context.foreach { case (field, value) =>
-      val offset = " " * (fMaxLength - field.length)
-      errln("    " + offset + field + "  " + value)
+        val offset = " " * (fMaxLength - field.length)
+        errln("    " + offset + field + "  " + value)
       }
   end if
 end log

@@ -52,9 +52,10 @@ trait TotalWrapper[Newtype, Impl](using ev: Newtype =:= Impl):
   given BasicallyTheSame[Newtype, Impl] = ev.apply(_)
   given BasicallyTheSame[Impl, Newtype] = ev.flip.apply(_)
 
-  extension (a: Newtype) 
+  extension (a: Newtype)
     inline def value = raw(a)
-    inline def into[X](inline other: TotalWrapper[X, Impl]): X = other.apply(raw(a))
+    inline def into[X](inline other: TotalWrapper[X, Impl]): X =
+      other.apply(raw(a))
     inline def map(inline f: Impl => Impl): Newtype = apply(f(raw(a)))
 end TotalWrapper
 

@@ -31,7 +31,10 @@ def struct(struct: Def.Struct, line: Appender)(using
   if rewriteRules.nonEmpty then
     trace(
       s"Rewrite rules for struct ${struct.name}",
-      rewriteRules.toSeq.sortBy(_._1).map(_._2).map(p => p.name.value -> p.newRawType)*
+      rewriteRules.toSeq
+        .sortBy(_._1)
+        .map(_._2)
+        .map(p => p.name.value -> p.newRawType)*
     )
   line(s"opaque type $structName = ${scalaType(rewrittenStructType)}")
   line(s"object $structName:")

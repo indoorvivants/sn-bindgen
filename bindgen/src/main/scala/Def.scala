@@ -69,7 +69,10 @@ enum Def:
       var name: StructName,
       var anonymous: ListBuffer[Def.Union | Def.Struct]
   )
-  case Union(var fields: ListBuffer[(UnionParameterName, CType)], var name: UnionName)
+  case Union(
+      var fields: ListBuffer[(UnionParameterName, CType)],
+      var name: UnionName
+  )
   case Function(
       var name: FunctionName,
       var returnType: CType,
