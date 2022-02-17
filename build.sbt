@@ -66,6 +66,9 @@ lazy val iface = projectMatrix
     }
   )
 
+val generateCSources = taskKey[Seq[File]]("")
+val generateScalaSources = taskKey[Seq[File]]("")
+
 lazy val bindgen = project
   .in(file("bindgen"))
   .dependsOn(libclang)
@@ -106,45 +109,68 @@ lazy val bindgen = project
         .collect(Collectors.toList())
         .asScala
         .filter(glob.matches)
-        .map(h => path.toPath.relativize(h).toString)
-        .map(_.dropRight(2)) // remove ".h"
-        .toSeq
+        .map(h => h.toFile -> path.toPath.relativize(h).toString.dropRight(2))
+        .toMap
     },
-    Test / sourceGenerators += Def.task {
-
+    Test / generateScalaSources := {
       val scalaFiles = (Test / sourceManaged).value
       val headersPath =
         baseDirectory.value / "src" / "test" / "resources" / "scala-native"
       val binary = (Compile / nativeLink).value
+      val headerSpec = (Test / watchedHeaders).value
+      val expectedScalaFiles =
+        headerSpec.map { case (headerFile, name) =>
+          headerFile -> (scalaFiles / s"lib_test_$name.scala")
+        }
 
+      val changes = (Test / watchedHeaders).inputFileChanges
+      val missing = expectedScalaFiles.filterNot(_._2.exists()).map(_._1)
+      val toRebuild =
+        changes.created.map(_.toFile) ++
+          changes.modified.map(_.toFile) ++
+          missing
       val builder = new BindingBuilder(binary)
-      /* builder.withLogLevel(LogLevel.Warn) */
 
-      (Test / watchedHeaders).value.foreach { header =>
-        builder.define(headersPath / s"$header.h", s"lib_test_$header")
+      val existing = (expectedScalaFiles -- toRebuild).map(_._2)
+
+      toRebuild.foreach { header =>
+        val name = headerSpec(header)
+        builder.define(header, s"lib_test_$name")
       }
 
-      builder.generate(scalaFiles, BindingLang.Scala)
+      builder.generate(scalaFiles, BindingLang.Scala) ++ existing
+
     },
-    Test / resourceGenerators += Def.task {
+    Test / generateCSources := {
       val cFiles = (Test / resourceManaged).value / "scala-native"
       val headersPath =
         baseDirectory.value / "src" / "test" / "resources" / "scala-native"
       val binary = (Compile / nativeLink).value
+      val headerSpec = (Test / watchedHeaders).value
+      val expectedCFiles =
+        headerSpec.map { case (headerFile, name) =>
+          headerFile -> (cFiles / s"lib_test_$name.c")
+        }
 
+      val changes = (Test / watchedHeaders).inputFileChanges
+      val missing = expectedCFiles.filterNot(_._2.exists()).map(_._1)
+      val toRebuild =
+        changes.created.map(_.toFile) ++
+          changes.modified.map(_.toFile) ++
+          missing
       val builder = new BindingBuilder(binary)
-      builder.withLogLevel(LogLevel.Warn)
 
-      (Test / watchedHeaders).value.foreach { header =>
-        builder.define(
-          headersPath / s"$header.h",
-          s"lib_test_$header",
-          cImports = List(s"$header.h")
-        )
+      val existing = (expectedCFiles -- toRebuild).map(_._2)
+
+      toRebuild.foreach { header =>
+        val name = headerSpec(header)
+        builder.define(header, s"lib_test_$name", cImports = List(s"$name.h"))
       }
 
-      builder.generate(cFiles, BindingLang.C)
-    }
+      builder.generate(cFiles, BindingLang.C) ++ existing
+    },
+    Test / sourceGenerators += (Test / generateScalaSources),
+    Test / resourceGenerators += (Test / generateCSources)
   )
   .settings {
     val detected = detectBinaryArtifacts
@@ -155,6 +181,22 @@ lazy val bindgen = project
       .toSeq
       .flatten
   }
+
+def getHeaders(path: File): Seq[String] = {
+  /* val path = */
+  /*   baseDirectory.value / "src" / "test" / "resources" / "scala-native" */
+  val glob = path.toGlob / "*.h"
+
+  import scala.collection.JavaConverters.*
+  Files
+    .walk(path.toPath, 1)
+    .collect(Collectors.toList())
+    .asScala
+    .filter(glob.matches)
+    .map(h => path.toPath.relativize(h).toString)
+    .map(_.dropRight(2)) // remove ".h"
+    .toSeq
+}
 
 lazy val binaryArtifacts = project
   .in(file("build/binary-artifacts"))
@@ -207,7 +249,7 @@ lazy val plugin = projectMatrix
   .dependsOn(iface)
   .settings(
     sbtPlugin := true,
-    pluginCrossBuild / sbtVersion := "1.5.7",
+    pluginCrossBuild / sbtVersion := "1.6.1",
     moduleName := "bindgen-sbt-plugin",
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
@@ -430,7 +472,7 @@ lazy val nativeCommon = Seq(
 )
 
 lazy val watchedHeaders =
-  taskKey[Seq[String]]("Header files watched by bindgen's tests")
+  taskKey[Map[File, String]]("Header files watched by bindgen's tests")
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
