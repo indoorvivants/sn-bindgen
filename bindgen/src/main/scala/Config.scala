@@ -46,19 +46,26 @@ object MinLogPriority extends bindgen.OpaqueNum[MinLogPriority]
 trait BasicallyTheSame[A, T]:
   def apply(a: A): T
 
-abstract class TotalWrapper[A, T](using ev: A =:= T):
-  def raw(a: A): T = ev.apply(a)
-  def apply(s: T): A = ev.flip.apply(s)
-  given BasicallyTheSame[A, T] = ev.apply(_)
-  given BasicallyTheSame[T, A] = ev.flip.apply(_)
+trait TotalWrapper[Newtype, Impl](using ev: Newtype =:= Impl):
+  def raw(a: Newtype): Impl = ev.apply(a)
+  def apply(s: Impl): Newtype = ev.flip.apply(s)
+  given BasicallyTheSame[Newtype, Impl] = ev.apply(_)
+  given BasicallyTheSame[Impl, Newtype] = ev.flip.apply(_)
 
-  extension (a: A)
+  extension (a: Newtype)
     inline def value = raw(a)
-    inline def into[A1](inline other: TotalWrapper[A1, T]): A1 = other(a.value)
-    inline def map(inline f: T => T): A = apply(f(raw(a)))
+    inline def into[X](inline other: TotalWrapper[X, Impl]): X =
+      other.apply(raw(a))
+    inline def map(inline f: Impl => Impl): Newtype = apply(f(raw(a)))
 end TotalWrapper
 
-abstract class OpaqueString[A](using A =:= String)
+inline given [A, T](using
+    bts: BasicallyTheSame[T, A],
+    ord: Ordering[A]
+): Ordering[T] =
+  Ordering.by(bts.apply)
+
+trait OpaqueString[A](using A =:= String)
     extends bindgen.TotalWrapper[A, String]
 
 abstract class OpaqueNum[A](using A =:= Int)

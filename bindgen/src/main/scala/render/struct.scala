@@ -7,8 +7,10 @@ def struct(struct: Def.Struct, line: Appender)(using
 ): Unit =
   given AliasResolver = AliasResolver(s =>
     val inner = struct.anonymous.collectFirst {
-      case u: Def.Union if s == struct.name + "." + u.name  => Def.typeOf(u)
-      case u: Def.Struct if s == struct.name + "." + u.name => Def.typeOf(u)
+      case u: Def.Union if s == struct.name.value + "." + u.name.value =>
+        Def.typeOf(u)
+      case u: Def.Struct if s == struct.name.value + "." + u.name.value =>
+        Def.typeOf(u)
     }
     inner.getOrElse(ar(s))
   )
@@ -27,7 +29,13 @@ def struct(struct: Def.Struct, line: Appender)(using
   val fieldOffsets = offsets(structType)
 
   if rewriteRules.nonEmpty then
-    trace(s"Rewrite rules for struct ${struct.name}: $rewriteRules")
+    trace(
+      s"Rewrite rules for struct ${struct.name}",
+      rewriteRules.toSeq
+        .sortBy(_._1)
+        .map(_._2)
+        .map(p => p.name.value -> p.newRawType)*
+    )
   line(s"opaque type $structName = ${scalaType(rewrittenStructType)}")
   line(s"object $structName:")
   nest {
@@ -53,7 +61,7 @@ def struct(struct: Def.Struct, line: Appender)(using
       val applyArgList = List.newBuilder[String]
       struct.fields.zipWithIndex.map { case ((name, typ), idx) =>
         val inputType = rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
-        applyArgList.addOne(s"${escape(name)}: ${scalaType(inputType)}")
+        applyArgList.addOne(s"${escape(name.value)}: ${scalaType(inputType)}")
       }
 
       line(
@@ -61,8 +69,10 @@ def struct(struct: Def.Struct, line: Appender)(using
       )
       nest {
         line(s"val ____ptr = apply()")
-        struct.fields.foreach { case (n, _) =>
-          line(s"(!____ptr).${escape(n)} = ${escape(n)}")
+        struct.fields.foreach { case (fieldName, _) =>
+          line(
+            s"(!____ptr).${escape(fieldName.value)} = ${escape(fieldName.value)}"
+          )
         }
         line(s"____ptr")
       }
@@ -75,18 +85,20 @@ def struct(struct: Def.Struct, line: Appender)(using
               rewriteRules.get(idx) match
                 case Some(rewrite) =>
                   line(
-                    s"def ${escape(fieldName)}: ${scalaType(rewrite.newRichType)} = struct._${idx + 1}.asInstanceOf[${scalaType(rewrite.newRichType)}]"
+                    s"def ${escape(fieldName.value)}: ${scalaType(
+                      rewrite.newRichType
+                    )} = struct._${idx + 1}.asInstanceOf[${scalaType(rewrite.newRichType)}]"
                   )
                   line(
-                    s"def ${escape(fieldName + "_=")}(value: ${scalaType(rewrite.newRichType)}): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(rewrite.newRawType)}]"
+                    s"def ${escape(fieldName.value + "_=")}(value: ${scalaType(rewrite.newRichType)}): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(rewrite.newRawType)}]"
                   )
 
                 case None =>
                   line(
-                    s"def ${escape(fieldName)}: ${scalaType(fieldType)} = struct._${idx + 1}"
+                    s"def ${escape(fieldName.value)}: ${scalaType(fieldType)} = struct._${idx + 1}"
                   )
                   line(
-                    s"def ${escape(fieldName + "_=")}(value: ${scalaType(fieldType)}): Unit = !struct.at${idx + 1} = value"
+                    s"def ${escape(fieldName.value + "_=")}(value: ${scalaType(fieldType)}): Unit = !struct.at${idx + 1} = value"
                   )
           }
         else
@@ -94,10 +106,10 @@ def struct(struct: Def.Struct, line: Appender)(using
             case ((fieldName, fieldType), fieldOffset) =>
               val typ = scalaType(fieldType)
               line(
-                s"def ${escape(fieldName)}: $typ = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]]"
+                s"def ${escape(fieldName.value)}: $typ = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]]"
               )
               line(
-                s"def ${escape(fieldName + "_=")}(value: $typ): Unit = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]] = value"
+                s"def ${escape(fieldName.value + "_=")}(value: $typ): Unit = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]] = value"
               )
           }
         end if

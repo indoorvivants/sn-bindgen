@@ -3,49 +3,52 @@ package bindgen.rendering
 import bindgen.*
 import scala.annotation.tailrec
 
-def isCyclical(typ: CType, name: String)(using AliasResolver, Config): Boolean =
-  def go(t: CType, visited: Set[String], level: Int): Boolean =
+def isCyclical(typ: CType, structName: StructName)(using
+    AliasResolver,
+    Config
+): Option[List[String]] =
+  def go(t: CType, visited: List[String], level: Int): Option[List[String]] =
     import CType.*
-    // trace((" " * level) + s"visiting $t with $visited")
-    val result =
-      t match
-        case Reference(Name.Model(name)) =>
-          visited.contains(name) || go(
+    t match
+      case Reference(Name.Model(name)) =>
+        Option.when(visited.contains(name))(visited ++ List(name)) orElse
+          go(
             aliasResolver(name),
-            visited ++ Set(name),
+            visited ++ List(name),
             level + 1
           )
-        case Pointer(Reference(Name.Model(name))) =>
-          visited.contains(name) || go(
+      case Pointer(Reference(Name.Model(name))) =>
+        Option.when(visited.contains(name))(visited ++ List(name)) orElse
+          go(
             aliasResolver(name),
-            visited ++ Set(name),
+            visited ++ List(name),
             level + 1
           )
 
-        case Struct(fields) =>
-          if fields.size > 22 then
-            false // implemented as CArray[Byte, ...] so cannot be self-referential
-          else
-            fields.foldLeft(false) { case (acc, field) =>
-              acc || go(field, visited, level + 1)
-            }
-
-        case Pointer(Function(retType, params)) =>
-          (retType +: params.map(_.of)).foldLeft(false) { case (acc, field) =>
-            acc || go(field, visited, level + 1)
+      case Struct(fields) =>
+        if fields.size > 22 then
+          Option.empty // implemented as CArray[Byte, ...] so cannot be self-referential
+        else
+          fields.foldLeft(Option.empty) { case (acc, field) =>
+            acc orElse go(field, visited, level + 1)
           }
-        case _ => false
-      end match
-    end result
 
-    // trace((" " * level) + s"result of $t is '$result', visited: $visited")
-    result
+      case Pointer(Function(retType, params)) =>
+        (retType +: params.map(_.of)).foldLeft(Option.empty) {
+          case (acc, field) =>
+            acc orElse go(field, visited, level + 1)
+        }
+
+      case _ => Option.empty
+    end match
+
+  // trace((" " * level) + s"result of $t is '$result', visited: $visited")
   end go
-  go(typ, Set(name), 0)
+  go(typ, List(structName.value), 0)
 end isCyclical
 
 case class ParameterRewrite(
-    name: String,
+    name: StructParameterName,
     originalType: CType,
     newRawType: CType,
     newRichType: CType
@@ -60,13 +63,13 @@ def hack_recursive_structs(
   val cyclicalParameters =
     struct.fields.map((_, typ) => isCyclical(typ, structName))
 
-  val isPointerRecursive: Boolean = cyclicalParameters.exists(_ == true)
+  val isPointerRecursive: Boolean = cyclicalParameters.exists(_.nonEmpty)
 
   def rewrite(
-      parameterName: String,
+      parameterName: StructParameterName,
       originalType: CType
   ): Option[ParameterRewrite] =
-    if !isCyclical(originalType, structName) then None
+    if isCyclical(originalType, structName).isEmpty then None
     else
       import CType.*
       def result(newType: CType) = Some(
@@ -80,26 +83,37 @@ def hack_recursive_structs(
 
       originalType match
         case Pointer(Reference(Name.Model(name))) =>
-          result(Pointer(Reference(Name.Model(name))))
+          Some(
+            ParameterRewrite(
+              name = parameterName,
+              originalType = originalType,
+              newRawType = Pointer(Void),
+              newRichType = Pointer(Reference(Name.Model(name)))
+            )
+          )
         case a @ Pointer(func @ Function(retType, params)) =>
-          val newFunctionType =
+          def rewriteFunctionType(func: Function): Function =
             func.copy(
               returnType = func.returnType match
-                case Pointer(of) if isCyclical(of, structName) => Pointer(Void)
-                case other if isCyclical(other, structName) =>
-                  throw Error(
-                    s"Return type of function pointer is '$other' which we cannot rewrite to avoid cycles"
-                  )
+                case Pointer(of) if isCyclical(of, structName).nonEmpty =>
+                  Pointer(Void)
+                case funcP @ Pointer(f: Function)
+                    if isCyclical(funcP, structName).nonEmpty =>
+                  Pointer(rewriteFunctionType(f))
                 case other => other
               ,
               parameters = func.parameters.map { p =>
                 val newPType = p.of match
-                  case Pointer(of) if isCyclical(of, structName) =>
+                  case Pointer(of) if isCyclical(of, structName).nonEmpty =>
                     Pointer(Void)
-                  case other if isCyclical(other, structName) =>
-                    throw Error(
-                      s"Return type of function pointer is '$other' which we cannot rewrite to avoid cycles"
-                    )
+                  case funcP @ Pointer(f: Function)
+                      if isCyclical(funcP, structName).nonEmpty =>
+                    Pointer(rewriteFunctionType(f))
+                  // case other if isCyclical(other, structName).nonEmpty =>
+                  //   val cycle = isCyclical(other, structName)
+                  //   throw Error(
+                  //     s"Parameter: ${parameterName}, Type of function pointer is '$other' which we cannot rewrite to avoid cycles ($cycle)"
+                  //   )
                   case other => other
 
                 p.copy(of = newPType)
@@ -110,7 +124,7 @@ def hack_recursive_structs(
             ParameterRewrite(
               name = parameterName,
               originalType = a,
-              newRawType = newFunctionType,
+              newRawType = rewriteFunctionType(func),
               newRichType = a
             )
           )

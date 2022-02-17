@@ -20,20 +20,21 @@ def definitionClosure(b: Def)(using Config): Set[String] =
 
   b match
     case f: Def.Function =>
-      Set(f.name) ++
+      Set(f.name.value) ++
         ref(f.returnType) ++
         f.parameters.toSet.flatMap { p =>
           ref(p.typ) ++ ref(p.originalTyp.typ)
         }
     case f: Def.Struct =>
-      Set(f.name) ++
+      Set(f.name.value) ++
         f.fields
           .map(_._2)
           .toSet
           .flatMap(ref) ++
         f.anonymous.toSet.flatMap(definitionClosure)
-    case f: Def.Union => Set(f.name) ++ f.fields.map(_._2).toSet.flatMap(ref)
-    case f: Def.Enum  => f.name.toSet
+    case f: Def.Union =>
+      Set(f.name.value) ++ f.fields.map(_._2).toSet.flatMap(ref)
+    case f: Def.Enum  => f.name.toSet.map(_.value)
     case a: Def.Alias => Set(a.name) ++ ref(a.underlying)
   end match
 end definitionClosure

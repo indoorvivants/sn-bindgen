@@ -39,6 +39,7 @@ def alignment(typ: CType)(using AliasResolver): CSize =
     case real: NumericReal         => staticSize(real)
     case Arr(of, Some(_))          => alignment(of)
     case Pointer(_)                => staticSize(typ)
+    case _: Function               => 8.toULong
     case Struct(fields) =>
       fields.map(alignment).maxOption.getOrElse(1.toULong)
     case Bool                          => 1.toULong
@@ -67,6 +68,7 @@ def staticSize(typ: CType)(using AliasResolver): CSize =
     case Arr(of, Some(sz)) =>
       sz.toULong * staticSize(of)
     case Pointer(_)       => 8.toULong
+    case _: Function      => 8.toULong
     case Enum(underlying) => staticSize(underlying)
     case Struct(fields) =>
       var res = 0.toULong

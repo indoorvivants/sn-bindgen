@@ -18,16 +18,22 @@ case class Allocations(
 ):
   def hasAny: Boolean = params.nonEmpty || returnValue
 
+opaque type CFunctionName = String
+object CFunctionName extends OpaqueString[CFunctionName]
+
+opaque type ScalaFunctionName = String
+object ScalaFunctionName extends OpaqueString[ScalaFunctionName]
+
 enum ScalaFunctionBody:
   case Extern
-  case Delegate(to: String, allocations: Allocations)
+  case Delegate(to: ScalaFunctionName, allocations: Allocations)
 
 enum CFunctionBody:
-  case Delegate(to: String, dereference: Set[Int], returnAsWell: Boolean)
+  case Delegate(to: CFunctionName, dereference: Set[Int], returnAsWell: Boolean)
 
 enum GeneratedFunction:
   case ScalaFunction(
-      name: String,
+      name: ScalaFunctionName,
       returnType: CType,
       arguments: List[List[FunctionParameter]],
       body: ScalaFunctionBody,
@@ -35,7 +41,7 @@ enum GeneratedFunction:
   )
 
   case CFunction(
-      name: String,
+      name: CFunctionName,
       returnType: CType,
       originalCType: OriginalCType,
       arguments: List[FunctionParameter],
@@ -73,7 +79,7 @@ private def scalaForwarderFunction(
   val returnType = if returnAsWell then CType.Void else bad.returnType
 
   GeneratedFunction.ScalaFunction(
-    externFuncName(bad.name),
+    ScalaFunctionName(externFuncName(bad.name.value)),
     returnType,
     List(parameters.result),
     ScalaFunctionBody.Extern,
@@ -85,9 +91,9 @@ private def scalaAllocatingFunction(bad: Def.Function)(using
     Config,
     AliasResolver
 ): GeneratedFunction.ScalaFunction =
-  val invokes = externFuncName(bad.name)
+  val invokes = externFuncName(bad.name.value)
   GeneratedFunction.ScalaFunction(
-    bad.name,
+    ScalaFunctionName(bad.name.value),
     bad.returnType,
     List(bad.parameters.toList),
     ScalaFunctionBody.Delegate(
@@ -109,13 +115,13 @@ private def scalaPtrFunctions(bad: Def.Function)(using
     Config,
     AliasResolver
 ): List[GeneratedFunction] =
-  val invokes = externFuncName(bad.name)
+  val invokes = externFuncName(bad.name.value)
   val returnAsWell = isDirectStructAccess(bad.returnType)
 
   val gen = List.newBuilder[GeneratedFunction]
   gen.addOne {
     GeneratedFunction.ScalaFunction(
-      bad.name,
+      bad.name.into(ScalaFunctionName),
       bad.returnType,
       List(bad.parameters.toList.map { fp =>
         if isDirectStructAccess(fp.typ) then
@@ -136,7 +142,7 @@ private def scalaPtrFunctions(bad: Def.Function)(using
   if returnAsWell then
     gen.addOne {
       GeneratedFunction.ScalaFunction(
-        bad.name,
+        bad.name.into(ScalaFunctionName),
         CType.Void,
         List(bad.parameters.toList.map { fp =>
           if isDirectStructAccess(fp.typ) then
@@ -170,12 +176,12 @@ private def cForwarderFunction(
     bad: Def.Function
 )(using Config, AliasResolver): GeneratedFunction.CFunction =
   GeneratedFunction.CFunction(
-    externFuncName(bad.name),
+    externFuncName(bad.name.into(CFunctionName)),
     bad.returnType,
     bad.originalCType,
     bad.parameters.toList,
     CFunctionBody.Delegate(
-      bad.name,
+      bad.name.into(CFunctionName),
       bad.parameters.map(_.typ).zipWithIndex.toSet.flatMap { (p, i) =>
         if isDirectStructAccess(p) then Some(i)
         else None
@@ -208,7 +214,7 @@ def functionRewriter(badFunction: Def.Function)(using
   else
     Seq(
       GeneratedFunction.ScalaFunction(
-        badFunction.name,
+        badFunction.name.into(ScalaFunctionName),
         badFunction.returnType,
         List(badFunction.parameters.toList),
         ScalaFunctionBody.Extern,
