@@ -15,3 +15,6 @@ target
 **/target/**
 project/project
 project/metals.sbt
+
+docs/_site
+docs/mdoc-invocation.txt

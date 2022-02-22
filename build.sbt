@@ -328,6 +328,25 @@ lazy val examples = project
     }
   )
 
+lazy val docs =
+  project
+    .in(file("docs"))
+    .enablePlugins(SubatomicPlugin)
+    .settings(
+      scalaVersion := Versions.Scala3,
+      fork := true,
+      publish / skip := true,
+      // To react to asset changes
+      watchSources += WatchSource(
+        (ThisBuild / baseDirectory).value / "docs" / "assets"
+      ),
+      watchSources += WatchSource(
+        (ThisBuild / baseDirectory).value / "docs" / "pages"
+      ),
+      watchSources += WatchSource(
+        (ThisBuild / baseDirectory).value / "docs" / "blog"
+      )
+    )
 // --------------HELPERS-------------------------
 
 def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
@@ -467,6 +486,11 @@ def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
 }
 
 // --------------SETTINGS-------------------------
+ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
+
+addCommandAlias("buildSite", "docs/runMain bindgen.docs.Docs build")
+addCommandAlias("buildBlog", "docs/runMain bindgen.docs.DevBlog build")
+
 lazy val nativeCommon = Seq(
   scalaVersion := Versions.Scala3
 )
