@@ -152,6 +152,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: [pre_release_check]
+    name: Website
     steps:
       - uses: actions/checkout@v2
 
