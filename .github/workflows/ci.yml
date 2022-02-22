@@ -151,20 +151,25 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [release]
-    if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+    needs: [pre_release_check]
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-java@v2
         with:
           distribution: 'temurin' 
           java-version: '17'
+
       - uses: coursier/cache-action@v3      
+
       - run: git fetch --unshallow
+
       - name: Build site
-        run: sbt "buildSite --destination $(pwd)/_site; buildBlog --destination $(pwd)/_site/blog"
+        run: sbt "buildSite --destination $(pwd)/_site"
+
       - name: Publish gh-pages
         uses: peaceiris/actions-gh-pages@v3
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
