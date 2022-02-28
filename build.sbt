@@ -129,7 +129,7 @@ lazy val bindgen = project
         changes.created.map(_.toFile) ++
           changes.modified.map(_.toFile) ++
           missing
-      val builder = new BindingBuilder(binary)
+      val builder = new BindingBuilder(binary).withLogLevel(LogLevel.Trace)
 
       val existing = (expectedScalaFiles -- toRebuild).map(_._2)
 
@@ -158,7 +158,7 @@ lazy val bindgen = project
         changes.created.map(_.toFile) ++
           changes.modified.map(_.toFile) ++
           missing
-      val builder = new BindingBuilder(binary)
+      val builder = new BindingBuilder(binary).withLogLevel(LogLevel.Trace)
 
       val existing = (expectedCFiles -- toRebuild).map(_._2)
 
@@ -525,6 +525,7 @@ addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
 
 inThisBuild(
   Seq(
+    concurrentRestrictions += Tags.limitAll(1),
     organization := "com.indoorvivants",
     organizationName := "Anton Sviridov",
     homepage := Some(url("https://github.com/indoorvivants/sn-bindgen")),
