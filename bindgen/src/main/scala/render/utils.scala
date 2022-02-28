@@ -18,7 +18,8 @@ def escape(name: String) =
       "null",
       "match",
       "true",
-      "false"
+      "false",
+      "final"
     )
   if keywords.contains(name) then s"`$name`" else name
 end escape

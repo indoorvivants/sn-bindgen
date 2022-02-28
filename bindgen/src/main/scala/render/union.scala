@@ -43,7 +43,7 @@ def union(model: Def.Union, line: Appender)(using Config, AliasResolver) =
             s"def ${escape(fieldName.value)}: $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
           )
           line(
-            s"def ${escape(fieldName.value)}_=(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
+            s"def ${escape(fieldName.value + "_=")}(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
           )
         }
       }

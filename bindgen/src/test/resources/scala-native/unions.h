@@ -10,3 +10,9 @@ typedef union UnionOverlapping {
 } UnionOverlapping;
 
 typedef union empty_union UnionEmpty;
+
+typedef union test_keywords {
+  char object;
+  long final;
+  void* class;
+} UnionKeywords;
