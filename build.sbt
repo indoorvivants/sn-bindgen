@@ -525,7 +525,11 @@ addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
 
 inThisBuild(
   Seq(
-    concurrentRestrictions += Tags.limitAll(1),
+    concurrentRestrictions ++= {
+      if (Platform.os == Platform.OS.Windows && sys.env.contains("CI"))
+        Seq(Tags.limitAll(1))
+      else Seq.empty
+    },
     organization := "com.indoorvivants",
     organizationName := "Anton Sviridov",
     homepage := Some(url("https://github.com/indoorvivants/sn-bindgen")),
