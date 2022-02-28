@@ -8,3 +8,5 @@ typedef union UnionOverlapping {
   long p[35];
   char d[40];
 } UnionOverlapping;
+
+typedef union empty_union UnionEmpty;
