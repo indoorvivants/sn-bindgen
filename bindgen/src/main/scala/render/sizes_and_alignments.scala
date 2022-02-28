@@ -79,7 +79,7 @@ def staticSize(typ: CType)(using AliasResolver): CSize =
       align(res, alignment(typ))
     case Union(fields) =>
       // TODO: are unions aligned on any boundary?
-      fields.map(staticSize).max
+      fields.map(staticSize).maxOption.getOrElse(1.toULong)
     case Reference(Name.Model(name))   => staticSize(aliasResolver(name))
     case Reference(Name.BuiltIn(name)) => name.size
     case Bool                          => 1.toULong

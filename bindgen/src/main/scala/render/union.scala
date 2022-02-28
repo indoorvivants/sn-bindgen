@@ -21,6 +21,8 @@ def union(model: Def.Union, line: Appender)(using Config, AliasResolver) =
       }
       model.fields.foreach { case (fieldName, fieldType) =>
         val typ = scalaType(fieldType)
+        // It's important we don't use the escape(...) function here
+        line(s"@scala.annotation.targetName(\"apply_${fieldName.value}\")")
         line(
           s"def apply(${escape(fieldName.value)}: $typ)(using Zone): Ptr[$structName] ="
         )
@@ -41,7 +43,7 @@ def union(model: Def.Union, line: Appender)(using Config, AliasResolver) =
             s"def ${escape(fieldName.value)}: $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
           )
           line(
-            s"def ${escape(fieldName.value)}_=(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
+            s"def ${escape(fieldName.value + "_=")}(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
           )
         }
       }
