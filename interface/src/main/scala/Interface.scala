@@ -76,8 +76,7 @@ class BindingBuilder(binary: File) {
       cFile: String,
       linkName: Option[String],
       cImports: List[String],
-      clangFlags: List[String],
-      exclusivePrefixes: List[String]
+      clangFlags: List[String]
   ) {
     def toCommand(lang: BindingLang): List[String] = {
       val sb = List.newBuilder[String]
@@ -102,9 +101,6 @@ class BindingBuilder(binary: File) {
       clangFlags.foreach { clangFlag =>
         arg("clang", clangFlag)
       }
-      exclusivePrefixes.foreach { prefix =>
-        arg("exclusive-prefix", prefix)
-      }
       flag(level.str)
       if (lang == BindingLang.Scala)
         flag("scala")
@@ -120,8 +116,7 @@ class BindingBuilder(binary: File) {
       packageName: String,
       linkName: Option[String] = None,
       cImports: List[String] = Nil,
-      clangFlags: List[String] = Nil,
-      exclusivePrefixes: List[String] = Nil
+      clangFlags: List[String] = Nil
   ) = {
     bindings +=
       Binding(
@@ -131,8 +126,7 @@ class BindingBuilder(binary: File) {
         cFile = s"$packageName.c",
         scalaFile = s"$packageName.scala",
         cImports = cImports,
-        clangFlags = clangFlags,
-        exclusivePrefixes = exclusivePrefixes
+        clangFlags = clangFlags
       )
 
     this

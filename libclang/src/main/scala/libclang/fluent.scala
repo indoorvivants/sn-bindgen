@@ -5,16 +5,12 @@ import types.*
 import scala.scalanative.unsafe.Zone
 import scala.annotation.targetName
 import scala.scalanative.unsigned.*
-import libclang.enumerations.CXCursorKind
 
 object fluent:
   extension (cursor: CXCursor)
     def location(using Zone): CXSourceLocation = clang_getCursorLocation(cursor)
     def spelling(using Zone): String = clang_getCursorSpelling(cursor).string
     def tpe(using Zone): CXType = clang_getCursorType(cursor)
-
-  extension (cursorKind: CXCursorKind)
-    def spelling(using Zone) = clang_getCursorKindSpelling(cursorKind).string
 
   extension (tpe: CXType)
     @targetName("tpe_spelling")

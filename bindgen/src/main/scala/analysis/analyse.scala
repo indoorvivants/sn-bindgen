@@ -188,12 +188,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
   val binding = (!cxClientData)._1
   addBuiltInAliases(binding)
-  val closure = computeClosure(binding.named.filter { n =>
-    val name = n._1.n
-
-    if (config.exclusivePrefix.isEmpty) then true
-    else config.exclusivePrefix.exists(ep => name.startsWith(ep.value))
-  }.toMap)
+  val closure = computeClosure(binding.named.toMap)
 
   trace(s"Defined or used in main file: ${closure}")
 

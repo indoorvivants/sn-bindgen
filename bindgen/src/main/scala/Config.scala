@@ -10,8 +10,7 @@ case class Config(
     cImports: List[CImport],
     clangFlags: List[ClangFlag] = Nil,
     quiet: Quiet = Quiet.No,
-    minLogPriority: MinLogPriority = MinLogPriority(3),
-    exclusivePrefix: List[ExclusivePrefix] = Nil
+    minLogPriority: MinLogPriority = MinLogPriority(3)
 )
 
 opaque type Quiet = Boolean
@@ -19,9 +18,6 @@ object Quiet extends YesNo[Quiet]
 
 enum Lang:
   case Scala, C
-
-opaque type ExclusivePrefix = String
-object ExclusivePrefix extends bindgen.OpaqueString[ExclusivePrefix]
 
 opaque type PackageName = String
 object PackageName extends bindgen.OpaqueString[PackageName]

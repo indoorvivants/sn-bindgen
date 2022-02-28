@@ -91,15 +91,6 @@ object CLI:
     .map(_.getOrElse(LogLevel.priority(LogLevel.warning)))
     .map(MinLogPriority.apply)
 
-  private val exclusivePrefix = Opts
-    .options[String](
-      "exclusive-prefix",
-      help = "When provided, "
-    )
-    .map(_.toList)
-    .withDefault(Nil)
-    .map(_.map(ExclusivePrefix.apply))
-
   private val indentation = Opts
     .option[Int](
       "base-indentation",
@@ -123,8 +114,7 @@ object CLI:
       cImport,
       clangFlag,
       quiet,
-      minLogPriority,
-      exclusivePrefix
+      minLogPriority
     ).mapN(Config.apply)
   }
 end CLI
