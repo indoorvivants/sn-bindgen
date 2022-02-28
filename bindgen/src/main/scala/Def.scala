@@ -77,7 +77,8 @@ enum Def:
       var name: FunctionName,
       var returnType: CType,
       var parameters: ListBuffer[FunctionParameter],
-      val originalCType: OriginalCType
+      val originalCType: OriginalCType,
+      var numArguments: Int
   )
   case Alias(name: String, underlying: CType)
 

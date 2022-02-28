@@ -23,9 +23,12 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
       originalCType = OriginalCType(
         constructType(returnType),
         clang_getTypeSpelling(returnType).string
-      )
+      ),
+      numArguments = clang_getNumArgTypes(typ)
     )
   )
+
+  import libclang.fluent.*
 
   clang_visitChildren(
     functionCursor,
@@ -33,8 +36,8 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
       val (builder, zone, config) = (!d.unwrap[Captured[Def.Function]])
       given Zone = zone
       given Config = config
-      if cursor.kind == CXCursorKind.CXCursor_ParmDecl then
-        val origParamName = Option(clang_getCursorSpelling(cursor).string)
+      if cursor.kind == CXCursorKind.CXCursor_ParmDecl && builder.parameters.size < builder.numArguments then
+        val origParamName = Option(cursor.spelling)
           .filter(_.nonEmpty)
 
         val parameterName = origParamName
@@ -53,10 +56,11 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
           )
         )
         CXChildVisitResult.CXChildVisit_Continue
-      else CXChildVisitResult.CXChildVisit_Recurse
+      else CXChildVisitResult.CXChildVisit_Continue
       end if
     },
     CXClientData.wrap(mem)
   )
+
   (!mem)._1
 end visitFunction
