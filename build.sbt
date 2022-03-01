@@ -53,6 +53,7 @@ lazy val iface = projectMatrix
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     Test / fork := true,
     Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString,
+    Test / envVars += "BINDGEN_CLANG_PATH" -> (bindgen / Compile / nativeClang).value.toString,
     Compile / resourceGenerators += Def.task {
       val out =
         (Compile / managedResourceDirectories).value.head / "sn-bindgen.properties"

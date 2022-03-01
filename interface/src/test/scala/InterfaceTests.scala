@@ -7,10 +7,12 @@ import java.nio.file.Files
 import Utils.*
 import scala.util.Try
 import scala.util.Success
+import java.nio.file.Paths
 
 class TestFunctions {
+  val plat = Platform.detectClangInfo(Paths.get(sys.env("BINDGEN_CLANG_PATH")))
   private def builder =
-    new BindingBuilder(new File(sys.env("BINARY"))).withLogLevel(LogLevel.Warn)
+    new BindingBuilder(new File(sys.env("BINARY")))
 
   val c_code = """
       | unsigned run(int i, float h);
@@ -32,39 +34,49 @@ class TestFunctions {
 
   @Test def writes_scala_file(): Unit = isolate { probe =>
     builder
-      .define(headerFile, "lib_check")
-      .generate(probe.scalaFiles, BindingLang.Scala)
+      .generate(
+        Seq(Binding(headerFile, "lib_check")),
+        probe.scalaFiles,
+        BindingLang.Scala,
+        plat
+      )
 
     assertTrue(exists(probe.scalaFiles / "lib_check.scala"))
   }
 
   @Test def writes_c_file(): Unit = isolate { probe =>
     builder
-      .define(headerFile, "lib_check")
-      .generate(probe.cFiles, BindingLang.C)
+      .generate(
+        Seq(Binding(headerFile, "lib_check")),
+        probe.cFiles,
+        BindingLang.C,
+        plat
+      )
 
     assertTrue(exists(probe.cFiles / "lib_check.c"))
   }
 
   @Test def checks_header_file_exists(): Unit = isolate { probe =>
+    val bind = Binding(probe.cFiles / scala.util.Random.nextInt.toString, "bla")
+
     def invoke = builder
-      .define(probe.cFiles / scala.util.Random.nextInt.toString, "bla")
-      .generate(probe.cFiles, BindingLang.C)
+      .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
 
     assertTrue(Try(invoke).isFailure)
   }
   @Test def checks_header_is_a_file(): Unit = isolate { probe =>
+    val bind = Binding(probe.cFiles, "bla")
     def invoke = builder
-      .define(probe.cFiles, "bla")
-      .generate(probe.cFiles, BindingLang.C)
+      .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
 
     assertTrue(Try(invoke).isFailure)
   }
 
   @Test def adds_c_imports(): Unit = isolate { probe =>
+    val bind =
+      Binding(headerFile, "lib_check", cImports = List("my_cool_library.h"))
     builder
-      .define(headerFile, "lib_check", cImports = List("my_cool_library.h"))
-      .generate(probe.cFiles, BindingLang.C)
+      .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
 
     assertEquals(
       lines(probe.cFiles / "lib_check.c")
@@ -78,9 +90,11 @@ class TestFunctions {
   }
 
   @Test def adds_link_name(): Unit = isolate { probe =>
+    val bind =
+      Binding(headerFile, "lib_check", linkName = Some("my-awesome-library"))
+
     builder
-      .define(headerFile, "lib_check", linkName = Some("my-awesome-library"))
-      .generate(probe.scalaFiles, BindingLang.Scala)
+      .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
     assertEquals(
       lines(probe.scalaFiles / "lib_check.scala")
@@ -91,9 +105,10 @@ class TestFunctions {
   }
 
   @Test def adds_package_name(): Unit = isolate { probe =>
+    val bind =
+      Binding(headerFile, "lib_my_awesome_library")
     builder
-      .define(headerFile, "lib_my_awesome_library")
-      .generate(probe.scalaFiles, BindingLang.Scala)
+      .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
     assertEquals(
       lines(probe.scalaFiles / "lib_my_awesome_library.scala").head,
@@ -108,24 +123,26 @@ class TestFunctions {
       fw.write("#include \"headers.h\"")
     }
 
+    val noFlags = Binding(customCFile, "lib_check")
+
     // without any clang flags, this file won't be found and clang will fail
     val opt = Try(
       builder
-        .define(customCFile, "lib_check")
-        .generate(probe.scalaFiles, BindingLang.Scala)
+        .generate(Seq(noFlags), probe.scalaFiles, BindingLang.Scala, plat)
     )
 
     assertTrue(opt.isFailure)
 
+    val withFlags =
+      Binding(
+        customCFile,
+        "lib_check",
+        clangFlags = List(s"-I${headerFile.getParentFile()}")
+      )
     // if we add additional `-I` flag with correct location, it should succeed
     val optFixed = Try(
       builder
-        .define(
-          customCFile,
-          "lib_check",
-          clangFlags = List(s"-I${headerFile.getParentFile()}")
-        )
-        .generate(probe.scalaFiles, BindingLang.Scala)
+        .generate(Seq(withFlags), probe.scalaFiles, BindingLang.Scala, plat)
     )
 
     assertEquals(Success(Seq(probe.scalaFiles / "lib_check.scala")), optFixed)
