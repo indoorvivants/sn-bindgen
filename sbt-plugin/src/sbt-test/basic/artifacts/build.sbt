@@ -1,7 +1,14 @@
 enablePlugins(BindgenPlugin, ScalaNativePlugin)
 
+import bindgen.interface.Binding
+
 scalaVersion := "3.1.1"
 
-Bindgen.bindings := { builder =>
-  builder.define(baseDirectory.value / "header.h", "libtest")
+bindgenBindings := {
+  Seq(
+    Binding(
+      baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
+      "libtest"
+    )
+  )
 }

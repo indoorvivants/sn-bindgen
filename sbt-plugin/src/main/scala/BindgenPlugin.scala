@@ -2,27 +2,35 @@ package bindgen.plugin
 import java.util.Properties
 
 import sbt.Keys.*
+import sbt.nio.Keys.*
 import sbt.*
 import bindgen.interface.Platform
 import bindgen.interface.BindingBuilder
 import bindgen.interface.BindingLang
 import scala.util.Try
+import bindgen.interface.Binding
+import scala.scalanative.sbtplugin.ScalaNativePlugin
 
 object BindgenPlugin extends AutoPlugin {
   object autoImport {
-    object Bindgen {
-      val generatorVersion = settingKey[String]("")
-      val binary = taskKey[File]("")
-      val bindings = taskKey[BindingBuilder => BindingBuilder]("")
-    }
+    val bindgenVersion = settingKey[String]("")
+    val bindgenBinary = taskKey[File]("")
+    val bindgenBindings = settingKey[Seq[Binding]]("")
+    val bindgenGenerateScalaSources = taskKey[Seq[File]]("")
+    val bindgenGenerateCSources = taskKey[Seq[File]]("")
+    val bindgenClangInfo = taskKey[Platform.ClangInfo]("")
   }
+
+  override def requires: Plugins = ScalaNativePlugin
+  import ScalaNativePlugin.autoImport.nativeClang
 
   import autoImport.*
 
   override def projectSettings = Seq(
-    Bindgen.generatorVersion := Platform.BuildInfo.version,
-    Bindgen.bindings := identity,
-    Bindgen.binary := {
+    bindgenVersion := Platform.BuildInfo.version,
+    bindgenBindings := Seq.empty,
+    bindgenClangInfo := Platform.detectClangInfo(nativeClang.value.toPath),
+    bindgenBinary := {
       val res = dependencyResolution.value
       def getJars(mid: ModuleID) = {
 
@@ -47,7 +55,7 @@ object BindgenPlugin extends AutoPlugin {
           ModuleID(
             "com.indoorvivants",
             "bindgen_native0.4_3",
-            Bindgen.generatorVersion.value
+            bindgenVersion.value
           ).intransitive().classifier(platform.string)
         ).headOption
       }
@@ -64,19 +72,54 @@ object BindgenPlugin extends AutoPlugin {
       file
 
     },
-    Compile / sourceGenerators += Def.task {
-      val builder = new BindingBuilder(Bindgen.binary.value)
-      val defined = Bindgen.bindings.value.apply(builder)
-      val destination = (Compile / sourceManaged).value
-
-      defined.generate(destination, BindingLang.Scala)
+    Compile / bindgenGenerateScalaSources / fileInputs ++= {
+      val defined = bindgenBindings.value
+      defined.map(_.headerFile.toPath).map(_.toGlob)
     },
-    Compile / resourceGenerators += Def.task {
-      val builder = new BindingBuilder(Bindgen.binary.value)
-      val defined = Bindgen.bindings.value.apply(builder)
+    Compile / bindgenGenerateScalaSources / fileOutputs ++= {
+      val defined = bindgenBindings.value
+      val destination = (Compile / sourceManaged).value
+      defined
+        .map(bind => destination.toPath.resolve(bind.scalaFile))
+        .map(_.toGlob)
+    },
+    Compile / bindgenGenerateCSources / fileInputs ++= {
+      val defined = bindgenBindings.value
+      defined.map(_.headerFile.toPath).map(_.toGlob)
+    },
+    Compile / bindgenGenerateCSources / fileOutputs ++= {
+      val defined = bindgenBindings.value
+      val destination = (Compile / resourceManaged).value / "scala-native"
+      defined
+        .map(bind => destination.toPath.resolve(bind.cFile))
+        .map(_.toGlob)
+    },
+    Compile / bindgenGenerateScalaSources := {
+      val builder = new BindingBuilder(bindgenBinary.value)
+      val defined = bindgenBindings.value
+      val destination = (Compile / sourceManaged).value
+      val report = bindgenGenerateScalaSources.inputFileChanges
+
+      val definitely = report.created ++ report.modified
+
+      println(report)
+
+      builder.generate(
+        defined,
+        destination,
+        BindingLang.Scala,
+        bindgenClangInfo.value
+      )
+    },
+    Compile / bindgenGenerateCSources := {
+      val builder = new BindingBuilder(bindgenBinary.value)
+      val defined = bindgenBindings.value
       val destination = (Compile / resourceManaged).value / "scala-native"
 
-      defined.generate(destination, BindingLang.C)
-    }
+      builder
+        .generate(defined, destination, BindingLang.C, bindgenClangInfo.value)
+    },
+    Compile / sourceGenerators += Compile / bindgenGenerateScalaSources,
+    Compile / resourceGenerators += Compile / bindgenGenerateCSources
   )
 }
