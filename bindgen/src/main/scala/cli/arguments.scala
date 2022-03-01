@@ -76,6 +76,15 @@ object CLI:
     .withDefault(Nil)
     .map(_.map(ClangFlag.apply))
 
+  private val clangInclude = Opts
+    .options[String](
+      "clang-include",
+      help = "List of include paths passed to Clang"
+    )
+    .map(_.toList)
+    .withDefault(Nil)
+    .map(_.map(s => ClangFlag.apply(s"-I$s")))
+
   private val minLogPriority = List(
     "trace" -> LogLevel.trace,
     "info" -> LogLevel.info,
@@ -121,7 +130,7 @@ object CLI:
       indentation,
       lang,
       cImport,
-      clangFlag,
+      (clangInclude, clangFlag).mapN(_ ++ _),
       quiet,
       minLogPriority,
       exclusivePrefix

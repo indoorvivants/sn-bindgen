@@ -1,5 +1,6 @@
 import _root_.bindgen.interface.Platform.OS.*
 import _root_.bindgen.interface.Platform.ClangInfo
+import _root_.bindgen.interface.Binding
 import coursierapi.ResolutionParams
 import coursierapi.Repository
 import sbt.io.Using
@@ -52,6 +53,7 @@ lazy val iface = projectMatrix
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     Test / fork := true,
     Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString,
+    Test / envVars += "BINDGEN_CLANG_PATH" -> (bindgen / Compile / nativeClang).value.toString,
     Compile / resourceGenerators += Def.task {
       val out =
         (Compile / managedResourceDirectories).value.head / "sn-bindgen.properties"
@@ -129,16 +131,22 @@ lazy val bindgen = project
         changes.created.map(_.toFile) ++
           changes.modified.map(_.toFile) ++
           missing
-      val builder = new BindingBuilder(binary).withLogLevel(LogLevel.Trace)
+      val builder = new BindingBuilder(binary)
 
       val existing = (expectedScalaFiles -- toRebuild).map(_._2)
 
-      toRebuild.foreach { header =>
+      val defined = toRebuild.map { header =>
         val name = headerSpec(header)
-        builder.define(header, s"lib_test_$name")
+        Binding(header, s"lib_test_$name", logLevel = LogLevel.Trace)
       }
 
-      builder.generate(scalaFiles, BindingLang.Scala) ++ existing
+      builder
+        .generate(
+          defined,
+          scalaFiles,
+          BindingLang.Scala,
+          clangInfo.value
+        ) ++ existing
 
     },
     Test / generateCSources := {
@@ -158,16 +166,22 @@ lazy val bindgen = project
         changes.created.map(_.toFile) ++
           changes.modified.map(_.toFile) ++
           missing
-      val builder = new BindingBuilder(binary).withLogLevel(LogLevel.Trace)
+      val builder = new BindingBuilder(binary)
 
       val existing = (expectedCFiles -- toRebuild).map(_._2)
 
-      toRebuild.foreach { header =>
+      val defined = toRebuild.map { header =>
         val name = headerSpec(header)
-        builder.define(header, s"lib_test_$name", cImports = List(s"$name.h"))
+        Binding(
+          header,
+          s"lib_test_$name",
+          cImports = List(s"$name.h"),
+          logLevel = LogLevel.Trace
+        )
       }
 
-      builder.generate(cFiles, BindingLang.C) ++ existing
+      builder
+        .generate(defined, cFiles, BindingLang.C, clangInfo.value) ++ existing
     },
     Test / sourceGenerators += (Test / generateScalaSources),
     Test / resourceGenerators += (Test / generateCSources)
@@ -249,6 +263,7 @@ lazy val plugin = projectMatrix
   .dependsOn(iface)
   .settings(
     sbtPlugin := true,
+    addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.3"),
     pluginCrossBuild / sbtVersion := "1.6.1",
     moduleName := "bindgen-sbt-plugin",
     scriptedLaunchOpts := {
@@ -388,9 +403,9 @@ def generateExampleBindings(
 
   val builder = new BindingBuilder(binary)
 
-  sampleBindings(base / "libraries", builder, ci)
+  val defined = sampleBindings(base / "libraries", builder, ci)
 
-  builder.generate(destination, lang)
+  builder.generate(defined, destination, lang, ci)
 }
 
 def environmentConfiguration(conf: NativeConfig): NativeConfig = {
@@ -415,74 +430,40 @@ def usesLibClang(conf: NativeConfig) = {
     )
 }
 def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
-  import builder.define
 
   val clangInclude = ci.includePaths.map("-I" + _)
   val llvmInclude = ci.llvmInclude.map("-I" + _)
 
-  define(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h"))
-
-  define(
-    location /
-      "Clang-Index.h",
-    "libclang",
-    Some("clang"),
-    List("clang-c/Index.h"),
-    llvmInclude
-  )
-  define(
-    location /
-      "tree-sitter.h",
-    "libtreesitter",
-    Some("treesitter"),
-    cImports = List("tree_sitter/api.h"),
-    llvmInclude ++
-      clangInclude ++
-      List("-std=gnu99")
-  )
-
-  define(
-    location /
-      "raylib.h",
-    "libraylib",
-    Some("raylib"),
-    List("raylib.h"),
-    llvmInclude ++ clangInclude
-  )
-  /* define( */
-  /*   location / */
-  /*     "sokol_gfx.h", */
-  /*   "sokol_gfx", */
-  /*   Some("sokol_gfx"), */
-  /*   List("sokol_gfx.h"), */
-  /*   llvmInclude ++ clangInclude */
-  /* ) */
-
-  if (Platform.target.os == Platform.OS.MacOS) {
-    val curlIncludes =
-      if (Platform.arch == Platform.Arch.x86_64)
-        List("-I/usr/local/opt/curl/include/curl")
-      else
-        List("-I/opt/homebrew/opt/curl/include/curl")
-
-    define(
+  Seq(
+    Binding(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h")),
+    Binding(
       location /
-        "curl.h",
-      "libcurl",
-      Some("curl"),
-      List("curl.h"),
-      clangInclude ++ curlIncludes
+        "Clang-Index.h",
+      "libclang",
+      Some("clang"),
+      List("clang-c/Index.h"),
+      llvmInclude
+    ),
+    Binding(
+      location /
+        "tree-sitter.h",
+      "libtreesitter",
+      Some("treesitter"),
+      cImports = List("tree_sitter/api.h"),
+      llvmInclude ++
+        clangInclude ++
+        List("-std=gnu99")
+    ),
+    Binding(
+      location /
+        "raylib.h",
+      "libraylib",
+      Some("raylib"),
+      List("raylib.h"),
+      llvmInclude ++ clangInclude
     )
-  }
-  // Compiling this monster crashes the compiler :shrug:
-  /* define( */
-  /*   location / */
-  /*     "nuklear.h", */
-  /*   "libnuklear", */
-  /*   Some("nuklear"), */
-  /*   List("nuklear.h"), */
-  /*   List("-DNK_IMPLEMENTATION=1", "-DNK_INCLUDE_FIXED_TYPES=1") */
-  /* ) */
+  )
+
 }
 
 // --------------SETTINGS-------------------------
@@ -519,6 +500,11 @@ lazy val clangDetection = Seq(clangInfo := {
 addCommandAlias(
   "ci",
   "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted"
+)
+
+addCommandAlias(
+  "devPublish",
+  "publishLocal; localBindgenArtifact/publishLocal; show bindgen/version"
 )
 
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")

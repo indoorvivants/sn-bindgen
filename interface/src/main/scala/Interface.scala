@@ -10,6 +10,7 @@ import java.io.BufferedWriter
 import java.io.OutputStreamWriter
 import java.io.FileOutputStream
 import java.io.Writer
+import java.nio.file.Path
 
 sealed trait BindingLang extends Product with Serializable
 object BindingLang {
@@ -56,6 +57,87 @@ object Utils {
 
 import Utils.*
 
+case class Binding private (
+    headerFile: File,
+    packageName: String,
+    scalaFile: String,
+    cFile: String,
+    linkName: Option[String],
+    cImports: List[String],
+    clangFlags: List[String],
+    exclusivePrefixes: List[String],
+    logLevel: LogLevel,
+    systemIncludes: List[Includes]
+) {
+  def toCommand(lang: BindingLang): List[String] = {
+    val sb = List.newBuilder[String]
+
+    def arg(name: String, value: String) =
+      sb ++= Seq(s"--$name", value)
+
+    def flag(name: String) =
+      sb += s"--$name"
+
+    arg(
+      "header",
+      headerFile.toPath().toAbsolutePath().toString
+    )
+    arg("package", packageName)
+    linkName.foreach { link =>
+      arg("link-name", link)
+    }
+    cImports.foreach { cimp =>
+      arg("c-import", cimp)
+    }
+    clangFlags.foreach { clangFlag =>
+      arg("clang", clangFlag)
+    }
+    exclusivePrefixes.foreach { prefix =>
+      arg("exclusive-prefix", prefix)
+    }
+    flag(logLevel.str)
+    if (lang == BindingLang.Scala)
+      flag("scala")
+    else
+      flag("c")
+
+    sb.result()
+  }
+
+}
+
+object Binding {
+  def apply(
+      headerFile: File,
+      packageName: String,
+      linkName: Option[String] = None,
+      cImports: List[String] = Nil,
+      clangFlags: List[String] = Nil,
+      exclusivePrefixes: List[String] = Nil,
+      logLevel: LogLevel = LogLevel.Info,
+      systemIncludes: List[Includes] = List(Includes.ClangSearchPath)
+  ) = {
+    new Binding(
+      headerFile = headerFile,
+      packageName = packageName,
+      linkName = linkName,
+      cFile = s"$packageName.c",
+      scalaFile = s"$packageName.scala",
+      cImports = cImports,
+      clangFlags = clangFlags,
+      exclusivePrefixes = exclusivePrefixes,
+      logLevel = LogLevel.Info,
+      systemIncludes = systemIncludes
+    )
+  }
+}
+
+sealed trait Includes extends Product with Serializable
+object Includes {
+  case object ClangSearchPath extends Includes
+  case object LLVMSources extends Includes
+}
+
 class BindingBuilder(binary: File) {
   assert(
     Files.exists(binary.toPath),
@@ -66,88 +148,16 @@ class BindingBuilder(binary: File) {
     s"Bindgen: specified binary [$binary] is not a regular file!"
   )
 
-  private val bindings = List.newBuilder[Binding]
-  private var level: LogLevel = LogLevel.Info
-
-  private case class Binding(
-      headerFile: File,
-      packageName: String,
-      scalaFile: String,
-      cFile: String,
-      linkName: Option[String],
-      cImports: List[String],
-      clangFlags: List[String],
-      exclusivePrefixes: List[String]
-  ) {
-    def toCommand(lang: BindingLang): List[String] = {
-      val sb = List.newBuilder[String]
-
-      def arg(name: String, value: String) =
-        sb ++= Seq(s"--$name", value)
-
-      def flag(name: String) =
-        sb += s"--$name"
-
-      arg(
-        "header",
-        headerFile.toPath().toAbsolutePath().toString
-      )
-      arg("package", packageName)
-      linkName.foreach { link =>
-        arg("link-name", link)
-      }
-      cImports.foreach { cimp =>
-        arg("c-import", cimp)
-      }
-      clangFlags.foreach { clangFlag =>
-        arg("clang", clangFlag)
-      }
-      exclusivePrefixes.foreach { prefix =>
-        arg("exclusive-prefix", prefix)
-      }
-      flag(level.str)
-      if (lang == BindingLang.Scala)
-        flag("scala")
-      else
-        flag("c")
-
-      sb.result()
-    }
-  }
-
-  def define(
-      headerFile: File,
-      packageName: String,
-      linkName: Option[String] = None,
-      cImports: List[String] = Nil,
-      clangFlags: List[String] = Nil,
-      exclusivePrefixes: List[String] = Nil
-  ) = {
-    bindings +=
-      Binding(
-        headerFile = headerFile,
-        packageName = packageName,
-        linkName = linkName,
-        cFile = s"$packageName.c",
-        scalaFile = s"$packageName.scala",
-        cImports = cImports,
-        clangFlags = clangFlags,
-        exclusivePrefixes = exclusivePrefixes
-      )
-
-    this
-  }
-
-  def withLogLevel(level: LogLevel): BindingBuilder = {
-    this.level = level
-    this
-  }
-
-  def generate(to: File, lang: BindingLang): Seq[File] = {
+  def generate(
+      bindings: Seq[Binding],
+      destinationDir: File,
+      lang: BindingLang,
+      ci: Platform.ClangInfo
+  ): Seq[File] = {
 
     val files = Seq.newBuilder[File]
 
-    bindings.result.foreach { binding =>
+    bindings.foreach { binding =>
       import scala.sys.process.Process
 
       val destinationFilename = lang match {
@@ -155,9 +165,12 @@ class BindingBuilder(binary: File) {
         case C     => binding.cFile
       }
 
-      val destination = to / destinationFilename
-
-      val cmd = binary.toString :: binding.toCommand(lang)
+      val destination = destinationDir / destinationFilename
+      val platformArgs =
+        if (binding.systemIncludes.contains(Includes.ClangSearchPath))
+          ci.includePaths.flatMap(path => List("--clang-include", path))
+        else Nil
+      val cmd = binary.toString :: binding.toCommand(lang) ++ platformArgs
 
       fileWriter(destination) { wr =>
         val buf = List.newBuilder[String]
@@ -166,7 +179,7 @@ class BindingBuilder(binary: File) {
             buf += o
             wr.write(o + System.lineSeparator())
           },
-          (e: String) => println(e)
+          (e: String) => System.err.println(e)
         )
 
         val result = Process(cmd).run(logger).exitValue()
