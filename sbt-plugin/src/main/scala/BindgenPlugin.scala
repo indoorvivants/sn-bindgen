@@ -132,25 +132,42 @@ object BindgenPlugin extends AutoPlugin {
   ) = {
     val builder = new BindingBuilder(binary)
     val definitely = report.created ++ report.modified
+    val out = outputs(defined, destination.toPath, lang)
+    val in = inputs(defined)
     val mapping =
       defined
-        .zip(inputs(defined))
-        .zip(outputs(defined, destination.toPath, lang))
+        .zip(in)
+        .zip(out)
 
-    val toRebuild = mapping.collect {
+    val toRebuild = Seq.newBuilder[Binding]
+    val unchangedOuts = Seq.newBuilder[File]
+
+    mapping.foreach {
       case ((binding, in), out) if !out.toFile.exists() =>
         logger.debug(
           s"(BINDGEN $lang) regenerating $in because it was either created or modified"
         )
-        binding
+        toRebuild += binding
       case ((binding, in), _) if definitely.contains(in) =>
         logger.debug(
           s"(BINDGEN $lang) regenerating $in because output was removed"
         )
-        binding
+        toRebuild += binding
+      case ((_, in), out) if !report.deleted.contains(in) =>
+        logger.debug(
+          s"(BINDGEN $lang) $in not changed, not regenerating"
+        )
+        unchangedOuts += out.toFile
+
+      case ((_, in), out) =>
+        logger.debug(
+          s"(BINDGEN $lang) $in was deleted, so stop tracking it"
+        )
+
     }
 
-    builder.generate(defined, destination, lang, ci)
+    builder.generate(toRebuild.result(), destination, lang, ci) ++
+      unchangedOuts.result()
   }
 
   def inputs(bindings: Seq[Binding]) = bindings.map(_.headerFile.toPath)
