@@ -10,6 +10,7 @@ import bindgen.interface.BindingLang
 import scala.util.Try
 import bindgen.interface.Binding
 import scala.scalanative.sbtplugin.ScalaNativePlugin
+import sbt.internal.util.ManagedLogger
 
 object BindgenPlugin extends AutoPlugin {
   object autoImport {
@@ -77,49 +78,108 @@ object BindgenPlugin extends AutoPlugin {
       defined.map(_.headerFile.toPath).map(_.toGlob)
     },
     Compile / bindgenGenerateScalaSources / fileOutputs ++= {
-      val defined = bindgenBindings.value
-      val destination = (Compile / sourceManaged).value
-      defined
-        .map(bind => destination.toPath.resolve(bind.scalaFile))
-        .map(_.toGlob)
+      outputs(
+        bindgenBindings.value,
+        (Compile / sourceManaged).value.toPath,
+        BindingLang.Scala
+      ).map(_.toGlob)
     },
     Compile / bindgenGenerateCSources / fileInputs ++= {
       val defined = bindgenBindings.value
       defined.map(_.headerFile.toPath).map(_.toGlob)
     },
     Compile / bindgenGenerateCSources / fileOutputs ++= {
-      val defined = bindgenBindings.value
-      val destination = (Compile / resourceManaged).value / "scala-native"
-      defined
-        .map(bind => destination.toPath.resolve(bind.cFile))
-        .map(_.toGlob)
+      outputs(
+        bindgenBindings.value,
+        ((Compile / resourceManaged).value / "scala-native").toPath,
+        BindingLang.C
+      ).map(_.toGlob)
     },
     Compile / bindgenGenerateScalaSources := {
-      val builder = new BindingBuilder(bindgenBinary.value)
-      val defined = bindgenBindings.value
-      val destination = (Compile / sourceManaged).value
-      val report = bindgenGenerateScalaSources.inputFileChanges
-
-      val definitely = report.created ++ report.modified
-
-      println(report)
-
-      builder.generate(
-        defined,
-        destination,
+      incremental(
+        bindgenBinary.value,
+        bindgenBindings.value,
+        (Compile / sourceManaged).value,
         BindingLang.Scala,
-        bindgenClangInfo.value
+        bindgenClangInfo.value,
+        bindgenGenerateScalaSources.inputFileChanges,
+        streams.value.log
       )
     },
     Compile / bindgenGenerateCSources := {
-      val builder = new BindingBuilder(bindgenBinary.value)
-      val defined = bindgenBindings.value
-      val destination = (Compile / resourceManaged).value / "scala-native"
-
-      builder
-        .generate(defined, destination, BindingLang.C, bindgenClangInfo.value)
+      incremental(
+        bindgenBinary.value,
+        bindgenBindings.value,
+        (Compile / resourceManaged).value / "scala-native",
+        BindingLang.C,
+        bindgenClangInfo.value,
+        bindgenGenerateCSources.inputFileChanges,
+        streams.value.log
+      )
     },
     Compile / sourceGenerators += Compile / bindgenGenerateScalaSources,
     Compile / resourceGenerators += Compile / bindgenGenerateCSources
   )
+
+  def incremental(
+      binary: File,
+      defined: Seq[Binding],
+      destination: File,
+      lang: BindingLang,
+      ci: Platform.ClangInfo,
+      report: FileChanges,
+      logger: Logger
+  ) = {
+    val builder = new BindingBuilder(binary)
+    val definitely = report.created ++ report.modified
+    val out = outputs(defined, destination.toPath, lang)
+    val in = inputs(defined)
+    val mapping =
+      defined
+        .zip(in)
+        .zip(out)
+
+    val toRebuild = Seq.newBuilder[Binding]
+    val unchangedOuts = Seq.newBuilder[File]
+
+    mapping.foreach {
+      case ((binding, in), out) if !out.toFile.exists() =>
+        logger.debug(
+          s"(BINDGEN $lang) regenerating $in because it was either created or modified"
+        )
+        toRebuild += binding
+      case ((binding, in), _) if definitely.contains(in) =>
+        logger.debug(
+          s"(BINDGEN $lang) regenerating $in because output was removed"
+        )
+        toRebuild += binding
+      case ((_, in), out) if !report.deleted.contains(in) =>
+        logger.debug(
+          s"(BINDGEN $lang) $in not changed, not regenerating"
+        )
+        unchangedOuts += out.toFile
+
+      case ((_, in), out) =>
+        logger.debug(
+          s"(BINDGEN $lang) $in was deleted, so stop tracking it"
+        )
+
+    }
+
+    builder.generate(toRebuild.result(), destination, lang, ci) ++
+      unchangedOuts.result()
+  }
+
+  def inputs(bindings: Seq[Binding]) = bindings.map(_.headerFile.toPath)
+  def outputs(
+      bindings: Seq[Binding],
+      destination: java.nio.file.Path,
+      lang: bindgen.interface.BindingLang
+  ) =
+    bindings
+      .map(bind =>
+        destination.resolve(
+          if (lang == BindingLang.C) bind.cFile else bind.scalaFile
+        )
+      )
 }
