@@ -22,3 +22,4 @@ generate comprehensive Scala 3 Native definitions from C header files.
 
 - In [Configuration](/configuration) you can see what options are available both in CLI and 
   in the SBT plugin
+
