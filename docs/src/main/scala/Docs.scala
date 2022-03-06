@@ -4,6 +4,7 @@ import subatomic.builders.librarysite.*
 import subatomic.builders.*
 import subatomic.*
 import java.time.LocalDate
+import subatomic.builders.Tracker.GoogleAnalytics
 
 def currentYear = LocalDate.now().getYear()
 
@@ -17,7 +18,8 @@ object Docs extends LibrarySite.App:
       tagline = Some("Scala 3 Native binding generator to C libraries"),
       assetsRoot = Some(os.pwd / "assets"),
       copyright = Some(s"© 2021-$currentYear Anton Sviridov"),
-      githubUrl = Some("https://github.com/indoorvivants/sn-bindgen")
+      githubUrl = Some("https://github.com/indoorvivants/sn-bindgen"),
+      trackers = Seq(GoogleAnalytics("G-2V7BY56Z37"))
     )
   override def extra(site: Site[LibrarySite.Doc]) =
     site
