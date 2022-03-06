@@ -10,7 +10,6 @@ env:
   JAVA_OPTS: "-Xmx4G"
   JVM_OPTS: "-Xmx4G"
   SBT_OPTS: "-Xmx4G"
-  SN_RELEASE: fast
 
 jobs:
   build:
@@ -34,6 +33,8 @@ jobs:
             uploaded_filename: sn-bindgen-windows-x86_64
             llvm_bin_path: C:\Program Files\LLVM\bin
     runs-on: ${{ matrix.os }}
+    env:
+      SN_RELEASE: fast
     steps:
       # This step is important to make sure scalafmt 
       # checks don't fail
@@ -151,7 +152,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    # needs: [pre_release_check]
+    needs: [pre_release_check]
     name: Website
     steps:
       - uses: actions/checkout@v2
