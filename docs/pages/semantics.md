@@ -80,3 +80,63 @@ Small bad_return_type();
 """
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
+
+### Enums are generated for specific C type
+
+Whatever type clang reports for a particular enum - that's the type that will be
+used for the enum.
+
+This is important, as on Windows enums are `int` by default, whereas on Linux and OS X they are `unsigned int` (if there's no negative elements).
+
+This documentation is built on Linux.
+
+```scala mdoc:nest:passthrough
+val cSource = 
+"""
+typedef enum {
+  U_X = 1,
+  U_Y = 4,
+  U_Z = 228
+} MyUnsigned;
+
+typedef enum {
+  X = -1,
+  Y = 4,
+  Z = 228
+} MySigned;
+"""
+println(bindgen.BindgenRender.render(cSource, "libtest"))
+```
+
+### Function pointers are defined as opaque types
+
+The inlining in `apply` method is important - it's a restricting of Scala Native 
+that the function must be statically known.
+
+```scala mdoc:nest:passthrough
+val cSource = 
+"""
+typedef void* Cursor;
+typedef int (*Visitor)(Cursor*);
+"""
+println(bindgen.BindgenRender.render(cSource, "libtest"))
+```
+
+### Recursive structs are rewritten with opaque pointers
+
+This is invisible to the user, so doesn't impact the experience, but 
+can complicate reading the code.
+
+Scala cannot have recursive type aliases.
+
+```scala mdoc:nest:passthrough
+val cSource = 
+"""
+typedef struct Arr;
+
+typedef struct {
+  struct Arr* nested;
+} Arr;
+"""
+println(bindgen.BindgenRender.render(cSource, "libtest"))
+```
