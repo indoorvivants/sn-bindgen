@@ -103,7 +103,9 @@ object CLI:
   private val exclusivePrefix = Opts
     .options[String](
       "exclusive-prefix",
-      help = "When provided, "
+      help =
+        "When provided, only definitions that start with this prefix will be" +
+          "rendered"
     )
     .map(_.toList)
     .withDefault(Nil)

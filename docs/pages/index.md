@@ -1,7 +1,6 @@
 ---
 title: Home
 index: true
-mdoc: true
 ---
 
 SN Bindgen is a set of tools to generate Scala Native bindings for C libraries 
@@ -23,6 +22,9 @@ generate comprehensive Scala 3 Native definitions from C header files.
 - In [Configuration](/configuration) you can see what options are available both in CLI and 
   in the SBT plugin
 
+There's a GIF, therefore it works
+--
+
 As a motivating example, here's a program written with bindings to [Raylib](https://www.raylib.com/examples.html), running on Apple M1.
 
 <img title = "A GIF showing the program running, and a code modification" src ="https://user-images.githubusercontent.com/1052965/156929377-5494b58a-41f3-4fff-8462-435a41929277.gif"  style = "width: 100%">
@@ -37,8 +39,6 @@ import scala.scalanative.unsigned.*
 @main def hello_raylib =
   val screenWidth = 800
   val screenHeight = 450
-  import libraylib.functions.*
-  import libraylib.types.*
 
   InitWindow(
     screenWidth,

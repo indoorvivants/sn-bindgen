@@ -13,7 +13,7 @@ object Docs extends LibrarySite.App:
       name = "SN bindgen",
       contentRoot = os.pwd / "pages",
       highlighting = SyntaxHighlighting.HighlightJS.default
-        .copy(theme = "monokai", languages = List("scala", "c")),
+        .copy(theme = "androidstudio", languages = List("scala", "c")),
       tagline = Some("Scala 3 Native binding generator to C libraries"),
       assetsRoot = Some(os.pwd / "assets"),
       copyright = Some(s"© 2021-$currentYear Anton Sviridov"),
