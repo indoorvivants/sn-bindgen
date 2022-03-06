@@ -37,9 +37,9 @@ def enumeration(model: Def.Enum, line: Appender)(using
     }
     line(s"extension (a: $opaqueType)")
     nest {
-      line(s"def &(b: $opaqueType): $opaqueType = a & b")
-      line(s"def |(b: $opaqueType): $opaqueType = a | b")
-      line(s"def is(b: $opaqueType): Boolean = (a & b) == b")
+      line(s"inline def &(b: $opaqueType): $opaqueType = a & b")
+      line(s"inline def |(b: $opaqueType): $opaqueType = a | b")
+      line(s"inline def is(b: $opaqueType): Boolean = (a & b) == b")
     }
   }
 end enumeration
