@@ -82,13 +82,15 @@ scalaVersion := "3.1.1"
 
 enablePlugins(ScalaNativePlugin, BindgenPlugin)
 
-Bindgen.bindings := { builder =>
-  builder.define(
+import bindgen.interface.Binding
+
+bindgenBindings := Seq(
+  Binding(
   /* 1 */  baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
   /* 2 */  "libtest",
   /* 3 */  cImports = List("header.h")
   )
-}
+)
 ```
 
 1. Path to the header file - in this example we're putting it into a location
