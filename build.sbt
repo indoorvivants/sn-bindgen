@@ -351,15 +351,8 @@ lazy val docs =
       scalaVersion := Versions.Scala3,
       fork := true,
       publish / skip := true,
-      // To react to asset changes
-      watchSources += WatchSource(
-        (ThisBuild / baseDirectory).value / "docs" / "assets"
-      ),
-      watchSources += WatchSource(
-        (ThisBuild / baseDirectory).value / "docs" / "pages"
-      ),
-      watchSources += WatchSource(
-        (ThisBuild / baseDirectory).value / "docs" / "blog"
+      Compile / run / envVars := Map(
+        "BINDGEN_BINARY" -> (bindgen / Compile / nativeLink).value.toString()
       )
     )
 // --------------HELPERS-------------------------
@@ -469,8 +462,36 @@ def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
 // --------------SETTINGS-------------------------
 ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
-addCommandAlias("buildSite", "docs/runMain bindgen.docs.Docs build")
-addCommandAlias("buildBlog", "docs/runMain bindgen.docs.DevBlog build")
+lazy val markdownDocuments = taskKey[Seq[java.nio.file.Path]]("")
+markdownDocuments := {
+  markdownDocuments.inputFiles
+}
+
+markdownDocuments / fileInputs ++=
+  Seq(
+    (docs / baseDirectory).value.toGlob / "**" / "*.md",
+    (docs / baseDirectory).value.toGlob / "**" / "*.css",
+    (
+      docs / baseDirectory
+    ).value.toGlob / "**" / "*.js"
+  )
+
+lazy val buildSite = inputKey[Unit]("")
+buildSite := Def.inputTaskDyn {
+  val defaultArgs =
+    Seq("--destination", ((ThisBuild / baseDirectory).value / "_site").toString)
+  val parsed = sbt.complete.DefaultParsers.spaceDelimited("<arg>").parsed
+
+  val args = (defaultArgs ++ parsed).mkString(" ")
+
+  val _ = markdownDocuments.value
+
+  Def.taskDyn {
+    (docs / Compile / runMain)
+      .toTask(s" bindgen.docs.Docs build $args")
+  }
+
+}.evaluated
 
 lazy val nativeCommon = Seq(
   scalaVersion := Versions.Scala3

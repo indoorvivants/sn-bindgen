@@ -1,0 +1,9 @@
+table.compatibility {
+  /* border:1px solid darkgrey; */
+  border-collapse: collapse;
+}
+table.compatibility th, td{
+  /* border:1px solid darkgrey; */
+  border-collapse: collapse;
+  padding: 8px;
+}
