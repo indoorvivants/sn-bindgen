@@ -21,3 +21,9 @@ typedef enum EnumKeywords {
   val=8,
   var=9
 } EnumKeywords;
+
+typedef enum EnumBitwiseOperations {
+  BITWISE_ONE=1,
+  BITWISE_TWO=2,
+  BITWISE_THREE=3
+} EnumBitwiseOperations;
