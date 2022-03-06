@@ -161,6 +161,9 @@ jobs:
           distribution: 'temurin' 
           java-version: '17'
 
+      - name: Setup Unix-like
+        run: ./build/setup_unix.sh
+
       - uses: coursier/cache-action@v3      
 
       - run: git fetch --unshallow
@@ -173,7 +176,7 @@ jobs:
       - name: Build site
         run: sbt "buildSite --destination $(pwd)/_site"
         env:
-          BINDGEN_BINARY: /tmp/binaries/sn-bindgen-linux-x86_64/bindgen_out
+          LLVM_BIN: /usr/lib/llvm-13/bin
 
       - name: Publish gh-pages
         uses: peaceiris/actions-gh-pages@v3
