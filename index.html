@@ -1,4 +1,4 @@
-<html><head><title>SN bindgen: Home</title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/monokai.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn nav-selected" href="/index.html">Home</a><a class="nav-btn" href="/configuration/index.html">Configuration </a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><p>SN Bindgen is a set of tools to generate Scala Native bindings for C libraries
+<html><head><title>SN bindgen: Home</title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/monokai.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn nav-selected" href="/index.html">Home</a><a class="nav-btn" href="/configuration/index.html">Configuration </a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><p>SN Bindgen is a set of tools to generate Scala Native bindings for C libraries
 from header files.</p>
 <p>It comes in the form of a standalone CLI binary and a SBT plugin, both of which can
 generate comprehensive Scala 3 Native definitions from C header files.</p>
@@ -22,4 +22,67 @@ is required to overcome those difficulties</p>
 in the SBT plugin</p>
 </li>
 </ul>
+<p>As a motivating example, here's a program written with bindings to <a href="https://www.raylib.com/examples.html">Raylib</a>, running on Apple M1.</p>
+<img title = "A GIF showing the program running, and a code modification" src ="https://user-images.githubusercontent.com/1052965/156929377-5494b58a-41f3-4fff-8462-435a41929277.gif"  style = "width: 100%">
+<pre><code class="language-scala">import libraylib.functions.*
+import libraylib.types.*
+
+import scala.scalanative.unsafe.*
+import scala.scalanative.unsigned.*
+
+@main def hello_raylib =
+  val screenWidth = 800
+  val screenHeight = 450
+  import libraylib.functions.*
+  import libraylib.types.*
+
+  InitWindow(
+    screenWidth,
+    screenHeight,
+    c&quot;hello raylib from Scala Native&quot;
+  )
+
+  Zone { implicit z =&gt;
+
+    val WHITE = Color(255.toUByte, 255.toUByte, 255.toUByte, 255.toUByte)
+    val GREEN = Color(0.toUByte, 255.toUByte, 0.toUByte, 255.toUByte)
+    val BLUE = Color(0.toUByte, 0.toUByte, 255.toUByte, 255.toUByte)
+    val BLACK = Color(0.toUByte, 0.toUByte, 0.toUByte, 255.toUByte)
+
+    val redBallPosition = Vector2(screenWidth / 2, screenHeight / 2)
+    val blueBallPositionPtr = Vector2(0, 0)
+    val blueBallPosition = !blueBallPositionPtr
+
+    SetTargetFPS(200)
+
+    var i = 0
+
+    while !WindowShouldClose() do
+
+      !redBallPosition = GetMousePosition()
+      BeginDrawing()
+
+      import KeyboardKey.*
+
+      if IsKeyDown(KEY_RIGHT.int) then blueBallPosition.x += 2.0f;
+      if IsKeyDown(KEY_LEFT.int) then blueBallPosition.x -= 2.0f;
+      if IsKeyDown(KEY_UP.int) then blueBallPosition.y -= 2.0f;
+      if IsKeyDown(KEY_DOWN.int) then blueBallPosition.y += 2.0f;
+
+      ClearBackground(!WHITE)
+      DrawText(
+        c&quot;Red ball will follow your pointer,\n move blue with arrow keys&quot;,
+        10,
+        10,
+        20,
+        !BLACK
+      )
+      DrawCircleV(!redBallPosition, 50, !GREEN)
+      DrawCircleV(blueBallPosition, 20, !BLUE)
+      EndDrawing()
+    end while
+    CloseWindow()
+  }
+end hello_raylib
+</code></pre>
 </div></div><footer>© 2021-2022 Anton Sviridov</footer></body></html>
