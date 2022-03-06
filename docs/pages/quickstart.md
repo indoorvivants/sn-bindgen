@@ -97,7 +97,9 @@ Bindgen.bindings := { builder =>
 2. Package name where generated definitions will be put
 3. List of imports that will be added to generated C files (if there are any, see [Semantics](/semantics) page for details)
 
-There are more settings available, see [Configuration](/configuration#sbt-plugin) page for details
+There are more settings available, see [Configuration](/configuration#sbt-plugin) page for details.
+
+Now all that is left to do is put some definitions into the header file:
 
 ```scala mdoc:passthrough
 val cSource = 
@@ -107,3 +109,7 @@ void sum(bla one, bla two);
 """
 println(bindgen.BindgenRender.render(cSource, "libtest", Option("src/main/resources/scala-native/header.h")))
 ```
+
+After that in your Scala sources you can use `libtest` package to access the 
+generated bindings.
+

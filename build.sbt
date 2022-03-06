@@ -352,7 +352,10 @@ lazy val docs =
       fork := true,
       publish / skip := true,
       Compile / run / envVars := Map(
-        "BINDGEN_BINARY" -> (bindgen / Compile / nativeLink).value.toString
+        "BINDGEN_BINARY" -> sys.env.getOrElse(
+          "BINDGEN_BINARY",
+          (bindgen / Compile / nativeLink).value.toString
+        )
       )
     )
 // --------------HELPERS-------------------------

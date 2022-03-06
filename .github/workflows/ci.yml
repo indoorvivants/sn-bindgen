@@ -164,9 +164,16 @@ jobs:
       - uses: coursier/cache-action@v3      
 
       - run: git fetch --unshallow
+      
+      - name: Download binaries
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp/binaries
 
       - name: Build site
         run: sbt "buildSite --destination $(pwd)/_site"
+        env:
+          BINDGEN_BINARY: /tmp/binaries/sn-bindgen-linux-x86_64/bindgen_out
 
       - name: Publish gh-pages
         uses: peaceiris/actions-gh-pages@v3
