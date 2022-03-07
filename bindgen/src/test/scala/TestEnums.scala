@@ -30,6 +30,12 @@ class TestEnums:
     assertEquals(-2, Enum2.MINUS_TWO)
     assertEquals(4, Enum2.FOUR)
 
+  @Test def test_bitwise_operation(): Unit =
+    import EnumBitwiseOperations.*
+    assertTrue((BITWISE_ONE & BITWISE_THREE) == BITWISE_ONE)
+    assertTrue((BITWISE_ONE | BITWISE_TWO) == BITWISE_THREE)
+    assertTrue(BITWISE_THREE.is(BITWISE_ONE) && BITWISE_THREE.is(BITWISE_TWO))
+
   @Test def test_reserved_keywords(): Unit =
     assertEquals(1, EnumKeywords.`match`.int)
     assertEquals(2, EnumKeywords.`true`.int)
