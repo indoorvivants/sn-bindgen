@@ -30,7 +30,7 @@ class TestEnums:
     assertEquals(-2, Enum2.MINUS_TWO)
     assertEquals(4, Enum2.FOUR)
 
-  @Test def test_bitwize_operation(): Unit =
+  @Test def test_bitwise_operation(): Unit =
     import EnumBitwiseOperations.*
     assertTrue((BITWISE_ONE & BITWISE_THREE) == BITWISE_ONE)
     assertTrue((BITWISE_ONE | BITWISE_TWO) == BITWISE_THREE)
