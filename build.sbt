@@ -1,3 +1,4 @@
+import scala.scalanative.build.GC
 import _root_.bindgen.interface.Platform.OS.*
 import _root_.bindgen.interface.Platform.ClangInfo
 import _root_.bindgen.interface.Binding
@@ -74,25 +75,20 @@ val generateScalaSources = taskKey[Seq[File]]("")
 lazy val bindgen = project
   .in(file("bindgen"))
   .dependsOn(libclang)
-  .enablePlugins(ScalaNativePlugin)
+  .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin)
   .settings(nativeCommon)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
   .settings(Test / nativeConfig ~= usesLibClang)
-  .settings(
-    Test / nativeLink / artifactPath := crossTarget.value / "test-bindgen-out"
-  )
   .settings(clangDetection)
   .settings(
     moduleName := "bindgen",
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
       .excludeAll(ExclusionRule("org.scala-native")),
+
     // test settings for Scala Native
-    libraryDependencies += "org.scala-native" %%% "junit-runtime" % Versions.scalaNative % Test,
-    addCompilerPlugin(
-      "org.scala-native" % "junit-plugin" % Versions.scalaNative cross CrossVersion.full
-    ),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
+
     // Scala 3 hack around the issue with docs
     Compile / doc / scalacOptions ~= { opts =>
       opts.filterNot(_.contains("-Xplugin"))
@@ -197,8 +193,6 @@ lazy val bindgen = project
   }
 
 def getHeaders(path: File): Seq[String] = {
-  /* val path = */
-  /*   baseDirectory.value / "src" / "test" / "resources" / "scala-native" */
   val glob = path.toGlob / "*.h"
 
   import scala.collection.JavaConverters.*
@@ -402,8 +396,28 @@ def generateExampleBindings(
 }
 
 def environmentConfiguration(conf: NativeConfig): NativeConfig = {
-  if (sys.env.contains("SN_RELEASE")) conf.withMode(Mode.releaseFast)
-  else conf
+  var modified = conf
+  if (sys.env.contains("SN_RELEASE"))
+    modified = modified.withMode(Mode.releaseFast)
+
+  if (sys.env.contains("SN_SANITIZE")) {
+    val opts =
+      "-fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-return=always"
+        .split(' ')
+        .toList
+
+    modified = modified
+      .withLinkingOptions(modified.linkingOptions ++ opts)
+      .withCompileOptions(modified.compileOptions ++ opts)
+      .withOptimize(false)
+      .withMode(Mode.debug)
+      .withLTO(LTO.none)
+  }
+
+  if (sys.env.contains("SN_GC"))
+    modified = modified.withGC(GC.apply(sys.env("SN_GC")))
+
+  modified
 }
 
 def usesLibClang(conf: NativeConfig) = {

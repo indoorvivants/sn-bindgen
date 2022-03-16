@@ -5,15 +5,8 @@ def struct(struct: Def.Struct, line: Appender)(using
     c: Config,
     ar: AliasResolver
 ): Unit =
-  given AliasResolver = AliasResolver(s =>
-    val inner = struct.anonymous.collectFirst {
-      case u: Def.Union if s == struct.name.value + "." + u.name.value =>
-        Def.typeOf(u)
-      case u: Def.Struct if s == struct.name.value + "." + u.name.value =>
-        Def.typeOf(u)
-    }
-    inner.getOrElse(ar(s))
-  )
+  given AliasResolver = ar.nest(struct)
+
   val rewriteRules = hack_recursive_structs(struct)
   val structName = struct.name
   val structType: CType.Struct = CType.Struct(struct.fields.map(_._2).toList)

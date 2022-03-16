@@ -131,7 +131,8 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                   struct.fields.map { case (n, f) =>
                     n.into(UnionParameterName) -> f
                   },
-                  struct.name.into(UnionName)
+                  struct.name.into(UnionName),
+                  struct.anonymous
                 )
               else struct
 
@@ -153,9 +154,11 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
               en.fields.map { case (n, f) =>
                 n.into(UnionParameterName) -> f
               },
-              en.name.into(UnionName)
+              en.name.into(UnionName),
+              en.anonymous
             )
             binding.add(union, shouldBeIncluded)
+          end if
         end if
 
         if cursor.kind == CXCursorKind.CXCursor_StructDecl then

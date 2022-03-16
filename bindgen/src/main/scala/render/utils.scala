@@ -57,7 +57,7 @@ object AliasResolver:
       .collectFirst {
         case Def.Struct(fields, name, _) if name.value == s =>
           CType.Struct(fields.map(_._2).toList)
-        case Def.Union(fields, name) if name.value == s =>
+        case Def.Union(fields, name, _) if name.value == s =>
           CType.Struct(fields.map(_._2).toList)
         case Def.Alias(name, underlying) if name == s =>
           underlying
@@ -65,6 +65,44 @@ object AliasResolver:
           tp
       }
       .getOrElse(throw Error(s"Failed to resolve aliased definition $s"))
+
+  extension (ar: AliasResolver)
+    def nest(st: Def.Union | Def.Struct)(using LoggingConfig): AliasResolver =
+
+      def go(
+          s: Def.Union | Def.Struct,
+          bld: Tuple2[String, CType] => Unit,
+          prepend: String = ""
+      ): Unit =
+        val anonymous = s match
+          case u: Def.Union  => u.anonymous
+          case u: Def.Struct => u.anonymous
+
+        val thisName = prepend +
+          (s match
+            case u: Def.Union  => u.name.value
+            case u: Def.Struct => u.name.value
+          )
+
+        s match
+          case u: Def.Union =>
+            bld(thisName -> Def.typeOf(u))
+          case s: Def.Struct =>
+            bld(thisName -> Def.typeOf(s))
+
+        anonymous.foreach { u =>
+          go(u, bld, prepend = thisName + ".")
+        }
+      end go
+
+      val bld = Map.newBuilder[String, CType]
+      go(st, bld.addOne(_))
+      val result = bld.result
+
+      trace("Build alias resolving", result.toSeq*)
+
+      AliasResolver(s => result.getOrElse(s, ar(s)))
+
 end AliasResolver
 
 opaque type LineBuilder = StringBuilder

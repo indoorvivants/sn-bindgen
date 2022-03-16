@@ -71,7 +71,8 @@ enum Def:
   )
   case Union(
       var fields: ListBuffer[(UnionParameterName, CType)],
-      var name: UnionName
+      var name: UnionName,
+      var anonymous: ListBuffer[Def.Union | Def.Struct]
   )
   case Function(
       var name: FunctionName,
@@ -85,7 +86,7 @@ enum Def:
   def defName: Option[DefName] =
     this match
       case Alias(name, _) => Some(DefName(name, DefTag.Alias))
-      case Union(_, name) => Some(DefName(name.value, DefTag.Union))
+      case u: Union       => Some(DefName(u.name.value, DefTag.Union))
       case f: Function    => Some(DefName(f.name.value, DefTag.Function))
       case s: Struct      => Some(DefName(s.name.value, DefTag.Struct))
       case e: Enum =>
