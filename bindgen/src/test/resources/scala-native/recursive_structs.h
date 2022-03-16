@@ -29,3 +29,8 @@ typedef struct {
   void (*free)(struct Recursive_Func *entry);
   int freed;
 } Recursive_Func;
+
+typedef struct {
+  double d;
+  struct Ptr_Recrusive_Func **elements;
+} Ptr_Recrusive_Func;
