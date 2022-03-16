@@ -32,5 +32,10 @@ typedef struct {
 
 typedef struct {
   double d;
-  struct Ptr_Recrusive_Func **elements;
-} Ptr_Recrusive_Func;
+  struct Ptr_Recursive **elements;
+} Ptr_Recursive;
+
+typedef struct {
+  double d;
+  struct Ptr_Recursive2 ***elements;
+} Ptr_Recursive2;

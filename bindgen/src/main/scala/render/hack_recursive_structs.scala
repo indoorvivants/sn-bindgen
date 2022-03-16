@@ -17,13 +17,6 @@ def isCyclical(typ: CType, structName: StructName)(using
             visited ++ List(name),
             level + 1
           )
-      // case Pointer(Reference(Name.Model(name))) =>
-      //   Option.when(visited.contains(name))(visited ++ List(name)) orElse
-      //     go(
-      //       aliasResolver(name),
-      //       visited ++ List(name),
-      //       level + 1
-      //     )
 
       case Struct(fields) =>
         if fields.size > 22 then
