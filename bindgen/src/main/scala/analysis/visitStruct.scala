@@ -40,11 +40,11 @@ def visitStruct(cursor: CXCursor, name: String)(using
         if isAnonymous then
           val last = builder.anonymous.apply(collector.numAnonymous)
           val nestedName = last match
-            case un: Def.Union  => un.name
-            case st: Def.Struct => st.name
+            case un: Def.Union  => un.name.value
+            case st: Def.Struct => st.name.value
           builder.fields.addOne(
             fieldName -> CType.Reference(
-              Name.Model(s"${builder.name}.$nestedName")
+              Name.Model(builder.name.value + "." + nestedName)
             )
           )
           collector.numAnonymous += 1
@@ -56,22 +56,25 @@ def visitStruct(cursor: CXCursor, name: String)(using
 
         CXChildVisitResult.CXChildVisit_Continue
       else if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
-        val str = visitStruct(cursor, "Union")
+        val nestedName = "Union" + builder.anonymous.size
+        val str = visitStruct(cursor, builder.name.value + "." + nestedName)
         builder.anonymous.addOne(
           Def.Union(
             str.fields.map { case (n, field) =>
               n.into(UnionParameterName) -> field
             },
-            UnionName("Union" + builder.anonymous.size)
+            UnionName(nestedName),
+            str.anonymous
           )
         )
         CXChildVisitResult.CXChildVisit_Continue
       else if cursor.kind == CXCursorKind.CXCursor_StructDecl then
-        val str = visitStruct(cursor, "Union")
+        val nestedName = "Struct" + builder.anonymous.size
+        val str = visitStruct(cursor, builder.name.value + "." + nestedName)
         builder.anonymous.addOne(
           Def.Struct(
             str.fields,
-            StructName("Struct" + builder.anonymous.size),
+            StructName(nestedName),
             str.anonymous
           )
         )

@@ -3,13 +3,23 @@ package rendering
 
 import bindgen.*
 
-def union(model: Def.Union, line: Appender)(using Config, AliasResolver) =
+def union(model: Def.Union, line: Appender)(using Config)(using
+    ar: AliasResolver
+): Unit =
+  given AliasResolver = ar.nest(model)
+
   val structName = model.name
   val unionType: CType.Union = CType.Union(model.fields.map(_._2).toList)
   val tpe = scalaType(unionType)
   line(s"opaque type $structName = $tpe")
   line(s"object $structName:")
   nest {
+    model.anonymous.foreach {
+      case s: Def.Struct =>
+        rendering.struct(s, line)
+      case u: Def.Union =>
+        rendering.union(u, line)
+    }
     val tag =
       s"given _tag: Tag[$structName] = ${scalaTag(unionType)}"
     line(tag)
