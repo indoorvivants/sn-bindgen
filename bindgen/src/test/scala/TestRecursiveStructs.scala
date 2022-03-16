@@ -40,6 +40,18 @@ class TestRecursiveStructs:
 
     }
 
+  @Test def test_ptr_recursive: Unit =
+    zone {
+
+      val structPtr = Ptr_Recursive(25.0, null)
+      val struct = !structPtr
+      struct.elements = stackalloc[Ptr[Ptr_Recursive]](1)
+      struct.elements(0) = structPtr
+
+      assertEquals(structPtr, struct.elements(0))
+
+    }
+
   @Test def test_recursive_function_pointer(): Unit =
     zone {
       val struct1 = Recursive_Func(0.5, (_: Ptr[Recursive_Func]) => (), 0)

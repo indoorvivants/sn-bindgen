@@ -17,13 +17,6 @@ def isCyclical(typ: CType, structName: StructName)(using
             visited ++ List(name),
             level + 1
           )
-      case Pointer(Reference(Name.Model(name))) =>
-        Option.when(visited.contains(name))(visited ++ List(name)) orElse
-          go(
-            aliasResolver(name),
-            visited ++ List(name),
-            level + 1
-          )
 
       case Struct(fields) =>
         if fields.size > 22 then
@@ -38,6 +31,8 @@ def isCyclical(typ: CType, structName: StructName)(using
           case (acc, field) =>
             acc orElse go(field, visited, level + 1)
         }
+      case Pointer(to) =>
+        go(to, visited, level + 1)
 
       case _ => Option.empty
     end match
@@ -82,15 +77,6 @@ def hack_recursive_structs(
       )
 
       originalType match
-        case Pointer(Reference(Name.Model(name))) =>
-          Some(
-            ParameterRewrite(
-              name = parameterName,
-              originalType = originalType,
-              newRawType = Pointer(Void),
-              newRichType = Pointer(Reference(Name.Model(name)))
-            )
-          )
         case a @ Pointer(func @ Function(retType, params)) =>
           def rewriteFunctionType(func: Function): Function =
             func.copy(
@@ -126,6 +112,16 @@ def hack_recursive_structs(
               originalType = a,
               newRawType = rewriteFunctionType(func),
               newRichType = a
+            )
+          )
+
+        case Pointer(to) =>
+          Some(
+            ParameterRewrite(
+              name = parameterName,
+              originalType = originalType,
+              newRawType = Pointer(Void),
+              newRichType = Pointer(to)
             )
           )
 

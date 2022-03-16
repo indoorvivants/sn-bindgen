@@ -58,6 +58,7 @@ object EnumName extends OpaqueString[EnumName]
 
 opaque type StructName = String
 object StructName extends OpaqueString[StructName]
+
 enum Def:
   case Enum(
       var values: ListBuffer[(String, Long)],
@@ -123,6 +124,7 @@ enum CType:
   case Struct(fields: List[CType])
   case Union(fields: List[CType])
   case Function(returnType: CType, parameters: List[CType.Parameter])
+  case IncompleteArray(of: CType)
 
   case Void
   case Bool

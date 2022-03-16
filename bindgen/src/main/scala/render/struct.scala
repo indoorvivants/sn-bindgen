@@ -1,10 +1,25 @@
 package bindgen
 package rendering
 
-def struct(struct: Def.Struct, line: Appender)(using
+def struct(model: Def.Struct, line: Appender)(using
     c: Config,
     ar: AliasResolver
 ): Unit =
+  val hasFlexibleArrayMember = model.fields.lastOption.collectFirst {
+    case (_, CType.IncompleteArray(_)) => true
+  }.isDefined
+
+  val struct: Def.Struct =
+    if hasFlexibleArrayMember then
+      model.copy(fields = model.fields.dropRight(1))
+    else model
+
+  if hasFlexibleArrayMember then
+    warning(
+      s"Struct '${model.name}' has a Flexible Array Member, so it was dropped from the definition. " +
+        "See https://github.com/indoorvivants/sn-bindgen/issues/62 for details"
+    )
+
   given AliasResolver = ar.nest(struct)
 
   val rewriteRules = hack_recursive_structs(struct)
