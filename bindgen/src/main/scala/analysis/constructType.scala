@@ -100,6 +100,10 @@ def constructType(typ: CXType)(using
     case CXType_Double     => CType.NumericReal(FloatingBase.Double)
     case CXType_LongDouble => CType.NumericReal(FloatingBase.LongDouble)
 
+    case CXType_IncompleteArray =>
+      val elementType = constructType(clang_getArrayElementType(typ))
+      CType.IncompleteArray(elementType)
+
     case other => warning(s"Unknown type: $spelling"); CType.Void;
   end match
 

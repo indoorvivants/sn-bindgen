@@ -59,6 +59,8 @@ def scalaType(typ: CType)(using AliasResolver): String =
         case Some(cnt) => s"CArray[${scalaType(of)}, ${natDigits(cnt)}]"
         case None      => s"Ptr[${scalaType(of)}]"
 
+    case IncompleteArray(of) => s"Ptr[${scalaType(of)}]"
+
     case Void =>
       "Unit"
     case Bool => "Boolean"
