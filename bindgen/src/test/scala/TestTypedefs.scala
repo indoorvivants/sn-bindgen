@@ -13,4 +13,8 @@ class TestTypeDefs:
   @Test def test_basics() =
     val enum1 = DUCKDB_TYPEs.DUCKDB_TYPE_INVALID
 
+    zone {
+      val st = Hello()
+    }
+
 end TestTypeDefs
