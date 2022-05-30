@@ -116,10 +116,9 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
         if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
 
-          /**
-            Definitions such as this: 
-              typedef enum MY_BOOL {m_false, m_true} my_bool;
-           **/
+          /** Definitions such as this: typedef enum MY_BOOL {m_false, m_true}
+            * my_bool;
+            */
           val typ = clang_getTypedefDeclUnderlyingType(cursor)
           val name = cursor.spelling
           val referencedType = clang_Type_getNamedType(typ)
@@ -131,7 +130,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
             // If the typedef's name is different from the alias name,
             // we should add both definitions
-          
+
             if !en.name.exists(_.value == name) then
               binding.add(Def.Alias(name, constructType(typ)), shouldBeIncluded)
           else if (referencedType.kind == CXTypeKind.CXType_Record) then
