@@ -12,8 +12,8 @@ def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using
     Zone,
     Config
 ): bindgen.Def.Enum =
-  val mem = Captured.allocate[Def.Enum](
-    Def.Enum(
+  val mem = Captured.allocate[DefBuilder.Enum](
+    DefBuilder.Enum(
       mutable.ListBuffer.empty,
       name = None,
       intType =
@@ -32,7 +32,7 @@ def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using
   clang_visitChildren(
     cursor,
     CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
-      val (ref, zone, config) = !d.unwrap[Captured[Def.Enum]]
+      val (ref, zone, config) = !d.unwrap[Captured[DefBuilder.Enum]]
       given Zone = zone
       given Config = config
       if cursor.kind == CXCursorKind.CXCursor_EnumConstantDecl then
@@ -45,5 +45,5 @@ def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using
     },
     CXClientData.wrap(mem)
   )
-  (!mem)._1
+  (!mem)._1.build
 end visitEnum

@@ -23,7 +23,7 @@ inline def error(msg: Any)(using LoggingConfig) =
   log(LogLevel.error, msg)
 
 private inline def log[A](
-    level: LogLevel,
+    inline level: LogLevel,
     inline msg: A,
     context: Seq[(String, Any)] = Seq.empty
 )(using

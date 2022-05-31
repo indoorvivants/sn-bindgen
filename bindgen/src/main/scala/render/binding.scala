@@ -59,6 +59,7 @@ def binding(
 
   type Scope = "predef" | "aliases" | "enumerations" | "structs" | "functions"
   def define(s: Scope) = s"object $s"
+
   def imports(scopes: Scope*) =
     val filtered = scopes.filter {
       case "aliases"      => binding.aliases.nonEmpty
@@ -68,9 +69,10 @@ def binding(
       case _              => true
     }
     s"import ${filtered.map { sc => sc + ".*" }.mkString(", ")}"
+  end imports
 
   given AliasResolver =
-    AliasResolver.create(binding.named.values.toList.map(_.item))
+    AliasResolver.create(binding.all)
 
   def commentException(element: Any, exc: Throwable) =
     val stackTrace =
