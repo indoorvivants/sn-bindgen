@@ -81,8 +81,8 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
       s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
     )
 
-  val cxClientData = Captured.allocate[Binding](
-    Binding()
+  val cxClientData = Captured.allocate[BindingBuilder](
+    BindingBuilder()
   )
 
   val translationUnitCursor = clang_getTranslationUnitCursor(unit)
@@ -96,7 +96,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     translationUnitCursor,
     CXCursorVisitor.apply {
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
-        val (binding, zone, conf) = !(data.unwrap[Captured[Binding]])
+        val (binding, zone, conf) = !(data.unwrap[Captured[BindingBuilder]])
 
         given Config = conf
         given Zone = zone
@@ -218,10 +218,10 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     trace(s"'$k': $v")
   }
 
-  binding
+  binding.build
 end analyse
 
-def addBuiltInAliases(binding: Binding): Binding =
+def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
   val replaceTypes = DefTag.all - DefTag.Function
   BuiltinType.all.foreach { tpe =>
     val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))

@@ -15,8 +15,8 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
   val functionName = clang_getCursorSpelling(functionCursor).string
   val returnType = clang_getResultType(typ)
 
-  val mem = Captured.allocate[Def.Function](
-    Def.Function(
+  val mem = Captured.allocate[DefBuilder.Function](
+    DefBuilder.Function(
       name = FunctionName(functionName),
       returnType = constructType(returnType),
       parameters = ListBuffer.empty,
@@ -33,7 +33,7 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
   clang_visitChildren(
     functionCursor,
     CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
-      val (builder, zone, config) = (!d.unwrap[Captured[Def.Function]])
+      val (builder, zone, config) = (!d.unwrap[Captured[DefBuilder.Function]])
       given Zone = zone
       given Config = config
       if cursor.kind == CXCursorKind.CXCursor_ParmDecl && builder.parameters.size < builder.numArguments then
@@ -62,5 +62,5 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config) =
     CXClientData.wrap(mem)
   )
 
-  (!mem)._1
+  (!mem)._1.build
 end visitFunction

@@ -10,7 +10,7 @@ import scala.scalanative.unsigned.*
 
 import scalanative.libc.*
 
-class StructCollector(val struct: Def.Struct, var numAnonymous: Int)
+class StructCollector(val struct: DefBuilder.Struct, var numAnonymous: Int)
 
 def visitStruct(cursor: CXCursor, name: String)(using
     Zone,
@@ -18,7 +18,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
 ): Def.Struct =
   val mem = Captured.allocate[StructCollector](
     StructCollector(
-      Def.Struct(ListBuffer.empty, StructName(name), ListBuffer.empty),
+      DefBuilder.Struct(ListBuffer.empty, StructName(name), ListBuffer.empty),
       0
     )
   )
@@ -85,5 +85,5 @@ def visitStruct(cursor: CXCursor, name: String)(using
     CXClientData.wrap(mem)
   )
 
-  (!mem)._1.struct
+  (!mem)._1.struct.build
 end visitStruct
