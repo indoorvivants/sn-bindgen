@@ -12,6 +12,7 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import scalanative.libc.*
+import scala.scalanative.runtime.libc
 
 def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
   import CXDiagnosticSeverity as sev
@@ -81,9 +82,13 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
       s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
     )
 
-  val cxClientData = Captured.allocate[BindingBuilder](
-    BindingBuilder()
+  type Capture = (BindingBuilder, Zone, Config)
+
+  val cxClientData = scala.scalanative.runtime.fromRawPtr[Capture](
+    libc.malloc(sizeof[Capture])
   )
+
+  !cxClientData = (BindingBuilder(), summon[Zone], summon[Config])
 
   val translationUnitCursor = clang_getTranslationUnitCursor(unit)
 
@@ -96,7 +101,9 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     translationUnitCursor,
     CXCursorVisitor.apply {
       (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
-        val (binding, zone, conf) = !(data.unwrap[Captured[BindingBuilder]])
+        val (binding, zone, conf) = !(data.asInstanceOf[Ptr[Capture]])
+
+        assert(zone.isOpen, "Zone has already been closed, dang it!")
 
         given Config = conf
         given Zone = zone
@@ -201,6 +208,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
   clang_disposeIndex(index)
 
   val binding = (!cxClientData)._1
+
   addBuiltInAliases(binding)
   val closure = computeClosure(binding.named.filter { n =>
     val name = n._1.n
@@ -218,7 +226,12 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     trace(s"'$k': $v")
   }
 
-  binding.build
+  val immut = binding.build
+
+  libc.free(scala.scalanative.runtime.toRawPtr[Capture](cxClientData))
+
+  immut
+
 end analyse
 
 def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
