@@ -568,5 +568,3 @@ inThisBuild(
     )
   )
 )
-
-ThisBuild / version := sys.env.getOrElse("VERSION_OVERRIDE", version.value)
