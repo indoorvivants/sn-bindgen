@@ -231,7 +231,6 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
   libc.free(scala.scalanative.runtime.toRawPtr[Capture](cxClientData))
 
   immut
-
 end analyse
 
 def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
