@@ -19,7 +19,7 @@ object Captured:
       (
         value.toString(),
         () =>
-          references.remove(value.asInstanceOf[Object])
+          GCRoots.removeRoot(value.asInstanceOf[Object])
           libc.free(toRawPtr[Captured[D]](mem))
       )
 
@@ -29,10 +29,14 @@ object Captured:
 
     Intrinsics.storeObject(rawptr, tuple)
 
-    references += value.asInstanceOf[Object]
+    GCRoots.addRoot(tuple)
 
     (mem, deallocate)
   end unsafe
 
-  private val references = collection.mutable.Set.empty[Object]
 end Captured
+
+object GCRoots:
+  private val references = new java.util.IdentityHashMap[Object, Unit]
+  def addRoot(o: Object): Unit = references.put(o, ())
+  def removeRoot(o: Object): Unit = references.remove(o)
