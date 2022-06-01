@@ -16,7 +16,12 @@ object Captured:
     val rawptr = libc.malloc(sizeof[Captured[D]])
     val mem = fromRawPtr[Captured[D]](rawptr)
     val deallocate: Memory =
-      (value.toString(), () => libc.free(toRawPtr[Captured[D]](mem)))
+      (
+        value.toString(),
+        () =>
+          references.remove(value.asInstanceOf[Object])
+          libc.free(toRawPtr[Captured[D]](mem))
+      )
 
     val tuple = (value, c)
 
@@ -24,6 +29,10 @@ object Captured:
 
     Intrinsics.storeObject(rawptr, tuple)
 
+    references += value.asInstanceOf[Object]
+
     (mem, deallocate)
   end unsafe
+
+  private val references = collection.mutable.Set.empty[Object]
 end Captured
