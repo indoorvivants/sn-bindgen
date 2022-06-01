@@ -22,9 +22,178 @@ def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
     case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
 
 def analyse(file: String)(using Zone)(using config: Config): Binding =
+  val index = clang_createIndex(0, 0)
+
+  val unit = createTranslationUnit(index, file)
+
+  val (cxClientData, memory) = Captured.unsafe(BindingBuilder())
+
+  val translationUnitCursor = clang_getTranslationUnitCursor(unit)
+
+  if translationUnitCursor == CXCursor.NULL then
+    throw Exception(
+      s"Translation unit cursor is NULL, which indicates that libclang failed to do _something_ (there's no extra information)"
+    )
+
+  val visitor =
+    CXCursorVisitor.apply {
+      (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
+        val (binding, conf) = !(data.unwrap[Captured[BindingBuilder]])
+
+        given Config = conf
+
+        zone {
+
+          val loc = cursor.location
+          val shouldBeIncluded =
+            (loc.isFromMainFile || !loc.isFromSystemHeader) && (
+              cursor.spelling != "__gnuc_va_list"
+            )
+
+          val spell = cursor.spelling
+
+          if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
+            val function = visitFunction(cursor)
+            binding.add(function, shouldBeIncluded)
+          end if
+
+          if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+
+            /** Definitions such as this: typedef enum MY_BOOL {m_false, m_true}
+              * my_bool;
+              */
+            val typ = clang_getTypedefDeclUnderlyingType(cursor)
+            val name = cursor.spelling
+            val referencedType = clang_Type_getNamedType(typ)
+            val typeDecl = clang_getTypeDeclaration(referencedType)
+
+            if (referencedType.kind == CXTypeKind.CXType_Enum) then
+              val en = visitEnum(typeDecl, true)
+              binding.add(en, shouldBeIncluded)
+
+              // If the typedef's name is different from the alias name,
+              // we should add both definitions
+
+              if !en.name.exists(_.value == name) then
+                binding.add(
+                  Def.Alias(name, constructType(typ)),
+                  shouldBeIncluded
+                )
+            else if (referencedType.kind == CXTypeKind.CXType_Record) then
+              val struct = visitStruct(typeDecl, name)
+
+              val item =
+                if typ.spelling.startsWith("union ") then
+                  Def.Union(
+                    struct.fields.map { case (n, f) =>
+                      n.into(UnionParameterName) -> f
+                    },
+                    struct.name.into(UnionName),
+                    struct.anonymous
+                  )
+                else struct
+
+              if name != "" then binding.add(item, shouldBeIncluded)
+            else
+              val alias: Def.Alias =
+                Def.Alias(name, constructType(typ))
+              val canonical = clang_getCanonicalType(typ)
+
+              binding.add(alias, shouldBeIncluded)
+            end if
+          end if
+
+          if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
+            val name = clang_getCursorSpelling(cursor).string
+            if name != "" then
+              val en = visitStruct(cursor, name)
+              val union = Def.Union(
+                en.fields.map { case (n, f) =>
+                  n.into(UnionParameterName) -> f
+                },
+                en.name.into(UnionName),
+                en.anonymous
+              )
+              binding.add(union, shouldBeIncluded)
+            end if
+          end if
+
+          if cursor.kind == CXCursorKind.CXCursor_StructDecl then
+            val name = cursor.spelling
+            if name != "" then
+              val en = visitStruct(cursor, name)
+              binding.add(en, shouldBeIncluded)
+          end if
+
+          if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
+            val en = visitEnum(
+              cursor,
+              clang_getCursorType(
+                parent
+              ).kind == CXTypeKind.CXType_Typedef
+            )
+
+            binding.add(en, shouldBeIncluded)
+          end if
+
+          if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
+            CXChildVisitResult.CXChildVisit_Continue
+          else CXChildVisitResult.CXChildVisit_Recurse
+        }
+    }
+
+  try
+    clang_visitChildren(
+      translationUnitCursor,
+      visitor,
+      CXClientData.wrap(cxClientData)
+    )
+
+    clang_disposeTranslationUnit(unit)
+    clang_disposeIndex(index)
+
+    val binding = (!cxClientData)._1
+
+    addBuiltInAliases(binding)
+    val closure = computeClosure(binding.named.filter { n =>
+      val name = n._1.n
+
+      if (config.exclusivePrefix.isEmpty) then true
+      else config.exclusivePrefix.exists(ep => name.startsWith(ep.value))
+    }.toMap)
+
+    trace(s"Defined or used in main file: ${closure}")
+
+    binding.named.filterInPlace((k, _) => closure.contains(k.n))
+
+    trace("Binding information:")
+    binding.named.toList.sortBy(_._1.n).foreach { case (k, v) =>
+      trace(s"'$k': $v")
+    }
+
+    binding.build
+  finally memory.deallocate()
+  end try
+
+end analyse
+
+def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
+  val replaceTypes = DefTag.all - DefTag.Function
+  BuiltinType.all.foreach { tpe =>
+    val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
+    replaceTypes.foreach { tg =>
+      binding.remove(DefName(tpe.short, tg))
+    }
+    binding.add(al, isFromMainFile = false)
+  }
+  binding
+end addBuiltInAliases
+
+def createTranslationUnit(index: CXIndex, file: String)(using config: Config)(
+    using Zone
+) =
   info(s"Using following clang flags: ${summon[Config].clangFlags}")
   val filename = toCString(file)
-  val index = clang_createIndex(0, 0)
   val l = List.newBuilder[String]
   import CXTranslationUnit_Flags as flags
 
@@ -82,166 +251,5 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
       s"$errors errors were reported by clang, the generation will be aborted as" + " the binding will likely be incomplete, broken, or both"
     )
 
-  type Capture = (BindingBuilder, Zone, Config)
-
-  val cxClientData = scala.scalanative.runtime.fromRawPtr[Capture](
-    libc.malloc(sizeof[Capture])
-  )
-
-  !cxClientData = (BindingBuilder(), summon[Zone], summon[Config])
-
-  val translationUnitCursor = clang_getTranslationUnitCursor(unit)
-
-  if translationUnitCursor == CXCursor.NULL then
-    throw Exception(
-      s"Translation unit cursor is NULL, which indicates that libclang failed to do _something_ (there's no extra information)"
-    )
-
-  clang_visitChildren(
-    translationUnitCursor,
-    CXCursorVisitor.apply {
-      (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
-        val (binding, zone, conf) = !(data.asInstanceOf[Ptr[Capture]])
-
-        assert(zone.isOpen, "Zone has already been closed, dang it!")
-
-        given Config = conf
-        given Zone = zone
-
-        val loc = cursor.location
-        val shouldBeIncluded =
-          (loc.isFromMainFile || !loc.isFromSystemHeader) && (
-            cursor.spelling != "__gnuc_va_list"
-          )
-
-        val spell = cursor.spelling
-
-        if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
-          val function = visitFunction(cursor)
-          binding.add(function, shouldBeIncluded)
-        end if
-
-        if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-
-          /** Definitions such as this: typedef enum MY_BOOL {m_false, m_true}
-            * my_bool;
-            */
-          val typ = clang_getTypedefDeclUnderlyingType(cursor)
-          val name = cursor.spelling
-          val referencedType = clang_Type_getNamedType(typ)
-          val typeDecl = clang_getTypeDeclaration(referencedType)
-
-          if (referencedType.kind == CXTypeKind.CXType_Enum) then
-            val en = visitEnum(typeDecl, true)
-            binding.add(en, shouldBeIncluded)
-
-            // If the typedef's name is different from the alias name,
-            // we should add both definitions
-
-            if !en.name.exists(_.value == name) then
-              binding.add(Def.Alias(name, constructType(typ)), shouldBeIncluded)
-          else if (referencedType.kind == CXTypeKind.CXType_Record) then
-            val struct = visitStruct(typeDecl, name)
-
-            val item =
-              if typ.spelling.startsWith("union ") then
-                Def.Union(
-                  struct.fields.map { case (n, f) =>
-                    n.into(UnionParameterName) -> f
-                  },
-                  struct.name.into(UnionName),
-                  struct.anonymous
-                )
-              else struct
-
-            if name != "" then binding.add(item, shouldBeIncluded)
-          else
-            val alias: Def.Alias =
-              Def.Alias(name, constructType(typ))
-            val canonical = clang_getCanonicalType(typ)
-
-            binding.add(alias, shouldBeIncluded)
-          end if
-        end if
-
-        if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
-          val name = clang_getCursorSpelling(cursor).string
-          if name != "" then
-            val en = visitStruct(cursor, name)
-            val union = Def.Union(
-              en.fields.map { case (n, f) =>
-                n.into(UnionParameterName) -> f
-              },
-              en.name.into(UnionName),
-              en.anonymous
-            )
-            binding.add(union, shouldBeIncluded)
-          end if
-        end if
-
-        if cursor.kind == CXCursorKind.CXCursor_StructDecl then
-          val name = cursor.spelling
-          if name != "" then
-            val en = visitStruct(cursor, name)
-            binding.add(en, shouldBeIncluded)
-        end if
-
-        if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
-          val en = visitEnum(
-            cursor,
-            clang_getCursorType(
-              parent
-            ).kind == CXTypeKind.CXType_Typedef
-          )
-
-          binding.add(en, shouldBeIncluded)
-        end if
-
-        if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
-          CXChildVisitResult.CXChildVisit_Continue
-        else CXChildVisitResult.CXChildVisit_Recurse
-    },
-    CXClientData.wrap(cxClientData)
-  )
-
-  clang_disposeTranslationUnit(unit)
-  clang_disposeIndex(index)
-
-  val binding = (!cxClientData)._1
-
-  addBuiltInAliases(binding)
-  val closure = computeClosure(binding.named.filter { n =>
-    val name = n._1.n
-
-    if (config.exclusivePrefix.isEmpty) then true
-    else config.exclusivePrefix.exists(ep => name.startsWith(ep.value))
-  }.toMap)
-
-  trace(s"Defined or used in main file: ${closure}")
-
-  binding.named.filterInPlace((k, _) => closure.contains(k.n))
-
-  trace("Binding information:")
-  binding.named.toList.sortBy(_._1.n).foreach { case (k, v) =>
-    trace(s"'$k': $v")
-  }
-
-  val immut = binding.build
-
-  libc.free(scala.scalanative.runtime.toRawPtr[Capture](cxClientData))
-
-  immut
-
-end analyse
-
-def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
-  val replaceTypes = DefTag.all - DefTag.Function
-  BuiltinType.all.foreach { tpe =>
-    val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
-    replaceTypes.foreach { tg =>
-      binding.remove(DefName(tpe.short, tg))
-    }
-    binding.add(al, isFromMainFile = false)
-  }
-  binding
-end addBuiltInAliases
+  unit
+end createTranslationUnit

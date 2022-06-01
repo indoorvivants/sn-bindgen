@@ -2,10 +2,18 @@ package bindgen
 
 import scala.scalanative.unsafe.*
 
-type Captured[D] = (D, Zone, Config)
-object Captured:
-  def allocate[D: Tag](value: D)(using z: Zone, c: Config): Ptr[Captured[D]] =
-    val ptr = alloc[Captured[D]](1)
-    !ptr = (value, z, c)
+opaque type Memory = () => Unit
+object Memory:
+  extension (f: Memory) def deallocate() = f()
 
-    ptr
+type Captured[D] = (D, Config)
+object Captured:
+  def unsafe[D: Tag](value: D)(using c: Config): (Ptr[Captured[D]], Memory) =
+    import scalanative.runtime.*
+    val mem = fromRawPtr[Captured[D]](libc.malloc(sizeof[Captured[D]]))
+    val deallocate: Memory = () => libc.free(toRawPtr[Captured[D]](mem))
+
+    !mem = (value, c)
+
+    (mem, deallocate)
+end Captured

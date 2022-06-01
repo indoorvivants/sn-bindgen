@@ -99,25 +99,6 @@ object types:
     val CXError_InvalidArgument: CXErrorCode = 3
     val CXError_ASTReadError: CXErrorCode = 4
 
-  // opaque type CXDiagnosticDisplayOptions = CUnsignedInt
-  // object CXDiagnosticDisplayOptions extends CEnumU[CXDiagnosticDisplayOptions]:
-  //   inline def define(inline a: Long): CXDiagnosticDisplayOptions = a.toUInt
-  //   val CXDiagnostic_DisplaySourceLocation = define(1)
-  //   val CXDiagnostic_DisplayColumn = define(2)
-  //   val CXDiagnostic_DisplaySourceRanges = define(4)
-  //   val CXDiagnostic_DisplayOption = define(8)
-  //   val CXDiagnostic_DisplayCategoryId = define(16)
-  //   val CXDiagnostic_DisplayCategoryName = define(32)
-
-  // opaque type CXDiagnosticSeverity = CUnsignedInt
-  // object CXDiagnosticSeverity extends CEnumU[CXDiagnosticSeverity]:
-  //   inline def define(inline a: Long): CXDiagnosticSeverity = a.toUInt
-  //   val CXDiagnostic_Ignored = define(0)
-  //   val CXDiagnostic_Note = define(1)
-  //   val CXDiagnostic_Warning = define(2)
-  //   val CXDiagnostic_Error = define(3)
-  //   val CXDiagnostic_Fatal = define(4)
-
   opaque type CXDiagnostic = Ptr[Byte]
   object CXDiagnostic:
     given _tag: Tag[CXDiagnostic] = Tag.Ptr(Tag.Byte)

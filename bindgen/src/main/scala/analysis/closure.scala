@@ -77,7 +77,6 @@ end definitionClosure
 def computeClosure(named: Map[DefName, BindingDefinition])(using
     Config
 ): Set[String] =
-  import scala.collection.mutable
 
   @tailrec
   def expand(visited: Set[String], result: Set[String]): Set[String] =
