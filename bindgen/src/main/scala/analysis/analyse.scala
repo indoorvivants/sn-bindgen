@@ -43,8 +43,8 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
         given Config = conf
 
         zone {
-
           val loc = cursor.location
+
           val shouldBeIncluded =
             (loc.isFromMainFile || !loc.isFromSystemHeader) && (
               cursor.spelling != "__gnuc_va_list"
