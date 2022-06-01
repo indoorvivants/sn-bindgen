@@ -15,12 +15,18 @@ object Captured:
     import scalanative.runtime.*
 
     System.err.println(s"Allocating ${value.toString}")
-
-    val mem = fromRawPtr[Captured[D]](libc.malloc(sizeof[Captured[D]]))
+    val rawptr = libc.malloc(sizeof[Captured[D]])
+    val mem = fromRawPtr[Captured[D]](rawptr)
     val deallocate: Memory =
       (value.toString(), () => libc.free(toRawPtr[Captured[D]](mem)))
 
-    !mem = (value, c)
+    val tuple = (value, c)
+
+    val originalAddress = Intrinsics.castObjectToRawPtr(tuple)
+
+    Intrinsics.storeObject(rawptr, tuple)
+
+    // System.err.println(s"Original address: $originalAddress, ptr: $rawptr")
 
     (mem, deallocate)
   end unsafe
