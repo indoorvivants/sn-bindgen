@@ -2,18 +2,37 @@ package bindgen
 
 import scala.scalanative.unsafe.*
 
-opaque type Memory = () => Unit
+opaque type Memory = (String, () => Unit)
 object Memory:
-  extension (f: Memory) def deallocate() = f()
+  extension (f: Memory)
+    def deallocate() =
+      f._2()
 
 type Captured[D] = (D, Config)
 object Captured:
   def unsafe[D: Tag](value: D)(using c: Config): (Ptr[Captured[D]], Memory) =
     import scalanative.runtime.*
-    val mem = fromRawPtr[Captured[D]](libc.malloc(sizeof[Captured[D]]))
-    val deallocate: Memory = () => libc.free(toRawPtr[Captured[D]](mem))
 
-    !mem = (value, c)
+    val rawptr = libc.malloc(sizeof[Captured[D]])
+    val mem = fromRawPtr[Captured[D]](rawptr)
+    val deallocate: Memory =
+      (
+        value.toString(),
+        () =>
+          references.remove(value.asInstanceOf[Object])
+          libc.free(toRawPtr[Captured[D]](mem))
+      )
+
+    val tuple = (value, c)
+
+    val originalAddress = Intrinsics.castObjectToRawPtr(tuple)
+
+    Intrinsics.storeObject(rawptr, tuple)
+
+    references += value.asInstanceOf[Object]
 
     (mem, deallocate)
+  end unsafe
+
+  private val references = collection.mutable.Set.empty[Object]
 end Captured
