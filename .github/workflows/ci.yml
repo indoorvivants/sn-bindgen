@@ -35,7 +35,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       SN_RELEASE: fast
-      # SN_GC: none
     steps:
       # This step is important to make sure scalafmt 
       # checks don't fail
