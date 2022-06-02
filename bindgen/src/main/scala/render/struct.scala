@@ -20,8 +20,6 @@ def struct(model: Def.Struct, line: Appender)(using
         "See https://github.com/indoorvivants/sn-bindgen/issues/62 for details"
     )
 
-  given AliasResolver = ar.nest(struct)
-
   val rewriteRules = hack_recursive_structs(struct)
   val structName = struct.name
   val structType: CType.Struct = CType.Struct(struct.fields.map(_._2).toList)

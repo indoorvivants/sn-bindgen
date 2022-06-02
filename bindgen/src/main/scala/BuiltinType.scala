@@ -2,6 +2,8 @@ package bindgen
 
 import scala.scalanative.libc.stdio.*
 import scala.scalanative.posix.sys.socket.*
+import scala.scalanative.posix.netdb.*
+import scala.scalanative.posix.netinet.in.*
 import scala.scalanative.posix.time.*
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -53,15 +55,13 @@ object BuiltinType:
       "time_t",
       "scala.scalanative.posix.time.time_t"
     ),
-    apply[sockaddr](
-      "sockaddr",
-      "scala.scalanative.posix.sys.socket.sockaddr"
-    ),
     apply[UByte]("uint8_t", _unsigned("UByte")),
     apply[UShort]("uint16_t", _unsigned("UShort")),
     apply[UInt]("uint32_t", _unsigned("UInt")),
+    apply[ULong]("uint64_t", _unsigned("ULong")),
     apply[CChar]("int8_t", _unsafe("CChar")),
     apply[Short]("int16_t", _scala("Short")),
-    apply[CInt]("int32_t", _unsafe("CInt"))
+    apply[CInt]("int32_t", _unsafe("CInt")),
+    apply[Long]("int64_t", _scala("Long"))
   )
 end BuiltinType
