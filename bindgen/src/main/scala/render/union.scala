@@ -9,6 +9,20 @@ def union(model: Def.Union, line: Appender)(using Config)(using
   val structName = model.name
   val unionType: CType.Union = CType.Union(model.fields.map(_._2).toList)
   val tpe = scalaType(unionType)
+
+  def setter(name: String): String =
+    import Sanitation.*
+    sanitise(name) match
+      case Good | Escaped => name + "_="
+      case Renamed(value) => value + "_="
+
+  def getter(name: String): String =
+    import Sanitation.*
+    sanitise(name) match
+      case Good           => name
+      case Renamed(value) => value
+      case Escaped        => s"`$name`"
+
   line(s"opaque type $structName = $tpe")
   line(s"object $structName:")
   nest {
@@ -18,9 +32,11 @@ def union(model: Def.Union, line: Appender)(using Config)(using
       case u: Def.Union =>
         rendering.union(u, line)
     }
+
     val tag =
       s"given _tag: Tag[$structName] = ${scalaTag(unionType)}"
     line(tag)
+
     if model.fields.nonEmpty then
       line(s"def apply()(using Zone): Ptr[$structName] = ")
       nest {
@@ -29,16 +45,18 @@ def union(model: Def.Union, line: Appender)(using Config)(using
       }
       model.fields.foreach { case (fieldName, fieldType) =>
         val typ = scalaType(fieldType)
+        val getterName = getter(fieldName.value)
+        val setterName = setter(fieldName.value)
         // It's important we don't use the escape(...) function here
         line(s"@scala.annotation.targetName(\"apply_${fieldName.value}\")")
         line(
-          s"def apply(${escape(fieldName.value)}: $typ)(using Zone): Ptr[$structName] ="
+          s"def apply($getterName: $typ)(using Zone): Ptr[$structName] ="
         )
         nest {
           line(s"val ___ptr = alloc[$structName](1)")
           line(s"val un = !___ptr")
           line(
-            s"un.at(0).asInstanceOf[Ptr[$typ]].update(0, ${escape(fieldName.value)})"
+            s"un.at(0).asInstanceOf[Ptr[$typ]].update(0, $getterName)"
           )
           line("___ptr")
         }
@@ -46,12 +64,15 @@ def union(model: Def.Union, line: Appender)(using Config)(using
       line(s"extension (struct: $structName)")
       nest {
         model.fields.foreach { case (fieldName, fieldType) =>
+          val getterName = getter(fieldName.value)
+          val setterName = setter(fieldName.value)
           val typ = scalaType(fieldType)
+
           line(
-            s"def ${escape(fieldName.value)}: $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
+            s"def $getterName : $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
           )
           line(
-            s"def ${escape(fieldName.value + "_=")}(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
+            s"def $setterName(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
           )
         }
       }

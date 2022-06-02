@@ -34,6 +34,19 @@ def struct(model: Def.Struct, line: Appender)(using
   )
   val fieldOffsets = offsets(structType)
 
+  def setter(name: String): String =
+    import Sanitation.*
+    sanitise(name) match
+      case Good | Escaped => name + "_="
+      case Renamed(value) => value + "_="
+
+  def getter(name: String): String =
+    import Sanitation.*
+    sanitise(name) match
+      case Good           => name
+      case Renamed(value) => value
+      case Escaped        => s"`$name`"
+
   if rewriteRules.nonEmpty then
     trace(
       s"Rewrite rules for struct ${struct.name}",
@@ -67,7 +80,7 @@ def struct(model: Def.Struct, line: Appender)(using
       val applyArgList = List.newBuilder[String]
       struct.fields.zipWithIndex.map { case ((name, typ), idx) =>
         val inputType = rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
-        applyArgList.addOne(s"${escape(name.value)}: ${scalaType(inputType)}")
+        applyArgList.addOne(s"${getter(name.value)} : ${scalaType(inputType)}")
       }
 
       line(
@@ -77,7 +90,7 @@ def struct(model: Def.Struct, line: Appender)(using
         line(s"val ____ptr = apply()")
         struct.fields.foreach { case (fieldName, _) =>
           line(
-            s"(!____ptr).${escape(fieldName.value)} = ${escape(fieldName.value)}"
+            s"(!____ptr).${getter(fieldName.value)} = ${getter(fieldName.value)}"
           )
         }
         line(s"____ptr")
@@ -88,34 +101,41 @@ def struct(model: Def.Struct, line: Appender)(using
         if struct.fields.size <= 22 then
           struct.fields.zipWithIndex.foreach {
             case ((fieldName, fieldType), idx) =>
+              val setterName = setter(fieldName.value)
+              val getterName = getter(fieldName.value)
+
               rewriteRules.get(idx) match
                 case Some(rewrite) =>
+                  val typ = scalaType(rewrite.newRichType)
                   line(
-                    s"def ${escape(fieldName.value)}: ${scalaType(
-                      rewrite.newRichType
-                    )} = struct._${idx + 1}.asInstanceOf[${scalaType(rewrite.newRichType)}]"
+                    s"def $getterName : $typ = struct._${idx + 1}.asInstanceOf[$typ]"
                   )
                   line(
-                    s"def ${escape(fieldName.value + "_=")}(value: ${scalaType(rewrite.newRichType)}): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(rewrite.newRawType)}]"
+                    s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(rewrite.newRawType)}]"
                   )
 
                 case None =>
+                  val typ = scalaType(fieldType)
                   line(
-                    s"def ${escape(fieldName.value)}: ${scalaType(fieldType)} = struct._${idx + 1}"
+                    s"def $getterName : $typ = struct._${idx + 1}"
                   )
                   line(
-                    s"def ${escape(fieldName.value + "_=")}(value: ${scalaType(fieldType)}): Unit = !struct.at${idx + 1} = value"
+                    s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value"
                   )
+              end match
           }
         else
           struct.fields.zip(fieldOffsets).foreach {
             case ((fieldName, fieldType), fieldOffset) =>
               val typ = scalaType(fieldType)
+              val setterName = setter(fieldName.value)
+              val getterName = getter(fieldName.value)
+
               line(
-                s"def ${escape(fieldName.value)}: $typ = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]]"
+                s"def $getterName: $typ = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]]"
               )
               line(
-                s"def ${escape(fieldName.value + "_=")}(value: $typ): Unit = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]] = value"
+                s"def $setterName(value: $typ): Unit = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]] = value"
               )
           }
         end if

@@ -7,6 +7,30 @@ import scala.scalanative.unsafe.Tag
 import scala.scalanative.annotation.alwaysinline
 import scala.collection.mutable.ListBuffer
 
+enum Sanitation:
+  case Renamed(value: String)
+  case Escaped
+  case Good
+
+def sanitise(name: String) =
+  val keywords =
+    Set(
+      "type",
+      "val",
+      "var",
+      "class",
+      "object",
+      "null",
+      "match",
+      "true",
+      "false",
+      "final"
+    )
+  if name == "_" then Sanitation.Renamed("$underscore")
+  else if keywords.contains(name) || name.endsWith("_") then Sanitation.Escaped
+  else Sanitation.Good
+end sanitise
+
 def escape(name: String) =
   val keywords =
     Set(
@@ -21,7 +45,9 @@ def escape(name: String) =
       "false",
       "final"
     )
-  if keywords.contains(name) then s"`$name`" else name
+  if name == "_" then "$underscore"
+  else if keywords.contains(name) || name.endsWith("_") then s"`$name`"
+  else name
 end escape
 
 case class Error(msg: String) extends Exception(msg)

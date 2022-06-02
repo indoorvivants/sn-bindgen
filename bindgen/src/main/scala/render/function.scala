@@ -11,7 +11,7 @@ def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
   val arglist = f.arguments
     .map { args =>
       args
-        .map(fp => s"${escape(fp.name)}: ${scalaType(fp.typ)}")
+        .map(fp => s"${escape(fp.name)} : ${scalaType(fp.typ)}")
         .mkString(", ")
     }
     .mkString("(", ")(", ")")
@@ -74,8 +74,9 @@ def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
         end locations
 
         typeIndices.foreach { (ct, i) =>
+          val typ = scalaType(ct)
           line(
-            s"val __ptr_$i: Ptr[${scalaType(ct)}] = alloc[${scalaType(ct)}](${allocationSizes(ct)})"
+            s"val __ptr_$i: Ptr[$typ] = alloc[$typ](${allocationSizes(ct)})"
           )
         }
         indices.toList.sorted.foreach { idx =>
