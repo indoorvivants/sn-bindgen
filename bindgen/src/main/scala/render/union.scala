@@ -6,8 +6,6 @@ import bindgen.*
 def union(model: Def.Union, line: Appender)(using Config)(using
     ar: AliasResolver
 ): Unit =
-  given AliasResolver = ar.nest(model)
-
   val structName = model.name
   val unionType: CType.Union = CType.Union(model.fields.map(_._2).toList)
   val tpe = scalaType(unionType)
