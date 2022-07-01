@@ -19,7 +19,8 @@ typedef enum EnumKeywords {
   null=6,
   type=7,
   val=8,
-  var=9
+  var=9,
+  def=10
 } EnumKeywords;
 
 typedef enum EnumBitwiseOperations {
