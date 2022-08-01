@@ -15,4 +15,5 @@ typedef union test_keywords {
   char object;
   long final;
   void* class;
+  int* def;
 } UnionKeywords;
