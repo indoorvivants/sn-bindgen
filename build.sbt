@@ -28,7 +28,7 @@ lazy val Versions = new {
   val Scala212 = "2.12.15"
   val Scala213 = "2.13.8"
   val Scala2 = List(Scala212, Scala213)
-  val Scala3 = "3.1.1"
+  val Scala3 = "3.1.3"
 }
 
 // --------------MODULES-------------------------
