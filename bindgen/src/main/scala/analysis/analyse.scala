@@ -94,12 +94,16 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                 else struct
 
               if name != "" then binding.add(item, shouldBeIncluded)
-            else
+            else if typ.kind != CXTypeKind.CXType_Invalid then
               val alias: Def.Alias =
                 Def.Alias(name, constructType(typ))
               val canonical = clang_getCanonicalType(typ)
 
               binding.add(alias, shouldBeIncluded)
+            else
+              error(
+                s"Unexpected type `${typ.spelling}` of kind `${typ.kindSpelling}`"
+              )
             end if
           end if
 

@@ -7,7 +7,10 @@ def scalaTag(typ: CType)(using AliasResolver): String =
   typ match
     case model @ Struct(fields) if fields.size <= 22 =>
       val paramTypes = model.fields.map(scalaType).mkString(", ")
-      s"Tag.materializeCStruct${model.fields.size}Tag[$paramTypes]"
+
+      if model.fields.size > 0 then
+        s"Tag.materializeCStruct${model.fields.size}Tag[$paramTypes]"
+      else "Tag.materializeCStruct0Tag"
 
     case struct @ Struct(fields) =>
       scalaTag(Arr(CType.Byte, Some(staticSize(struct).toInt)))

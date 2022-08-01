@@ -3,6 +3,7 @@ package bindgen
 import libclang.defs.*
 import libclang.enumerations.*
 import libclang.types
+import libclang.fluent.*
 import libclang.types.*
 
 import scala.collection.mutable
@@ -24,12 +25,15 @@ def constructType(typ: CXType)(using
     | full type: ${clang_getTypeSpelling(typ).string}
     """.stripMargin
 
+  trace(s"Constructing type: '${typ.spelling}', kind: '${typ.kindSpelling}'")
+
   typekind match
     case CXType_Record =>
       val decl = clang_getTypeDeclaration(typ)
-      val name = clang_getCursorSpelling(decl)
+      val name = clang_getCursorSpelling(decl).string
 
-      CType.Reference(Name.Model(name.string))
+      CType.Reference(if name.isEmpty then Name.Unnamed else Name.Model(name))
+
     case CXType_Elaborated =>
       val name = constructType(clang_Type_getNamedType(typ))
       name

@@ -83,6 +83,7 @@ case class OriginalCType(typ: CType, s: String)
 enum Name:
   case Model(value: String)
   case BuiltIn(value: BuiltinType)
+  case Unnamed
 
 import CType.*
 
