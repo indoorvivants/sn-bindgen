@@ -1,4 +1,4 @@
 import libtest.functions.*
 
 @main def test = 
-  hello(25, 0.5f)
+  assert(hello(25, 0.5f) == true)

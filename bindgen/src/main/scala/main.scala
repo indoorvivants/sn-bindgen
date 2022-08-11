@@ -12,6 +12,8 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import scalanative.libc.*
+import scala.util.Using.apply
+import scala.util.Using
 
 inline def errln(inline a: Any) = System.err.println(a)
 
@@ -37,10 +39,21 @@ object Generate:
 
               if config.quiet == Quiet.No then
                 config.lang match
-                  case Lang.Scala => println(scalaOutput.result)
-                  case Lang.C     => println(cOutput.result)
+                  case Lang.Scala =>
+                    writeTo(config.outputFile, scalaOutput)
+                  case Lang.C => writeTo(config.outputFile, cOutput)
             case Some(msg) =>
               error(msg)(using LoggingConfig.default)
               sys.exit(1)
     }
+
+  private def writeTo(out: Option[OutputFile], lb: LineBuilder) =
+    out match
+      case None => print(lb.result)
+      case Some(out) =>
+        val f = new File(out.value)
+        Using.resource(new FileWriter(f)) { fw =>
+          fw.write(lb.result)
+        }
+
 end Generate

@@ -1,1 +1,13 @@
 > run
+$ exists target/scala-3.1.1/resource_managed/main/scala-native/libtest.c 
+
+# > clean
+# -$ exists target/scala-3.1.1/resource_managed/main/scala-native/libtest.c 
+# > run # recover after clean
+# > clean
+# > changePackageName 
+# -> run # should fail because we moved generated code to different package 
+# -$ exists target/scala-3.1.1/resource_managed/main/scala-native/libtest.c 
+# > revertPackageName
+# > run
+# $ exists target/scala-3.1.1/resource_managed/main/scala-native/libtest.c 

@@ -11,7 +11,8 @@ case class Config(
     clangFlags: List[ClangFlag] = Nil,
     quiet: Quiet = Quiet.No,
     minLogPriority: MinLogPriority = MinLogPriority(3),
-    exclusivePrefix: List[ExclusivePrefix] = Nil
+    exclusivePrefix: List[ExclusivePrefix] = Nil,
+    outputFile: Option[OutputFile]
 )
 
 opaque type Quiet = Boolean
@@ -37,6 +38,9 @@ object ClangFlag extends bindgen.OpaqueString[ClangFlag]
 
 opaque type HeaderFile = String
 object HeaderFile extends bindgen.OpaqueString[HeaderFile]
+
+opaque type OutputFile = String
+object OutputFile extends bindgen.OpaqueString[OutputFile]
 
 opaque type IndentationSize = Int
 object IndentationSize extends bindgen.OpaqueNum[IndentationSize]
