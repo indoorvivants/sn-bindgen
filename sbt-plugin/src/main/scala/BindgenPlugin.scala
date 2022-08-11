@@ -160,8 +160,6 @@ object BindgenPlugin extends AutoPlugin {
     import LList.:*:
     import BasicJsonProtocol.*
 
-    import codecs.configIso
-
     implicit val configFormat: JsonFormat[Config] =
       caseClassArray(Config.apply _, Config.unapply _)
 
@@ -191,22 +189,6 @@ object BindgenPlugin extends AutoPlugin {
       FileInfo.hash(defined.map(_.headerFile).toSet)
 
     tracker(Input(config, s, defined.map(InternalBinding.convert).toList)).toSeq
-  }
-
-  private object codecs {
-    import sjsonnew.*
-    import LList.:*:
-    import BasicJsonProtocol.*
-
-    implicit val configIso = LList.isoCurried({ (c: Config) =>
-      ("version", c.version) :*: ("binary", c.binary.toString) :*: LNil
-    })(
-      { case (_, version) :*: (_, binary) :*: LNil =>
-        Config(version, new File(binary))
-      }
-    )
-
-    println(implicitly[JsonFormat[Config]])
   }
 
   def inputs(bindings: Seq[Binding]): Seq[java.nio.file.Path] =
