@@ -95,7 +95,6 @@ object BindgenPlugin extends AutoPlugin {
         (Compile / resourceManaged).value / "scala-native",
         BindingLang.C,
         bindgenClangInfo.value,
-        // bindgenGenerateCSources.inputFileChanges,
         streams.value
       )
     },
