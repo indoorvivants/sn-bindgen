@@ -9,6 +9,7 @@ import bindgen.interface.Platform.OS.Windows
 import bindgen.interface.Platform.OS.MacOS
 import bindgen.interface.Platform.OS.Linux
 import bindgen.interface.Platform.OS.Unknown
+import java.nio.file.Files
 
 object Platform {
   sealed abstract class OS(val string: String) extends Product with Serializable
@@ -89,8 +90,8 @@ object Platform {
 object ClangDetector {
 
   def detect(path: Path): Platform.ClangInfo = {
-    val destination =
-      if (Platform.os == Platform.OS.Windows) "nul" else "/dev/null"
+    val tempFolder = Files.createTempDirectory("sn-bindgen-clang")
+    val destination = tempFolder.resolve("output.o").toString
     val cmd = List(path.toString(), "-v", "-c", "-xc++", destination)
 
     val stderr = List.newBuilder[String]
