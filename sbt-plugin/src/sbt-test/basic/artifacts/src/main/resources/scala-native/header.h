@@ -1,1 +1,2 @@
-void hello(int i, float y);
+#include <stdbool.h>
+bool hello(int i, float y);

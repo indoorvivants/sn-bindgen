@@ -92,7 +92,10 @@ object ClangDetector {
   def detect(path: Path): Platform.ClangInfo = {
     val tempFolder = Files.createTempDirectory("sn-bindgen-clang")
     val destination = tempFolder.resolve("output.o").toString
-    val cmd = List(path.toString(), "-v", "-c", "-xc++", destination)
+    val tempC = Files.createTempFile(tempFolder, "test", ".c").toString()
+
+    val cmd =
+      List(path.toString(), tempC, "-v", "-c", "-xc++", "-o", destination)
 
     val stderr = List.newBuilder[String]
     val stdout = List.newBuilder[String]
@@ -104,8 +107,9 @@ object ClangDetector {
 
     val exitCode = scala.sys.process.Process(cmd).run(logger).exitValue()
 
-    if (exitCode != 0)
+    if (exitCode != 0) {
       stderr.result().foreach(println)
+    }
 
     def addLLVMFolders(conf: Platform.ClangInfo) = Platform.os match {
       case MacOS =>
