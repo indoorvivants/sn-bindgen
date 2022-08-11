@@ -21,6 +21,15 @@ object CLI:
     )
     .map(PackageName.apply)
 
+  private val outputFile = Opts
+    .option[String](
+      "out",
+      help =
+        "Path to file where code will be generated. If not provided, result is sent to STDOUT"
+    )
+    .map(OutputFile.apply)
+    .orNone
+
   private val linkName = Opts
     .option[String](
       "link-name",
@@ -135,7 +144,8 @@ object CLI:
       (clangInclude, clangFlag).mapN(_ ++ _),
       quiet,
       minLogPriority,
-      exclusivePrefix
+      exclusivePrefix,
+      outputFile
     ).mapN(Config.apply)
   }
 end CLI

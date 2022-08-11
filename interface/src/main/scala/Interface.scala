@@ -26,6 +26,18 @@ object LogLevel {
   case object Info extends LogLevel("info")
   case object Warn extends LogLevel("warning")
   case object Error extends LogLevel("error")
+
+  def apply(str: String): Option[LogLevel] =
+    try {
+      Option {
+        str.toLowerCase match {
+          case "trace"   => Trace
+          case "info"    => Info
+          case "warning" => Warn
+          case "error"   => Error
+        }
+      }
+    } catch { case _: MatchError => None }
 }
 
 import BindingLang.*
@@ -170,40 +182,49 @@ class BindingBuilder(binary: File) {
         if (binding.systemIncludes.contains(Includes.ClangSearchPath))
           ci.includePaths.flatMap(path => List("--clang-include", path))
         else Nil
-      val cmd = binary.toString :: binding.toCommand(lang) ++ platformArgs
+      val outputArgs = Seq("--out", destination.toPath().toString())
+      val cmd =
+        binary.toString :: binding.toCommand(lang) ++ platformArgs ++ outputArgs
 
-      fileWriter(destination) { wr =>
-        val buf = List.newBuilder[String]
-        val logger = ProcessLogger.apply(
-          (o: String) => {
-            buf += o
-            wr.write(o + System.lineSeparator())
-          },
-          (e: String) => System.err.println(e)
+      val escapeArgs = cmd
+        .map { arg =>
+          if (arg contains ' ') s"'$arg'"
+          else arg
+        }
+        .mkString(" ")
+
+      System.err.println(s"Running `$escapeArgs`")
+
+      val buf = List.newBuilder[String]
+      val logger = ProcessLogger.apply(
+        (o: String) => {
+          buf += o
+          System.err.println(o)
+        },
+        (e: String) => System.err.println(e)
+      )
+
+      val result = Process(cmd).run(logger).exitValue()
+
+      if (result == 0) {
+        System.err.println(
+          s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
         )
 
-        val result = Process(cmd).run(logger).exitValue()
+        files += destination
+      } else {
+        val code = destination.hashCode().toHexString.toUpperCase()
+        System.err.println(
+          s"(FAILED [$code]) Executing [$escapeArgs]"
+        )
 
-        if (result == 0) {
-          System.out.println(
-            s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
-          )
-
-          files += destination
-        } else {
-          val code = destination.hashCode().toHexString.toUpperCase()
-          System.err.println(
-            s"(FAILED [$code]) Executing [${cmd.mkString(" ")}] writing to $destination"
-          )
-
-          buf.result().foreach { l =>
-            System.err.println(s"/*$code*/  " + l)
-          }
-
-          throw new Exception(
-            s"Process [${cmd.mkString(" ")}] failed with code $result"
-          )
+        buf.result().foreach { l =>
+          System.err.println(s"/*$code*/  " + l)
         }
+
+        throw new Exception(
+          s"Process [$escapeArgs] failed with code $result"
+        )
       }
     }
     files.result()

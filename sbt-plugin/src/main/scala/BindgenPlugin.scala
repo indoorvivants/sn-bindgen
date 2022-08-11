@@ -11,12 +11,15 @@ import scala.util.Try
 import bindgen.interface.Binding
 import scala.scalanative.sbtplugin.ScalaNativePlugin
 import sbt.internal.util.ManagedLogger
+import sjsonnew.JsonFormat
+import bindgen.interface.LogLevel
+import bindgen.interface.Includes
 
 object BindgenPlugin extends AutoPlugin {
   object autoImport {
     val bindgenVersion = settingKey[String]("")
     val bindgenBinary = taskKey[File]("")
-    val bindgenBindings = settingKey[Seq[Binding]]("")
+    val bindgenBindings = taskKey[Seq[Binding]]("")
     val bindgenGenerateScalaSources = taskKey[Seq[File]]("")
     val bindgenGenerateCSources = taskKey[Seq[File]]("")
     val bindgenClangInfo = taskKey[Platform.ClangInfo]("")
@@ -26,6 +29,8 @@ object BindgenPlugin extends AutoPlugin {
   import ScalaNativePlugin.autoImport.nativeClang
 
   import autoImport.*
+
+  private case class Config(version: String, binary: File)
 
   override def projectSettings = Seq(
     bindgenVersion := Platform.BuildInfo.version,
@@ -73,109 +78,146 @@ object BindgenPlugin extends AutoPlugin {
       file
 
     },
-    Compile / bindgenGenerateScalaSources / fileInputs ++= {
-      val defined = bindgenBindings.value
-      defined.map(_.headerFile.toPath).map(_.toGlob)
-    },
-    Compile / bindgenGenerateScalaSources / fileOutputs ++= {
-      outputs(
-        bindgenBindings.value,
-        (Compile / sourceManaged).value.toPath,
-        BindingLang.Scala
-      ).map(_.toGlob)
-    },
-    Compile / bindgenGenerateCSources / fileInputs ++= {
-      val defined = bindgenBindings.value
-      defined.map(_.headerFile.toPath).map(_.toGlob)
-    },
-    Compile / bindgenGenerateCSources / fileOutputs ++= {
-      outputs(
-        bindgenBindings.value,
-        ((Compile / resourceManaged).value / "scala-native").toPath,
-        BindingLang.C
-      ).map(_.toGlob)
-    },
     Compile / bindgenGenerateScalaSources := {
       incremental(
-        bindgenBinary.value,
+        Config(bindgenVersion.value, bindgenBinary.value),
         bindgenBindings.value,
         (Compile / sourceManaged).value,
         BindingLang.Scala,
         bindgenClangInfo.value,
-        bindgenGenerateScalaSources.inputFileChanges,
-        streams.value.log
+        streams.value
       )
     },
     Compile / bindgenGenerateCSources := {
       incremental(
-        bindgenBinary.value,
+        Config(bindgenVersion.value, bindgenBinary.value),
         bindgenBindings.value,
         (Compile / resourceManaged).value / "scala-native",
         BindingLang.C,
         bindgenClangInfo.value,
-        bindgenGenerateCSources.inputFileChanges,
-        streams.value.log
+        // bindgenGenerateCSources.inputFileChanges,
+        streams.value
       )
     },
     Compile / sourceGenerators += Compile / bindgenGenerateScalaSources,
     Compile / resourceGenerators += Compile / bindgenGenerateCSources
   )
 
-  def incremental(
-      binary: File,
+  implicit object IntJsonFormat extends JsonFormat[LogLevel] {
+    override def write[J](x: LogLevel, builder: sjsonnew.Builder[J]): Unit =
+      builder.writeString(x.str)
+    override def read[J](
+        jsOpt: Option[J],
+        unbuilder: sjsonnew.Unbuilder[J]
+    ): LogLevel =
+      jsOpt match {
+        case Some(js) =>
+          LogLevel(unbuilder.readString(js)).getOrElse(LogLevel.Info)
+        case None => LogLevel.Info
+      }
+  }
+
+  private case class InternalBinding(
+      headerFile: File,
+      packageName: String,
+      scalaFile: String,
+      cFile: String,
+      linkName: Option[String],
+      cImports: List[String],
+      clangFlags: List[String],
+      logLevel: String
+  )
+
+  private object InternalBinding {
+    def convert(b: Binding): InternalBinding =
+      InternalBinding(
+        headerFile = b.headerFile,
+        packageName = b.packageName,
+        scalaFile = b.scalaFile,
+        cFile = b.cFile,
+        linkName = b.linkName,
+        cImports = b.cImports,
+        clangFlags = b.clangFlags,
+        logLevel = b.logLevel.str
+      )
+  }
+
+  private def incremental(
+      config: Config,
       defined: Seq[Binding],
       destination: File,
       lang: BindingLang,
       ci: Platform.ClangInfo,
-      report: FileChanges,
-      logger: Logger
-  ) = {
+      streams: TaskStreams
+  ): Seq[File] = {
+
+    import config.*
+    val logger = streams.log
     val builder = new BindingBuilder(binary)
-    val definitely = report.created ++ report.modified
-    val out = outputs(defined, destination.toPath, lang)
-    val in = inputs(defined)
-    val mapping =
-      defined
-        .zip(in)
-        .zip(out)
+    val cacheFile =
+      streams.cacheDirectory / s"sn-bindgen"
 
-    val toRebuild = Seq.newBuilder[Binding]
-    val unchangedOuts = Seq.newBuilder[File]
+    import sjsonnew.*
+    import LList.:*:
+    import BasicJsonProtocol.*
 
-    mapping.foreach {
-      case ((binding, in), out) if !out.toFile.exists() =>
-        logger.debug(
-          s"(BINDGEN $lang) regenerating $in because it was either created or modified"
-        )
-        toRebuild += binding
-      case ((binding, in), _) if definitely.contains(in) =>
-        logger.debug(
-          s"(BINDGEN $lang) regenerating $in because output was removed"
-        )
-        toRebuild += binding
-      case ((_, in), out) if !report.deleted.contains(in) =>
-        logger.debug(
-          s"(BINDGEN $lang) $in not changed, not regenerating"
-        )
-        unchangedOuts += out.toFile
+    import codecs.configIso
 
-      case ((_, in), out) =>
-        logger.debug(
-          s"(BINDGEN $lang) $in was deleted, so stop tracking it"
-        )
+    implicit val configFormat: JsonFormat[Config] =
+      caseClassArray(Config.apply _, Config.unapply _)
 
+    case class Input(
+        config: Config,
+        hash: FilesInfo[HashFileInfo],
+        configs: List[InternalBinding]
+    )
+
+    implicit val ibFormat: JsonFormat[InternalBinding] =
+      caseClassArray(InternalBinding.apply _, InternalBinding.unapply _)
+
+    implicit val inputFormat: JsonFormat[Input] =
+      caseClassArray(Input.apply _, Input.unapply _)
+
+    val tracker = Tracked.inputChanged[Input, Set[File]](cacheFile / "input") {
+      (changed: Boolean, in: Input) =>
+        Tracked.diffOutputs(cacheFile / "output", FileInfo.exists) {
+          (outDiff: ChangeReport[File]) =>
+            if (changed || outDiff.modified.nonEmpty) {
+              builder.generate(defined, destination, lang, ci).toSet
+            } else outDiff.checked
+        }
     }
 
-    builder.generate(toRebuild.result(), destination, lang, ci) ++
-      unchangedOuts.result()
+    val s: FilesInfo[HashFileInfo] =
+      FileInfo.hash(defined.map(_.headerFile).toSet)
+
+    tracker(Input(config, s, defined.map(InternalBinding.convert).toList)).toSeq
   }
 
-  def inputs(bindings: Seq[Binding]) = bindings.map(_.headerFile.toPath)
+  private object codecs {
+    import sjsonnew.*
+    import LList.:*:
+    import BasicJsonProtocol.*
+
+    implicit val configIso = LList.isoCurried({ (c: Config) =>
+      ("version", c.version) :*: ("binary", c.binary.toString) :*: LNil
+    })(
+      { case (_, version) :*: (_, binary) :*: LNil =>
+        Config(version, new File(binary))
+      }
+    )
+
+    println(implicitly[JsonFormat[Config]])
+  }
+
+  def inputs(bindings: Seq[Binding]): Seq[java.nio.file.Path] =
+    bindings.map(_.headerFile.toPath)
+
   def outputs(
       bindings: Seq[Binding],
       destination: java.nio.file.Path,
       lang: bindgen.interface.BindingLang
-  ) =
+  ): Seq[java.nio.file.Path] =
     bindings
       .map(bind =>
         destination.resolve(
