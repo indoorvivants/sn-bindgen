@@ -7,7 +7,7 @@ By default it's resolved from Sonatype for your particular platform.</p>
 <pre><code class="language-scala">bindgenBinary := baseDirectory.value / &quot;my-custom-binary&quot;
 </code></pre>
 <h2><a href="#cli" id="cli">CLI</a></h2>
-<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--indentation-size &lt;integer&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--exclusive-prefix &lt;string&gt;]...
+<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--indentation-size &lt;integer&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--exclusive-prefix &lt;string&gt;]... [--out &lt;string&gt;]
 
 Generate Scala 3 native bindings from C header files
 
@@ -46,6 +46,8 @@ Options and flags:
         Output 'error' log messages or above
     --exclusive-prefix &lt;string&gt;
         When provided, only definitions that start with this prefix will berendered
+    --out &lt;string&gt;
+        Path to file where code will be generated. If not provided, result is sent to STDOUT
 </code></pre>
 </div></div><footer>© 2021-2022 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
