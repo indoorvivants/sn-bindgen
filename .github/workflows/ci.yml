@@ -74,7 +74,7 @@ jobs:
         if: runner.os == 'Windows'
 
       - name: CI (unix-like)
-        run: sbt ci
+        run: sbt ci buildBinary
         if: runner.os != 'Windows'
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
