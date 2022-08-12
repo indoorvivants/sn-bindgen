@@ -121,7 +121,7 @@ jobs:
 
       - name: Check published artifacts
         run: |
-          sbt --client versionDump binaryArtifacts/publishLocal iface3/publishLocal iface/publishLocal iface2_12/publishLocal
+          sbt versionDump binaryArtifacts/publishLocal iface3/publishLocal iface/publishLocal iface2_12/publishLocal
           curl -fLo cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
           chmod +x cs
           ./cs resolve com.indoorvivants:bindgen-interface_2.13:$(cat version)
