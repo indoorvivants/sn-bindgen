@@ -7,6 +7,9 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
 addSbtPlugin(
   "com.indoorvivants" % "subatomic-plugin" % "0.0.6+20-ebfed215-SNAPSHOT"
 )
+addSbtPlugin(
+  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.11+3-e0bfd074-SNAPSHOT"
+)
 
 // We want to have all the interface sources available in this project's own build
 unmanagedSourceDirectories.in(Compile) +=

@@ -95,6 +95,7 @@ object BindgenPlugin extends AutoPlugin {
     bindgenClangInfo := Platform.detectClangInfo(
       nativeClang.value.toPath
     ),
+    bindgenBindings := Seq.empty,
     bindgenBinary := resolveBinaryTask.value,
     bindgenGenerateScalaSources := {
       val compile = bindgenBindings.all(compileFilter).value

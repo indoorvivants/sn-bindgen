@@ -18,3 +18,5 @@ project/metals.sbt
 
 docs/_site
 docs/mdoc-invocation.txt
+local-bindgen
+bin

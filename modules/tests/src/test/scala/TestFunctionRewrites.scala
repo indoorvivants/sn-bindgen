@@ -90,14 +90,14 @@ class TestFunctionRewrites:
       counting {
 
         val res = rewrite_bad_func(!t1, !t2)
-        assertEquals(List(size[FunctionRewriteStruct] * 3.toUInt), result)
+        assertEquals(List(sizeof[FunctionRewriteStruct] * 3.toUInt), result)
       }
       counting {
         val res = rewrite_without_allocations(!t1, !t2, !at, i)
         assertEquals(
           Set(
-            size[FunctionRewriteStruct] * 3.toUInt,
-            size[AllocationTest] * 1.toUInt
+            sizeof[FunctionRewriteStruct] * 3.toUInt,
+            sizeof[AllocationTest] * 1.toUInt
           ),
           result.toSet
         )
@@ -108,7 +108,7 @@ class TestFunctionRewrites:
         val res = rewrite_without_allocations(t1, t2, at, i)
         assertEquals(
           Set(
-            size[
+            sizeof[
               FunctionRewriteStruct
             ] * 1.toUInt // only return value needs an alloc
           ),

@@ -19,17 +19,17 @@ jobs:
       matrix:
         include:
           - os: macos-11
-            output_filename: bindgen-out
+            output_filename: bindgen
             uploaded_filename: sn-bindgen-osx-x86_64
             llvm_bin_path: /usr/local/opt/llvm/bin
 
           - os: ubuntu-20.04
-            output_filename: bindgen-out
+            output_filename: bindgen
             uploaded_filename: sn-bindgen-linux-x86_64
             llvm_bin_path: /usr/lib/llvm-13/bin
 
           - os: windows-2022
-            output_filename: bindgen-out.exe
+            output_filename: bindgen.exe
             uploaded_filename: sn-bindgen-windows-x86_64
             llvm_bin_path: C:\Program Files\LLVM\bin
     runs-on: ${{ matrix.os }}
@@ -74,7 +74,7 @@ jobs:
         if: runner.os == 'Windows'
 
       - name: CI (unix-like)
-        run: sbt "show nativeConfig" ci examples/compile
+        run: sbt ci
         if: runner.os != 'Windows'
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
@@ -82,7 +82,7 @@ jobs:
       # Can't make shell type come from a matrix parameter: 
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
       - name: CI (windows)
-        run: sbt "show nativeConfig" ci examples/compile
+        run: sbt ci buildBinary
         shell: cmd
         if: runner.os == 'Windows'
         env: 
@@ -91,7 +91,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          path: bindgen/target/scala-3.1.3/${{ matrix.output_filename }}
+          path: bin/${{ matrix.output_filename }}
           name: ${{ matrix.uploaded_filename }}
           if-no-files-found: error
 
