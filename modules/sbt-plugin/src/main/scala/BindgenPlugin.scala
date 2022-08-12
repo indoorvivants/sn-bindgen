@@ -78,35 +78,23 @@ object BindgenPlugin extends AutoPlugin {
     }
 
   override def projectSettings =
-    Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
-
-  val compileFilter =
-    ScopeFilter(
-      inProjects(ThisProject.project),
-      inConfigurations(Compile) || inZeroConfiguration
-    )
-
-  val testFilter =
-    ScopeFilter(inProjects(ThisProject.project), inConfigurations(Test))
+    Seq(
+      bindgenVersion := Platform.BuildInfo.version,
+      bindgenBindings := Seq.empty,
+      bindgenClangInfo := Platform.detectClangInfo(
+        nativeClang.value.toPath
+      ),
+      bindgenBinary := resolveBinaryTask.value
+    ) ++
+      Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
 
   private def definedSettings(addConf: Configuration) = Seq(
-    bindgenVersion := Platform.BuildInfo.version,
-    bindgenBindings := Seq.empty,
-    bindgenClangInfo := Platform.detectClangInfo(
-      nativeClang.value.toPath
-    ),
-    bindgenBinary := resolveBinaryTask.value,
     bindgenGenerateScalaSources := {
-      val compile = bindgenBindings.all(compileFilter).value
-      val test = bindgenBindings.all(testFilter).value
-
-      val default = bindgenBindings.value
-
-      val selected = if (addConf == Test) test.flatten else compile.flatten
+      val selected = (addConf / bindgenBindings).value
 
       incremental(
         Config(bindgenVersion.value, bindgenBinary.value),
-        (selected ++ default).distinct,
+        (selected).distinct,
         (sourceManaged).value,
         BindingLang.Scala,
         bindgenClangInfo.value,
@@ -114,16 +102,11 @@ object BindgenPlugin extends AutoPlugin {
       )
     },
     bindgenGenerateCSources := {
-      val compile = bindgenBindings.all(compileFilter).value
-      val test = bindgenBindings.all(testFilter).value
-
-      val default = bindgenBindings.value
-
-      val selected = if (addConf == Test) test.flatten else compile.flatten
+      val selected = (addConf / bindgenBindings).value
 
       incremental(
         Config(bindgenVersion.value, bindgenBinary.value),
-        (selected ++ default).distinct,
+        (selected).distinct,
         (resourceManaged).value / "scala-native",
         BindingLang.C,
         bindgenClangInfo.value,

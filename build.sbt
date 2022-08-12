@@ -31,6 +31,26 @@ lazy val Versions = new {
   val Scala3 = "3.1.3"
 }
 
+inThisBuild(
+  Seq(
+    organization := "com.indoorvivants",
+    organizationName := "Anton Sviridov",
+    homepage := Some(url("https://github.com/indoorvivants/sn-bindgen")),
+    startYear := Some(2022),
+    licenses := List(
+      "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
+    ),
+    developers := List(
+      Developer(
+        "keynmol",
+        "Anton Sviridov",
+        "velvetbaldmime@protonmail.com",
+        url("https://blog.indoorvivants.com")
+      )
+    )
+  )
+)
+
 // --------------MODULES-------------------------
 lazy val root = project
   .in(file("."))
@@ -43,7 +63,7 @@ lazy val root = project
   )
 
 lazy val iface = projectMatrix
-  .in(file("interface"))
+  .in(file("modules/interface"))
   .someVariations(
     Versions.Scala2 :+ Versions.Scala3,
     List(VirtualAxis.jvm) // todo may be publish native interfaces as well
@@ -69,11 +89,8 @@ lazy val iface = projectMatrix
     }
   )
 
-val generateCSources = taskKey[Seq[File]]("")
-val generateScalaSources = taskKey[Seq[File]]("")
-
 lazy val bindgen = project
-  .in(file("bindgen"))
+  .in(file("modules/bindgen"))
   .dependsOn(libclang)
   .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin)
   .settings(nativeCommon)
@@ -85,102 +102,7 @@ lazy val bindgen = project
     moduleName := "bindgen",
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
       .excludeAll(ExclusionRule("org.scala-native")),
-
-    // test settings for Scala Native
-    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
-
-    // Scala 3 hack around the issue with docs
-    Compile / doc / scalacOptions ~= { opts =>
-      opts.filterNot(_.contains("-Xplugin"))
-    },
-    // end of Scala 3 hack around the issue with docs
-    Test / watchedHeaders / fileInputs +=
-      baseDirectory.value.toGlob / "src" / "test" / "resources" / "scala-native" / "*.h",
-    Test / watchedHeaders := {
-      val path =
-        baseDirectory.value / "src" / "test" / "resources" / "scala-native"
-      val glob = path.toGlob / "*.h"
-
-      import scala.collection.JavaConverters.*
-      Files
-        .walk(path.toPath, 1)
-        .collect(Collectors.toList())
-        .asScala
-        .filter(glob.matches)
-        .map(h => h.toFile -> path.toPath.relativize(h).toString.dropRight(2))
-        .toMap
-    },
-    Test / generateScalaSources := {
-      val scalaFiles = (Test / sourceManaged).value
-      val headersPath =
-        baseDirectory.value / "src" / "test" / "resources" / "scala-native"
-      val binary = (Compile / nativeLink).value
-      val headerSpec = (Test / watchedHeaders).value
-      val expectedScalaFiles =
-        headerSpec.map { case (headerFile, name) =>
-          headerFile -> (scalaFiles / s"lib_test_$name.scala")
-        }
-
-      val changes = (Test / watchedHeaders).inputFileChanges
-      val missing = expectedScalaFiles.filterNot(_._2.exists()).map(_._1)
-      val toRebuild =
-        changes.created.map(_.toFile) ++
-          changes.modified.map(_.toFile) ++
-          missing
-      val builder = new BindingBuilder(binary)
-
-      val existing = (expectedScalaFiles -- toRebuild).map(_._2)
-
-      val defined = toRebuild.map { header =>
-        val name = headerSpec(header)
-        Binding(header, s"lib_test_$name", logLevel = LogLevel.Trace)
-      }
-
-      builder
-        .generate(
-          defined,
-          scalaFiles,
-          BindingLang.Scala,
-          clangInfo.value
-        ) ++ existing
-
-    },
-    Test / generateCSources := {
-      val cFiles = (Test / resourceManaged).value / "scala-native"
-      val headersPath =
-        baseDirectory.value / "src" / "test" / "resources" / "scala-native"
-      val binary = (Compile / nativeLink).value
-      val headerSpec = (Test / watchedHeaders).value
-      val expectedCFiles =
-        headerSpec.map { case (headerFile, name) =>
-          headerFile -> (cFiles / s"lib_test_$name.c")
-        }
-
-      val changes = (Test / watchedHeaders).inputFileChanges
-      val missing = expectedCFiles.filterNot(_._2.exists()).map(_._1)
-      val toRebuild =
-        changes.created.map(_.toFile) ++
-          changes.modified.map(_.toFile) ++
-          missing
-      val builder = new BindingBuilder(binary)
-
-      val existing = (expectedCFiles -- toRebuild).map(_._2)
-
-      val defined = toRebuild.map { header =>
-        val name = headerSpec(header)
-        Binding(
-          header,
-          s"lib_test_$name",
-          cImports = List(s"$name.h"),
-          logLevel = LogLevel.Trace
-        )
-      }
-
-      builder
-        .generate(defined, cFiles, BindingLang.C, clangInfo.value) ++ existing
-    },
-    Test / sourceGenerators += (Test / generateScalaSources),
-    Test / resourceGenerators += (Test / generateCSources)
+    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v")
   )
   .settings {
     val detected = detectBinaryArtifacts
@@ -191,20 +113,6 @@ lazy val bindgen = project
       .toSeq
       .flatten
   }
-
-def getHeaders(path: File): Seq[String] = {
-  val glob = path.toGlob / "*.h"
-
-  import scala.collection.JavaConverters.*
-  Files
-    .walk(path.toPath, 1)
-    .collect(Collectors.toList())
-    .asScala
-    .filter(glob.matches)
-    .map(h => path.toPath.relativize(h).toString)
-    .map(_.dropRight(2)) // remove ".h"
-    .toSeq
-}
 
 lazy val binaryArtifacts = project
   .in(file("build/binary-artifacts"))
@@ -251,7 +159,7 @@ lazy val localBindgenArtifact = project
   }
 
 lazy val plugin = projectMatrix
-  .in(file("sbt-plugin"))
+  .in(file("modules/sbt-plugin"))
   .defaultAxes(VirtualAxis.scalaABIVersion(Versions.Scala212), VirtualAxis.jvm)
   .allVariations(List(Versions.Scala212), List(VirtualAxis.jvm))
   .dependsOn(iface)
@@ -274,7 +182,7 @@ lazy val plugin = projectMatrix
   .enablePlugins(ScriptedPlugin, SbtPlugin)
 
 lazy val libclang = project
-  .in(file("libclang"))
+  .in(file("modules/libclang"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
   .settings(clangDetection)
@@ -286,52 +194,42 @@ lazy val libclang = project
     }
   )
 
-lazy val examples = project
-  .in(file("examples"))
-  .enablePlugins(ScalaNativePlugin)
+lazy val tests = project
+  .in(file("modules/tests"))
+  .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin, BindgenPlugin)
   .settings(nativeCommon)
-  .settings(clangDetection)
+  .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
+  .settings(clangDetection)
   .settings(
-    Compile / sourceGenerators += Def.taskIf {
-      if (sys.env.contains("BINARY")) {
-        val ci = clangInfo.value
-        generateExampleBindings(
-          (Compile / sourceManaged).value,
-          baseDirectory.value,
-          new File(sys.env("BINARY")),
-          BindingLang.Scala,
-          ci
+    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
+    bindgenBinary := (bindgen / Compile / nativeLink).value,
+    Compile / bindgenBinary := (bindgen / Compile / nativeLink).value,
+    Test / bindgenBinary := (bindgen / Compile / nativeLink).value,
+    bindgenBindings := Seq.empty,
+    Test / bindgenBindings := {
+      val headersPath =
+        baseDirectory.value / "src" / "test" / "resources" / "scala-native"
+
+      val files = headersPath.toGlob / "**" / "*.h"
+      import scala.collection.JavaConverters.*
+      val headerSpec = Files
+        .walk(headersPath.toPath, 1)
+        .collect(Collectors.toList())
+        .asScala
+        .filter(_.toFile().isFile())
+        .filter(_.toFile.ext == "h")
+        .map(h =>
+          h.toFile -> headersPath.toPath.relativize(h).toString.dropRight(2)
         )
-      } else {
-        val ci = clangInfo.value
-        generateExampleBindings(
-          (Compile / sourceManaged).value,
-          baseDirectory.value,
-          (bindgen / Compile / nativeLink).value,
-          BindingLang.Scala,
-          ci
-        )
-      }
-    },
-    Compile / resourceGenerators += Def.taskIf {
-      if (sys.env.contains("BINARY")) {
-        val ci = clangInfo.value
-        generateExampleBindings(
-          (Compile / resourceManaged).value / "scala-native",
-          baseDirectory.value,
-          new File(sys.env("BINARY")),
-          BindingLang.C,
-          ci
-        )
-      } else {
-        val ci = clangInfo.value
-        generateExampleBindings(
-          (Compile / resourceManaged).value / "scala-native",
-          baseDirectory.value,
-          (bindgen / Compile / nativeLink).value,
-          BindingLang.C,
-          ci
+        .toMap
+
+      headerSpec.toSeq.map { case (header, name) =>
+        Binding(
+          header,
+          s"lib_test_$name",
+          cImports = List(s"$name.h"),
+          logLevel = LogLevel.Trace
         )
       }
     }
@@ -380,21 +278,6 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
   artifacts.toMap
 } else Map.empty
 
-def generateExampleBindings(
-    destination: File,
-    base: File,
-    binary: File,
-    lang: BindingLang,
-    ci: ClangInfo
-): Seq[File] = {
-
-  val builder = new BindingBuilder(binary)
-
-  val defined = sampleBindings(base / "libraries", builder, ci)
-
-  builder.generate(defined, destination, lang, ci)
-}
-
 def environmentConfiguration(conf: NativeConfig): NativeConfig = {
   var modified = conf
   if (sys.env.contains("SN_RELEASE"))
@@ -436,44 +319,9 @@ def usesLibClang(conf: NativeConfig) = {
       conf.compileOptions ++ detected.llvmInclude.map("-I" + _)
     )
 }
-def sampleBindings(location: File, builder: BindingBuilder, ci: ClangInfo) = {
-
-  val clangInclude = ci.includePaths.map("-I" + _)
-  val llvmInclude = ci.llvmInclude.map("-I" + _)
-
-  Seq(
-    Binding(location / "cJSON.h", "libcjson", Some("cjson"), List("cJSON.h")),
-    Binding(
-      location /
-        "Clang-Index.h",
-      "libclang",
-      Some("clang"),
-      List("clang-c/Index.h"),
-      llvmInclude
-    ),
-    Binding(
-      location /
-        "tree-sitter.h",
-      "libtreesitter",
-      Some("treesitter"),
-      cImports = List("tree_sitter/api.h"),
-      llvmInclude ++
-        clangInclude ++
-        List("-std=gnu99")
-    ),
-    Binding(
-      location /
-        "raylib.h",
-      "libraylib",
-      Some("raylib"),
-      List("raylib.h"),
-      llvmInclude ++ clangInclude
-    )
-  )
-
-}
 
 // --------------SETTINGS-------------------------
+
 ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 lazy val markdownDocuments = taskKey[Seq[java.nio.file.Path]]("")
@@ -507,12 +355,22 @@ buildSite := Def.inputTaskDyn {
 
 }.evaluated
 
+lazy val buildBinary = taskKey[File]("")
+
+buildBinary := {
+  val built = (bindgen / Compile / nativeLink).value
+  val name =
+    if (Platform.os == Platform.OS.Windows) "bindgen.exe" else "bindgen"
+  val dest = (ThisBuild / baseDirectory).value / "bin" / name
+
+  IO.copyFile(built, dest)
+
+  dest
+}
+
 lazy val nativeCommon = Seq(
   scalaVersion := Versions.Scala3
 )
-
-lazy val watchedHeaders =
-  taskKey[Map[File, String]]("Header files watched by bindgen's tests")
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -543,28 +401,3 @@ addCommandAlias(
 )
 
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
-
-inThisBuild(
-  Seq(
-    concurrentRestrictions ++= {
-      if (Platform.os == Platform.OS.Windows && sys.env.contains("CI"))
-        Seq(Tags.limitAll(1))
-      else Seq.empty
-    },
-    organization := "com.indoorvivants",
-    organizationName := "Anton Sviridov",
-    homepage := Some(url("https://github.com/indoorvivants/sn-bindgen")),
-    startYear := Some(2022),
-    licenses := List(
-      "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
-    ),
-    developers := List(
-      Developer(
-        "keynmol",
-        "Anton Sviridov",
-        "velvetbaldmime@protonmail.com",
-        url("https://blog.indoorvivants.com")
-      )
-    )
-  )
-)
