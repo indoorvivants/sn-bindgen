@@ -32,25 +32,24 @@ object BindgenPlugin extends AutoPlugin {
 
   private case class Config(version: String, binary: File)
 
-  override def projectSettings = Seq(
-    bindgenVersion := Platform.BuildInfo.version,
-    bindgenBindings := Seq.empty,
-    bindgenClangInfo := Platform.detectClangInfo(nativeClang.value.toPath),
-    bindgenBinary := {
-      val res = dependencyResolution.value
+  private val resolveBinaryTask =
+    Def.task {
+      val res = (dependencyResolution).value
+
       def getJars(mid: ModuleID) = {
 
         val depRes = (update / dependencyResolution).value
         val updc = (update / updateConfiguration).value
         val uwconfig = (update / unresolvedWarningConfiguration).value
         val modDescr = depRes.wrapDependencyInModule(mid)
+        val log = (streams).value.log
 
         depRes
           .update(
             modDescr,
             updc,
             uwconfig,
-            streams.value.log
+            log
           )
           .map(_.allFiles)
           .fold(uw => throw uw.resolveException, identity)
@@ -76,33 +75,66 @@ object BindgenPlugin extends AutoPlugin {
       file.setExecutable(true)
 
       file
+    }
 
-    },
-    Compile / bindgenGenerateScalaSources := {
+  override def projectSettings =
+    Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
+
+  val compileFilter =
+    ScopeFilter(
+      inProjects(ThisProject.project),
+      inConfigurations(Compile) || inZeroConfiguration
+    )
+
+  val testFilter =
+    ScopeFilter(inProjects(ThisProject.project), inConfigurations(Test))
+
+  private def definedSettings(addConf: Configuration) = Seq(
+    bindgenVersion := Platform.BuildInfo.version,
+    bindgenBindings := Seq.empty,
+    bindgenClangInfo := Platform.detectClangInfo(
+      nativeClang.value.toPath
+    ),
+    bindgenBinary := resolveBinaryTask.value,
+    bindgenGenerateScalaSources := {
+      val compile = bindgenBindings.all(compileFilter).value
+      val test = bindgenBindings.all(testFilter).value
+
+      val default = bindgenBindings.value
+
+      val selected = if (addConf == Test) test.flatten else compile.flatten
+
       incremental(
         Config(bindgenVersion.value, bindgenBinary.value),
-        bindgenBindings.value,
-        (Compile / sourceManaged).value,
+        (selected ++ default).distinct,
+        (sourceManaged).value,
         BindingLang.Scala,
         bindgenClangInfo.value,
         streams.value
       )
     },
-    Compile / bindgenGenerateCSources := {
+    bindgenGenerateCSources := {
+      val compile = bindgenBindings.all(compileFilter).value
+      val test = bindgenBindings.all(testFilter).value
+
+      val default = bindgenBindings.value
+
+      val selected = if (addConf == Test) test.flatten else compile.flatten
+
       incremental(
         Config(bindgenVersion.value, bindgenBinary.value),
-        bindgenBindings.value,
-        (Compile / resourceManaged).value / "scala-native",
+        (selected ++ default).distinct,
+        (resourceManaged).value / "scala-native",
         BindingLang.C,
         bindgenClangInfo.value,
         streams.value
       )
     },
-    Compile / sourceGenerators += Compile / bindgenGenerateScalaSources,
-    Compile / resourceGenerators += Compile / bindgenGenerateCSources
+    sourceGenerators += bindgenGenerateScalaSources,
+    resourceGenerators += bindgenGenerateCSources
   )
 
-  implicit object IntJsonFormat extends JsonFormat[LogLevel] {
+  implicit object LogLevelFormat extends JsonFormat[LogLevel] {
     override def write[J](x: LogLevel, builder: sjsonnew.Builder[J]): Unit =
       builder.writeString(x.str)
     override def read[J](

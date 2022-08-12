@@ -1,4 +1,4 @@
-enablePlugins(BindgenPlugin, ScalaNativePlugin)
+enablePlugins(BindgenPlugin, ScalaNativePlugin, ScalaNativeJUnitPlugin)
 
 import bindgen.interface.Binding
 import java.util.concurrent.atomic.AtomicReference
@@ -8,11 +8,24 @@ scalaVersion := "3.1.1"
 bindgenBindings := {
   Seq(
     Binding(
-      baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
-      getPackageName.value.get
+      headerFile =
+        baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
+      packageName = getPackageName.value.get
     )
   )
 }
+
+Test / bindgenBindings := {
+  Seq(
+    Binding(
+      headerFile =
+        baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
+      packageName = "gentests"
+    )
+  )
+}
+
+testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v")
 
 val changePackageName = taskKey[Unit]("")
 
