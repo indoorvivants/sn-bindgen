@@ -359,7 +359,8 @@ lazy val buildBinary = taskKey[File]("")
 
 buildBinary := {
   val built = (bindgen / Compile / nativeLink).value
-  val name = if (Platform.os == Platform.OS.Windows) "bindgen.exe" else "bindgen"
+  val name =
+    if (Platform.os == Platform.OS.Windows) "bindgen.exe" else "bindgen"
   val dest = (ThisBuild / baseDirectory).value / "bin" / name
 
   IO.copyFile(built, dest)
