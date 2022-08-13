@@ -16,10 +16,10 @@ div.searchContainer span.searchResults {
   background-color: white;
   border:2px solid darkslategrey;
   border-radius: 2px; 
-  min-width: 500px;
   max-width: 600px;
-  z-index: 100;
-  right: auto;
   position: absolute;
-  top: 100%;  z-index: 100;  left: 0px;  right: auto
+  top: 100%;  
+  z-index: 100;  
+  left: 0px;  
+  right: auto
 }
