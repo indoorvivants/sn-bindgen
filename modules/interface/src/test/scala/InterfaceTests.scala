@@ -11,8 +11,6 @@ import java.nio.file.Paths
 
 class TestFunctions {
   val plat = Platform.detectClangInfo(Paths.get(sys.env("BINDGEN_CLANG_PATH")))
-  private def builder =
-    new BindingBuilder(new File(sys.env("BINARY")))
 
   val c_code = """
       | unsigned run(int i, float h);
@@ -33,7 +31,7 @@ class TestFunctions {
   }
 
   @Test def writes_scala_file(): Unit = isolate { probe =>
-    builder
+    probe.builder
       .generate(
         Seq(Binding(headerFile, "lib_check")),
         probe.scalaFiles,
@@ -45,7 +43,7 @@ class TestFunctions {
   }
 
   @Test def writes_c_file(): Unit = isolate { probe =>
-    builder
+    probe.builder
       .generate(
         Seq(Binding(headerFile, "lib_check")),
         probe.cFiles,
@@ -59,14 +57,14 @@ class TestFunctions {
   @Test def checks_header_file_exists(): Unit = isolate { probe =>
     val bind = Binding(probe.cFiles / scala.util.Random.nextInt.toString, "bla")
 
-    def invoke = builder
+    def invoke = probe.builder
       .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
 
     assertTrue(Try(invoke).isFailure)
   }
   @Test def checks_header_is_a_file(): Unit = isolate { probe =>
     val bind = Binding(probe.cFiles, "bla")
-    def invoke = builder
+    def invoke = probe.builder
       .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
 
     assertTrue(Try(invoke).isFailure)
@@ -75,7 +73,7 @@ class TestFunctions {
   @Test def adds_c_imports(): Unit = isolate { probe =>
     val bind =
       Binding(headerFile, "lib_check", cImports = List("my_cool_library.h"))
-    builder
+    probe.builder
       .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
 
     assertEquals(
@@ -93,7 +91,7 @@ class TestFunctions {
     val bind =
       Binding(headerFile, "lib_check", linkName = Some("my-awesome-library"))
 
-    builder
+    probe.builder
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
     assertEquals(
@@ -107,7 +105,7 @@ class TestFunctions {
   @Test def adds_package_name(): Unit = isolate { probe =>
     val bind =
       Binding(headerFile, "lib_my_awesome_library")
-    builder
+    probe.builder
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
     assertEquals(
@@ -127,7 +125,7 @@ class TestFunctions {
 
     // without any clang flags, this file won't be found and clang will fail
     val opt = Try(
-      builder
+      probe.builder
         .generate(Seq(noFlags), probe.scalaFiles, BindingLang.Scala, plat)
     )
 
@@ -141,7 +139,7 @@ class TestFunctions {
       )
     // if we add additional `-I` flag with correct location, it should succeed
     val optFixed = Try(
-      builder
+      probe.builder
         .generate(Seq(withFlags), probe.scalaFiles, BindingLang.Scala, plat)
     )
 
@@ -150,14 +148,29 @@ class TestFunctions {
 
   private def exists(f: File) = Files.exists(f.toPath())
   private def lines(f: File) = io.Source.fromFile(f).getLines().toList
-  private case class Probe(scalaFiles: File, cFiles: File)
+  private case class Probe(
+      scalaFiles: File,
+      cFiles: File,
+      builder: BindingBuilder
+  )
   private def isolate(f: Probe => Unit) = {
-    f(
-      Probe(
-        cFiles = Files.createTempDirectory("c-files").toFile,
-        scalaFiles = Files.createTempDirectory("scala-files").toFile
+    val logs = Vector.newBuilder[String]
+    val str = (s: String) => { logs += s; () }
+    val builder =
+      new BindingBuilder(new File(sys.env("BINARY")), errPrintln = str)
+    try {
+      f(
+        Probe(
+          cFiles = Files.createTempDirectory("c-files").toFile,
+          scalaFiles = Files.createTempDirectory("scala-files").toFile,
+          builder = builder
+        )
       )
-    )
+    } catch {
+      case scala.util.control.NonFatal(exc) =>
+        logs.result().foreach(println)
+        throw exc
+    }
   }
 
   private val headerFile = {
