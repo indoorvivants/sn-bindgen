@@ -21,7 +21,7 @@ import _root_.bindgen.interface.{
 import java.nio.file.Paths
 
 lazy val Versions = new {
-  val decline = "2.2.0"
+  val decline = "2.3.0"
   val scalaNative = nativeVersion
   val junit = "0.11"
 
