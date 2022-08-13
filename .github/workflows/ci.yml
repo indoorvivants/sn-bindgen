@@ -12,8 +12,8 @@ env:
   SBT_OPTS: "-Xmx4G"
 
 jobs:
-  build:
-    name: CI on ${{ matrix.os }}
+  unix_build:
+    name: Unix CI on ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -28,20 +28,10 @@ jobs:
             uploaded_filename: sn-bindgen-linux-x86_64
             llvm_bin_path: /usr/lib/llvm-13/bin
 
-          - os: windows-2022
-            output_filename: bindgen.exe
-            uploaded_filename: sn-bindgen-windows-x86_64
-            llvm_bin_path: C:\Program Files\LLVM\bin
     runs-on: ${{ matrix.os }}
     env:
       SN_RELEASE: fast
     steps:
-      # This step is important to make sure scalafmt 
-      # checks don't fail
-      - name: Setup git config
-        run: git config --global core.autocrlf false
-        if: runner.os == 'Windows'
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 
@@ -54,7 +44,42 @@ jobs:
 
       - name: Setup Unix-like
         run: ./build/setup_unix.sh
-        if: runner.os != 'Windows'
+
+      - name: CI (unix-like)
+        run: sbt ci buildBinary
+        env: 
+          LLVM_BIN: ${{ matrix.llvm_bin_path }}
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          path: bin/${{ matrix.output_filename }}
+          name: ${{ matrix.uploaded_filename }}
+          if-no-files-found: error
+
+  windows_build:
+    name: Windows CI
+    strategy:
+      fail-fast: false
+    runs-on: windows-2022
+    env:
+      SN_RELEASE: fast
+      LLVM_BIN: C:\Program Files\LLVM\bin
+    steps:
+      # This step is important to make sure scalafmt 
+      # checks don't fail
+      - name: Setup git config
+        run: git config --global core.autocrlf false
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' 
+          java-version: '17'
+          cache: 'sbt'
 
       # See https://github.com/scala-native/scala-native/blob/master/.github/actions/windows-setup-env/action.yml#L14 
       # for details
@@ -63,40 +88,29 @@ jobs:
         with:
           minimum-size: 4GB
           maximum-size: 16GB
-        if: runner.os == 'Windows'
 
-      - name: Setup windows
+      - name: Install clang
         shell: pwsh
         run: |
           choco install llvm --version=13.0.0 --allow-downgrade
-          choco install sbt --version=1.6.1
+          choco install sbt --version=1.7.1
           clang --version
-        if: runner.os == 'Windows'
 
-      - name: CI (unix-like)
-        run: sbt ci buildBinary
-        if: runner.os != 'Windows'
-        env: 
-          LLVM_BIN: ${{ matrix.llvm_bin_path }}
-      
       # Can't make shell type come from a matrix parameter: 
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
       - name: CI (windows)
         run: sbt ci buildBinary
         shell: cmd
-        if: runner.os == 'Windows'
-        env: 
-          LLVM_BIN: ${{ matrix.llvm_bin_path }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          path: bin/${{ matrix.output_filename }}
-          name: ${{ matrix.uploaded_filename }}
+          path: bin/bindgen.exe
+          name: sn-bindgen-windows-x86_64
           if-no-files-found: error
 
   release:
-    needs: [build]
+    needs: [unix_build, windows_build]
     name: Release
     if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
