@@ -20,12 +20,12 @@ jobs:
         include:
           - os: macos-11
             output_filename: bindgen
-            uploaded_filename: sn-bindgen-osx-x86_64
+            uploaded_filename: sn-bindgen-x86_64-apple-darwin
             llvm_bin_path: /usr/local/opt/llvm@13/bin
 
           - os: ubuntu-20.04
             output_filename: bindgen
-            uploaded_filename: sn-bindgen-linux-x86_64
+            uploaded_filename: sn-bindgen-x86_64-pc-linux
             llvm_bin_path: /usr/lib/llvm-13/bin
 
     runs-on: ${{ matrix.os }}
@@ -108,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           path: bin/bindgen.exe
-          name: sn-bindgen-windows-x86_64
+          uploaded_filename: sn-bindgen-x86_64-pc-win32
           if-no-files-found: error
 
   release:
@@ -133,6 +133,7 @@ jobs:
 
       - name: Download binaries
         uses: actions/download-artifact@v2
+        id: download
         with:
           path: binaries
 
@@ -169,9 +170,21 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
 
+      - name: Rename binaries 
+        run: |
+          cd "${{steps.download.outputs.download-path}}"
+          mv sn-bindgen-x86_64-apple-darwin sn-bindgen-x86_64-apple-darwin-dir
+          mv sn-bindgen-x86_64-apple-darwin-dir/bindgen sn-bindgen-x86_64-apple-darwin
+
+          mv sn-bindgen-x86_64-pc-linux sn-bindgen-x86_64-pc-linux-dir
+          mv sn-bindgen-x86_64-pc-linux-dir/bindgen sn-bindgen-x86_64-pc-linux
+
+          mv sn-bindgen-x86_64-pc-win32 sn-bindgen-x86_64-pc-win32-dir
+          mv sn-bindgen-x86_64-pc-win32-dir/bindgen.exe sn-bindgen-x86_64-pc-win32.exe
+          ls -R .
+
       - name: Upload release binaries
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: |
-            binaries/*
+          files: "${{steps.download.outputs.download-path}}/**/*"
