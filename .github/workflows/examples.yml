@@ -1,0 +1,84 @@
+name: Examples
+on: workflow_dispatch
+
+env: 
+  JAVA_OPTS: "-Xmx4G"
+  JVM_OPTS: "-Xmx4G"
+  SBT_OPTS: "-Xmx4G"
+
+jobs:
+  unix_build:
+    name: Examples
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-11
+            llvm_bin_path: /usr/local/opt/llvm@13/bin
+
+          - os: ubuntu-20.04
+            llvm_bin_path: /usr/lib/llvm-13/bin
+
+    runs-on: ${{ matrix.os }}
+    env:
+      SN_RELEASE: fast
+      LLVM_VERSION: 13
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' 
+          java-version: '17'
+          cache: 'sbt'
+
+      - name: Cache sbt-vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/Library/Caches/sbt-vcpkg
+            ~/.cache/sbt-vcpkg
+          key: ${{ runner.os }}-sbt-vcpkg-${{ hashFiles('examples/**/*.sbt') }}
+
+      - name: Setup Unix-like
+        run: ./build/setup_unix.sh
+
+      - name: Build
+        run: sbt devPublish versionDump
+        env: 
+          LLVM_BIN: ${{ matrix.llvm_bin_path }}
+
+      - name: Setup for examples
+        run: |
+          git clone https://github.com/keynmol/sn-bindgen-examples examples
+          cd examples
+          git submodule update --init
+
+          cd example-tree-sitter && ./setup.sh && cd ..
+          cd example-civetweb && ./setup.sh && cd ..
+
+          PLATFORM="$(uname)"
+          if [ $PLATFORM == "Darwin" ]; then 
+            echo "It's a Mac"
+          else
+            docker run -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+            docker run -p 6379:6379 -d redis
+          fi
+
+      - name: Run examples
+        run: | 
+          PLATFORM="$(uname)"
+
+          export SN_BINDGEN_VERSION="$(cat version)"
+
+          cd examples
+
+          if [ $PLATFORM == "Darwin" ]; then 
+            echo "It's a Mac"
+            LLVM_BIN=/usr/local/opt/llvm/bin sbt runExamples
+          else
+            echo "It's a Linux"
+            LLVM_BIN=/usr/lib/llvm-13/bin sbt runExamples
+          fi
