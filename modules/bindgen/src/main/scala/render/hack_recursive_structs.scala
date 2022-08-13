@@ -36,7 +36,6 @@ def isCyclical(typ: CType, structName: StructName)(using
 
       case _ => Option.empty
     end match
-
   // trace((" " * level) + s"result of $t is '$result', visited: $visited")
   end go
   go(typ, List(structName.value), 0)

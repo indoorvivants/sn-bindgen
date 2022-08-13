@@ -31,7 +31,7 @@ def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
         val returnKeyword = if f.returnType != CType.Void then "return " else ""
         line(
           s"${f.originalCType.s} ${f.name}(${arglist.result
-            .mkString(", ")}) {\n $returnKeyword$to(${delegateCallList.mkString(", ")});\n};\n"
+              .mkString(", ")}) {\n $returnKeyword$to(${delegateCallList.mkString(", ")});\n};\n"
         )
       else
         val returnParamName = "____return"
