@@ -268,8 +268,8 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     arch <- Platform.Arch.all
     target = Platform.Target(os, arch)
     filename = os match {
-      case Windows => "bindgen-out.exe"
-      case _       => "bindgen-out"
+      case Windows => "bindgen.exe"
+      case _       => "bindgen"
     }
     file = folder / s"sn-bindgen-${target.string}" / filename
     if file.exists()

@@ -12,12 +12,25 @@ import bindgen.interface.Platform.OS.Unknown
 import java.nio.file.Files
 
 object Platform {
-  sealed abstract class OS(val string: String) extends Product with Serializable
+  sealed trait OS extends Product with Serializable {
+    def string: String = this match {
+      case Windows => "windows"
+      case MacOS   => "osx"
+      case Linux   => "linux"
+      case Unknown => "unknown"
+    }
+    def coursierString: String = this match {
+      case Windows => "pc-win32"
+      case MacOS   => "apple-darwin"
+      case Linux   => "pc-linux"
+      case Unknown => "unknown"
+    }
+  }
   object OS {
-    case object Windows extends OS("windows")
-    case object MacOS extends OS("osx")
-    case object Linux extends OS("linux")
-    case object Unknown extends OS("unknown")
+    case object Windows extends OS
+    case object MacOS extends OS
+    case object Linux extends OS
+    case object Unknown extends OS
 
     val all = List(Windows, MacOS, Linux, Unknown)
   }
@@ -32,7 +45,9 @@ object Platform {
   }
 
   case class Target(os: OS, arch: Arch) {
-    def string = os.string + "-" + arch.string
+    def string: String = os.string + "-" + arch.string
+    def coursierString: String = arch.string + "-" + os.coursierString
+
     def fallback = (os, arch) match {
       case (OS.MacOS, Arch.aarch64) => Some(Target(os, Arch.x86_64))
       case _                        => None
