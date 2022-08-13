@@ -108,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           path: bin/bindgen.exe
-          uploaded_filename: sn-bindgen-x86_64-pc-win32
+          name: sn-bindgen-x86_64-pc-win32
           if-no-files-found: error
 
   release:
