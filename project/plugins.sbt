@@ -8,7 +8,7 @@ addSbtPlugin(
   "com.indoorvivants" % "subatomic-plugin" % "0.0.6+20-ebfed215-SNAPSHOT"
 )
 addSbtPlugin(
-  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.11+3-e0bfd074-SNAPSHOT"
+  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.11+6-33a327a0-SNAPSHOT"
 )
 
 // We want to have all the interface sources available in this project's own build
