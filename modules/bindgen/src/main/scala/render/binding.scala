@@ -4,6 +4,8 @@ package rendering
 import bindgen.*
 import scala.collection.mutable.ListBuffer
 
+case class Constants(enums: Seq[Def.Enum])
+
 def binding(
     binding: Binding,
     scalaOutput: LineBuilder,
@@ -41,6 +43,7 @@ def binding(
       |trait CEnum[T](using eq: T =:= Int):
       |  given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
       |  extension (t: T) def int: CInt = eq.apply(t)
+      |  extension (t: T) def value: CInt = eq.apply(t)
      """.stripMargin.linesIterator
 
       val predefUnsigned = s"""
@@ -49,6 +52,7 @@ def binding(
       |  extension (t: T)
       |   def int: CInt = eq.apply(t).toInt
       |   def uint: CUnsignedInt = eq.apply(t)
+      |   def value: CUnsignedInt = eq.apply(t)
       """.stripMargin.linesIterator
 
       if (hasSignedEnums) then predefSigned.foreach(to(scalaOutput))
@@ -188,4 +192,10 @@ def binding(
       renderAll(cFunctions.toList.sortBy(_.name), cOutput, cFunctionForwarder)
 
   end if
+
+  if binding.unnamedEnums.nonEmpty then
+    to(scalaOutput)("object constants:")
+    nest {
+      constants(Constants(binding.unnamedEnums.toSeq), to(scalaOutput))
+    }
 end binding

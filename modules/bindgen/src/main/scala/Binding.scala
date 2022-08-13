@@ -13,6 +13,8 @@ case class Binding(
     unions: Set[Def.Union],
     structs: Set[Def.Struct],
     enums: Set[Def.Enum],
-    functions: Set[Def.Function]
+    functions: Set[Def.Function],
+    unnamedEnums: Set[Def.Enum]
 ):
   lazy val all = (aliases ++ unions ++ structs ++ enums ++ functions).toSeq
+end Binding
