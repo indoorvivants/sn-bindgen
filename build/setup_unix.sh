@@ -1,17 +1,20 @@
 #!/bin/bash
 
 PLATFORM="$(uname)"
+LLVM_VERSION="${LLVM_VERSION:-13}"
+
+echo "Installing LLVM $LLVM_VERSION"
 
 if [ $PLATFORM == "Darwin" ]; then
   echo "It's a Mac"
-  brew install llvm
+  brew install llvm@$LLVM_VERSION
 else
   echo "It's a linux"
   sudo apt update
   sudo apt install lsb-release wget software-properties-common
   wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-  sudo add-apt-repository "deb http://apt.llvm.org/focal/     llvm-toolchain-focal-13   main"
+  sudo add-apt-repository "deb http://apt.llvm.org/focal/     llvm-toolchain-focal-$LLVM_VERSION   main"
   sudo apt-get update 
-  sudo apt-get install clang-13 lldb-13 libclang-13-dev llvm-13-dev
+  sudo apt-get install clang-$LLVM_VERSION lldb-$LLVM_VERSION libclang-$LLVM_VERSION-dev llvm-$LLVM_VERSION-dev
 fi
 

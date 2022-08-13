@@ -21,7 +21,7 @@ jobs:
           - os: macos-11
             output_filename: bindgen
             uploaded_filename: sn-bindgen-osx-x86_64
-            llvm_bin_path: /usr/local/opt/llvm/bin
+            llvm_bin_path: /usr/local/opt/llvm@13/bin
 
           - os: ubuntu-20.04
             output_filename: bindgen
@@ -31,6 +31,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       SN_RELEASE: fast
+      LLVM_VERSION: 13
     steps:
       - uses: actions/checkout@v3
         with:
@@ -65,6 +66,7 @@ jobs:
     env:
       SN_RELEASE: fast
       LLVM_BIN: C:\Program Files\LLVM\bin
+      LLVM_VERSION: "13.0.1"
     steps:
       # This step is important to make sure scalafmt 
       # checks don't fail
@@ -92,7 +94,7 @@ jobs:
       - name: Install clang
         shell: pwsh
         run: |
-          choco install llvm --version=13.0.0 --allow-downgrade
+          choco install llvm --version="$Env:LLVM_VERSION" --allow-downgrade
           choco install sbt --version=1.7.1
           clang --version
 
@@ -117,6 +119,7 @@ jobs:
     env: 
       BINARIES: binaries/
       LLVM_BIN: /usr/lib/llvm-13/bin
+      LLVM_VERSION: 13
     steps:
       - uses: actions/checkout@v3
         with:

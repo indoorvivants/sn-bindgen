@@ -150,7 +150,10 @@ object Includes {
   case object LLVMSources extends Includes
 }
 
-class BindingBuilder(binary: File) {
+class BindingBuilder(
+    binary: File,
+    errPrintln: String => Unit = s => System.err.println(s)
+) {
   assert(
     Files.exists(binary.toPath),
     s"Bindgen: specified binary [$binary] doesn't exist!"
@@ -193,33 +196,30 @@ class BindingBuilder(binary: File) {
         }
         .mkString(" ")
 
-      System.err.println(s"Running `$escapeArgs`")
-
       val buf = List.newBuilder[String]
       val logger = ProcessLogger.apply(
         (o: String) => {
           buf += o
-          System.err.println(o)
         },
-        (e: String) => System.err.println(e)
+        (e: String) => errPrintln(e)
       )
 
       val result = Process(cmd).run(logger).exitValue()
 
       if (result == 0) {
-        System.err.println(
+        errPrintln(
           s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
         )
 
         files += destination
       } else {
         val code = destination.hashCode().toHexString.toUpperCase()
-        System.err.println(
+        errPrintln(
           s"(FAILED [$code]) Executing [$escapeArgs]"
         )
 
         buf.result().foreach { l =>
-          System.err.println(s"/*$code*/  " + l)
+          errPrintln(s"/*$code*/  " + l)
         }
 
         throw new Exception(
