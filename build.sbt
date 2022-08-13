@@ -25,7 +25,7 @@ lazy val Versions = new {
   val scalaNative = nativeVersion
   val junit = "0.11"
 
-  val Scala212 = "2.12.15"
+  val Scala212 = "2.12.16"
   val Scala213 = "2.13.8"
   val Scala2 = List(Scala212, Scala213)
   val Scala3 = "3.1.3"
