@@ -140,3 +140,22 @@ typedef struct {
 """
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
+
+### Global enums are rendered as constants
+
+```scala mdoc:nest:passthrough
+val cSource = 
+"""
+enum {
+  HELLO = 25,
+  BYEBYE = 11
+};
+
+enum {
+  HOW=-1,
+  DOESTHIS=-2,
+  WORK=0
+};
+"""
+println(bindgen.BindgenRender.render(cSource, "libtest"))
+```

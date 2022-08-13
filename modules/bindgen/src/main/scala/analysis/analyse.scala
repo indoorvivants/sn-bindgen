@@ -169,6 +169,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     trace(s"Defined or used in main file: ${closure}")
 
     binding.named.filterInPlace((k, _) => closure.contains(k.n))
+    binding.unnamed.filterInPlace(_.isFromMainFile)
 
     trace("Binding information:")
     binding.named.toList.sortBy(_._1.n).foreach { case (k, v) =>

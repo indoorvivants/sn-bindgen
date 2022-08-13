@@ -9,12 +9,15 @@ import Def.*
 import CType.*
 
 class BindingBuilder(
-    var named: mutable.Map[DefName, BindingDefinition] = mutable.Map.empty
+    var named: mutable.Map[DefName, BindingDefinition] = mutable.Map.empty,
+    var unnamed: ListBuffer[BindingDefinition] = ListBuffer.empty
 ):
   def add(item: Def, isFromMainFile: Boolean) =
     item.defName.foreach { n =>
       named.addOne(n -> BindingDefinition(item, isFromMainFile))
     }
+    if item.defName.isEmpty then
+      unnamed += BindingDefinition(item, isFromMainFile)
     this
 
   def remove(name: DefName): BindingBuilder =
@@ -37,6 +40,10 @@ class BindingBuilder(
     case (k, BindingDefinition(item: Def.Enum, _)) => item
   }.toSet
 
+  def unnamedEnums: Set[Def.Enum] = unnamed.collect {
+    case BindingDefinition(item: Def.Enum, _) => item
+  }.toSet
+
   def functions: Set[Def.Function] = named.collect {
     case (k, BindingDefinition(item: Def.Function, _)) => item
   }.toSet
@@ -47,6 +54,7 @@ class BindingBuilder(
       unions = this.unions,
       structs = this.structs,
       functions = this.functions,
-      enums = this.enums
+      enums = this.enums,
+      unnamedEnums = this.unnamedEnums
     )
 end BindingBuilder
