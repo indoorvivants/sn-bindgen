@@ -98,10 +98,11 @@ def binding(
           trace(s"Rendering Scala function '${sf.name}'")
         case sf: GeneratedFunction.CFunction =>
           trace(s"Rendering C function '${sf.name}'")
-      try how(
-        en,
-        to(out)
-      )
+      try
+        how(
+          en,
+          to(out)
+        )
       catch exc => to(out)(commentException(en, exc))
       if idx != defs.size - 1 then out.emptyLine
     }
