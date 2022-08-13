@@ -246,8 +246,8 @@ def createTranslationUnit(index: CXIndex, file: String)(using config: Config)(
 
     val severity = clang_getDiagnosticSeverity(diag)
 
-    if severity == CXDiagnosticSeverity.CXDiagnostic_Error || severity == CXDiagnosticSeverity.CXDiagnostic_Fatal then
-      errors += 1
+    if severity == CXDiagnosticSeverity.CXDiagnostic_Error || severity == CXDiagnosticSeverity.CXDiagnostic_Fatal
+    then errors += 1
   }
 
   if errors != 0 then

@@ -36,7 +36,8 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
       given Config = config
 
       zone {
-        if cursor.kind == CXCursorKind.CXCursor_ParmDecl && builder.parameters.size < builder.numArguments then
+        if cursor.kind == CXCursorKind.CXCursor_ParmDecl && builder.parameters.size < builder.numArguments
+        then
           val origParamName = Option(cursor.spelling)
             .filter(_.nonEmpty)
 
