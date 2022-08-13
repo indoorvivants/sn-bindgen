@@ -23,7 +23,7 @@ import java.nio.file.Paths
 lazy val Versions = new {
   val decline = "2.2.0"
   val scalaNative = nativeVersion
-  val junit = "0.11"
+  val junit = "0.13.3"
 
   val Scala212 = "2.12.15"
   val Scala213 = "2.13.8"
@@ -70,7 +70,7 @@ lazy val iface = projectMatrix
   )(MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"))
   .settings(
     moduleName := "bindgen-interface",
-    libraryDependencies += "com.novocode" % "junit-interface" % Versions.junit % Test,
+    libraryDependencies += "com.github.sbt" % "junit-interface" % Versions.junit % Test,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     Test / fork := true,
     Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString,
