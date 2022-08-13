@@ -34,13 +34,6 @@ jobs:
           java-version: '17'
           cache: 'sbt'
 
-      - name: Cache sbt-vcpkg
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/Library/Caches/sbt-vcpkg
-            ~/.cache/sbt-vcpkg
-          key: ${{ runner.os }}-sbt-vcpkg-${{ hashFiles('examples/**/*.sbt') }}
 
       - name: Setup Unix-like
         run: ./build/setup_unix.sh
@@ -53,11 +46,8 @@ jobs:
       - name: Setup for examples
         run: |
           git clone https://github.com/keynmol/sn-bindgen-examples examples
-          cd examples
-          git submodule update --init
-
-          cd example-tree-sitter && ./setup.sh && cd ..
-          cd example-civetweb && ./setup.sh && cd ..
+          cd examples 
+          ./manual_setup.sh
 
           PLATFORM="$(uname)"
           if [ $PLATFORM == "Darwin" ]; then 
@@ -67,18 +57,23 @@ jobs:
             docker run -p 6379:6379 -d redis
           fi
 
+      - name: Cache sbt-vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/Library/Caches/sbt-vcpkg
+            ~/.cache/sbt-vcpkg
+          key: ${{ runner.os }}-sbt-vcpkg-${{ hashFiles('examples/**/*.sbt') }}
+
       - name: Run examples
+        env: 
+          LLVM_BIN: ${{ matrix.llvm_bin_path }}
         run: | 
           PLATFORM="$(uname)"
 
           export SN_BINDGEN_VERSION="$(cat version)"
 
           cd examples
+          sbt runExamples
 
-          if [ $PLATFORM == "Darwin" ]; then 
-            echo "It's a Mac"
-            LLVM_BIN=/usr/local/opt/llvm/bin sbt runExamples
-          else
-            echo "It's a Linux"
-            LLVM_BIN=/usr/lib/llvm-13/bin sbt runExamples
-          fi
+
