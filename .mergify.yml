@@ -2,7 +2,9 @@ pull_request_rules:
   - name: automatically merge scala-steward's PRs
     conditions:
       - author=indoorvivants-steward[bot]
-      - body~=labels:.*semver-patch.*
+      - or:
+        - body~=labels:.*semver-patch.*
+        - body~=labels:.*semver-spec-patch.*
       - status-success=build
     actions:
       merge:
