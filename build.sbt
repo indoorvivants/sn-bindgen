@@ -271,7 +271,7 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
       case Windows => "bindgen.exe"
       case _       => "bindgen"
     }
-    file = folder / s"sn-bindgen-${target.string}" / filename
+    file = folder / s"sn-bindgen-${target.coursierString}" / filename
     if file.exists()
   } yield build(target.string, file)
 
