@@ -86,6 +86,6 @@ jobs:
           export SN_BINDGEN_VERSION="${TRIGGER_VERSION:-"$DUMPED_VERSION"}"
 
           cd examples
-          sbt runBatchedExamples ${{matrix.segment}} 3
+          sbt 'runBatchedExamples ${{matrix.segment}} 3'
 
 
