@@ -16,7 +16,7 @@ target
 project/project
 project/metals.sbt
 
-docs/_site
+_site
 docs/mdoc-invocation.txt
 local-bindgen
 bin
