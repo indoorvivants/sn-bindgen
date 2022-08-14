@@ -3,6 +3,12 @@ on:
   schedule:
   - cron: "0 2 * * 1,3,5,0"
   workflow_dispatch:
+    inputs:
+      bindgenVersion:
+        description: 'Version of bindgen to run (if empty, master will be republished)'
+        required: false
+        default: ''
+        type: string
 
 env: 
   JAVA_OPTS: "-Xmx4G"
@@ -11,10 +17,11 @@ env:
 
 jobs:
   unix_build:
-    name: Examples
+    name: Examples on ${{matrix.os}} ${{matrix.segment}} out of 3
     strategy:
       fail-fast: false
       matrix:
+        segment: [1, 2, 3]
         include:
           - os: macos-11
             llvm_bin_path: /usr/local/opt/llvm@13/bin
@@ -43,6 +50,7 @@ jobs:
 
       - name: Build
         run: sbt devPublish versionDump
+        if: inputs.bindgenVersion == ''
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
 
@@ -64,19 +72,20 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/Library/Caches/sbt-vcpkg
-            ~/.cache/sbt-vcpkg
-          key: ${{ runner.os }}-sbt-vcpkg-${{ hashFiles('examples/**/*.sbt') }}
+            ~/Library/Caches/sbt-vcpkg/vcpkg
+            ~/.cache/sbt-vcpkg/vcpkg
+          key: ${{ runner.os }}-sbt-vcpkg
 
       - name: Run examples
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
+          TRIGGER_VERSION: ${{inputs.bindgenVersion}}
         run: | 
-          PLATFORM="$(uname)"
+          DUMPED_VERSION=$(cat version || echo "")
 
-          export SN_BINDGEN_VERSION="$(cat version)"
+          export SN_BINDGEN_VERSION="${TRIGGER_VERSION:-"$DUMPED_VERSION"}"
 
           cd examples
-          sbt runExamples
+          sbt runBatchedExamples ${{matrix.segment}} 3
 
 
