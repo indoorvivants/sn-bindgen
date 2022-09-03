@@ -235,6 +235,14 @@ lazy val tests = project
     }
   )
 
+lazy val scalaNativeLibParser = project
+  .in(file("modules/scalaNativeLib"))
+  .settings(scalaVersion := "2.13.8")
+  .settings(
+    libraryDependencies += "org.scalameta" %% "scalameta" % "4.5.13",
+    scalacOptions += "-Xsource:3"
+  )
+
 lazy val docs =
   project
     .in(file("docs"))
