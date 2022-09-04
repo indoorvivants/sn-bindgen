@@ -23,8 +23,6 @@ class TestBuiltInTypes:
     summon[Test_time_t =:= posix.time.time_t]
     summon[Test_fpos_t =:= libc.stdio.fpos_t]
     summon[va_list =:= CVarArgList]
-    summon[sockaddr =:= posix.sys.socket.sockaddr]
-    summon[NotGiven[group =:= posix.grp.group]]
   end correct_tags
 
   @Test def consistent_uint_types(): Unit =

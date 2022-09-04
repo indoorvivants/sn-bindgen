@@ -220,6 +220,12 @@ lazy val tests = project
     Compile / bindgenBinary := (bindgen / Compile / nativeLink).value,
     Test / bindgenBinary := (bindgen / Compile / nativeLink).value,
     bindgenBindings := Seq.empty,
+    Test / sources := {
+      val defaults = (Test / sources).value
+      if (Platform.os == Platform.OS.Windows)
+        defaults.filterNot(_.toString.toLowerCase.contains("no-windows"))
+      else defaults
+    },
     Test / bindgenBindings := {
       val headersPath =
         baseDirectory.value / "src" / "test" / "resources" / "scala-native"

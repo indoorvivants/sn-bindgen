@@ -23,6 +23,10 @@ struct SpecialIntTypes {
 };
 
 #include <inttypes.h>
+
+
+#ifndef _WIN32
+
 #include <sys/socket.h>
 
 // We are testing that this doesn't get replaced by group from posix
@@ -36,3 +40,4 @@ typedef struct {
   group g1;
 } UsingPosixTypes;
 
+#endif
