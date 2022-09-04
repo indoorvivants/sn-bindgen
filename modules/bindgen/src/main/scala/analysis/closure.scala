@@ -95,5 +95,8 @@ def computeClosure(named: Map[DefName, BindingDefinition])(using
     end if
   end expand
 
-  expand(Set.empty, named.filter(_._2.isFromMainFile).keySet.map(_.n))
+  expand(
+    Set.empty,
+    named.filter(_._2.location.shouldBeIncluded).keySet.map(_.n)
+  )
 end computeClosure

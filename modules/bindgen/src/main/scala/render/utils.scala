@@ -102,7 +102,7 @@ object AliasResolver:
 
     go(aliases)
 
-    trace("Aliases:", mapping.result().toSeq*)
+    trace("Aliases:", mapping.result().toSeq)
 
     val result = mapping.result()
 

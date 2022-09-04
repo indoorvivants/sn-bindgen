@@ -21,3 +21,23 @@ struct SpecialIntTypes {
   uint16_t u16;
   uint32_t u32;
 };
+
+#include <inttypes.h>
+
+
+#ifndef _WIN32
+
+#include <sys/socket.h>
+
+// We are testing that this doesn't get replaced by group from posix
+typedef struct group {
+  int i;
+} group;
+
+typedef struct {
+  imaxdiv_t i1;
+  struct sockaddr s2;
+  group g1;
+} UsingPosixTypes;
+
+#endif

@@ -24,11 +24,16 @@ lazy val Versions = new {
   val decline = "2.3.0"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
+  val scalameta = "4.5.13"
+  val b2s = "0.3.16"
+  val pluginTargetSN = "0.4.6"
+  val pluginTargetSBT = "1.6.1"
 
+  val Scala3 = "3.1.3"
   val Scala212 = "2.12.16"
   val Scala213 = "2.13.8"
   val Scala2 = List(Scala212, Scala213)
-  val Scala3 = "3.1.3"
+
 }
 
 inThisBuild(
@@ -57,6 +62,7 @@ lazy val root = project
   .aggregate(bindgen, libclang)
   .aggregate(iface.projectRefs*)
   .aggregate(plugin.projectRefs*)
+  .aggregate(tests)
   .settings(
     publish / skip := true,
     publishLocal / skip := true
@@ -102,6 +108,9 @@ lazy val bindgen = project
     moduleName := "bindgen",
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
       .excludeAll(ExclusionRule("org.scala-native")),
+    libraryDependencies += compilerPlugin(
+      "org.polyvariant" % "better-tostring" % Versions.b2s cross CrossVersion.full
+    ),
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v")
   )
   .settings {
@@ -165,8 +174,10 @@ lazy val plugin = projectMatrix
   .dependsOn(iface)
   .settings(
     sbtPlugin := true,
-    addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.3"),
-    pluginCrossBuild / sbtVersion := "1.6.1",
+    addSbtPlugin(
+      "org.scala-native" % "sbt-scala-native" % Versions.pluginTargetSN
+    ),
+    pluginCrossBuild / sbtVersion := Versions.pluginTargetSBT,
     moduleName := "bindgen-sbt-plugin",
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
@@ -202,11 +213,19 @@ lazy val tests = project
   .settings(nativeConfig ~= usesLibClang)
   .settings(clangDetection)
   .settings(
+    publish / skip := true,
+    publishLocal / skip := true,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     bindgenBinary := (bindgen / Compile / nativeLink).value,
     Compile / bindgenBinary := (bindgen / Compile / nativeLink).value,
     Test / bindgenBinary := (bindgen / Compile / nativeLink).value,
     bindgenBindings := Seq.empty,
+    Test / sources := {
+      val defaults = (Test / sources).value
+      if (Platform.os == Platform.OS.Windows)
+        defaults.filterNot(_.toString.toLowerCase.contains("no-windows"))
+      else defaults
+    },
     Test / bindgenBindings := {
       val headersPath =
         baseDirectory.value / "src" / "test" / "resources" / "scala-native"
@@ -233,6 +252,14 @@ lazy val tests = project
         )
       }
     }
+  )
+
+lazy val scalaNativeLibParser = project
+  .in(file("modules/scalaNativeLib"))
+  .settings(scalaVersion := Versions.Scala213)
+  .settings(
+    libraryDependencies += "org.scalameta" %% "scalameta" % Versions.scalameta,
+    scalacOptions += "-Xsource:3"
   )
 
 lazy val docs =

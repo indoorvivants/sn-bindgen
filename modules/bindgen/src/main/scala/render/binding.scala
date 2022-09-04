@@ -19,6 +19,7 @@ def binding(
     |import scala.scalanative.unsafe.*
     |import scala.scalanative.unsigned.*
     |import scalanative.libc.*
+    |import scalanative.*
     """.stripMargin.trim)
   scalaOutput.emptyLines(2)
   val hasUnsignedEnums =

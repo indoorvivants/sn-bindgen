@@ -12,12 +12,11 @@ class BindingBuilder(
     var named: mutable.Map[DefName, BindingDefinition] = mutable.Map.empty,
     var unnamed: ListBuffer[BindingDefinition] = ListBuffer.empty
 ):
-  def add(item: Def, isFromMainFile: Boolean) =
+  def add(item: Def, location: Location) =
     item.defName.foreach { n =>
-      named.addOne(n -> BindingDefinition(item, isFromMainFile))
+      named.addOne(n -> BindingDefinition(item, location))
     }
-    if item.defName.isEmpty then
-      unnamed += BindingDefinition(item, isFromMainFile)
+    if item.defName.isEmpty then unnamed += BindingDefinition(item, location)
     this
 
   def remove(name: DefName): BindingBuilder =

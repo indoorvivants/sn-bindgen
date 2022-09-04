@@ -53,7 +53,7 @@ def struct(model: Def.Struct, line: Appender)(using
       rewriteRules.toSeq
         .sortBy(_._1)
         .map(_._2)
-        .map(p => p.name.value -> p.newRawType)*
+        .map(p => p.name.value -> p.newRawType)
     )
   line(s"opaque type $structName = ${scalaType(rewrittenStructType)}")
   line(s"object $structName:")
