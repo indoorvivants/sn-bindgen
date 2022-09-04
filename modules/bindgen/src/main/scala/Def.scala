@@ -9,7 +9,14 @@ import scala.scalanative.unsigned.ULong
 
 import Def.*
 
-case class BindingDefinition(item: Def, isFromMainFile: Boolean)
+case class Location(isFromMainFile: Boolean, isFromSystemHeader: Boolean):
+  inline def shouldBeIncluded: Boolean = isFromMainFile || !isFromSystemHeader
+
+object Location:
+  inline def systemHeader =
+    Location(isFromMainFile = false, isFromSystemHeader = true)
+
+case class BindingDefinition(item: Def, location: Location)
 
 case class DefName(n: String, tg: DefTag)
 

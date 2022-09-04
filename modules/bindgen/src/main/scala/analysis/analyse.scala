@@ -45,16 +45,13 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
         zone {
           val loc = cursor.location
 
-          val shouldBeIncluded =
-            (loc.isFromMainFile || !loc.isFromSystemHeader) && (
-              cursor.spelling != "__gnuc_va_list"
-            )
+          val location = Location(loc.isFromMainFile, loc.isFromSystemHeader)
 
           val spell = cursor.spelling
 
           if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
             val function = visitFunction(cursor)
-            binding.add(function, shouldBeIncluded)
+            binding.add(function, location)
           end if
 
           if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
@@ -69,7 +66,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
             if (referencedType.kind == CXTypeKind.CXType_Enum) then
               val en = visitEnum(typeDecl, true)
-              binding.add(en, shouldBeIncluded)
+              binding.add(en, location)
 
               // If the typedef's name is different from the alias name,
               // we should add both definitions
@@ -77,7 +74,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
               if !en.name.exists(_.value == name) then
                 binding.add(
                   Def.Alias(name, constructType(typ)),
-                  shouldBeIncluded
+                  location
                 )
             else if (referencedType.kind == CXTypeKind.CXType_Record) then
               val struct = visitStruct(typeDecl, name)
@@ -93,13 +90,13 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                   )
                 else struct
 
-              if name != "" then binding.add(item, shouldBeIncluded)
+              if name != "" then binding.add(item, location)
             else if typ.kind != CXTypeKind.CXType_Invalid then
               val alias: Def.Alias =
                 Def.Alias(name, constructType(typ))
               val canonical = clang_getCanonicalType(typ)
 
-              binding.add(alias, shouldBeIncluded)
+              binding.add(alias, location)
             else
               error(
                 s"Unexpected type `${typ.spelling}` of kind `${typ.kindSpelling}`"
@@ -118,7 +115,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                 en.name.into(UnionName),
                 en.anonymous
               )
-              binding.add(union, shouldBeIncluded)
+              binding.add(union, location)
             end if
           end if
 
@@ -126,7 +123,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
             val name = cursor.spelling
             if name != "" then
               val en = visitStruct(cursor, name)
-              binding.add(en, shouldBeIncluded)
+              binding.add(en, location)
           end if
 
           if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
@@ -137,7 +134,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
               ).kind == CXTypeKind.CXType_Typedef
             )
 
-            binding.add(en, shouldBeIncluded)
+            binding.add(en, location)
           end if
 
           if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
@@ -156,9 +153,23 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     clang_disposeTranslationUnit(unit)
     clang_disposeIndex(index)
 
-    val binding = (!cxClientData)._1
+    val binding: BindingBuilder = (!cxClientData)._1
+
+    trace(
+      "Binding information before adding system aliases:",
+      binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
+        k.toString -> v
+      }
+    )
 
     addBuiltInAliases(binding)
+
+    trace(
+      "Binding information after adding system alises:",
+      binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
+        k.toString -> v
+      }
+    )
     val closure = computeClosure(binding.named.filter { n =>
       val name = n._1.n
 
@@ -169,12 +180,14 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     trace(s"Defined or used in main file: ${closure}")
 
     binding.named.filterInPlace((k, _) => closure.contains(k.n))
-    binding.unnamed.filterInPlace(_.isFromMainFile)
+    binding.unnamed.filterInPlace(_.location.shouldBeIncluded)
 
-    trace("Binding information:")
-    binding.named.toList.sortBy(_._1.n).foreach { case (k, v) =>
-      trace(s"'$k': $v")
-    }
+    trace(
+      "Binding information after computing closure:",
+      binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
+        k.toString -> v
+      }
+    )
 
     binding.build
   finally memory.deallocate()
@@ -187,9 +200,13 @@ def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
   BuiltinType.all.foreach { tpe =>
     val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
     replaceTypes.foreach { tg =>
-      binding.remove(DefName(tpe.short, tg))
+      binding.named.get(DefName(tpe.short, tg)) match
+        case Some(bd) =>
+          if bd.location.isFromSystemHeader then
+            binding.remove(DefName(tpe.short, tg))
+            binding.add(al, location = Location.systemHeader)
+        case None =>
     }
-    binding.add(al, isFromMainFile = false)
   }
   binding
 end addBuiltInAliases

@@ -5,26 +5,26 @@ object LoggingConfig:
   val default = LoggingConfig(MinLogPriority(LogLevel.priority(LogLevel.info)))
   given infer(using c: Config): LoggingConfig = LoggingConfig(c.minLogPriority)
 
-inline def trace[A](inline msg: A)(using LoggingConfig): Unit =
+def trace[A](msg: A)(using LoggingConfig): Unit =
   log(LogLevel.trace, msg)
 
-inline def trace[A](inline msg: A, context: (String, Any)*)(using
+def trace[A](msg: A, context: Seq[(String, Any)])(using
     LoggingConfig
 ): Unit =
   log(LogLevel.trace, msg, context)
 
-inline def info(inline msg: Any)(using LoggingConfig) =
+def info(msg: Any)(using LoggingConfig) =
   log(LogLevel.info, msg)
 
-inline def warning(inline msg: Any)(using LoggingConfig) =
+def warning(msg: Any)(using LoggingConfig) =
   log(LogLevel.warning, msg)
 
-inline def error(msg: Any)(using LoggingConfig) =
+def error(msg: Any)(using LoggingConfig) =
   log(LogLevel.error, msg)
 
 private inline def log[A](
-    inline level: LogLevel,
-    inline msg: A,
+    level: LogLevel,
+    msg: A,
     context: Seq[(String, Any)] = Seq.empty
 )(using
     lc: LoggingConfig
@@ -40,8 +40,20 @@ private inline def log[A](
       val fMaxLength = context.map(_._1).maxBy(_.length).length
       context.foreach { case (field, value) =>
         val offset = " " * (fMaxLength - field.length)
-        errln("    " + offset + field + "  " + value)
+        val filler = " " * fMaxLength
+        value.toString
+          .grouped(80)
+          .zipWithIndex
+          .map { case (valueLine, idx) =>
+            if idx == 0 then
+              errln(
+                "    " + offset + Console.BOLD + field + Console.RESET + "  " + valueLine
+              )
+            else errln("    " + offset + filler + "  " + valueLine)
+          }
+          .toVector
       }
+    end if
   end if
 end log
 
@@ -50,19 +62,19 @@ enum LogLevel:
 
 object LogLevel:
   import LogLevel as lev
-  inline def priority(inline m: LogLevel): Int = m match
+  def priority(m: LogLevel): Int = m match
     case lev.trace   => 0
     case lev.info    => 1
     case lev.warning => 2
     case lev.error   => 3
 
-  inline def color(inline m: LogLevel): String = m match
+  def color(m: LogLevel): String = m match
     case LogLevel.info    => Console.GREEN
     case LogLevel.trace   => Console.CYAN
     case LogLevel.warning => Console.YELLOW
     case LogLevel.error   => Console.RED
 
-  inline def name(inline m: LogLevel): String = m match
+  def name(m: LogLevel): String = m match
     case LogLevel.info    => "info"
     case LogLevel.trace   => "trace"
     case LogLevel.warning => "warn"

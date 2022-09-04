@@ -98,6 +98,7 @@ object BuiltinType:
     apply[posix.sys.types.pthread_rwlockattr_t](short = "pthread_rwlockattr_t", full = "posix.sys.types.pthread_rwlockattr_t", header = "sys/types.h"),
     apply[posix.sys.types.pthread_spinlock_t](short = "pthread_spinlock_t", full = "posix.sys.types.pthread_spinlock_t", header = "sys/types.h"),
     apply[posix.sys.types.pthread_t](short = "pthread_t", full = "posix.sys.types.pthread_t", header = "sys/types.h"),
+    apply[posix.sys.types.ssize_t](short = "ssize_t", full = "posix.sys.types.ssize_t", header = "sys/types.h"),
     apply[posix.sys.types.suseconds_t](short = "suseconds_t", full = "posix.sys.types.suseconds_t", header = "sys/types.h"),
     apply[posix.sys.types.time_t](short = "time_t", full = "posix.sys.types.time_t", header = "sys/types.h"),
     apply[posix.sys.types.uid_t](short = "uid_t", full = "posix.sys.types.uid_t", header = "sys/types.h"),
@@ -137,6 +138,11 @@ object BuiltinType:
     apply[libc.stdint.uintmax_t](short = "uintmax_t", full = "libc.stdint.uintmax_t", header = "stdint.h"),
     // GENERATEDCODE: END
     // format: on
+    apply[CVarArgList](
+      short = "va_list",
+      full = "unsafe.CVarArgList",
+      header = "stdarg.h"
+    ),
     apply[UByte]("uint8_t", _unsigned("UByte")),
     apply[UShort]("uint16_t", _unsigned("UShort")),
     apply[UInt]("uint32_t", _unsigned("UInt")),

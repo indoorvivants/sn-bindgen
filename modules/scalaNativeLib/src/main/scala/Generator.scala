@@ -125,6 +125,7 @@ object Generator {
       "CLong",
       "CLongLong",
       "CSize",
+      "CSSize",
       "CChar",
       "CShort",
       "UByte",
