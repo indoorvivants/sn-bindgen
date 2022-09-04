@@ -19,7 +19,6 @@ class TestBuiltInTypes:
 
     // these should just compile
     summon[Test_size_t =:= CSize]
-    summon[Test_ssize_t =:= CSSize]
     summon[Test_time_t =:= posix.time.time_t]
     summon[Test_fpos_t =:= libc.stdio.fpos_t]
     summon[va_list =:= CVarArgList]
