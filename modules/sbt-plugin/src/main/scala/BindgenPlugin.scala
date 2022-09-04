@@ -15,6 +15,12 @@ import sjsonnew.JsonFormat
 import bindgen.interface.LogLevel
 import bindgen.interface.Includes
 
+sealed trait BindgenMode extends Product with Serializable
+object BindgenMode {
+  case object ResourceGenerator extends BindgenMode
+  case class Manual(scalaDir: File, cDir: File) extends BindgenMode
+}
+
 object BindgenPlugin extends AutoPlugin {
   object autoImport {
     val bindgenVersion = settingKey[String]("")
@@ -23,6 +29,7 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenGenerateScalaSources = taskKey[Seq[File]]("")
     val bindgenGenerateCSources = taskKey[Seq[File]]("")
     val bindgenClangInfo = taskKey[Platform.ClangInfo]("")
+    val bindgenMode = taskKey[BindgenMode]("")
   }
 
   override def requires: Plugins = ScalaNativePlugin
@@ -81,6 +88,7 @@ object BindgenPlugin extends AutoPlugin {
     Seq(
       bindgenVersion := Platform.BuildInfo.version,
       bindgenBindings := Seq.empty,
+      bindgenMode := BindgenMode.ResourceGenerator,
       bindgenClangInfo := Platform.detectClangInfo(
         nativeClang.value.toPath
       ),
@@ -92,10 +100,17 @@ object BindgenPlugin extends AutoPlugin {
     bindgenGenerateScalaSources := {
       val selected = (addConf / bindgenBindings).value
 
+      val managedDestination = sourceManaged.value
+
+      val dest = bindgenMode.value match {
+        case BindgenMode.ResourceGenerator   => managedDestination
+        case BindgenMode.Manual(scalaDir, _) => scalaDir
+      }
+
       incremental(
         Config(bindgenVersion.value, bindgenBinary.value),
         (selected).distinct,
-        (sourceManaged).value,
+        dest,
         BindingLang.Scala,
         bindgenClangInfo.value,
         streams.value
@@ -104,10 +119,16 @@ object BindgenPlugin extends AutoPlugin {
     bindgenGenerateCSources := {
       val selected = (addConf / bindgenBindings).value
 
+      val managedDestination = (resourceManaged).value / "scala-native"
+
+      val dest = bindgenMode.value match {
+        case BindgenMode.ResourceGenerator => managedDestination
+        case BindgenMode.Manual(_, cDir)   => cDir
+      }
       incremental(
         Config(bindgenVersion.value, bindgenBinary.value),
         (selected).distinct,
-        (resourceManaged).value / "scala-native",
+        dest,
         BindingLang.C,
         bindgenClangInfo.value,
         streams.value

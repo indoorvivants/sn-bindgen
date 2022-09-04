@@ -1,0 +1,7 @@
+> run
+$ exists src/main/resources/scala-native/bindings.c 
+$ exists src/main/scala/generated/bindings.scala
+
+> test
+$ exists src/test/resources/scala-native/testbindings.c 
+$ exists src/test/scala/generated/testbindings.scala
