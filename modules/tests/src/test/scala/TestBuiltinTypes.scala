@@ -13,7 +13,6 @@ class TestBuiltInTypes:
   import lib_test_built_in_types.types.*
   @Test def correct_tags(): Unit =
     assertEquals(summon[Tag[CSize]], Test_size_t._tag)
-    assertEquals(summon[Tag[CSSize]], Test_ssize_t._tag)
     assertEquals(summon[Tag[posix.time.time_t]], Test_time_t._tag)
     assertEquals(summon[Tag[libc.stdio.fpos_t]], Test_fpos_t._tag)
 

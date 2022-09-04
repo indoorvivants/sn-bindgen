@@ -15,4 +15,5 @@ class TestBuiltInTypes_NoWindows:
     summon[Test_ssize_t =:= CSSize]
     summon[sockaddr =:= posix.sys.socket.sockaddr]
     summon[NotGiven[group =:= posix.grp.group]]
+    assertEquals(summon[Tag[CSSize]], Test_ssize_t._tag)
   end correct_tags
