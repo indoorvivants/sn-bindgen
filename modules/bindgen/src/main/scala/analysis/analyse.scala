@@ -201,6 +201,24 @@ def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
     val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
     replaceTypes.foreach { tg =>
       binding.named.get(DefName(tpe.short, tg)) match
+        case Some(
+              BindingDefinition(
+                Def.Alias(
+                  "va_list",
+                  CType.Reference(
+                    Name.Model("__builtin_va_list")
+                  ) // whatever the hell happens on MacOS
+                ),
+                _
+              )
+            ) =>
+          binding.remove(DefName(tpe.short, DefTag.Alias))
+          binding.remove(DefName("__gnuc_va_list", DefTag.Alias))
+          binding.remove(DefName("__builtin_va_list", DefTag.Alias))
+          binding.remove(DefName("__darwin_va_list", DefTag.Alias))
+
+          binding.add(al, location = Location.systemHeader)
+
         case Some(bd) =>
           if bd.location.isFromSystemHeader then
             binding.remove(DefName(tpe.short, tg))

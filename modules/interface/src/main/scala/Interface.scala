@@ -138,7 +138,7 @@ object Binding {
       cImports = cImports,
       clangFlags = clangFlags,
       exclusivePrefixes = exclusivePrefixes,
-      logLevel = LogLevel.Info,
+      logLevel = logLevel,
       systemIncludes = systemIncludes
     )
   }

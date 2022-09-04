@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdint.h>
+#include <stdarg.h>
 
 #ifdef _WIN32
 typedef unsigned long ssize_t;
@@ -21,6 +22,8 @@ struct SpecialIntTypes {
   uint16_t u16;
   uint32_t u32;
 };
+
+void TestVaListArgument(va_list args);
 
 #include <inttypes.h>
 
