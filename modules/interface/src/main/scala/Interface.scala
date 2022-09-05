@@ -21,6 +21,7 @@ object BindingLang {
 sealed abstract class LogLevel(val str: String)
     extends Product
     with Serializable
+
 object LogLevel {
   case object Trace extends LogLevel("trace")
   case object Info extends LogLevel("info")
@@ -167,7 +168,7 @@ class BindingBuilder(
       bindings: Seq[Binding],
       destinationDir: File,
       lang: BindingLang,
-      ci: Platform.ClangInfo
+      ci: ClangInfo
   ): Seq[File] = {
 
     val files = Seq.newBuilder[File]

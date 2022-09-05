@@ -1,7 +1,4 @@
 import scala.scalanative.build.GC
-import _root_.bindgen.interface.Platform.OS.*
-import _root_.bindgen.interface.Platform.ClangInfo
-import _root_.bindgen.interface.Binding
 import coursierapi.ResolutionParams
 import coursierapi.Repository
 import sbt.io.Using
@@ -11,13 +8,11 @@ import scala.scalanative.build.Mode
 import scala.scalanative.build.NativeConfig
 import scala.scalanative.build.LTO
 import commandmatrix.extra.*
+import com.indoorvivants.detective.Platform
+import Platform.*
 
-import _root_.bindgen.interface.{
-  BindingBuilder,
-  BindingLang,
-  LogLevel,
-  Platform
-}
+import _root_.bindgen.interface.*
+
 import java.nio.file.Paths
 
 lazy val Versions = new {
@@ -28,6 +23,7 @@ lazy val Versions = new {
   val b2s = "0.3.16"
   val pluginTargetSN = "0.4.6"
   val pluginTargetSBT = "1.6.1"
+  val detective = "0.0.2"
 
   val Scala3 = "3.1.3"
   val Scala212 = "2.12.16"
@@ -72,10 +68,14 @@ lazy val iface = projectMatrix
   .in(file("modules/interface"))
   .someVariations(
     Versions.Scala2 :+ Versions.Scala3,
-    List(VirtualAxis.jvm) // todo may be publish native interfaces as well
+    List(
+      VirtualAxis.jvm,
+      VirtualAxis.native
+    ) // todo may be publish native interfaces as well
   )(MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"))
   .settings(
     moduleName := "bindgen-interface",
+    libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
     libraryDependencies += "com.github.sbt" % "junit-interface" % Versions.junit % Test,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     Test / fork := true,
@@ -162,7 +162,7 @@ lazy val localBindgenArtifact = project
         .withType("jar")
         .withConfigurations(Vector(Compile))
     addArtifact(
-      Def.setting(build(Platform.target.string)),
+      Def.setting(build(jarString(Platform.target))),
       Def.task { (bindgen / Compile / nativeLink).value }
     )
   }
@@ -290,17 +290,22 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     classifier -> (artif, file)
   }
 
+  import Platform.OS
+  import Platform.Arch
+  import Platform.Bits
+
   val artifacts = for {
-    os <- Platform.OS.all
-    arch <- Platform.Arch.all
-    target = Platform.Target(os, arch)
+    os <- Seq(OS.Windows, OS.Linux, OS.MacOS)
+    arch <- Seq(Arch.Intel, Arch.Arm)
+    bits <- Seq(Bits.x32, Bits.x64)
+    target = Platform.Target(os, arch, bits)
     filename = os match {
-      case Windows => "bindgen.exe"
-      case _       => "bindgen"
+      case OS.Windows => "bindgen.exe"
+      case _          => "bindgen"
     }
-    file = folder / s"sn-bindgen-${target.coursierString}" / filename
+    file = folder / s"sn-bindgen-${coursierString(target)}" / filename
     if file.exists()
-  } yield build(target.string, file)
+  } yield build(jarString(target), file)
 
   artifacts.toMap
 } else Map.empty
@@ -334,7 +339,7 @@ def usesLibClang(conf: NativeConfig) = {
   val libraryName =
     if (Platform.os == Platform.OS.Windows) "libclang" else "clang"
 
-  val detected = Platform.detectClangInfo(conf.clang)
+  val detected = ClangDetector.detect(conf.clang)
 
   conf
     .withLinkingOptions(
@@ -409,12 +414,12 @@ versionDump := {
   IO.write(file, (Compile / version).value)
 }
 
-lazy val clangInfo = taskKey[Platform.ClangInfo]("")
+lazy val clangInfo = taskKey[_root_.bindgen.interface.Platform.ClangInfo]("")
 
 lazy val clangDetection = Seq(clangInfo := {
   val path = nativeClang.value.toPath()
 
-  Platform.detectClangInfo(path)
+  ClangDetector.detect(path)
 })
 
 addCommandAlias(
@@ -428,3 +433,39 @@ addCommandAlias(
 )
 
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
+// duplicate for now, remove once plugin is bootstrapped
+def jarString(os: Platform.OS): String = {
+  import Platform.OS.*
+  os match {
+    case Windows => "windows"
+    case MacOS   => "osx"
+    case Linux   => "linux"
+    case Unknown => "unknown"
+  }
+}
+
+def jarString(bits: Platform.Bits, arch: Platform.Arch): String = {
+  (bits, arch) match {
+    case (Bits.x64, Arch.Intel) => "x86_64"
+    case (Bits.x64, Arch.Arm)   => "aarch_64"
+  }
+
+}
+
+def jarString(target: Platform.Target): String = {
+  jarString(target.bits, target.arch) + "-" + jarString(target.os)
+}
+
+def coursierString(os: Platform.OS): String = {
+  import Platform.OS.*
+  os match {
+    case Windows => "pc-win32"
+    case MacOS   => "apple-darwin"
+    case Linux   => "pc-linux"
+    case Unknown => "unknown"
+  }
+}
+
+def coursierString(target: Platform.Target): String = {
+  jarString(target.bits, target.arch) + "-" + coursierString(target.os)
+}

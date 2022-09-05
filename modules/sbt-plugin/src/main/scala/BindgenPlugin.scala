@@ -4,16 +4,15 @@ import java.util.Properties
 import sbt.Keys.*
 import sbt.nio.Keys.*
 import sbt.*
-import bindgen.interface.Platform
-import bindgen.interface.BindingBuilder
-import bindgen.interface.BindingLang
+import bindgen.interface.*
 import scala.util.Try
-import bindgen.interface.Binding
 import scala.scalanative.sbtplugin.ScalaNativePlugin
 import sbt.internal.util.ManagedLogger
 import sjsonnew.JsonFormat
 import bindgen.interface.LogLevel
 import bindgen.interface.Includes
+import com.indoorvivants.detective.Platform
+import ArtifactNames.*
 
 sealed trait BindgenMode extends Product with Serializable
 object BindgenMode {
@@ -28,7 +27,7 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenBindings = taskKey[Seq[Binding]]("")
     val bindgenGenerateScalaSources = taskKey[Seq[File]]("")
     val bindgenGenerateCSources = taskKey[Seq[File]]("")
-    val bindgenClangInfo = taskKey[Platform.ClangInfo]("")
+    val bindgenClangInfo = taskKey[ClangInfo]("")
     val bindgenMode = taskKey[BindgenMode]("")
   }
 
@@ -68,13 +67,12 @@ object BindgenPlugin extends AutoPlugin {
             "com.indoorvivants",
             "bindgen_native0.4_3",
             bindgenVersion.value
-          ).intransitive().classifier(platform.string)
+          ).intransitive().classifier(jarString(platform))
         ).headOption
       }
 
       val file = {
-        find(Platform.target) orElse
-          Platform.target.fallback.flatMap(target => find(target))
+        find(Platform.target)
       }.getOrElse(
         throw new Exception("Could not download the binary for bindgen")
       )
@@ -86,10 +84,10 @@ object BindgenPlugin extends AutoPlugin {
 
   override def projectSettings =
     Seq(
-      bindgenVersion := Platform.BuildInfo.version,
+      bindgenVersion := BuildInfo.version,
       bindgenBindings := Seq.empty,
       bindgenMode := BindgenMode.ResourceGenerator,
-      bindgenClangInfo := Platform.detectClangInfo(
+      bindgenClangInfo := ClangDetector.detect(
         nativeClang.value.toPath
       ),
       bindgenBinary := resolveBinaryTask.value
@@ -182,7 +180,7 @@ object BindgenPlugin extends AutoPlugin {
       defined: Seq[Binding],
       destination: File,
       lang: BindingLang,
-      ci: Platform.ClangInfo,
+      ci: ClangInfo,
       streams: TaskStreams
   ): Seq[File] = {
 

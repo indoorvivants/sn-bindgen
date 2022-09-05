@@ -10,7 +10,7 @@ import scala.util.Success
 import java.nio.file.Paths
 
 class TestFunctions {
-  val plat = Platform.detectClangInfo(Paths.get(sys.env("BINDGEN_CLANG_PATH")))
+  val plat = ClangDetector.detect(Paths.get(sys.env("BINDGEN_CLANG_PATH")))
 
   val c_code = """
       | unsigned run(int i, float h);
