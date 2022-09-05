@@ -11,7 +11,4 @@ addSbtPlugin(
   "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.13"
 )
 
-// We want to have all the interface sources available in this project's own build
-unmanagedSourceDirectories.in(Compile) +=
-  (ThisBuild / baseDirectory).value.getParentFile /
-    "interface" / "src" / "main" / "scala"
+libraryDependencies += "com.indoorvivants.detective" %% "platform" % "0.0.2"

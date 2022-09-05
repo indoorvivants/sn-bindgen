@@ -3,22 +3,28 @@ package bindgen.interface
 import org.junit.Assert.*
 import org.junit.Test
 
-import Platform.*
+import com.indoorvivants.detective.Platform.*
+
+import ArtifactNames.*
 
 class TestPlatform {
 
   @Test def platform_string(): Unit = {
     assertEquals(
       "x86_64-apple-darwin",
-      Target(OS.MacOS, Arch.x86_64).coursierString
+      coursierString(Target(OS.MacOS, Arch.Intel, Bits.x64))
+    )
+    assertEquals(
+      "aarch_64-apple-darwin",
+      coursierString(Target(OS.MacOS, Arch.Arm, Bits.x64))
     )
     assertEquals(
       "x86_64-pc-linux",
-      Target(OS.Linux, Arch.x86_64).coursierString
+      coursierString(Target(OS.Linux, Arch.Intel, Bits.x64))
     )
     assertEquals(
       "x86_64-pc-win32",
-      Target(OS.Windows, Arch.x86_64).coursierString
+      coursierString(Target(OS.Windows, Arch.Intel, Bits.x64))
     )
   }
 }
