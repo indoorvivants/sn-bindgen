@@ -20,3 +20,4 @@ _site
 docs/mdoc-invocation.txt
 local-bindgen
 bin
+worktree-main

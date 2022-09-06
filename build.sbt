@@ -20,12 +20,12 @@ lazy val Versions = new {
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
-  val b2s = "0.3.16"
+  val b2s = "0.3.17"
   val pluginTargetSN = "0.4.6"
   val pluginTargetSBT = "1.6.1"
   val detective = "0.0.2"
 
-  val Scala3 = "3.1.3"
+  val Scala3 = "3.2.0"
   val Scala212 = "2.12.16"
   val Scala213 = "2.13.8"
   val Scala2 = List(Scala212, Scala213)
@@ -58,7 +58,7 @@ lazy val root = project
   .aggregate(bindgen, libclang)
   .aggregate(iface.projectRefs*)
   .aggregate(plugin.projectRefs*)
-  .aggregate(tests)
+  .aggregate(tests.projectRefs*)
   .settings(
     publish / skip := true,
     publishLocal / skip := true
@@ -71,28 +71,33 @@ lazy val iface = projectMatrix
     List(
       VirtualAxis.jvm,
       VirtualAxis.native
-    ) // todo may be publish native interfaces as well
-  )(MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"))
+    )
+  )(
+    MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"),
+    MatrixAction
+      .ForPlatform(VirtualAxis.native)
+      .Configure(_.enablePlugins(ScalaNativeJUnitPlugin)),
+    MatrixAction
+      .ForPlatform(VirtualAxis.jvm)
+      .Settings(
+        Seq(
+          Test / fork := true,
+          libraryDependencies += "com.github.sbt" % "junit-interface" % Versions.junit % Test
+        )
+      )
+  )
   .settings(
     moduleName := "bindgen-interface",
-    libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
-    libraryDependencies += "com.github.sbt" % "junit-interface" % Versions.junit % Test,
-    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
-    Test / fork := true,
-    Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString,
-    Test / envVars += "BINDGEN_CLANG_PATH" -> (bindgen / Compile / nativeClang).value.toString,
-    Compile / resourceGenerators += Def.task {
-      val out =
-        (Compile / managedResourceDirectories).value.head / "sn-bindgen.properties"
-
-      val props = new java.util.Properties()
-
-      props.setProperty("sn-bindgen.version", version.value)
-
-      IO.write(props, "SN bindgen properites file", out)
-
-      List(out)
-    }
+    libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective
+  )
+  .enablePlugins(BuildInfoPlugin)
+  .settings(
+    buildInfoPackage := "bindgen.interface",
+    buildInfoKeys := Seq[BuildInfoKey](
+      version,
+      scalaVersion,
+      scalaBinaryVersion
+    )
   )
 
 lazy val bindgen = project
@@ -102,10 +107,9 @@ lazy val bindgen = project
   .settings(nativeCommon)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
-  .settings(Test / nativeConfig ~= usesLibClang)
-  .settings(clangDetection)
   .settings(
     moduleName := "bindgen",
+    libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
     libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
       .excludeAll(ExclusionRule("org.scala-native")),
     libraryDependencies += compilerPlugin(
@@ -196,7 +200,6 @@ lazy val libclang = project
   .in(file("modules/libclang"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
-  .settings(clangDetection)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
     moduleName := "bindgen-libclang",
@@ -205,52 +208,84 @@ lazy val libclang = project
     }
   )
 
-lazy val tests = project
+lazy val tests = projectMatrix
   .in(file("modules/tests"))
-  .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin, BindgenPlugin)
-  .settings(nativeCommon)
-  .settings(Compile / nativeConfig ~= environmentConfiguration)
-  .settings(nativeConfig ~= usesLibClang)
-  .settings(clangDetection)
+  .dependsOn(iface)
+  .someVariations(
+    Versions.Scala2 :+ Versions.Scala3,
+    List(
+      VirtualAxis.jvm,
+      VirtualAxis.native
+    )
+  )(
+    MatrixAction((sv, axes) =>
+      sv.isScala2 && axes.contains(VirtualAxis.native)
+    ).Skip,
+    MatrixAction.ForScala(_.isScala2).Settings(scalacOptions += "-Xsource:3"),
+    MatrixAction
+      .ForPlatform(VirtualAxis.native)
+      .Configure(
+        _.enablePlugins(ScalaNativeJUnitPlugin, BindgenPlugin)
+          .settings(nativeCommon)
+          .settings(Compile / nativeConfig ~= environmentConfiguration)
+          .settings(
+            Compile / bindgenBinary := (bindgen / Compile / nativeLink).value,
+            Test / bindgenBinary := (bindgen / Compile / nativeLink).value,
+            bindgenBindings := Seq.empty,
+            bindgenBinary := (bindgen / Compile / nativeLink).value,
+            Test / bindgenBindings := {
+              val resourcesDirs = (Test / unmanagedResourceDirectories).value
+
+              resourcesDirs.flatMap { resourceDir =>
+                val headersPath = resourceDir / "scala-native"
+                val files = headersPath.toGlob / "**" / "*.h"
+                import scala.collection.JavaConverters.*
+                val headerSpec = Files
+                  .walk(headersPath.toPath, 1)
+                  .collect(Collectors.toList())
+                  .asScala
+                  .filter(_.toFile().isFile())
+                  .filter(_.toFile.ext == "h")
+                  .map(h =>
+                    h.toFile -> headersPath.toPath
+                      .relativize(h)
+                      .toString
+                      .dropRight(2)
+                  )
+                  .toMap
+
+                headerSpec.toSeq.map { case (header, name) =>
+                  Binding(
+                    header,
+                    s"lib_test_$name",
+                    cImports = List(s"$name.h"),
+                    logLevel = LogLevel.Warn
+                  ).copy(logLevel = LogLevel.Warn)
+                }
+              }
+            }
+          )
+      ),
+    MatrixAction
+      .ForPlatform(VirtualAxis.jvm)
+      .Settings(
+        Seq(
+          Test / fork := true,
+          Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString,
+          Test / envVars += "BINDGEN_CLANG_PATH" -> (bindgen / Compile / nativeClang).value.toString,
+          libraryDependencies += "com.github.sbt" % "junit-interface" % Versions.junit % Test
+        )
+      )
+  )
   .settings(
     publish / skip := true,
     publishLocal / skip := true,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
-    bindgenBinary := (bindgen / Compile / nativeLink).value,
-    Compile / bindgenBinary := (bindgen / Compile / nativeLink).value,
-    Test / bindgenBinary := (bindgen / Compile / nativeLink).value,
-    bindgenBindings := Seq.empty,
     Test / sources := {
       val defaults = (Test / sources).value
       if (Platform.os == Platform.OS.Windows)
         defaults.filterNot(_.toString.toLowerCase.contains("no-windows"))
       else defaults
-    },
-    Test / bindgenBindings := {
-      val headersPath =
-        baseDirectory.value / "src" / "test" / "resources" / "scala-native"
-
-      val files = headersPath.toGlob / "**" / "*.h"
-      import scala.collection.JavaConverters.*
-      val headerSpec = Files
-        .walk(headersPath.toPath, 1)
-        .collect(Collectors.toList())
-        .asScala
-        .filter(_.toFile().isFile())
-        .filter(_.toFile.ext == "h")
-        .map(h =>
-          h.toFile -> headersPath.toPath.relativize(h).toString.dropRight(2)
-        )
-        .toMap
-
-      headerSpec.toSeq.map { case (header, name) =>
-        Binding(
-          header,
-          s"lib_test_$name",
-          cImports = List(s"$name.h"),
-          logLevel = LogLevel.Trace
-        )
-      }
     }
   )
 
@@ -339,7 +374,7 @@ def usesLibClang(conf: NativeConfig) = {
   val libraryName =
     if (Platform.os == Platform.OS.Windows) "libclang" else "clang"
 
-  val detected = ClangDetector.detect(conf.clang)
+  val detected = llvmFolder(conf.clang.toAbsolutePath())
 
   conf
     .withLinkingOptions(
@@ -414,14 +449,6 @@ versionDump := {
   IO.write(file, (Compile / version).value)
 }
 
-lazy val clangInfo = taskKey[_root_.bindgen.interface.Platform.ClangInfo]("")
-
-lazy val clangDetection = Seq(clangInfo := {
-  val path = nativeClang.value.toPath()
-
-  ClangDetector.detect(path)
-})
-
 addCommandAlias(
   "ci",
   "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted"
@@ -433,6 +460,7 @@ addCommandAlias(
 )
 
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
+
 // duplicate for now, remove once plugin is bootstrapped
 def jarString(os: Platform.OS): String = {
   import Platform.OS.*
@@ -468,4 +496,30 @@ def coursierString(os: Platform.OS): String = {
 
 def coursierString(target: Platform.Target): String = {
   jarString(target.bits, target.arch) + "-" + coursierString(target.os)
+}
+
+def llvmFolder(clangPath: java.nio.file.Path) = {
+  import Platform.OS.*
+  Platform.os match {
+    case MacOS =>
+      LLVMInfo(
+        llvmInclude = List(
+          "/opt/homebrew/opt/llvm/include",
+          "/usr/local/opt/llvm/include"
+        ),
+        llvmLib = List("/usr/local/opt/llvm/lib", "/opt/homebrew/opt/llvm/lib")
+      )
+    case Linux | Windows =>
+      // <llvm-path>/bin/clang
+      val realPath = clangPath.toRealPath()
+      val binFolder = realPath.getParent()
+      val llvmFolder = binFolder.getParent()
+
+      if (llvmFolder.toFile.exists())
+        LLVMInfo(
+          llvmInclude = List(llvmFolder.resolve("include").toString),
+          llvmLib = List(llvmFolder.resolve("lib").toString)
+        )
+      else LLVMInfo(Nil, Nil)
+  }
 }

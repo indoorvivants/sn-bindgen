@@ -10,5 +10,6 @@ addSbtPlugin(
 addSbtPlugin(
   "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.13"
 )
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.11.0")
 
 libraryDependencies += "com.indoorvivants.detective" %% "platform" % "0.0.2"

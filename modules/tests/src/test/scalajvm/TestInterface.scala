@@ -9,8 +9,8 @@ import scala.util.Try
 import scala.util.Success
 import java.nio.file.Paths
 
-class TestFunctions {
-  val plat = ClangDetector.detect(Paths.get(sys.env("BINDGEN_CLANG_PATH")))
+class TestInterface {
+  val plat = sys.env.get("BINDGEN_CLANG_PATH").map(Paths.get(_))
 
   val c_code = """
       | unsigned run(int i, float h);
@@ -191,5 +191,4 @@ class TestFunctions {
     }
     file
   }
-
 }

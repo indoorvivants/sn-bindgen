@@ -27,4 +27,5 @@ class TestPlatform {
       coursierString(Target(OS.Windows, Arch.Intel, Bits.x64))
     )
   }
+
 }
