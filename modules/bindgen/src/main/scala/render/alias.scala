@@ -27,14 +27,14 @@ def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
         line(s"val _tag: Tag[${model.name}] = summon[Tag[${name.full}]]")
       case _ =>
         line(s"given _tag: Tag[${model.name}] = ${scalaTag(underlyingType)}")
-        if isOpaque && enableConstructor then
-          line(
-            s"inline def apply(inline o: ${scalaType(underlyingType)}): ${model.name} = o"
-          )
-          line(s"extension (v: ${model.name})")
-          nest {
-            line(s"inline def value: ${scalaType(underlyingType)} = v")
-          }
+    if enableConstructor then
+      line(
+        s"inline def apply(inline o: ${scalaType(underlyingType)}): ${model.name} = o"
+      )
+      line(s"extension (v: ${model.name})")
+      nest {
+        line(s"inline def value: ${scalaType(underlyingType)} = v")
+      }
   }
 
 end alias
