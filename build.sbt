@@ -259,8 +259,8 @@ lazy val tests = projectMatrix
                     header,
                     s"lib_test_$name",
                     cImports = List(s"$name.h"),
-                    logLevel = LogLevel.Warn
-                  ).copy(logLevel = LogLevel.Warn)
+                    logLevel = LogLevel.Info
+                  ).copy(logLevel = LogLevel.Info)
                 }
               }
             }
