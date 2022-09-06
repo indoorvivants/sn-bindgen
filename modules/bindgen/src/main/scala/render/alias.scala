@@ -31,6 +31,10 @@ def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
           line(
             s"inline def apply(inline o: ${scalaType(underlyingType)}): ${model.name} = o"
           )
+          line(s"extension (v: ${model.name})")
+          nest {
+            line(s"inline def value: ${scalaType(underlyingType)} = v")
+          }
   }
 
 end alias

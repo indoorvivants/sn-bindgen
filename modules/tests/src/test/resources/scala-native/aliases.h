@@ -11,4 +11,8 @@ typedef struct {
     char *key;
   } field1;
   AliasesRef *field2;
-} Test;
+} TestAliases;
+
+
+typedef int hello_alias;
+typedef hello_alias alias_of_an_alias;
