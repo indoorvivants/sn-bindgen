@@ -306,7 +306,7 @@ lazy val docs =
     .in(file("docs"))
     .enablePlugins(SubatomicPlugin)
     .settings(
-      scalaVersion := Versions.Scala3,
+      scalaVersion := "3.1.3",
       fork := true,
       publish / skip := true,
       Compile / run / envVars := Map(
