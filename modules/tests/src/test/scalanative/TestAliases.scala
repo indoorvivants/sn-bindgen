@@ -18,7 +18,7 @@ class TestAliases:
       assertTrue(hello_alias._tag == alias_of_an_alias._tag)
 
       summon[Tag[hello_alias]]
-      
+
       // testing that alias_of_an_alias is not opaque
       val t: alias_of_an_alias = hello_alias(25)
     }
