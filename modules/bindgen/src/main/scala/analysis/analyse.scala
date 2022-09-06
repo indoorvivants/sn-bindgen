@@ -22,9 +22,11 @@ def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
     case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
 
 def analyse(file: String)(using Zone)(using config: Config): Binding =
+  val clangInfo = systemHeaders(config.systemPathDetection)
   val index = clang_createIndex(0, 0)
 
-  val unit = createTranslationUnit(index, file)
+  val unit =
+    createTranslationUnit(index, file, clangInfo.fold(throw _, identity))
 
   val (cxClientData, memory) = Captured.unsafe(BindingBuilder())
 
@@ -229,19 +231,31 @@ def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
   binding
 end addBuiltInAliases
 
-def createTranslationUnit(index: CXIndex, file: String)(using config: Config)(
-    using Zone
+def createTranslationUnit(
+    index: CXIndex,
+    file: String,
+    clangInfo: ClangInfo
+)(using
+    config: Config
+)(using
+    Zone
 ) =
-  info(s"Using following clang flags: ${summon[Config].clangFlags}")
+  val extraClangFlags =
+    clangInfo.includePaths
+      .map(ip => s"-I$ip")
+      .map(ClangFlag.apply)
+
+  val allClangFlags = config.clangFlags ++ extraClangFlags
+
+  info(s"Using following clang flags", allClangFlags)
   val filename = toCString(file)
   val l = List.newBuilder[String]
   import CXTranslationUnit_Flags as flags
 
   val mem =
-    val seq = config.clangFlags
-    val ptr = alloc[CString](seq.size)
-    (0 until seq.size).foreach { i =>
-      ptr(i) = toCString(seq(i).value)
+    val ptr = alloc[CString](allClangFlags.size)
+    (0 until allClangFlags.size).foreach { i =>
+      ptr(i) = toCString(allClangFlags(i).value)
     }
 
     ptr
@@ -250,7 +264,7 @@ def createTranslationUnit(index: CXIndex, file: String)(using config: Config)(
     index,
     filename,
     mem,
-    config.clangFlags.size.toUInt,
+    allClangFlags.size.toUInt,
     null,
     0.toUInt,
     flags.CXTranslationUnit_None

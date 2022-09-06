@@ -5,22 +5,22 @@ object LoggingConfig:
   val default = LoggingConfig(MinLogPriority(LogLevel.priority(LogLevel.info)))
   given infer(using c: Config): LoggingConfig = LoggingConfig(c.minLogPriority)
 
-def trace[A](msg: A)(using LoggingConfig): Unit =
-  log(LogLevel.trace, msg)
+val trace = new LogBuilder(LogLevel.trace)
+val info = new LogBuilder(LogLevel.info)
+val warning = new LogBuilder(LogLevel.warning)
+val error = new LogBuilder(LogLevel.error)
 
-def trace[A](msg: A, context: Seq[(String, Any)])(using
-    LoggingConfig
-): Unit =
-  log(LogLevel.trace, msg, context)
+class LogBuilder(level: LogLevel):
+  def apply(msg: Any)(using LoggingConfig) =
+    log(level, msg)
 
-def info(msg: Any)(using LoggingConfig) =
-  log(LogLevel.info, msg)
+  def apply(msg: Any, context: Seq[(String, Any)])(using LoggingConfig) =
+    log(level, msg, context)
 
-def warning(msg: Any)(using LoggingConfig) =
-  log(LogLevel.warning, msg)
-
-def error(msg: Any)(using LoggingConfig) =
-  log(LogLevel.error, msg)
+  @scala.annotation.targetName("apply_strings")
+  def apply(msg: Any, context: Seq[Any])(using LoggingConfig) =
+    log(level, msg, context.map("" -> _.toString))
+end LogBuilder
 
 private inline def log[A](
     level: LogLevel,

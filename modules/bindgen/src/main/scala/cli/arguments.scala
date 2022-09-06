@@ -52,7 +52,8 @@ object CLI:
   private val indentationSize = Opts
     .option[Int](
       "indentation-size",
-      help = "number of spaces used for indentation (default: 2)"
+      help = "number of spaces used for indentation (default: 2)",
+      visibility = Visibility.Partial
     )
     .withDefault(2)
     .map(IndentationSize.apply)
@@ -103,18 +104,18 @@ object CLI:
     val extra = if name == "warning" then " (this is the default)" else ""
     Opts
       .flag(s"$name", help = s"Output '$name' log messages or above$extra")
-      .map(_ => LogLevel.priority(level))
+      .map(_ => MinLogPriority(LogLevel.priority(level)))
       .orNone
   }.reduce(_.orElse(_))
-    .map(_.getOrElse(LogLevel.priority(LogLevel.warning)))
-    .map(MinLogPriority.apply)
+    .map(_.getOrElse(LoggingConfig.default.minLogPriority))
 
   private val exclusivePrefix = Opts
     .options[String](
       "exclusive-prefix",
       help =
         "When provided, only definitions that start with this prefix will be" +
-          "rendered"
+          "rendered",
+      visibility = Visibility.Partial
     )
     .map(_.toList)
     .withDefault(Nil)
@@ -128,6 +129,42 @@ object CLI:
     )
     .withDefault(0)
     .map(Indentation.apply)
+
+  private val llvmBin = Opts
+    .option[String](
+      "llvm-bin",
+      help = "Path to the LLVM installation bin/ folder\n" +
+        "If provided, the clang binary from that folder will be used to\n" +
+        "figure out system headers folders"
+    )
+    .map(LLVMBin.apply)
+    .map(SystemPathDetection.FromLLVM.apply)
+
+  private val clangPath = Opts
+    .option[String](
+      "clang-path",
+      help = "Path to the Clang executable\n" +
+        "If provided, the binary will be used \n" +
+        "figure out system headers folders"
+    )
+    .map(ClangPath.apply)
+    .map(SystemPathDetection.FromClang.apply)
+
+  val noSystemHeaders = Opts
+    .flag(
+      "no-system",
+      help =
+        "Do NOT attempt to find clang binary and use it to figure out system headers\n" +
+          "Note that this puts the responsibility of providing paths to common system headers on you\n" +
+          "You can use --clang-include option for that"
+    )
+    .as(SystemPathDetection.No)
+
+  private val systemPathsDetection =
+    llvmBin
+      .orElse(clangPath)
+      .orElse(noSystemHeaders)
+      .withDefault(SystemPathDetection.Auto)
 
   val command = Command(
     name = "bindgen",
@@ -145,7 +182,8 @@ object CLI:
       quiet,
       minLogPriority,
       exclusivePrefix,
-      outputFile
+      outputFile,
+      systemPathsDetection
     ).mapN(Config.apply)
   }
 end CLI

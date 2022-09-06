@@ -27,7 +27,7 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenBindings = taskKey[Seq[Binding]]("")
     val bindgenGenerateScalaSources = taskKey[Seq[File]]("")
     val bindgenGenerateCSources = taskKey[Seq[File]]("")
-    val bindgenClangInfo = taskKey[ClangInfo]("")
+    val bindgenClangPath = taskKey[java.nio.file.Path]("")
     val bindgenMode = taskKey[BindgenMode]("")
   }
 
@@ -87,9 +87,7 @@ object BindgenPlugin extends AutoPlugin {
       bindgenVersion := BuildInfo.version,
       bindgenBindings := Seq.empty,
       bindgenMode := BindgenMode.ResourceGenerator,
-      bindgenClangInfo := ClangDetector.detect(
-        nativeClang.value.toPath
-      ),
+      bindgenClangPath := nativeClang.value.toPath,
       bindgenBinary := resolveBinaryTask.value
     ) ++
       Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
@@ -110,7 +108,7 @@ object BindgenPlugin extends AutoPlugin {
         (selected).distinct,
         dest,
         BindingLang.Scala,
-        bindgenClangInfo.value,
+        bindgenClangPath.value,
         streams.value
       )
     },
@@ -128,7 +126,7 @@ object BindgenPlugin extends AutoPlugin {
         (selected).distinct,
         dest,
         BindingLang.C,
-        bindgenClangInfo.value,
+        bindgenClangPath.value,
         streams.value
       )
     },
@@ -180,7 +178,7 @@ object BindgenPlugin extends AutoPlugin {
       defined: Seq[Binding],
       destination: File,
       lang: BindingLang,
-      ci: ClangInfo,
+      clangPath: java.nio.file.Path,
       streams: TaskStreams
   ): Seq[File] = {
 
@@ -214,7 +212,9 @@ object BindgenPlugin extends AutoPlugin {
         Tracked.diffOutputs(cacheFile / "output", FileInfo.exists) {
           (outDiff: ChangeReport[File]) =>
             if (changed || outDiff.modified.nonEmpty) {
-              builder.generate(defined, destination, lang, ci).toSet
+              builder
+                .generate(defined, destination, lang, Some(clangPath))
+                .toSet
             } else outDiff.checked
         }
     }

@@ -1,16 +1,10 @@
 package bindgen.interface
 
-import java.io.File
-import java.nio.file.Paths
-import java.io.FileWriter
-import scala.util.control.NonFatal
+import java.io.*
+import java.lang.ProcessBuilder.Redirect
+import java.nio.file.*
 import scala.sys.process.ProcessLogger
-import java.nio.file.Files
-import java.io.BufferedWriter
-import java.io.OutputStreamWriter
-import java.io.FileOutputStream
-import java.io.Writer
-import java.nio.file.Path
+import scala.util.control.NonFatal
 
 sealed trait BindingLang extends Product with Serializable
 object BindingLang {
@@ -80,7 +74,7 @@ case class Binding private (
     clangFlags: List[String],
     exclusivePrefixes: List[String],
     logLevel: LogLevel,
-    systemIncludes: List[Includes]
+    systemIncludes: Includes
 ) {
   def toCommand(lang: BindingLang): List[String] = {
     val sb = List.newBuilder[String]
@@ -128,7 +122,7 @@ object Binding {
       clangFlags: List[String] = Nil,
       exclusivePrefixes: List[String] = Nil,
       logLevel: LogLevel = LogLevel.Info,
-      systemIncludes: List[Includes] = List(Includes.ClangSearchPath)
+      systemIncludes: Includes = Includes.ClangSearchPath
   ) = {
     new Binding(
       headerFile = headerFile,
@@ -148,7 +142,7 @@ object Binding {
 sealed trait Includes extends Product with Serializable
 object Includes {
   case object ClangSearchPath extends Includes
-  case object LLVMSources extends Includes
+  case object None extends Includes
 }
 
 class BindingBuilder(
@@ -168,7 +162,7 @@ class BindingBuilder(
       bindings: Seq[Binding],
       destinationDir: File,
       lang: BindingLang,
-      ci: ClangInfo
+      clangPath: Option[Path]
   ): Seq[File] = {
 
     val files = Seq.newBuilder[File]
@@ -183,9 +177,15 @@ class BindingBuilder(
 
       val destination = destinationDir / destinationFilename
       val platformArgs =
-        if (binding.systemIncludes.contains(Includes.ClangSearchPath))
-          ci.includePaths.flatMap(path => List("--clang-include", path))
-        else Nil
+        if (binding.systemIncludes == Includes.None) {
+          List("--no-system")
+        } else {
+          clangPath match {
+            case None        => Nil
+            case Some(value) => List("--clang-path", value.toString)
+          }
+        }
+
       val outputArgs = Seq("--out", destination.toPath().toString())
       val cmd =
         binary.toString :: binding.toCommand(lang) ++ platformArgs ++ outputArgs
@@ -197,15 +197,28 @@ class BindingBuilder(
         }
         .mkString(" ")
 
-      val buf = List.newBuilder[String]
+      val stderr = List.newBuilder[String]
+      val stdout = List.newBuilder[String]
+
       val logger = ProcessLogger.apply(
-        (o: String) => {
-          buf += o
-        },
-        (e: String) => errPrintln(e)
+        (o: String) => stdout += o,
+        (e: String) => stderr += e
       )
 
-      val result = Process(cmd).run(logger).exitValue()
+      val proces = new java.lang.ProcessBuilder(cmd*)
+        .start()
+
+      io.Source
+        .fromInputStream(proces.getErrorStream())
+        .getLines
+        .foreach(logger.err(_))
+
+      io.Source
+        .fromInputStream(proces.getInputStream())
+        .getLines
+        .foreach(logger.out(_))
+
+      val result = proces.waitFor()
 
       if (result == 0) {
         errPrintln(
@@ -219,9 +232,7 @@ class BindingBuilder(
           s"(FAILED [$code]) Executing [$escapeArgs]"
         )
 
-        buf.result().foreach { l =>
-          errPrintln(s"/*$code*/  " + l)
-        }
+        stderr.result().foreach(errPrintln)
 
         throw new Exception(
           s"Process [$escapeArgs] failed with code $result"
