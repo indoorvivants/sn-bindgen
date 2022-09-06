@@ -226,7 +226,6 @@ def addBuiltInAliases(binding: BindingBuilder)(using
           binding.add(al, location = Location.systemHeader)
 
         case bd =>
-          info(bd)
           if bd.location.isFromSystemHeader then
             binding.remove(DefName(tpe.short, tg))
             binding.add(al, location = Location.systemHeader)
