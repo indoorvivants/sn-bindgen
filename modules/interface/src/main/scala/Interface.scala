@@ -211,7 +211,7 @@ class BindingBuilder(
       io.Source
         .fromInputStream(proces.getErrorStream())
         .getLines
-        .foreach(logger.err(_))
+        .foreach(errPrintln(_))
 
       io.Source
         .fromInputStream(proces.getInputStream())
