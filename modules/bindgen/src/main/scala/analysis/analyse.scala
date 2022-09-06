@@ -197,35 +197,40 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
 end analyse
 
-def addBuiltInAliases(binding: BindingBuilder): BindingBuilder =
+def addBuiltInAliases(binding: BindingBuilder)(using
+    LoggingConfig
+): BindingBuilder =
   val replaceTypes = DefTag.all - DefTag.Function
   BuiltinType.all.foreach { tpe =>
     val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
     replaceTypes.foreach { tg =>
-      binding.named.get(DefName(tpe.short, tg)) match
-        case Some(
-              BindingDefinition(
-                Def.Alias(
-                  "va_list",
-                  CType.Reference(
-                    Name.Model("__builtin_va_list")
-                  ) // whatever the hell happens on MacOS
-                ),
-                _
-              )
-            ) =>
+
+      val annoyingBastards =
+        Set("__gnuc_va_list", "__builtin_va_list", "__darwin_va_list")
+
+      binding.named.get(DefName(tpe.short, tg)).collect {
+        case BindingDefinition(
+              Def.Alias(
+                "va_list",
+                CType.Reference(
+                  Name.Model(ref)
+                )
+              ),
+              _
+            ) if annoyingBastards(ref) =>
           binding.remove(DefName(tpe.short, DefTag.Alias))
-          binding.remove(DefName("__gnuc_va_list", DefTag.Alias))
-          binding.remove(DefName("__builtin_va_list", DefTag.Alias))
-          binding.remove(DefName("__darwin_va_list", DefTag.Alias))
+          annoyingBastards.foreach { b =>
+            binding.remove(DefName(b, DefTag.Alias))
+          }
 
           binding.add(al, location = Location.systemHeader)
 
-        case Some(bd) =>
+        case bd =>
+          info(bd)
           if bd.location.isFromSystemHeader then
             binding.remove(DefName(tpe.short, tg))
             binding.add(al, location = Location.systemHeader)
-        case None =>
+      }
     }
   }
   binding

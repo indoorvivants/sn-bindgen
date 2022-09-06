@@ -42,7 +42,7 @@ private inline def log[A](
         val offset = " " * (fMaxLength - field.length)
         val filler = " " * fMaxLength
         value.toString
-          .grouped(80)
+          .grouped(15000)
           .zipWithIndex
           .map { case (valueLine, idx) =>
             if idx == 0 then
