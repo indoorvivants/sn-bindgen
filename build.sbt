@@ -99,12 +99,14 @@ lazy val iface = projectMatrix
       scalaBinaryVersion
     )
   )
+  .settings(noTests)
 
 lazy val bindgen = project
   .in(file("modules/bindgen"))
   .dependsOn(libclang)
   .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin)
   .settings(nativeCommon)
+  .settings(noTests)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
@@ -131,6 +133,7 @@ lazy val binaryArtifacts = project
   .in(file("build/binary-artifacts"))
   .enablePlugins(ScalaNativePlugin)
   .settings(nativeCommon)
+  .settings(noTests)
   .settings(
     packageBin / publishArtifact := false,
     packageDoc / publishArtifact := false,
@@ -437,6 +440,10 @@ buildBinary := {
 
 lazy val nativeCommon = Seq(
   scalaVersion := Versions.Scala3
+)
+
+lazy val noTests = Seq(
+  test := {}
 )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
