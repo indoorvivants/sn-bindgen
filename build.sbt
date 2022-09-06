@@ -12,6 +12,7 @@ import com.indoorvivants.detective.Platform
 import Platform.*
 
 import _root_.bindgen.interface.*
+import ArtifactNames.*
 
 import java.nio.file.Paths
 
@@ -263,7 +264,7 @@ lazy val tests = projectMatrix
                     s"lib_test_$name",
                     cImports = List(s"$name.h"),
                     logLevel = LogLevel.Info
-                  ).copy(logLevel = LogLevel.Info)
+                  )
                 }
               }
             }
@@ -467,45 +468,6 @@ addCommandAlias(
 )
 
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
-
-// duplicate for now, remove once plugin is bootstrapped
-def jarString(os: Platform.OS): String = {
-  import Platform.OS.*
-  os match {
-    case Windows => "windows"
-    case MacOS   => "osx"
-    case Linux   => "linux"
-    case Unknown => "unknown"
-  }
-}
-
-def jarString(bits: Platform.Bits, arch: Platform.Arch): String = {
-  (bits, arch) match {
-    case (Bits.x64, Arch.Intel) => "x86_64"
-    case (Bits.x64, Arch.Arm)   => "aarch_64"
-    case (Bits.x32, Arch.Intel) => "x86_32"
-    case (Bits.x32, Arch.Arm)   => "aarch_32"
-  }
-
-}
-
-def jarString(target: Platform.Target): String = {
-  jarString(target.bits, target.arch) + "-" + jarString(target.os)
-}
-
-def coursierString(os: Platform.OS): String = {
-  import Platform.OS.*
-  os match {
-    case Windows => "pc-win32"
-    case MacOS   => "apple-darwin"
-    case Linux   => "pc-linux"
-    case Unknown => "unknown"
-  }
-}
-
-def coursierString(target: Platform.Target): String = {
-  jarString(target.bits, target.arch) + "-" + coursierString(target.os)
-}
 
 def llvmFolder(clangPath: java.nio.file.Path) = {
   import Platform.OS.*

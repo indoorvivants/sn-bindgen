@@ -164,7 +164,7 @@ object CLI:
     llvmBin
       .orElse(clangPath)
       .orElse(noSystemHeaders)
-      .withDefault(SystemPathDetection.No)
+      .withDefault(SystemPathDetection.Auto)
 
   val command = Command(
     name = "bindgen",

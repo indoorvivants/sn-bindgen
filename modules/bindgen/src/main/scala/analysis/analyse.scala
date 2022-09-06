@@ -245,7 +245,7 @@ def createTranslationUnit(
       .map(ip => s"-I$ip")
       .map(ClangFlag.apply)
 
-  val allClangFlags = config.clangFlags ++ extraClangFlags
+  val allClangFlags = (config.clangFlags ++ extraClangFlags).distinct
 
   info(s"Using following clang flags", allClangFlags)
   val filename = toCString(file)
