@@ -8,7 +8,7 @@ addSbtPlugin(
   "com.indoorvivants" % "subatomic-plugin" % "0.0.7"
 )
 addSbtPlugin(
-  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.13+13-086c6de4-SNAPSHOT"
+  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.13+20-4fe7511c-SNAPSHOT"
 )
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.11.0")
 
