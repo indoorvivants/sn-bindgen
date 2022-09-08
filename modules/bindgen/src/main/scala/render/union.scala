@@ -24,7 +24,7 @@ def union(model: Def.Union, line: Appender)(using Config)(using
       case Escaped        => s"`$name`"
 
   line(s"opaque type $structName = $tpe")
-  line(s"object $structName:")
+  line(s"object ${sanitiseBeforeColon(structName.value)}:")
   nest {
     model.anonymous.foreach {
       case s: Def.Struct =>

@@ -52,6 +52,10 @@ def escape(name: String) =
   else name
 end escape
 
+// I know, I know... the name is perfect.
+def sanitiseBeforeColon(name: String) = 
+  if name.endsWith("_") then s"$name " else name
+
 case class Error(msg: String) extends Exception(msg)
 
 import scala.scalanative.unsafe.*
