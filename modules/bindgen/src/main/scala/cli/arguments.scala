@@ -167,8 +167,9 @@ object CLI:
       .withDefault(SystemPathDetection.Auto)
 
   val command = Command(
-    name = "bindgen",
-    header = "Generate Scala 3 native bindings from C header files"
+    name = s"bindgen",
+    header = "Generate Scala 3 native bindings from C header files" +
+      s"\nVersion: ${BuildInfo.version}\nBuilt using Scala ${BuildInfo.scalaVersion} and Scala Native ${BuildInfo.nativeVersion}"
   ) {
     (
       packageName,
