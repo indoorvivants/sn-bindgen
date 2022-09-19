@@ -53,7 +53,7 @@ def escape(name: String) =
 end escape
 
 // I know, I know... the name is perfect.
-def sanitiseBeforeColon(name: String) = 
+def sanitiseBeforeColon(name: String) =
   if name.endsWith("_") then s"$name " else name
 
 case class Error(msg: String) extends Exception(msg)
