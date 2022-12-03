@@ -474,7 +474,7 @@ def llvmFolder(clangPath: java.nio.file.Path) = {
 
   Platform.os match {
     case MacOS =>
-      val detected = sys.env.get("LLVM_BIN").map(Paths.get(_)).toList
+      val detected = sys.env.get("LLVM_BIN").map(Paths.get(_)).map(_.getParent).toList
 
       val speculative = List(
         Paths.get("/usr/local/opt/llvm@13"),
