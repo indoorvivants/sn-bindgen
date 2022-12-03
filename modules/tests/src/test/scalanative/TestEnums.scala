@@ -48,6 +48,13 @@ class TestEnums:
     assertEquals(9, EnumKeywords.`var`.int)
   end test_reserved_keywords
 
+  // @Test def test_getname(): Unit =
+  //   assertEquals(Some("ONE"), Enum1.getName(Enum1.ONE))
+  //   assertEquals(Some("TWO"), Enum1.getName(Enum1.TWO))
+  //   assertEquals(Some("THREE"), Enum1.getName(Enum1.THREE))
+  //   assertEquals(None, Enum1.getName(Enum1.define(4)))
+  // end test_getname
+
   @Test def test_tags(): Unit =
     summon[Tag[Enum1]]
     summon[Tag[Enum2]]
