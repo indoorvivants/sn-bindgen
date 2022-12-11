@@ -62,7 +62,7 @@ jobs:
     name: Windows CI
     strategy:
       fail-fast: false
-    runs-on: windows-2022
+    runs-on: windows-2019
     env:
       SN_RELEASE: fast
       LLVM_BIN: C:\Program Files\LLVM\bin
@@ -90,6 +90,10 @@ jobs:
         with:
           minimum-size: 4GB
           maximum-size: 16GB
+
+      - run: clang -v
+        shell: cmd
+
 
       - name: Install clang
         shell: pwsh
