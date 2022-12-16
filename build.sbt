@@ -17,18 +17,18 @@ import ArtifactNames.*
 import java.nio.file.Paths
 
 lazy val Versions = new {
-  val decline = "2.3.1"
+  val decline = "2.4.1"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
   val b2s = "0.3.17"
-  val pluginTargetSN = "0.4.6"
+  val pluginTargetSN = "0.4.9"
   val pluginTargetSBT = "1.6.1"
   val detective = "0.0.2"
 
-  val Scala3 = "3.2.0"
+  val Scala3 = "3.2.1"
   val Scala212 = "2.12.17"
-  val Scala213 = "2.13.9"
+  val Scala213 = "2.13.10"
   val Scala2 = List(Scala212, Scala213)
 
 }
@@ -380,14 +380,17 @@ def usesLibClang(conf: NativeConfig) = {
 
   val detected = llvmFolder(conf.clang.toAbsolutePath())
 
+  val arm64 =
+    if (Platform.arch == Platform.Arch.Arm) Seq("-arch", "arm64") else Seq.empty
+
   conf
     .withLinkingOptions(
       conf.linkingOptions ++
         Seq("-l" + libraryName) ++
-        detected.llvmLib.map("-L" + _)
+        detected.llvmLib.map("-L'" + _ + "'") ++ arm64
     )
     .withCompileOptions(
-      conf.compileOptions ++ detected.llvmInclude.map("-I" + _)
+      conf.compileOptions ++ detected.llvmInclude.map("-I" + _) ++ arm64
     )
 }
 
@@ -471,14 +474,32 @@ addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
 
 def llvmFolder(clangPath: java.nio.file.Path) = {
   import Platform.OS.*
+
   Platform.os match {
     case MacOS =>
+      val detected =
+        sys.env.get("LLVM_BIN").map(Paths.get(_)).map(_.getParent).toList
+
+      val speculative = List(
+        Paths.get("/usr/local/opt/llvm@14"),
+        Paths.get("/usr/local/opt/llvm"),
+        Paths.get("/opt/homebrew/opt/llvm@14"),
+        Paths.get("/opt/homebrew/opt/llvm")
+      )
+
+      val all = (detected ++ speculative).dropWhile(!_.toFile.exists())
+
+      val includes = all
+        .map(_.resolve("include"))
+        .map(_.toAbsolutePath().toString)
+
+      val lib = all
+        .map(_.resolve("lib"))
+        .map(_.toAbsolutePath().toString)
+
       LLVMInfo(
-        llvmInclude = List(
-          "/opt/homebrew/opt/llvm/include",
-          "/usr/local/opt/llvm/include"
-        ),
-        llvmLib = List("/usr/local/opt/llvm/lib", "/opt/homebrew/opt/llvm/lib")
+        llvmInclude = includes,
+        llvmLib = lib
       )
     case Linux | Windows =>
       // <llvm-path>/bin/clang

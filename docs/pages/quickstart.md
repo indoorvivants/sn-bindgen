@@ -9,7 +9,7 @@ For more involved examples, see a [dedicated repository](https://github.com/keyn
 
 ## Pre-requisites
 
-The bindgen's binary is dynamically linked against Clang 13.
+The bindgen's binary is dynamically linked against Clang 14.
 
 Therefore you must have it installed on the system that _generates_ the code, you can follow [Scala Native's instructions](https://scala-native.readthedocs.io/en/latest/user/setup.html#installing-clang-and-runtime-dependencies).
 
