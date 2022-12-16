@@ -17,7 +17,7 @@ import ArtifactNames.*
 import java.nio.file.Paths
 
 lazy val Versions = new {
-  val decline = "2.4.0"
+  val decline = "2.4.1"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
@@ -380,14 +380,17 @@ def usesLibClang(conf: NativeConfig) = {
 
   val detected = llvmFolder(conf.clang.toAbsolutePath())
 
+  val arm64 =
+    if (Platform.arch == Platform.Arch.Arm) Seq("-arch", "arm64") else Seq.empty
+
   conf
     .withLinkingOptions(
       conf.linkingOptions ++
         Seq("-l" + libraryName) ++
-        detected.llvmLib.map("-L" + _)
+        detected.llvmLib.map("-L'" + _ + "'") ++ arm64
     )
     .withCompileOptions(
-      conf.compileOptions ++ detected.llvmInclude.map("-I" + _)
+      conf.compileOptions ++ detected.llvmInclude.map("-I" + _) ++ arm64
     )
 }
 
