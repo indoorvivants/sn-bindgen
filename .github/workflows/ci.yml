@@ -31,7 +31,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       SN_RELEASE: fast
-      LLVM_VERSION: 13
+      LLVM_VERSION: 14
     steps:
       - uses: actions/checkout@v3
         with:

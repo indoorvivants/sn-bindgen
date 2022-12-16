@@ -478,9 +478,9 @@ def llvmFolder(clangPath: java.nio.file.Path) = {
         sys.env.get("LLVM_BIN").map(Paths.get(_)).map(_.getParent).toList
 
       val speculative = List(
-        Paths.get("/usr/local/opt/llvm@13"),
+        Paths.get("/usr/local/opt/llvm@14"),
         Paths.get("/usr/local/opt/llvm"),
-        Paths.get("/opt/homebrew/opt/llvm@13"),
+        Paths.get("/opt/homebrew/opt/llvm@14"),
         Paths.get("/opt/homebrew/opt/llvm")
       )
 
