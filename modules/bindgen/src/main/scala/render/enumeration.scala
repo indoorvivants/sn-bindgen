@@ -35,6 +35,16 @@ def enumeration(model: Def.Enum, line: Appender)(using
 
       line(lhs + " = " + rhs)
     }
+    line(s"inline def getName(inline value: $opaqueType): Option[String] =")
+    nest {
+      line("value match")
+      nest {
+        model.values.foreach { case (constName, value) =>
+          line(s"""case ${escape(constName)} => Some("${escape(constName)}")""")
+        }
+        line("case _ => None")
+      }
+    }
     line(s"extension (a: $opaqueType)")
     nest {
       line(s"inline def &(b: $opaqueType): $opaqueType = a & b")
