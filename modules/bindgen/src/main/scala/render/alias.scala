@@ -20,7 +20,7 @@ def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
 
   val modifier = if isOpaque then "opaque " else ""
   line(s"${modifier}type ${model.name} = ${scalaType(underlyingType)}")
-  line(s"object ${model.name}: ")
+  line(s"object ${sanitiseBeforeColon(model.name)}: ")
   nest {
     model.underlying match
       case Reference(Name.BuiltIn(name)) =>

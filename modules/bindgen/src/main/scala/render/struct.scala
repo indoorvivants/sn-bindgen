@@ -56,7 +56,7 @@ def struct(model: Def.Struct, line: Appender)(using
         .map(p => p.name.value -> p.newRawType)
     )
   line(s"opaque type $structName = ${scalaType(rewrittenStructType)}")
-  line(s"object $structName:")
+  line(s"object ${sanitiseBeforeColon(structName.value)}:")
   nest {
     struct.anonymous.foreach {
       case s: Def.Struct =>

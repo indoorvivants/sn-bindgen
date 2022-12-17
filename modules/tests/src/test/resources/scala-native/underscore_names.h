@@ -9,3 +9,7 @@ typedef union {
   long hello_;
   char* _;
 } UnderscoreNamesUnion;
+
+typedef struct {
+  int x_;
+} UnderscoreNamesStruct_;

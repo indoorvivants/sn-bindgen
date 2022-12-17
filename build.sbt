@@ -105,11 +105,20 @@ lazy val iface = projectMatrix
 lazy val bindgen = project
   .in(file("modules/bindgen"))
   .dependsOn(libclang)
-  .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin)
+  .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin, BuildInfoPlugin)
   .settings(nativeCommon)
   .settings(noTests)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
+  .settings(
+    buildInfoPackage := "bindgen",
+    buildInfoKeys := Seq[BuildInfoKey](
+      version,
+      scalaVersion,
+      scalaBinaryVersion,
+      BuildInfoKey("nativeVersion" -> nativeVersion)
+    )
+  )
   .settings(
     moduleName := "bindgen",
     libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
