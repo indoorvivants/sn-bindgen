@@ -21,17 +21,17 @@ jobs:
           - os: macos-11
             output_filename: bindgen
             uploaded_filename: sn-bindgen-x86_64-apple-darwin
-            llvm_bin_path: /usr/local/opt/llvm@13/bin
+            llvm_bin_path: /usr/local/opt/llvm@14/bin
 
           - os: ubuntu-20.04
             output_filename: bindgen
             uploaded_filename: sn-bindgen-x86_64-pc-linux
-            llvm_bin_path: /usr/lib/llvm-13/bin
+            llvm_bin_path: /usr/lib/llvm-14/bin
 
     runs-on: ${{ matrix.os }}
     env:
       SN_RELEASE: fast
-      LLVM_VERSION: 13
+      LLVM_VERSION: 14
     steps:
       - uses: actions/checkout@v3
         with:
@@ -65,8 +65,8 @@ jobs:
     runs-on: windows-2022
     env:
       SN_RELEASE: fast
-      LLVM_BIN: C:\Program Files\LLVM\bin
-      LLVM_VERSION: "13.0.1"
+      LLVM_BIN: 'C:\Program Files\LLVM\bin'
+      LLVM_VERSION: "14.0.6"
     steps:
       # This step is important to make sure scalafmt 
       # checks don't fail
@@ -91,11 +91,14 @@ jobs:
           minimum-size: 4GB
           maximum-size: 16GB
 
+      - run: clang -v
+        shell: cmd
+
       - name: Install clang
         shell: pwsh
         run: |
           choco install llvm --version="$Env:LLVM_VERSION" --allow-downgrade
-          choco install sbt --version=1.7.1
+          choco install sbt --version=1.8.0
           clang --version
 
       # Can't make shell type come from a matrix parameter: 
@@ -118,8 +121,8 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       BINARIES: binaries/
-      LLVM_BIN: /usr/lib/llvm-13/bin
-      LLVM_VERSION: 13
+      LLVM_BIN: /usr/lib/llvm-14/bin
+      LLVM_VERSION: 14
     steps:
       - uses: actions/checkout@v3
         with:
