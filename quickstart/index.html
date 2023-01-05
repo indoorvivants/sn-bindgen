@@ -53,7 +53,7 @@
 // a version that has &quot;SNAPSHOT&quot; in it
 resolvers += Resolver.sonatypeRepo(&quot;snapshots&quot;)
 
-addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.0.14+6-f510dfff-SNAPSHOT&quot;)
+addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.0.14+7-022ca67f-SNAPSHOT&quot;)
 </code></pre>
 <p><strong>build.sbt</strong></p>
 <pre><code class="language-scala">// only add this line if you're living on the edge and using 
@@ -85,7 +85,7 @@ the Scala sources</li>
 <div style = "display:flex;width:100%; font-size:16px; justify-content: space-between;"><div style = "width: 40%; text-align: left"><b>src/main/resources/scala-native/header.h</b><pre><code class = "hljs language-c"><br />    typedef enum { X = 1, Y = 2} bla;<br />    void sum(bla one, bla two);<br />    </pre></code></div><div style = "width:55%"><div style = "overflow: scroll;"><b>Generated Scala</b><div style = "max-height:400px"><pre><code class = "hljs language-scala">package libtest<br><br>import scala.scalanative.unsafe.*<br>import scala.scalanative.unsigned.*<br>import scalanative.libc.*<br>import scalanative.*<br><br>object predef:<br>  <br>  trait CEnumU[T](using eq: T =:= UInt):<br>    given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]<br>    extension (t: T)<br>     def int: CInt = eq.apply(t).toInt<br>     def uint: CUnsignedInt = eq.apply(t)<br>     def value: CUnsignedInt = eq.apply(t)<br>        <br>object types:<br>  import predef.*<br>  opaque type bla = CUnsignedInt<br>  object bla extends CEnumU[bla]:<br>    given _tag: Tag[bla] = Tag.UInt<br>    inline def define(inline a: Long): bla = a.toUInt<br>    val X = define(1)<br>    val Y = define(2)<br>    inline def getName(inline value: bla): Option[String] =<br>      value match<br>        case X => Some("X")<br>        case Y => Some("Y")<br>        case _ => None<br>    extension (a: bla)<br>      inline def &(b: bla): bla = a & b<br>      inline def |(b: bla): bla = a | b<br>      inline def is(b: bla): Boolean = (a & b) == b<br><br>@extern<br>private[libtest] object extern_functions:<br>  import types.*<br>  def sum(one : bla, two : bla): Unit = extern<br><br>object functions:<br>  import types.*<br>  import extern_functions.*<br>  export extern_functions.*<br></code></pre></div></div></div></div>
 <p>After that in your Scala sources you can use <code>libtest</code> package to access the
 generated bindings.</p>
-</div></div><footer>© 2021-2022 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
+</div></div><footer>© 2021-2023 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               gtag('js', new Date());
 
