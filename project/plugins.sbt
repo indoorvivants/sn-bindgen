@@ -1,4 +1,4 @@
-resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.9")
 addSbtPlugin("com.indoorvivants" % "sbt-commandmatrix" % "0.0.5")
