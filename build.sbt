@@ -22,7 +22,7 @@ lazy val Versions = new {
   val junit = "0.13.3"
   val scalameta = "4.5.13"
   val b2s = "0.3.17"
-  val pluginTargetSN = "0.4.9"
+  val pluginTargetSN = "0.4.10"
   val pluginTargetSBT = "1.6.1"
   val detective = "0.0.2"
 
