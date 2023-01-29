@@ -1,4 +1,4 @@
 import bindings.functions.*
 
-@main def test = 
+@main def test =
   assert(hello(25, 0.5f) == true)

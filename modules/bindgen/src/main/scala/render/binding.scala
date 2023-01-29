@@ -36,7 +36,7 @@ def binding(
   val hasStructs = binding.structs.nonEmpty
   val hasAnyTypes = hasAnyEnums || hasAliases || hasUnions || hasStructs
 
-  if (hasAnyEnums) then
+  if hasAnyEnums then
     scalaOutput.appendLine("object predef:")
     nest {
 
@@ -56,8 +56,8 @@ def binding(
       |   def value: CUnsignedInt = eq.apply(t)
       """.stripMargin.linesIterator
 
-      if (hasSignedEnums) then predefSigned.foreach(to(scalaOutput))
-      if (hasUnsignedEnums) then predefUnsigned.foreach(to(scalaOutput))
+      if hasSignedEnums then predefSigned.foreach(to(scalaOutput))
+      if hasUnsignedEnums then predefUnsigned.foreach(to(scalaOutput))
 
     }
   end if
@@ -154,7 +154,7 @@ def binding(
         s"\n@extern\nprivate[$packageName] object extern_functions:"
       )
       nest {
-        if (hasAnyTypes) then to(scalaOutput)("import types.*")
+        if hasAnyTypes then to(scalaOutput)("import types.*")
         renderAll(
           scalaExternFunctions.toList.sortBy(_.name),
           scalaOutput,

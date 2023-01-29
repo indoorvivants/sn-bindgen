@@ -1,2 +1,2 @@
-@main def test = 
+@main def test =
   assert(true)
