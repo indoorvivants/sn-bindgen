@@ -107,7 +107,6 @@ lazy val bindgen = project
   .dependsOn(libclang)
   .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin, BuildInfoPlugin)
   .settings(nativeCommon)
-  .settings(noTests)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
   .settings(nativeConfig ~= (_.withIncrementalCompilation(true)))

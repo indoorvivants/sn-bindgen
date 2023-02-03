@@ -1,5 +1,9 @@
 package bindgen
 
+case class RenderingConfig(
+    noConstructor: Set[String]
+)
+
 case class Config(
     packageName: PackageName,
     headerFile: HeaderFile,
@@ -13,7 +17,8 @@ case class Config(
     minLogPriority: MinLogPriority = MinLogPriority(3),
     exclusivePrefix: List[ExclusivePrefix] = Nil,
     outputFile: Option[OutputFile],
-    systemPathDetection: SystemPathDetection
+    systemPathDetection: SystemPathDetection,
+    rendering: RenderingConfig
 )
 
 enum SystemPathDetection:

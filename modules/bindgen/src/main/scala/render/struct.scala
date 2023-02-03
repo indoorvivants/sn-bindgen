@@ -83,18 +83,24 @@ def struct(model: Def.Struct, line: Appender)(using
         applyArgList.addOne(s"${getter(name.value)} : ${scalaType(inputType)}")
       }
 
-      line(
-        s"def apply(${applyArgList.result.mkString(", ")})(using Zone): Ptr[$structName] = "
-      )
-      nest {
-        line(s"val ____ptr = apply()")
-        struct.fields.foreach { case (fieldName, _) =>
-          line(
-            s"(!____ptr).${getter(fieldName.value)} = ${getter(fieldName.value)}"
-          )
+      if !c.rendering.noConstructor.contains(structName.value) then
+        line(
+          s"def apply(${applyArgList.result.mkString(", ")})(using Zone): Ptr[$structName] = "
+        )
+        nest {
+          line(s"val ____ptr = apply()")
+          struct.fields.foreach { case (fieldName, _) =>
+            line(
+              s"(!____ptr).${getter(fieldName.value)} = ${getter(fieldName.value)}"
+            )
+          }
+          line(s"____ptr")
         }
-        line(s"____ptr")
-      }
+      else
+        warning(
+          s"Not rendering the constructor for ${structName.value}, as requested"
+        )
+      end if
 
       line(s"extension (struct: $structName)")
       nest {

@@ -24,8 +24,11 @@ object Generate:
     zone {
       CLI.command.parse(args) match
         case Left(help) =>
-          System.err.println(help)
-          sys.exit(1)
+          val (modified, code) =
+            if help.errors.nonEmpty then help.copy(body = Nil) -> -1
+            else help -> 0
+          System.err.println(modified)
+          sys.exit(code)
         case Right(config) =>
           validateConfig(config) match
             case None =>

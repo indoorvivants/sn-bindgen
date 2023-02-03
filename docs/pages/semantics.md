@@ -1,12 +1,15 @@
 ---
 title: Semantics 
 mdoc: true
-mdoc-version: 2.3.0
+mdoc-version: 2.3.7
 ---
 
-### Structs are converted to opaque types
+## Structs are converted to opaque types
 
-For those types, we generate getters, setters, `Tag` definition, and two constructors, with and without parameters, allocating the struct on the heap.
+For those types, we generate getters, setters, `Tag` definition, and two `apply` methods:
+
+1. A constructor, which takes all the parameters as arguments
+2. An allocator, which only creates an instance on the heap, without initialising it
 
 ```scala mdoc:passthrough
 val cSource = 
@@ -24,7 +27,39 @@ typedef struct {
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
-### Unions are converted to opaque types
+
+### You can disable constructor generation 
+
+Some bindings (libnotify, gtk, nuklear) have such deep type hierarchies, that apply methods 
+on some structs trigger an exception during bytecode generation (when compiling the generated 
+code):
+
+```
+java.lang.IllegalArgumentException: UTF8 string too large
+```
+
+To work around it, you can disable constructor generation by passing a comma-separated 
+list of struct names using the `--render.no-constructor` option in CLI, and `noConstructor`
+parameter in the `Binding(...)` specification.
+
+```scala mdoc:nest:passthrough
+val cSource = 
+"""
+typedef struct {
+  int x;
+  char* hello;
+} Enabled;
+
+typedef struct {
+  int x;
+  char* hello;
+} Disabled;
+"""
+println(bindgen.BindgenRender.render(cSource, "libtest", "--render.no-constructor", "Disabled"))
+```
+
+
+## Unions are converted to opaque types
 
 For a union with `N` members, `N` constructors will be generated,
 along with getters and setters.
@@ -63,7 +98,7 @@ Small* with_pointers(Small *x, int y);
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
-### Problematic functions generate C forwarders
+## Problematic functions generate C forwarders
 
 Where "Problematic" means having a struct as one of its arguments or return type.
 In this case we generate several variations of public Scala functions,
@@ -82,7 +117,7 @@ Small bad_return_type();
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
-### Enums are generated for specific C type
+## Enums are generated for specific C type
 
 Whatever type clang reports for a particular enum - that's the type that will be
 used for the enum.
@@ -109,7 +144,7 @@ typedef enum {
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
-### Function pointers are defined as opaque types
+## Function pointers are defined as opaque types
 
 The inlining in `apply` method is important - it's a restricting of Scala Native 
 that the function must be statically known.
@@ -123,7 +158,7 @@ typedef int (*Visitor)(Cursor*);
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
-### Recursive structs are rewritten with opaque pointers
+## Recursive structs are rewritten with opaque pointers
 
 This is invisible to the user, so doesn't impact the experience, but 
 can complicate reading the code.
@@ -142,7 +177,7 @@ typedef struct {
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
-### Global enums are rendered as constants
+## Global enums are rendered as constants
 
 ```scala mdoc:nest:passthrough
 val cSource = 
