@@ -25,7 +25,8 @@ def sanitise(name: String) =
       "match",
       "true",
       "false",
-      "final"
+      "final",
+      "new"
     )
   if name == "_" then Sanitation.Renamed("$underscore")
   else if keywords.contains(name) || name.endsWith("_") then Sanitation.Escaped
@@ -45,7 +46,8 @@ def escape(name: String) =
       "match",
       "true",
       "false",
-      "final"
+      "final",
+      "new"
     )
   if name == "_" then "$underscore"
   else if keywords.contains(name) || name.endsWith("_") then s"`$name`"
