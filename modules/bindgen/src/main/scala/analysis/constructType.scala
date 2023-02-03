@@ -21,13 +21,10 @@ def constructType(typ: CXType)(using
   val typekind = typ.kind
   lazy val spelling =
     s"""
-    |Kind: ${clang_getTypeKindSpelling(typekind).string}, 
-    | full type: ${clang_getTypeSpelling(typ).string}
-    """.stripMargin
+    Kind: ${clang_getTypeKindSpelling(typekind).string}, full type: ${clang_getTypeSpelling(typ).string}
+    """.stripMargin.trim
 
-  trace(s"Constructing type: '${typ.spelling}', kind: '${typ.kindSpelling}'")
-
-  typekind match
+  val result = typekind match
     case CXType_Record =>
       val decl = clang_getTypeDeclaration(typ)
       val name = clang_getCursorSpelling(decl).string
@@ -70,8 +67,7 @@ def constructType(typ: CXType)(using
     case CXType_ConstantArray =>
       val elementType = clang_getArrayElementType(typ)
       val numElements = clang_getArraySize(typ)
-
-      CType.Arr(constructType(elementType), Some(numElements))
+      constArrayType(constructType(elementType), numElements)
 
     case CXType_Bool => CType.Bool
     case CXType_Void => CType.Void
@@ -109,6 +105,14 @@ def constructType(typ: CXType)(using
       CType.IncompleteArray(elementType)
 
     case other => warning(s"Unknown type: $spelling"); CType.Void;
-  end match
+  end result
+
+  trace(
+    s"Constructed type ${result} from: '${typ.spelling}', kind: '${typ.kindSpelling}'"
+  )
+  result
 
 end constructType
+
+def constArrayType(elementType: CType, numElements: Int) =
+  CType.Arr(elementType, Some(numElements))
