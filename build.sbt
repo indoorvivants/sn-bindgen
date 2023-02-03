@@ -26,7 +26,7 @@ lazy val Versions = new {
   val pluginTargetSBT = "1.6.1"
   val detective = "0.0.2"
 
-  val Scala3 = "3.2.1"
+  val Scala3 = "3.2.2"
   val Scala212 = "2.12.17"
   val Scala213 = "2.13.10"
   val Scala2 = List(Scala212, Scala213)
@@ -110,6 +110,7 @@ lazy val bindgen = project
   .settings(noTests)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
+  .settings(nativeConfig ~= (_.withIncrementalCompilation(true)))
   .settings(
     buildInfoPackage := "bindgen",
     buildInfoKeys := Seq[BuildInfoKey](
