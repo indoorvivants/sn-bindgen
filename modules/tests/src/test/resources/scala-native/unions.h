@@ -11,9 +11,15 @@ typedef union UnionOverlapping {
 
 typedef union empty_union UnionEmpty;
 
-typedef union test_keywords {
-  char object;
-  long final;
-  void* class;
-  int* def;
-} UnionKeywords;
+
+typedef struct struct_with_union_array {
+  int g_type;
+  union {
+    long test;
+    char* help;
+  } yo;
+  union {
+    long test;
+    char* help;
+  } data[2];
+} StructWithUnionArray;
