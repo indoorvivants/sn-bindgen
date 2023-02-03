@@ -60,6 +60,7 @@ object CLI:
 
   private val isScala =
     Opts.flag("scala", help = "Generate Scala part of the binding").orFalse
+
   private val isC =
     Opts.flag("c", help = "Generate C part of the binding").orFalse
 
@@ -166,6 +167,19 @@ object CLI:
       .orElse(noSystemHeaders)
       .withDefault(SystemPathDetection.Auto)
 
+  private val renderingConfig =
+    val noConstructor = Opts
+      .option[String](
+        "render.no-constructor",
+        help = "Comma-separated list of names of structs, for which to NOT render the constructor\n" + "(apply method that takes all the parameters), useful when \n" + "you see a 'UTF8 string too large while running genBCode'\n" +
+          "example: --render.no-constructor _GFileOutputStreamClass,_GFileIface"
+      )
+      .map(_.split(",").toSet)
+      .withDefault(Set.empty[String])
+
+    noConstructor.map(nc => RenderingConfig(noConstructor = nc))
+  end renderingConfig
+
   val command = Command(
     name = s"bindgen",
     header = "Generate Scala 3 native bindings from C header files" +
@@ -184,7 +198,8 @@ object CLI:
       minLogPriority,
       exclusivePrefix,
       outputFile,
-      systemPathsDetection
+      systemPathsDetection,
+      renderingConfig
     ).mapN(Config.apply)
   }
 end CLI

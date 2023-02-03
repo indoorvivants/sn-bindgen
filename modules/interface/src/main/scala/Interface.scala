@@ -74,13 +74,19 @@ case class Binding private (
     clangFlags: List[String],
     exclusivePrefixes: List[String],
     logLevel: LogLevel,
-    systemIncludes: Includes
+    systemIncludes: Includes,
+    noConstructor: Set[String]
 ) {
   def toCommand(lang: BindingLang): List[String] = {
     val sb = List.newBuilder[String]
 
     def arg(name: String, value: String) =
       sb ++= Seq(s"--$name", value)
+
+    def args(name: String, values: String*) = {
+      sb ++= Seq(s"--$name")
+      sb ++= values
+    }
 
     def flag(name: String) =
       sb += s"--$name"
@@ -102,6 +108,9 @@ case class Binding private (
     exclusivePrefixes.foreach { prefix =>
       arg("exclusive-prefix", prefix)
     }
+
+    args("--rendering.no-constructor", noConstructor.toList.sorted*)
+
     flag(logLevel.str)
     if (lang == BindingLang.Scala)
       flag("scala")
@@ -122,7 +131,8 @@ object Binding {
       clangFlags: List[String] = Nil,
       exclusivePrefixes: List[String] = Nil,
       logLevel: LogLevel = LogLevel.Info,
-      systemIncludes: Includes = Includes.ClangSearchPath
+      systemIncludes: Includes = Includes.ClangSearchPath,
+      noConstructor: Set[String] = Set.empty
   ) = {
     new Binding(
       headerFile = headerFile,
@@ -134,7 +144,8 @@ object Binding {
       clangFlags = clangFlags,
       exclusivePrefixes = exclusivePrefixes,
       logLevel = logLevel,
-      systemIncludes = systemIncludes
+      systemIncludes = systemIncludes,
+      noConstructor = noConstructor
     )
   }
 }
