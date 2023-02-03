@@ -139,7 +139,7 @@ def hack_recursive_structs(
 
   if !isPointerRecursive then Map.empty
   else
-    info(s"Struct '$structName' was detected as having cycles")
+    trace(s"Struct '$structName' was detected as having cycles")
 
     struct.fields.zipWithIndex.flatMap { case ((name, typ), idx) =>
       rewrite(name, typ).map { rule =>
