@@ -3,6 +3,7 @@ package bindgen
 import libclang.defs.*
 import libclang.enumerations.*
 import libclang.types.*
+import libclang.fluent.*
 
 import scala.collection.mutable.ListBuffer
 import scala.scalanative.unsafe.*
@@ -30,12 +31,18 @@ def visitStruct(cursor: CXCursor, name: String)(using
       zone {
 
         val builder = collector.struct
+        trace(s"Cursor kind: ${cursor.kind.spelling}")
         if cursor.kind == CXCursorKind.CXCursor_FieldDecl then
           val fieldName =
             StructParameterName(clang_getCursorSpelling(cursor).string)
           val typ = clang_getCursorType(cursor)
           val decl = clang_getTypeDeclaration(typ)
           val isAnonymous = clang_Cursor_isAnonymous(decl) == 1.toUInt
+
+          trace(s"Field name: $fieldName, ${builder.anonymous}")
+          trace(
+            s"typ spelling: ${typ.kindSpelling}, ${decl.spelling}, anonymous $isAnonymous"
+          )
           if isAnonymous then
             val last = builder.anonymous.apply(collector.numAnonymous)
             val nestedName = last match
@@ -44,6 +51,23 @@ def visitStruct(cursor: CXCursor, name: String)(using
             builder.fields.addOne(
               fieldName -> CType.Reference(
                 Name.Model(builder.name.value + "." + nestedName)
+              )
+            )
+            collector.numAnonymous += 1
+          else if typ.kind == CXTypeKind.CXType_ConstantArray && builder.anonymous.size > collector.numAnonymous
+          then
+            val last = builder.anonymous.apply(collector.numAnonymous)
+            val nestedName = last match
+              case un: Def.Union  => un.name.value
+              case st: Def.Struct => st.name.value
+            val numElements = clang_getArraySize(typ)
+
+            builder.fields.addOne(
+              fieldName -> constArrayType(
+                CType.Reference(
+                  Name.Model(builder.name.value + "." + nestedName)
+                ),
+                numElements
               )
             )
             collector.numAnonymous += 1
