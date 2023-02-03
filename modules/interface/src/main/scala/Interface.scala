@@ -108,7 +108,7 @@ case class Binding private (
     exclusivePrefixes.foreach { prefix =>
       arg("exclusive-prefix", prefix)
     }
-    if(noConstructor.nonEmpty)
+    if (noConstructor.nonEmpty)
       args("--rendering.no-constructor", noConstructor.toList.sorted*)
 
     flag(logLevel.str)
