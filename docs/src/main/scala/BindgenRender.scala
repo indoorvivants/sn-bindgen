@@ -36,13 +36,34 @@ object BindgenRender:
   def render(
       cSource: String,
       packageName: String,
-      filename: Option[String] = None
-  ) =
+      extra: String*
+  ): String = render(cSource, packageName, None, extra*)
+
+  def render(
+      cSource: String,
+      packageName: String,
+      filename: Option[String],
+      extra: String*
+  ): String =
     val p = os.temp.apply(cSource, deleteOnExit = false, suffix = "header.h")
     val cmd =
-      Seq(binary, "--package", packageName, "--header", p.toString, "--scala")
+      Seq(
+        binary,
+        "--package",
+        packageName,
+        "--header",
+        p.toString,
+        "--scala"
+      ) ++ extra
     val cmdC =
-      Seq(binary, "--package", packageName, "--header", p.toString, "--c")
+      Seq(
+        binary,
+        "--package",
+        packageName,
+        "--header",
+        p.toString,
+        "--c"
+      ) ++ extra
 
     val generatedScala = StringBuilder()
 
@@ -70,7 +91,7 @@ object BindgenRender:
       generatedC.result.linesIterator.exists(_.trim != "<br>")
 
     sideBySide(
-      filename.getOrElse("C header"),
+      filename.getOrElse("C file"),
       cSource,
       generatedScala.result,
       Option.when(hasC)(generatedC.result)
