@@ -83,11 +83,6 @@ case class Binding private (
     def arg(name: String, value: String) =
       sb ++= Seq(s"--$name", value)
 
-    def args(name: String, values: String*) = {
-      sb ++= Seq(s"--$name")
-      sb ++= values
-    }
-
     def flag(name: String) =
       sb += s"--$name"
 
@@ -108,8 +103,9 @@ case class Binding private (
     exclusivePrefixes.foreach { prefix =>
       arg("exclusive-prefix", prefix)
     }
+
     if (noConstructor.nonEmpty)
-      args("--rendering.no-constructor", noConstructor.toList.sorted*)
+      arg("render.no-constructor", noConstructor.toList.sorted.mkString(","))
 
     flag(logLevel.str)
     if (lang == BindingLang.Scala)
