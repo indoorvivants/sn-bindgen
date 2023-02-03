@@ -108,8 +108,8 @@ case class Binding private (
     exclusivePrefixes.foreach { prefix =>
       arg("exclusive-prefix", prefix)
     }
-
-    args("--rendering.no-constructor", noConstructor.toList.sorted*)
+    if(noConstructor.nonEmpty)
+      args("--rendering.no-constructor", noConstructor.toList.sorted*)
 
     flag(logLevel.str)
     if (lang == BindingLang.Scala)
