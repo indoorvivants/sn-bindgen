@@ -21,7 +21,9 @@ def constructType(typ: CXType)(using
   val typekind = typ.kind
   lazy val spelling =
     s"""
-    Kind: ${clang_getTypeKindSpelling(typekind).string}, full type: ${clang_getTypeSpelling(typ).string}
+    Kind: ${clang_getTypeKindSpelling(
+        typekind
+      ).string}, full type: ${clang_getTypeSpelling(typ).string}
     """.stripMargin.trim
 
   val result = typekind match
