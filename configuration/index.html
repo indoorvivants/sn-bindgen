@@ -7,10 +7,10 @@ By default it's resolved from Sonatype for your particular platform.</p>
 <pre><code class="language-scala">bindgenBinary := baseDirectory.value / &quot;my-custom-binary&quot;
 </code></pre>
 <h2><a href="#cli" id="cli">CLI</a></h2>
-<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--out &lt;string&gt;] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system]
+<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--out &lt;string&gt;] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.0.14+15-b4f2d8ec-SNAPSHOT
+Version: 0.0.14+16-cca833bb-SNAPSHOT
 Built using Scala 3.2.2 and Scala Native 0.4.9
 
 Options and flags:
@@ -62,6 +62,11 @@ Options and flags:
         Do NOT attempt to find clang binary and use it to figure out system headers
         Note that this puts the responsibility of providing paths to common system headers on you
         You can use --clang-include option for that
+    --render.no-constructor &lt;string&gt;
+        Comma-separated list of names of structs, for which to NOT render the constructor
+        (apply method that takes all the parameters), useful when 
+        you see a 'UTF8 string too large while running genBCode'
+        example: --render.no-constructor _GFileOutputStreamClass,_GFileIface
 </code></pre>
 </div></div><footer>© 2021-2023 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
