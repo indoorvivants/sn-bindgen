@@ -48,6 +48,7 @@ object Generate:
                   Using.resource(new FileWriter(f.value)) { fw =>
                     fw.write(lb.result)
                   }
+                  info(s"Generated ${f.value.toPath.toAbsolutePath()}")
 
                   if config.printFiles == PrintFiles.Yes then
                     println(f.value.toPath.toAbsolutePath())
@@ -59,6 +60,7 @@ object Generate:
                     Using.resource(new FileWriter(file.toFile)) { fw =>
                       fw.write(lb.result)
                     }
+                    info(s"Generated ${file.toAbsolutePath()}")
                     if config.printFiles == PrintFiles.Yes then
                       println(file.toAbsolutePath())
 

@@ -120,11 +120,11 @@ class TestInterface {
     val allFiles = probe.builder
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
-    assertTrue(exists(probe.scalaFiles / "enumerations.scala"))
-    assertTrue(exists(probe.scalaFiles / "structs.scala"))
-    assertTrue(exists(probe.scalaFiles / "unions.scala"))
-    assertTrue(exists(probe.scalaFiles / "functions.scala"))
-    assertTrue(exists(probe.scalaFiles / "aliases.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "enumerations.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "structs.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "unions.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "functions.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "aliases.scala"))
 
   }
 
@@ -152,12 +152,12 @@ class TestInterface {
 
     assertEquals(
       Set(
-        probe.scalaFiles / "enumerations.scala",
-        probe.scalaFiles / "constants.scala",
-        probe.scalaFiles / "aliases.scala",
-        probe.scalaFiles / "structs.scala",
-        probe.scalaFiles / "functions.scala",
-        probe.scalaFiles / "unions.scala"
+        probe.scalaFiles / "lib_check" / "enumerations.scala",
+        probe.scalaFiles / "lib_check" / "constants.scala",
+        probe.scalaFiles / "lib_check" / "aliases.scala",
+        probe.scalaFiles / "lib_check" / "structs.scala",
+        probe.scalaFiles / "lib_check" / "functions.scala",
+        probe.scalaFiles / "lib_check" / "unions.scala"
       ),
       allFilesMultiScala.toSet
     )

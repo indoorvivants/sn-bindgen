@@ -28,9 +28,11 @@ def binding(
   val hasStructs = binding.structs.nonEmpty
   val hasAnyTypes = hasAnyEnums || hasAliases || hasUnions || hasStructs
 
-  def create =
+  def create(name: String) =
     val lb = LineBuilder()
     lb.appendLine(s"package $packageName")
+    if mode.isInstanceOf[OutputMode.MultiFile] then
+      lb.appendLine(s"package $name")
     lb.emptyLine
     lb.append("""
       |import _root_.scala.scalanative.unsafe.*
@@ -43,7 +45,7 @@ def binding(
     lb
   end create
 
-  val scalaOutput = create
+  val scalaOutput = create("")
   val cOutput = LineBuilder()
 
   val multi =
@@ -52,7 +54,7 @@ def binding(
   val (stream, asObject): (String => LineBuilder, Boolean) = mode match
     case OutputMode.MultiFile(_) =>
       (
-        (str: String) => multi.getOrElseUpdate(StreamName(str), create),
+        (str: String) => multi.getOrElseUpdate(StreamName(str), create(str)),
         false
       )
     case _ =>

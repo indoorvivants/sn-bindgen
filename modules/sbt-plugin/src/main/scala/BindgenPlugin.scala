@@ -156,7 +156,8 @@ object BindgenPlugin extends AutoPlugin {
       linkName: Option[String],
       cImports: List[String],
       clangFlags: List[String],
-      logLevel: String
+      logLevel: String,
+      multiFile: Boolean
   )
 
   private object InternalBinding {
@@ -169,7 +170,8 @@ object BindgenPlugin extends AutoPlugin {
         linkName = b.linkName,
         cImports = b.cImports,
         clangFlags = b.clangFlags,
-        logLevel = b.logLevel.str
+        logLevel = b.logLevel.str,
+        multiFile = b.multiFile
       )
   }
 
@@ -235,8 +237,13 @@ object BindgenPlugin extends AutoPlugin {
   ): Seq[java.nio.file.Path] =
     bindings
       .map(bind =>
-        destination.resolve(
-          if (lang == BindingLang.C) bind.cFile else bind.scalaFile
-        )
+        destination.resolve {
+          if (bind.multiFile && lang == BindingLang.Scala)
+            bind.packageName
+          else {
+            if (lang == BindingLang.C) bind.cFile else bind.scalaFile
+          }
+
+        }
       )
 }

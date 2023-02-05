@@ -114,7 +114,7 @@ case class Binding private (
     else
       flag("c")
 
-    if (multiFile) flag("multi-file")
+    if (multiFile && lang == BindingLang.Scala) flag("multi-file")
 
     sb.result()
   }
@@ -195,7 +195,11 @@ class BindingBuilder(
 
         destinationDir / destinationFilename
       } else {
-        destinationDir
+        val dir = destinationDir / binding.packageName
+
+        Files.createDirectories(dir.toPath)
+
+        dir
       }
 
       val platformArgs =
