@@ -1,0 +1,42 @@
+<html><head><title>SN bindgen: Cookbook</title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/androidstudio.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn" href="/index.html">Home</a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn" href="/configuration/index.html">Configuration </a><a class="nav-btn nav-selected" href="/cookbook/index.html">Cookbook</a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><!--toc:start-->
+<ul>
+<li><a href="#generating-bindings-from-multiple-header-files">Generating bindings from multiple header files</a></li>
+<li><a href="#rendering-the-binding-as-multiple-files">Rendering the binding as multiple files</a></li>
+</ul>
+<!--toc:end-->
+<h2><a href="#generating-bindings-from-multiple-header-files" id="generating-bindings-from-multiple-header-files">Generating bindings from multiple header files</a></h2>
+<p>Some libraries break apart their functionality among several header files, that you are supposed to pick and choose.</p>
+<p>The tools provided by clang to figure out which definition came from which file are quite crude, and the logic
+to merge results would be quite complex to be attempted.</p>
+<p>You can use the amalgam pattern, by pointing the binding generator not at a file in the library, but your own header file that includes them.</p>
+<p>For example, with OpenSSL, I would write a <code>openssl-amalgam.h</code>:</p>
+<pre><code class="language-c">#include &quot;openssl/sha.h&quot;
+#include &quot;openssl/evp.h&quot;
+</code></pre>
+<p>And point the binding generator at it:</p>
+<pre><code class="language-scala">bindgenBindings := {
+  Seq(
+    Binding(
+      (Compile / baseDirectory).value / &quot;openssl-amalgam.h&quot;,
+      &quot;openssl&quot;,
+      cImports = List(&quot;openssl/sha.h&quot;, &quot;openssl/evp.h&quot;),
+      clangFlags = List(&quot;-I&quot; + vcpkgConfigurator.value.includes(&quot;openssl&quot;))
+    )
+  )
+}
+</code></pre>
+<p>Example taken from <a href="https://github.com/indoorvivants/sn-bindgen-examples/blob/82c109aac423c1adacaf1a2a1458d6d0afdea7b6/build.sbt#L374">sn-bindgen-examples</a></p>
+<h2><a href="#rendering-the-binding-as-multiple-files" id="rendering-the-binding-as-multiple-files">Rendering the binding as multiple files</a></h2>
+<p>In case of really big bindings (think Glib from Gnome), a single file may be unwieldy and take a very long time
+to compile.</p>
+<p>You can help the situation by using the multi-file mode - where the bindgen will treat <code>--out</code> parameter
+as a folder and create several files there with definitions broken down by type.</p>
+<ul>
+<li>To enable multi-file mode in CLI, use <code>--multi-file</code> parameter.</li>
+<li>To enable multi-file mode in SBT, use <code>multiFile = true</code> in Binding specification.</li>
+</ul>
+</div></div><footer>© 2021-2023 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-2V7BY56Z37');</script></body></html>
