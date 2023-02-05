@@ -7,6 +7,8 @@ import scala.collection.mutable.ListBuffer
 import scala.scalanative.unsafe.Tag
 import scala.scalanative.unsigned.ULong
 
+import opaque_newtypes.*
+
 import Def.*
 
 case class Location(isFromMainFile: Boolean, isFromSystemHeader: Boolean):

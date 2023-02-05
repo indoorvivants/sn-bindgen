@@ -8,5 +8,8 @@ private def fileExists(file: File) =
     Option(s"'$file' is a directory, but should be a file")
   else Option(s"'$file' doesn't exist!")
 
+private def noLinkNameInMultiFileMode(config: Option[LinkName]) = None
+
 def validateConfig(config: Config): Option[String] =
-  fileExists(new File(config.headerFile.value))
+  fileExists(new File(config.headerFile.value)) orElse
+    noLinkNameInMultiFileMode(config.linkName)

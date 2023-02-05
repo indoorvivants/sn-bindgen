@@ -18,7 +18,13 @@ class TestInterface {
       |   int bla; 
       |} Hello;
       |
+      | union Test {int x; char y;};
+      | enum Bla {A, B};
+      | typedef float Howdy;
+      |
       | void naughty(Hello st);
+      | void nice(char st);
+      | enum {Constant1, Constant2};
       """.stripMargin.trim
 
   @Test def checks_binary_path(): Unit = isolate { probe =>
@@ -73,17 +79,18 @@ class TestInterface {
   @Test def adds_c_imports(): Unit = isolate { probe =>
     val bind =
       Binding(headerFile, "lib_check", cImports = List("my_cool_library.h"))
+
     probe.builder
       .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
 
     assertEquals(
-      lines(probe.cFiles / "lib_check.c")
-        .filter(_.startsWith("#include"))
-        .toSet,
       Set(
         "#include \"my_cool_library.h\"",
         "#include <string.h>"
-      )
+      ),
+      lines(probe.cFiles / "lib_check.c")
+        .filter(_.startsWith("#include"))
+        .toSet
     )
   }
 
@@ -95,10 +102,65 @@ class TestInterface {
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
     assertEquals(
+      List("@link(\"my-awesome-library\")"),
       lines(probe.scalaFiles / "lib_check.scala")
         .filter(_.contains("@link"))
-        .map(_.trim),
-      List("@link(\"my-awesome-library\")")
+        .map(_.trim)
+    )
+  }
+
+  @Test def multi_file(): Unit = isolate { probe =>
+    val bind =
+      Binding(
+        headerFile,
+        "lib_check",
+        linkName = Some("my-awesome-library"),
+        multiFile = true
+      )
+
+    val allFiles = probe.builder
+      .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
+
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "enumerations.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "structs.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "unions.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "functions.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "aliases.scala"))
+
+  }
+
+  @Test def print_file(): Unit = isolate { probe =>
+    def bind(multi: Boolean) =
+      Binding(
+        headerFile,
+        "lib_check",
+        linkName = Some("my-awesome-library"),
+        multiFile = multi
+      )
+
+    val allFilesScala = probe.builder
+      .generate(Seq(bind(false)), probe.scalaFiles, BindingLang.Scala, plat)
+
+    assertEquals(Seq(probe.scalaFiles / "lib_check.scala"), allFilesScala)
+
+    val allFilesC = probe.builder
+      .generate(Seq(bind(false)), probe.cFiles, BindingLang.C, plat)
+
+    assertEquals(Seq(probe.cFiles / "lib_check.c"), allFilesC)
+
+    val allFilesMultiScala = probe.builder
+      .generate(Seq(bind(true)), probe.scalaFiles, BindingLang.Scala, plat)
+
+    assertEquals(
+      Set(
+        probe.scalaFiles / "lib_check" / "enumerations.scala",
+        probe.scalaFiles / "lib_check" / "constants.scala",
+        probe.scalaFiles / "lib_check" / "aliases.scala",
+        probe.scalaFiles / "lib_check" / "structs.scala",
+        probe.scalaFiles / "lib_check" / "functions.scala",
+        probe.scalaFiles / "lib_check" / "unions.scala"
+      ),
+      allFilesMultiScala.toSet
     )
   }
 

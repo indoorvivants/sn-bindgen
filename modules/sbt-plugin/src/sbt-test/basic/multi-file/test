@@ -1,0 +1,7 @@
+> run
+$ exists target/scala-3.2.2/resource_managed/main/scala-native/bindings.c 
+$ exists target/scala-3.2.2/src_managed/main/bindings/aliases.scala
+$ exists target/scala-3.2.2/src_managed/main/bindings/enumerations.scala
+$ exists target/scala-3.2.2/src_managed/main/bindings/structs.scala
+$ exists target/scala-3.2.2/src_managed/main/bindings/unions.scala
+$ exists target/scala-3.2.2/src_managed/main/bindings/functions.scala

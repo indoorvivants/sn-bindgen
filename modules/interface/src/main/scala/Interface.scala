@@ -75,7 +75,8 @@ case class Binding private (
     exclusivePrefixes: List[String],
     logLevel: LogLevel,
     systemIncludes: Includes,
-    noConstructor: Set[String]
+    noConstructor: Set[String],
+    multiFile: Boolean
 ) {
   def toCommand(lang: BindingLang): List[String] = {
     val sb = List.newBuilder[String]
@@ -113,6 +114,8 @@ case class Binding private (
     else
       flag("c")
 
+    if (multiFile && lang == BindingLang.Scala) flag("multi-file")
+
     sb.result()
   }
 
@@ -128,7 +131,8 @@ object Binding {
       exclusivePrefixes: List[String] = Nil,
       logLevel: LogLevel = LogLevel.Info,
       systemIncludes: Includes = Includes.ClangSearchPath,
-      noConstructor: Set[String] = Set.empty
+      noConstructor: Set[String] = Set.empty,
+      multiFile: Boolean = false
   ) = {
     new Binding(
       headerFile = headerFile,
@@ -141,7 +145,8 @@ object Binding {
       exclusivePrefixes = exclusivePrefixes,
       logLevel = logLevel,
       systemIncludes = systemIncludes,
-      noConstructor = noConstructor
+      noConstructor = noConstructor,
+      multiFile = multiFile
     )
   }
 }
@@ -182,7 +187,21 @@ class BindingBuilder(
         case C     => binding.cFile
       }
 
-      val destination = destinationDir / destinationFilename
+      val destination = if (!binding.multiFile || lang == BindingLang.C) {
+        val destinationFilename = lang match {
+          case Scala => binding.scalaFile
+          case C     => binding.cFile
+        }
+
+        destinationDir / destinationFilename
+      } else {
+        val dir = destinationDir / binding.packageName
+
+        Files.createDirectories(dir.toPath)
+
+        dir
+      }
+
       val platformArgs =
         if (binding.systemIncludes == Includes.None) {
           List("--no-system")
@@ -193,7 +212,9 @@ class BindingBuilder(
           }
         }
 
-      val outputArgs = Seq("--out", destination.toPath().toString())
+      val outputArgs =
+        Seq("--out", destination.toPath().toString(), "--print-files")
+
       val cmd =
         binary.toString :: binding.toCommand(lang) ++ platformArgs ++ outputArgs
 
@@ -212,27 +233,30 @@ class BindingBuilder(
         (e: String) => stderr += e
       )
 
-      val proces = new java.lang.ProcessBuilder(cmd*)
+      val process = new java.lang.ProcessBuilder(cmd*)
         .start()
 
       io.Source
-        .fromInputStream(proces.getErrorStream())
+        .fromInputStream(process.getErrorStream())
         .getLines
         .foreach(errPrintln(_))
 
       io.Source
-        .fromInputStream(proces.getInputStream())
+        .fromInputStream(process.getInputStream())
         .getLines
         .foreach(logger.out(_))
 
-      val result = proces.waitFor()
+      val result = process.waitFor()
+
+      files ++= stdout
+        .result()
+        .map { path => new File(path) }
+        .filter(_.isFile())
 
       if (result == 0) {
         errPrintln(
           s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
         )
-
-        files += destination
       } else {
         val code = destination.hashCode().toHexString.toUpperCase()
         errPrintln(

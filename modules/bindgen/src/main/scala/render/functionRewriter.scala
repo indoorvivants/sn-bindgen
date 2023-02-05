@@ -2,6 +2,7 @@ package bindgen
 package rendering
 
 import scala.collection.mutable.ListBuffer
+import opaque_newtypes.*
 
 def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
   import CType.*

@@ -5,6 +5,7 @@ import org.junit.Test
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
+import java.nio.file.Files
 
 class TestCLI:
 
@@ -36,9 +37,27 @@ class TestCLI:
 
   @Test def test_out() =
     assertEquals(
-      Some("test.scala"),
-      parseExtra("--out", "test.scala").outputFile.map(_.value)
+      OutputMode.SingleFile(OutputFile("test.scala")),
+      parseExtra("--out", "test.scala").outputMode
     )
+
+    assertEquals(
+      OutputMode.StdOut,
+      parseRight(MINIMUM).outputMode
+    )
+
+    val tmpDir = Files.createTempDirectory("bindgen")
+
+    tmpDir.toFile.deleteOnExit()
+
+    assertEquals(
+      OutputMode.MultiFile(OutputDirectory(tmpDir.toString)),
+      parseExtra("--out", tmpDir.toString, "--multi-file").outputMode
+    )
+  end test_out
+
+  @Test def test_print_files() =
+    assertTrue(parseExtra("--print-files").printFiles == PrintFiles.Yes)
 
   @Test def test_linkName() =
     assertEquals(
