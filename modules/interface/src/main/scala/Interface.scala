@@ -187,7 +187,17 @@ class BindingBuilder(
         case C     => binding.cFile
       }
 
-      val destination = destinationDir / destinationFilename
+      val destination = if (!binding.multiFile || lang == BindingLang.C) {
+        val destinationFilename = lang match {
+          case Scala => binding.scalaFile
+          case C     => binding.cFile
+        }
+
+        destinationDir / destinationFilename
+      } else {
+        destinationDir
+      }
+
       val platformArgs =
         if (binding.systemIncludes == Includes.None) {
           List("--no-system")

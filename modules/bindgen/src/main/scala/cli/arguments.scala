@@ -82,7 +82,8 @@ object CLI:
     Opts
       .flag(
         "print-files",
-        help = "(internal use only) Output to stdout the files written by bindgen, 1 per line",
+        help =
+          "(internal use only) Output to stdout the files written by bindgen, 1 per line",
         visibility = Visibility.Partial
       )
       .orFalse

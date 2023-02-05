@@ -18,7 +18,12 @@ class TestInterface {
       |   int bla; 
       |} Hello;
       |
+      | union Test {int x; char y;};
+      | enum Bla {A, B};
+      | typedef float Howdy;
+      |
       | void naughty(Hello st);
+      | void nice(char st);
       """.stripMargin.trim
 
   @Test def checks_binary_path(): Unit = isolate { probe =>
@@ -100,6 +105,61 @@ class TestInterface {
       lines(probe.scalaFiles / "lib_check.scala")
         .filter(_.contains("@link"))
         .map(_.trim)
+    )
+  }
+
+  @Test def multi_file(): Unit = isolate { probe =>
+    val bind =
+      Binding(
+        headerFile,
+        "lib_check",
+        linkName = Some("my-awesome-library"),
+        multiFile = true
+      )
+
+    val allFiles = probe.builder
+      .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
+
+    assertTrue(exists(probe.scalaFiles / "enumerations.scala"))
+    assertTrue(exists(probe.scalaFiles / "structs.scala"))
+    assertTrue(exists(probe.scalaFiles / "unions.scala"))
+    assertTrue(exists(probe.scalaFiles / "functions.scala"))
+    assertTrue(exists(probe.scalaFiles / "aliases.scala"))
+
+  }
+
+  @Test def print_file(): Unit = isolate { probe =>
+    def bind(multi: Boolean) =
+      Binding(
+        headerFile,
+        "lib_check",
+        linkName = Some("my-awesome-library"),
+        multiFile = multi
+      )
+
+    val allFilesScala = probe.builder
+      .generate(Seq(bind(false)), probe.scalaFiles, BindingLang.Scala, plat)
+
+    assertEquals(Seq(probe.scalaFiles / "lib_check.scala"), allFilesScala)
+
+    val allFilesC = probe.builder
+      .generate(Seq(bind(false)), probe.cFiles, BindingLang.C, plat)
+
+    assertEquals(Seq(probe.cFiles / "lib_check.c"), allFilesC)
+
+    val allFilesMultiScala = probe.builder
+      .generate(Seq(bind(true)), probe.scalaFiles, BindingLang.Scala, plat)
+
+    assertEquals(
+      Set(
+        probe.scalaFiles / "enumerations.scala",
+        probe.scalaFiles / "constants.scala",
+        probe.scalaFiles / "aliases.scala",
+        probe.scalaFiles / "structs.scala",
+        probe.scalaFiles / "functions.scala",
+        probe.scalaFiles / "unions.scala"
+      ),
+      allFilesMultiScala.toSet
     )
   }
 
