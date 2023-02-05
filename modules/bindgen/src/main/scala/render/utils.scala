@@ -72,7 +72,7 @@ def nest(f: Config ?=> Unit)(using config: Config) =
   f(using config.copy(indents = config.indents.map(_ + 1)))
 
 def nestIf(cond: Boolean)(f: Config ?=> Unit)(using config: Config) =
-  val next = if cond then 1 else 0 
+  val next = if cond then 1 else 0
   f(using config.copy(indents = config.indents.map(_ + next)))
 
 def to(sb: LineBuilder)(using config: Config): Appender =

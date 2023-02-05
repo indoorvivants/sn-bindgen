@@ -198,7 +198,9 @@ class BindingBuilder(
           }
         }
 
-      val outputArgs = Seq("--out", destination.toPath().toString())
+      val outputArgs =
+        Seq("--out", destination.toPath().toString(), "--print-files")
+
       val cmd =
         binary.toString :: binding.toCommand(lang) ++ platformArgs ++ outputArgs
 
@@ -217,27 +219,30 @@ class BindingBuilder(
         (e: String) => stderr += e
       )
 
-      val proces = new java.lang.ProcessBuilder(cmd*)
+      val process = new java.lang.ProcessBuilder(cmd*)
         .start()
 
       io.Source
-        .fromInputStream(proces.getErrorStream())
+        .fromInputStream(process.getErrorStream())
         .getLines
         .foreach(errPrintln(_))
 
       io.Source
-        .fromInputStream(proces.getInputStream())
+        .fromInputStream(process.getInputStream())
         .getLines
         .foreach(logger.out(_))
 
-      val result = proces.waitFor()
+      val result = process.waitFor()
+
+      files ++= stdout
+        .result()
+        .map { path => new File(path) }
+        .filter(_.isFile())
 
       if (result == 0) {
         errPrintln(
           s"Successfully regenerated binding ($lang) for ${binding.packageName}, $result"
         )
-
-        files += destination
       } else {
         val code = destination.hashCode().toHexString.toUpperCase()
         errPrintln(

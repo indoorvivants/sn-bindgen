@@ -49,6 +49,9 @@ object Generate:
                     fw.write(lb.result)
                   }
 
+                  if config.printFiles == PrintFiles.Yes then
+                    println(f.value.toPath.toAbsolutePath())
+
                 case (RenderedOutput.Multi(mp), OutputMode.MultiFile(d)) =>
                   val path = d.value.toPath()
                   mp.foreach { (sn, lb) =>
@@ -56,6 +59,8 @@ object Generate:
                     Using.resource(new FileWriter(file.toFile)) { fw =>
                       fw.write(lb.result)
                     }
+                    if config.printFiles == PrintFiles.Yes then
+                      println(file.toAbsolutePath())
 
                   }
               end match

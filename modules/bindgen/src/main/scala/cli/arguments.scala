@@ -78,6 +78,16 @@ object CLI:
     if scala then Lang.Scala else Lang.C
   }
 
+  private val printFiles =
+    Opts
+      .flag(
+        "print-files",
+        help = "(internal use only) Output to stdout the files written by bindgen, 1 per line",
+        visibility = Visibility.Partial
+      )
+      .orFalse
+      .map(PrintFiles(_))
+
   private val quiet =
     Opts
       .flag(
@@ -226,7 +236,8 @@ object CLI:
       exclusivePrefix,
       systemPathsDetection,
       renderingConfig,
-      outputMode
+      outputMode,
+      printFiles
     ).mapN(Config.apply)
   }
 end CLI

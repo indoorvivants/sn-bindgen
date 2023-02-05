@@ -26,13 +26,17 @@ case class Config(
     exclusivePrefix: List[ExclusivePrefix] = Nil,
     systemPathDetection: SystemPathDetection,
     rendering: RenderingConfig,
-    outputMode: OutputMode
+    outputMode: OutputMode,
+    printFiles: PrintFiles
 )
 
 enum SystemPathDetection:
   case FromLLVM(bin: LLVMBin)
   case FromClang(clang: ClangPath)
   case Auto, No
+
+opaque type PrintFiles = Boolean
+object PrintFiles extends YesNo[PrintFiles]
 
 opaque type Quiet = Boolean
 object Quiet extends YesNo[Quiet]

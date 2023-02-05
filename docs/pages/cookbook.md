@@ -4,6 +4,7 @@ title: Cookbook
 
 <!--toc:start-->
 - [Generating bindings from multiple header files](#generating-bindings-from-multiple-header-files)
+- [Rendering the binding as multiple files](#rendering-the-binding-as-multiple-files)
 <!--toc:end-->
 
 ## Generating bindings from multiple header files
@@ -47,5 +48,5 @@ to compile.
 You can help the situation by using the multi-file mode - where the bindgen will treat `--out` parameter 
 as a folder and create several files there with definitions broken down by type.
 
-To enable multi-file mode in CLI, use `--multi-file` parameter.
-To enable multi-file mode in SBT, use `multiFile = true` in Binding specification.
+- To enable multi-file mode in CLI, use `--multi-file` parameter.
+- To enable multi-file mode in SBT, use `multiFile = true` in Binding specification.
