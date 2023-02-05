@@ -33,18 +33,33 @@ object Generate:
           validateConfig(config) match
             case None =>
               given Config = config
-              val b = analyse(config.headerFile.value)
+              val result =
+                binding(
+                  analyse(config.headerFile.value),
+                  config.lang,
+                  config.outputMode
+                )
 
-              val scalaOutput = LineBuilder()
-              val cOutput = LineBuilder()
+              (result, config.outputMode) match
+                case (RenderedOutput.Single(lb), OutputMode.StdOut) =>
+                  print(lb.result)
 
-              binding(b, scalaOutput, cOutput)
+                case (RenderedOutput.Single(lb), OutputMode.SingleFile(f)) =>
+                  Using.resource(new FileWriter(f.value)) { fw =>
+                    fw.write(lb.result)
+                  }
 
-              if config.quiet == Quiet.No then
-                config.lang match
-                  case Lang.Scala =>
-                    writeTo(config.outputFile, scalaOutput)
-                  case Lang.C => writeTo(config.outputFile, cOutput)
+                case (RenderedOutput.Multi(mp), OutputMode.MultiFile(d)) =>
+                  val path = d.value.toPath()
+                  mp.foreach { (sn, lb) =>
+                    val file = path.resolve(sn.value + ".scala")
+                    Using.resource(new FileWriter(file.toFile)) { fw =>
+                      fw.write(lb.result)
+                    }
+
+                  }
+              end match
+
             case Some(msg) =>
               error(msg)(using LoggingConfig.default)
               sys.exit(1)
@@ -54,7 +69,7 @@ object Generate:
     out match
       case None => print(lb.result)
       case Some(out) =>
-        val f = new File(out.value)
+        val f = out.value
         Using.resource(new FileWriter(f)) { fw =>
           fw.write(lb.result)
         }

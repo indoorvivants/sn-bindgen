@@ -4,7 +4,7 @@ package rendering
 import bindgen.*
 import scala.collection.mutable.ListBuffer
 
-def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
+def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
     Config,
     AliasResolver
 ) =
@@ -98,4 +98,4 @@ def function(f: GeneratedFunction.ScalaFunction, line: Appender)(using
         if returnAsWell then line(s"!${return_ptr}")
       }
   end match
-end function
+end renderFunction

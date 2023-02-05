@@ -247,7 +247,7 @@ def createTranslationUnit(
   val extraClangFlags =
     clangInfo.includePaths
       .map(ip => s"-I$ip")
-      .map(ClangFlag.apply)
+      .map(ClangFlag(_))
 
   val allClangFlags = (config.clangFlags ++ extraClangFlags).distinct
 

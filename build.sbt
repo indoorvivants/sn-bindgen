@@ -25,6 +25,7 @@ lazy val Versions = new {
   val pluginTargetSN = "0.4.9"
   val pluginTargetSBT = "1.6.1"
   val detective = "0.0.2"
+  val opaqueNewtypes = "0.0.2"
 
   val Scala3 = "3.2.2"
   val Scala212 = "2.12.17"
@@ -122,8 +123,8 @@ lazy val bindgen = project
   .settings(
     moduleName := "bindgen",
     libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
-    libraryDependencies += ("com.monovore" %%% "decline" % Versions.decline cross CrossVersion.for3Use2_13)
-      .excludeAll(ExclusionRule("org.scala-native")),
+    libraryDependencies += "com.monovore" %%% "decline" % Versions.decline,
+    libraryDependencies += "com.indoorvivants" %%% "opaque-newtypes" % Versions.opaqueNewtypes,
     libraryDependencies += compilerPlugin(
       "org.polyvariant" % "better-tostring" % Versions.b2s cross CrossVersion.full
     ),

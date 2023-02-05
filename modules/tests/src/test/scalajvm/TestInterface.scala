@@ -73,17 +73,18 @@ class TestInterface {
   @Test def adds_c_imports(): Unit = isolate { probe =>
     val bind =
       Binding(headerFile, "lib_check", cImports = List("my_cool_library.h"))
+
     probe.builder
       .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
 
     assertEquals(
-      lines(probe.cFiles / "lib_check.c")
-        .filter(_.startsWith("#include"))
-        .toSet,
       Set(
         "#include \"my_cool_library.h\"",
         "#include <string.h>"
-      )
+      ),
+      lines(probe.cFiles / "lib_check.c")
+        .filter(_.startsWith("#include"))
+        .toSet
     )
   }
 
@@ -95,10 +96,10 @@ class TestInterface {
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
     assertEquals(
+      List("@link(\"my-awesome-library\")"),
       lines(probe.scalaFiles / "lib_check.scala")
         .filter(_.contains("@link"))
-        .map(_.trim),
-      List("@link(\"my-awesome-library\")")
+        .map(_.trim)
     )
   }
 

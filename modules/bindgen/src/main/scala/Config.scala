@@ -1,24 +1,32 @@
 package bindgen
 
+import opaque_newtypes.*
+import java.io.File
+
 case class RenderingConfig(
     noConstructor: Set[String]
 )
+
+enum OutputMode:
+  case StdOut
+  case SingleFile(out: OutputFile)
+  case MultiFile(out: OutputDirectory)
 
 case class Config(
     packageName: PackageName,
     headerFile: HeaderFile,
     linkName: Option[LinkName],
     indentSize: IndentationSize,
-    indents: Indentation = Indentation(0),
+    indents: Indentation,
     lang: Lang,
     cImports: List[CImport],
-    clangFlags: List[ClangFlag] = Nil,
-    quiet: Quiet = Quiet.No,
-    minLogPriority: MinLogPriority = MinLogPriority(3),
+    clangFlags: List[ClangFlag],
+    quiet: Quiet,
+    minLogPriority: MinLogPriority,
     exclusivePrefix: List[ExclusivePrefix] = Nil,
-    outputFile: Option[OutputFile],
     systemPathDetection: SystemPathDetection,
-    rendering: RenderingConfig
+    rendering: RenderingConfig,
+    outputMode: OutputMode
 )
 
 enum SystemPathDetection:
@@ -29,41 +37,50 @@ enum SystemPathDetection:
 opaque type Quiet = Boolean
 object Quiet extends YesNo[Quiet]
 
+opaque type MultiFile = Boolean
+object MultiFile extends YesNo[MultiFile]
+
 enum Lang:
   case Scala, C
 
 opaque type ExclusivePrefix = String
-object ExclusivePrefix extends bindgen.OpaqueString[ExclusivePrefix]
+object ExclusivePrefix extends OpaqueString[ExclusivePrefix]
 
 opaque type PackageName = String
-object PackageName extends bindgen.OpaqueString[PackageName]
+object PackageName extends OpaqueString[PackageName]
 
 opaque type LinkName = String
-object LinkName extends bindgen.OpaqueString[LinkName]
+object LinkName extends OpaqueString[LinkName]
 
 opaque type CImport = String
-object CImport extends bindgen.OpaqueString[CImport]
+object CImport extends OpaqueString[CImport]
 
 opaque type ClangFlag = String
-object ClangFlag extends bindgen.OpaqueString[ClangFlag]
+object ClangFlag extends OpaqueString[ClangFlag]
 
 opaque type HeaderFile = String
-object HeaderFile extends bindgen.OpaqueString[HeaderFile]
+object HeaderFile extends OpaqueString[HeaderFile]
 
-opaque type OutputFile = String
-object OutputFile extends bindgen.OpaqueString[OutputFile]
+opaque type OutputFile = File
+object OutputFile extends OpaqueFile[OutputFile]
+
+opaque type OutputDirectory = File
+object OutputDirectory extends OpaqueFile[OutputDirectory]
 
 opaque type IndentationSize = Int
-object IndentationSize extends bindgen.OpaqueNum[IndentationSize]
+object IndentationSize extends OpaqueInt[IndentationSize]
 
 opaque type Indentation = Int
-object Indentation extends bindgen.OpaqueNum[Indentation]
+object Indentation extends OpaqueInt[Indentation]
 
 opaque type MinLogPriority = Int
-object MinLogPriority extends bindgen.OpaqueNum[MinLogPriority]
+object MinLogPriority extends OpaqueInt[MinLogPriority]
 
 opaque type LLVMBin = String
-object LLVMBin extends bindgen.OpaqueString[LLVMBin]
+object LLVMBin extends OpaqueString[LLVMBin]
 
 opaque type ClangPath = String
-object ClangPath extends bindgen.OpaqueString[ClangPath]
+object ClangPath extends OpaqueString[ClangPath]
+
+trait OpaqueFile[A] extends TotalWrapper[A, File]:
+  inline def apply(s: String): A = apply(new File(s))

@@ -75,7 +75,8 @@ case class Binding private (
     exclusivePrefixes: List[String],
     logLevel: LogLevel,
     systemIncludes: Includes,
-    noConstructor: Set[String]
+    noConstructor: Set[String],
+    multiFile: Boolean
 ) {
   def toCommand(lang: BindingLang): List[String] = {
     val sb = List.newBuilder[String]
@@ -113,6 +114,8 @@ case class Binding private (
     else
       flag("c")
 
+    if (multiFile) flag("multi-file")
+
     sb.result()
   }
 
@@ -128,7 +131,8 @@ object Binding {
       exclusivePrefixes: List[String] = Nil,
       logLevel: LogLevel = LogLevel.Info,
       systemIncludes: Includes = Includes.ClangSearchPath,
-      noConstructor: Set[String] = Set.empty
+      noConstructor: Set[String] = Set.empty,
+      multiFile: Boolean = false
   ) = {
     new Binding(
       headerFile = headerFile,
@@ -141,7 +145,8 @@ object Binding {
       exclusivePrefixes = exclusivePrefixes,
       logLevel = logLevel,
       systemIncludes = systemIncludes,
-      noConstructor = noConstructor
+      noConstructor = noConstructor,
+      multiFile = multiFile
     )
   }
 }

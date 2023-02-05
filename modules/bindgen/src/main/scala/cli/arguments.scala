@@ -1,6 +1,7 @@
 package bindgen
 
 import com.monovore.decline.Opts
+import java.io.File
 
 object CLI:
   import com.monovore.decline.*
@@ -12,14 +13,14 @@ object CLI:
       "header",
       help = "C header file with definitions you want bindings for"
     )
-    .map(HeaderFile.apply)
+    .map(HeaderFile(_))
 
   private val packageName = Opts
     .option[String](
       "package",
       help = "Package name (Scala) for generated code"
     )
-    .map(PackageName.apply)
+    .map(PackageName(_))
 
   private val outputFile = Opts
     .option[String](
@@ -27,7 +28,7 @@ object CLI:
       help =
         "Path to file where code will be generated. If not provided, result is sent to STDOUT"
     )
-    .map(OutputFile.apply)
+    .map(OutputFile.apply(_))
     .orNone
 
   private val linkName = Opts
@@ -36,8 +37,17 @@ object CLI:
       help =
         "Library name for linkage (i.e. 'clang' is equivalent to -lclang flag)"
     )
-    .map(LinkName.apply)
+    .map(LinkName.apply(_))
     .orNone
+
+  private val multiFile = Opts
+    .flag(
+      "multi-file",
+      help =
+        "Produce binding in multiple files, which should improve compilation times if the number of types/functions is large"
+    )
+    .orFalse
+    .map(MultiFile(_))
 
   private val cImport = Opts
     .options[String](
@@ -47,7 +57,7 @@ object CLI:
     )
     .map(_.toList)
     .withDefault(Nil)
-    .map(_.map(CImport.apply))
+    .map(_.map(CImport.apply(_)))
 
   private val indentationSize = Opts
     .option[Int](
@@ -56,7 +66,7 @@ object CLI:
       visibility = Visibility.Partial
     )
     .withDefault(2)
-    .map(IndentationSize.apply)
+    .map(IndentationSize.apply(_))
 
   private val isScala =
     Opts.flag("scala", help = "Generate Scala part of the binding").orFalse
@@ -85,7 +95,7 @@ object CLI:
     )
     .map(_.toList)
     .withDefault(Nil)
-    .map(_.map(ClangFlag.apply))
+    .map(_.map(ClangFlag.apply(_)))
 
   private val clangInclude = Opts
     .options[String](
@@ -120,7 +130,7 @@ object CLI:
     )
     .map(_.toList)
     .withDefault(Nil)
-    .map(_.map(ExclusivePrefix.apply))
+    .map(_.map(ExclusivePrefix.apply(_)))
 
   private val indentation = Opts
     .option[Int](
@@ -129,7 +139,7 @@ object CLI:
       visibility = Visibility.Partial
     )
     .withDefault(0)
-    .map(Indentation.apply)
+    .map(Indentation.apply(_))
 
   private val llvmBin = Opts
     .option[String](
@@ -138,7 +148,7 @@ object CLI:
         "If provided, the clang binary from that folder will be used to\n" +
         "figure out system headers folders"
     )
-    .map(LLVMBin.apply)
+    .map(LLVMBin.apply(_))
     .map(SystemPathDetection.FromLLVM.apply)
 
   private val clangPath = Opts
@@ -148,7 +158,7 @@ object CLI:
         "If provided, the binary will be used \n" +
         "figure out system headers folders"
     )
-    .map(ClangPath.apply)
+    .map(ClangPath.apply(_))
     .map(SystemPathDetection.FromClang.apply)
 
   val noSystemHeaders = Opts
@@ -180,6 +190,23 @@ object CLI:
     noConstructor.map(nc => RenderingConfig(noConstructor = nc))
   end renderingConfig
 
+  val outputMode: Opts[OutputMode] =
+    (outputFile, multiFile).tupled.mapValidated {
+      case (None, MultiFile.Yes) =>
+        "In multi-file mode, --out parameter is required, and it has to point to an existing folder".invalidNel
+      case (None, MultiFile.No) =>
+        OutputMode.StdOut.validNel
+      case (Some(f), MultiFile.No) =>
+        OutputMode.SingleFile(f).validNel
+
+      case (Some(f), MultiFile.Yes) =>
+        if f.value.isDirectory then
+          OutputMode.MultiFile(OutputDirectory(f.value)).validNel
+        else
+          "In multi-file mode, the --out parameter must be an existing directory".invalidNel
+
+    }
+
   val command = Command(
     name = s"bindgen",
     header = "Generate Scala 3 native bindings from C header files" +
@@ -197,9 +224,9 @@ object CLI:
       quiet,
       minLogPriority,
       exclusivePrefix,
-      outputFile,
       systemPathsDetection,
-      renderingConfig
+      renderingConfig,
+      outputMode
     ).mapN(Config.apply)
   }
 end CLI

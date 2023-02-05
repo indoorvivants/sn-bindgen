@@ -1,5 +1,6 @@
 package bindgen
 import scala.collection.mutable
+import opaque_newtypes.given
 
 private def functionsAreSame(a: Def.Function, b: Def.Function): Boolean =
   if a.name == b.name then

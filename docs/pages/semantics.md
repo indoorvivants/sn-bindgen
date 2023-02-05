@@ -4,6 +4,18 @@ mdoc: true
 mdoc-version: 2.3.7
 ---
 
+<!--toc:start-->
+- [Structs are converted to opaque types](#structs-are-converted-to-opaque-types)
+  - [You can disable constructor generation](#you-can-disable-constructor-generation)
+- [Unions are converted to opaque types](#unions-are-converted-to-opaque-types)
+  - [Simple functions are converted to direct `@extern` functions](#simple-functions-are-converted-to-direct-extern-functions)
+- [Problematic functions generate C forwarders](#problematic-functions-generate-c-forwarders)
+- [Enums are generated for specific C type](#enums-are-generated-for-specific-c-type)
+- [Function pointers are defined as opaque types](#function-pointers-are-defined-as-opaque-types)
+- [Recursive structs are rewritten with opaque pointers](#recursive-structs-are-rewritten-with-opaque-pointers)
+- [Global enums are rendered as constants](#global-enums-are-rendered-as-constants)
+<!--toc:end-->
+
 ## Structs are converted to opaque types
 
 For those types, we generate getters, setters, `Tag` definition, and two `apply` methods:
