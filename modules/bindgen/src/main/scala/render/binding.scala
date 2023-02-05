@@ -15,6 +15,25 @@ enum RenderedOutput:
   case Single(lb: LineBuilder)
   case Multi(mp: Map[StreamName, LineBuilder])
 
+case class TypeImports(
+    enums: Boolean,
+    aliases: Boolean,
+    structs: Boolean,
+    unions: Boolean
+):
+  def render(out: LineBuilder)(using Config) =
+    var any = false
+    val imp = (s: String) =>
+      any = true
+      to(out)(s"import _root_.$packageName.$s.*")
+    if enums then imp("enumerations")
+    if aliases then imp("aliases")
+    if structs then imp("structs")
+    if unions then imp("unions")
+    if any then out.emptyLine
+  end render
+end TypeImports
+
 def binding(
     binding: Binding,
     lang: Lang,
@@ -26,7 +45,22 @@ def binding(
   val hasAliases = binding.aliases.nonEmpty
   val hasUnions = binding.unions.nonEmpty
   val hasStructs = binding.structs.nonEmpty
+  val hasConstants = binding.unnamedEnums.nonEmpty
   val hasAnyTypes = hasAnyEnums || hasAliases || hasUnions || hasStructs
+  val typeImports = TypeImports(
+    enums = hasAnyEnums,
+    aliases = hasAliases,
+    structs = hasStructs,
+    unions = hasUnions
+  )
+
+  val multiFileMode = mode.isInstanceOf[OutputMode.MultiFile]
+
+  given AliasResolver =
+    AliasResolver.create(binding.all)
+
+  val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
+    deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))
 
   def create(name: String) =
     val lb = LineBuilder()
@@ -51,53 +85,57 @@ def binding(
   val multi =
     collection.mutable.Map.empty[StreamName, LineBuilder]
 
-  val (stream, asObject): (String => LineBuilder, Boolean) = mode match
-    case OutputMode.MultiFile(_) =>
+  val (stream, asObject): (String => LineBuilder, Boolean) =
+    if multiFileMode then
       (
         (str: String) => multi.getOrElseUpdate(StreamName(str), create(str)),
         false
       )
-    case _ =>
-      ((_: String) => scalaOutput, true)
+    else ((_: String) => scalaOutput, true)
 
-  given AliasResolver =
-    AliasResolver.create(binding.all)
+  if hasAnyEnums then
+    renderEnumerations(
+      stream("enumerations"),
+      binding.enums.toList
+        .sortBy(_.name)
+        .filter(_.name.isDefined),
+      asObject = asObject
+    )
 
-  renderEnumerations(
-    stream("enumerations"),
-    binding.enums.toList
-      .sortBy(_.name)
-      .filter(_.name.isDefined),
-    asObject = asObject
-  )
+  if hasAliases then
+    renderAliases(
+      binding.aliases.toList.sortBy(_.name),
+      stream("aliases"),
+      asObject = asObject,
+      typeImports
+    )
 
-  renderAliases(
-    binding.aliases.toList.sortBy(_.name),
-    stream("aliases"),
-    asObject = asObject
-  )
+  if hasStructs then
+    renderStructs(
+      binding.structs.toList.sortBy(_.name),
+      stream("structs"),
+      asObject = asObject,
+      typeImports
+    )
 
-  renderStructs(
-    binding.structs.toList.sortBy(_.name),
-    stream("structs"),
-    asObject = asObject
-  )
+  if hasUnions then
+    renderUnions(
+      binding.unions.toList.sortBy(_.name),
+      stream("unions"),
+      asObject = asObject,
+      typeImports
+    )
 
-  renderUnions(
-    binding.unions.toList.sortBy(_.name),
-    stream("unions"),
-    asObject = asObject
-  )
-
-  val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
-    deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))
-
-  renderScalaFunctions(
-    stream("functions"),
-    resolvedFunctions.toSet,
-    asObject = asObject,
-    hasAnyTypes = hasAnyTypes
-  )
+  if resolvedFunctions.exists(_.isInstanceOf[GeneratedFunction.ScalaFunction])
+  then
+    renderScalaFunctions(
+      stream("functions"),
+      resolvedFunctions.toSet,
+      asObject = asObject,
+      hasAnyTypes = hasAnyTypes,
+      typeImports
+    )
+  end if
 
   val cFunctions = resolvedFunctions.collect {
     case f: GeneratedFunction.CFunction => f
@@ -114,17 +152,28 @@ def binding(
 
   end if
 
-  renderConstants(
-    stream("constants"),
-    binding.unnamedEnums.toList,
-    asObject = asObject
-  )
+  if hasConstants then
+    renderConstants(
+      stream("constants"),
+      binding.unnamedEnums.toList,
+      asObject = asObject
+    )
 
-  mode match
-    case OutputMode.MultiFile(_) => RenderedOutput.Multi(multi.toMap)
-    case _ =>
-      if lang == Lang.C then RenderedOutput.Single(cOutput)
-      else RenderedOutput.Single(scalaOutput)
+  if !multiFileMode && hasAnyTypes then
+    val l = to(stream("types"))
+    l("object types:")
+    nest {
+      val l = to(stream("types"))
+      if hasStructs then l(s"export _root_.${packageName}.structs.*")
+      if hasAliases then l(s"export _root_.${packageName}.aliases.*")
+      if hasUnions then l(s"export _root_.${packageName}.unions.*")
+      if hasAnyEnums then l(s"export _root_.${packageName}.enumerations.*")
+    }
+  end if
+
+  if multiFileMode then RenderedOutput.Multi(multi.toMap)
+  else if lang == Lang.C then RenderedOutput.Single(cOutput)
+  else RenderedOutput.Single(scalaOutput)
 
 end binding
 
@@ -138,10 +187,12 @@ end commentException
 private def renderAliases(
     aliases: List[Def.Alias],
     out: LineBuilder,
-    asObject: Boolean
+    asObject: Boolean,
+    typeImports: TypeImports
 )(using Config, AliasResolver) =
   if asObject && aliases.nonEmpty then out.appendLine("object aliases:")
   nestIf(asObject) {
+    if asObject then typeImports.render(out)
     renderAll(aliases, out, alias)
   }
 end renderAliases
@@ -149,10 +200,12 @@ end renderAliases
 private def renderUnions(
     unions: List[Def.Union],
     out: LineBuilder,
-    asObject: Boolean
+    asObject: Boolean,
+    typeImports: TypeImports
 )(using Config, AliasResolver) =
   if asObject && unions.nonEmpty then out.appendLine("object unions:")
   nestIf(asObject) {
+    if asObject then typeImports.render(out)
     renderAll(unions, out, union)
   }
 end renderUnions
@@ -160,10 +213,12 @@ end renderUnions
 private def renderStructs(
     structs: List[Def.Struct],
     out: LineBuilder,
-    asObject: Boolean
+    asObject: Boolean,
+    typeImports: TypeImports
 )(using Config, AliasResolver) =
-  if asObject && structs.nonEmpty then out.appendLine("object structs:")
+  if asObject then out.appendLine("object structs:")
   nestIf(asObject) {
+    if asObject then typeImports.render(out)
     renderAll(structs, out, struct)
   }
 end renderStructs
@@ -259,7 +314,8 @@ private def renderScalaFunctions(
     out: LineBuilder,
     functions: Set[GeneratedFunction],
     asObject: Boolean,
-    hasAnyTypes: Boolean
+    hasAnyTypes: Boolean,
+    typeImports: TypeImports
 )(using Config, AliasResolver) =
   val scalaExternFunctions = functions.collect {
     case f: GeneratedFunction.ScalaFunction
@@ -285,7 +341,7 @@ private def renderScalaFunctions(
         s"\n@extern\nprivate[$packageName] object extern_functions:"
       )
       nest {
-        if hasAnyTypes && asObject then to(out)("import types.*")
+        if asObject then typeImports.render(out)
         renderAll(
           scalaExternFunctions.toList.sortBy(_.name),
           out,
@@ -297,7 +353,7 @@ private def renderScalaFunctions(
     if hasRegularFunctions || hasExternFunctions then
       if asObject then out.appendLine(s"\nobject functions:")
       nestIf(asObject) {
-        if hasAnyTypes && asObject then to(out)("import types.*")
+        if asObject then typeImports.render(out)
 
         if hasExternFunctions then
           to(out)("import extern_functions.*")

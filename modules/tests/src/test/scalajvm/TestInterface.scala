@@ -24,6 +24,7 @@ class TestInterface {
       |
       | void naughty(Hello st);
       | void nice(char st);
+      | enum {Constant1, Constant2};
       """.stripMargin.trim
 
   @Test def checks_binary_path(): Unit = isolate { probe =>
