@@ -562,12 +562,12 @@ usefulTasks := Seq(
     "Build and publish everything sn-bindgen needs to your local cache"
   ).alias("dp"),
   UsefulTask(
-    "devPublish",
-    "Build and publish everything sn-bindgen needs to your local cache"
-  ).alias("dp"),
-  UsefulTask(
     "ci",
     "Run exactly what CI runs"
+  ),
+  UsefulTask(
+    "preCI",
+    "Run formatting/scalafix"
   )
 )
 
@@ -587,3 +587,10 @@ addCommandAlias(
 addCommandAlias("preCI", "scalafmtAll; scalafmtSbt")
 
 logoColor := scala.Console.MAGENTA
+
+lazy val buildWebsite = taskKey[Unit]("Build website in _site folder")
+buildWebsite := Def.taskDyn {
+  val root = (ThisBuild / baseDirectory).value / "_site"
+
+  (docs / Compile / run).toTask(s" build --destination ${root.toString} --force")
+}.value
