@@ -101,6 +101,11 @@ void wrap_getArrayElementType(CXType *arrayType, CXType *elementType) {
   memcpy(elementType, &cs, sizeof(CXType));
 }
 
+void wrap_getElementType(CXType *arrayType, CXType *elementType) {
+  CXType cs = clang_getElementType(*arrayType);
+  memcpy(elementType, &cs, sizeof(CXType));
+}
+
 void wrap_getPointeeType(CXType *pointerType, CXType *pointeeType) {
   CXType cs = clang_getPointeeType(*pointerType);
   memcpy(pointeeType, &cs, sizeof(CXType));

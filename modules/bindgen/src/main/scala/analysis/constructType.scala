@@ -106,7 +106,17 @@ def constructType(typ: CXType)(using
       val elementType = constructType(clang_getArrayElementType(typ))
       CType.IncompleteArray(elementType)
 
-    case other => warning(s"Unknown type: $spelling"); CType.Void;
+    case CXType_Vector =>
+      val elementType = constructType(clang_getElementType(typ))
+      val numElements = clang_getNumElements(typ)
+
+      CType.Struct(List.fill(numElements.toInt)(elementType))
+
+    case other =>
+      warning(
+        s"Unknown type: $spelling"
+      )
+      CType.Void;
   end result
 
   trace(
