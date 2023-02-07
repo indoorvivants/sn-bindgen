@@ -2,10 +2,8 @@ package bindgen
 
 import opaque_newtypes.*
 import java.io.File
-
-case class RenderingConfig(
-    noConstructor: Set[String]
-)
+import scala.util.matching.Regex
+import scala.util.chaining.*
 
 enum OutputMode:
   case StdOut

@@ -13,15 +13,17 @@ class TestInterface {
   val plat = sys.env.get("BINDGEN_CLANG_PATH").map(Paths.get(_))
 
   val c_code = """
-      | unsigned run(int i, float h);
-      | typedef struct Hello {
-      |   int bla; 
-      |} Hello;
-      |
       | union Test {int x; char y;};
       | enum Bla {A, B};
       | typedef float Howdy;
+      | typedef struct Hello {
+      |   int bla; 
+      |   Howdy yes;
+      |} Hello;
       |
+      | typedef Hello HelloAlias;
+      |
+      | unsigned run(int i, float h, HelloAlias test, union Test verify);
       | void naughty(Hello st);
       | void nice(char st);
       | enum {Constant1, Constant2};
@@ -176,7 +178,53 @@ class TestInterface {
     )
   }
 
-  @Test def doesnt_render_some_Structs(): Unit = isolate { probe =>
+  @Test def test_rendering_opaque_structs(): Unit = isolate { probe =>
+    val customCFile = probe.cFiles / "test.h"
+    fileWriter(customCFile) { fw =>
+      val contents =
+        """ 
+        | struct Hello {int helloParam;};
+        | struct World {int worldParam;};
+        | struct StructA {int structAPAram;};
+        | struct StructB {int structBPAram;};
+        """.stripMargin
+      fw.write(contents)
+    }
+
+    val binding =
+      Binding(
+        customCFile,
+        "lib_my_awesome_library",
+        opaqueStructs = Set("StructA", "StructB")
+      )
+
+    probe.builder
+      .generate(Seq(binding), probe.scalaFiles, BindingLang.Scala, plat)
+
+    // this is very crude
+
+    assertEquals(
+      Nil,
+      lines(probe.scalaFiles / "lib_my_awesome_library.scala").filter { l =>
+        val line =
+          l.replace(" ", "")
+
+        line.contains("StructA=CStruct") || line.contains("StructB=CStruct")
+      }
+    )
+
+    assertNotEquals(
+      Nil,
+      lines(probe.scalaFiles / "lib_my_awesome_library.scala").filter { l =>
+        val line =
+          l.replace(" ", "")
+
+        line.contains("StructA=CArray") || line.contains("StructB=CArray") ||
+        line.contains("Hello=CStruct") || line.contains("World=CStruct")
+      }
+    )
+  }
+  @Test def test_rendering_no_constructor(): Unit = isolate { probe =>
     val customCFile = probe.cFiles / "test.h"
     fileWriter(customCFile) { fw =>
       val contents =

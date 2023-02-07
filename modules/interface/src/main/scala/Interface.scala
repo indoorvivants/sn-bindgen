@@ -76,6 +76,7 @@ case class Binding private (
     logLevel: LogLevel,
     systemIncludes: Includes,
     noConstructor: Set[String],
+    opaqueStructs: Set[String],
     multiFile: Boolean
 ) {
   def toCommand(lang: BindingLang): List[String] = {
@@ -108,6 +109,9 @@ case class Binding private (
     if (noConstructor.nonEmpty)
       arg("render.no-constructor", noConstructor.toList.sorted.mkString(","))
 
+    if (opaqueStructs.nonEmpty)
+      arg("render.opaque-structs", opaqueStructs.toList.sorted.mkString(","))
+
     flag(logLevel.str)
     if (lang == BindingLang.Scala)
       flag("scala")
@@ -132,6 +136,7 @@ object Binding {
       logLevel: LogLevel = LogLevel.Info,
       systemIncludes: Includes = Includes.ClangSearchPath,
       noConstructor: Set[String] = Set.empty,
+      opaqueStructs: Set[String] = Set.empty,
       multiFile: Boolean = false
   ) = {
     new Binding(
@@ -146,6 +151,7 @@ object Binding {
       logLevel = logLevel,
       systemIncludes = systemIncludes,
       noConstructor = noConstructor,
+      opaqueStructs = opaqueStructs,
       multiFile = multiFile
     )
   }

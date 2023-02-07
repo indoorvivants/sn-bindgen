@@ -23,13 +23,34 @@ class TestCLI:
     assertEquals("test.h", parseRight(MINIMUM).headerFile.value)
 
   @Test def `test_render.no-constructor`() =
+    import RenderingConfig.*
     assertEquals(
-      Set("StructA", "StructB"),
+      Set(
+        NameFilter.Single("StructA"),
+        NameFilter.Single("StructB"),
+        NameFilter.Wildcard("nk_style*")
+      ),
       parseExtra(
         "--render.no-constructor",
-        "StructA,StructB"
+        "StructA,StructB,nk_style*"
       ).rendering.noConstructor
     )
+  end `test_render.no-constructor`
+
+  @Test def `test_render.opaque-structs`() =
+    import RenderingConfig.*
+    assertEquals(
+      Set(
+        NameFilter.Single("StructA"),
+        NameFilter.Single("StructB"),
+        NameFilter.Wildcard("nk_style*")
+      ),
+      parseExtra(
+        "--render.opaque-structs",
+        "StructA,StructB,nk_style*"
+      ).rendering.opaqueStruct
+    )
+  end `test_render.opaque-structs`
 
   @Test def test_langs() =
     assertEquals(Lang.Scala, parseExtra("--scala").lang)
