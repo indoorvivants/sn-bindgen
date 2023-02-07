@@ -63,6 +63,7 @@ object defs:
       wrap_getTypedefDeclUnderlyingType(curs, ptr)
       ptr
 
+
     def clang_getTypeSpelling(curs: CXType)(using Zone): CXString =
       val ptr = CXString.allocate(1)
       wrap_getTypeSpelling(curs, ptr)
@@ -87,6 +88,12 @@ object defs:
       val ptr = CXType.allocate(1)
       wrap_getArrayElementType(curs, ptr)
       ptr
+
+    def clang_getElementType(curs: CXType)(using Zone): CXType =
+      val ptr = CXType.allocate(1)
+      wrap_getElementType(curs, ptr)
+      ptr
+
     def clang_getArgType(curs: CXType, idx: CInt)(using Zone): CXType =
       val ptr = CXType.allocate(1)
       wrap_getArgType(curs, ptr, idx)
@@ -122,6 +129,10 @@ object defs:
 
   @extern
   object methods:
+    def clang_Type_getSizeOf(tpe: CXType): CLongLong = extern 
+    def clang_Type_getAlignOf(tpe: CXType): CLongLong = extern 
+    def clang_getNumElements(tpe: CXType): CLongLong = extern 
+
     def clang_createIndex(
         excludeDeclarationsFromPCH: CInt,
         displayDiagnostics: CInt
@@ -220,6 +231,11 @@ object defs:
     ): Unit = extern
 
     private[libclang] def wrap_getArrayElementType(
+        ptr: CXType,
+        unit: CXType
+    ): Unit = extern
+
+    private[libclang] def wrap_getElementType(
         ptr: CXType,
         unit: CXType
     ): Unit = extern
