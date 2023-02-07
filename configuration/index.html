@@ -7,10 +7,10 @@ By default it's resolved from Sonatype for your particular platform.</p>
 <pre><code class="language-scala">bindgenBinary := baseDirectory.value / &quot;my-custom-binary&quot;
 </code></pre>
 <h2><a href="#cli" id="cli">CLI</a></h2>
-<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--out &lt;string&gt;] [--multi-file]
+<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--out &lt;string&gt;] [--multi-file]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.0.15
+Version: 0.0.15+1-2f72ff24-SNAPSHOT
 Built using Scala 3.2.2 and Scala Native 0.4.9
 
 Options and flags:
@@ -61,10 +61,18 @@ Options and flags:
         Note that this puts the responsibility of providing paths to common system headers on you
         You can use --clang-include option for that
     --render.no-constructor &lt;string&gt;
-        Comma-separated list of names of structs, for which to NOT render the constructor
+        Comma-separated list of names (or wildcards) of structs, for which to NOT render the constructor
         (apply method that takes all the parameters), useful when 
         you see a 'UTF8 string too large while running genBCode'
-        example: --render.no-constructor _GFileOutputStreamClass,_GFileIface
+        examples: 
+                    --render.no-constructor _GFileOutputStreamClass,_GFileIface
+                    --render.no-constructor 'nk_context,nk_style*'
+    --render.opaque-structs &lt;string&gt;
+        Comma-separated list of names (or wildcards) of structs, which will be rendered as CArray[...], rather than precise CStruct* - 
+        this can be necessary to circumvent the UTF8 string too large issue
+        examples: 
+                    --render.opaque-struct_GFileOutputStreamClass,_GFileIface
+                    --render.opaque-struct 'nk_context,nk_style*'
     --out &lt;string&gt;
         Path to file where code will be generated. If not provided, result is sent to STDOUT
     --multi-file
