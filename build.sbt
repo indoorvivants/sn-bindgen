@@ -470,18 +470,6 @@ versionDump := {
   IO.write(file, (Compile / version).value)
 }
 
-addCommandAlias(
-  "ci",
-  "scalafmtCheckAll; scalafmtSbtCheck; test; plugin/scripted"
-)
-
-addCommandAlias(
-  "devPublish",
-  "publishLocal; localBindgenArtifact/publishLocal; show bindgen/version"
-)
-
-addCommandAlias("preCI", "scalafmtAll; scalafmtSbt;")
-
 def llvmFolder(clangPath: java.nio.file.Path) = {
   import Platform.OS.*
 
@@ -526,3 +514,76 @@ def llvmFolder(clangPath: java.nio.file.Path) = {
     case _ => LLVMInfo(Nil, Nil)
   }
 }
+
+import sbtwelcome.*
+
+logo :=
+  s"""
+     | C Binding generator for Scala 3 Native
+     |
+     | ######                                       
+     | #     # # #    # #####   ####  ###### #    # 
+     | #     # # ##   # #    # #    # #      ##   # 
+     | ######  # # #  # #    # #      #####  # #  # 
+     | #     # # #  # # #    # #  ### #      #  # # 
+     | #     # # #   ## #    # #    # #      #   ## 
+     | ######  # #    # #####   ####  ###### #    # 
+     |
+     |${version.value}
+     |
+     |${scala.Console.YELLOW}Scala ${(bindgen / scalaVersion).value}${scala.Console.RESET}
+     |
+     |""".stripMargin
+
+usefulTasks := Seq(
+  UsefulTask("buildBinary", "Build bindgen binary and copy it into bin/ folder")
+    .alias("bb"),
+  UsefulTask(
+    "interfaceTests",
+    "Run tests for JVM artifacts that interact with CLI (Scala 2.12, 2.13, 3)"
+  ).alias("itt"),
+  UsefulTask("cliTests", "Run tests for just the CLI flags parsing").alias(
+    "ctt"
+  ),
+  UsefulTask(
+    "generatorTests",
+    "Tests for generated code and its runtime correctness"
+  ).alias("gtt"),
+  UsefulTask(
+    "pluginTests",
+    "Run SBT plugin tests"
+  ).alias("ptt"),
+  UsefulTask(
+    "buildWebsite",
+    "Tests for generated code and its runtime correctness"
+  ).alias("bw"),
+  UsefulTask(
+    "devPublish",
+    "Build and publish everything sn-bindgen needs to your local cache"
+  ).alias("dp"),
+  UsefulTask(
+    "devPublish",
+    "Build and publish everything sn-bindgen needs to your local cache"
+  ).alias("dp"),
+  UsefulTask(
+    "ci",
+    "Run exactly what CI runs"
+  )
+)
+
+addCommandAlias("generatorTests", "testsNative3/clean; testsNative3/test")
+addCommandAlias("cliTests", "bindgen/test")
+addCommandAlias("pluginTests", "plugin/scripted")
+addCommandAlias("interfaceTests", "tests/test; tests3/test; tests2_12/test")
+addCommandAlias(
+  "ci",
+  "scalafmtCheckAll; scalafmtSbtCheck; cliTests; interfaceTests; pluginTests; generatorTests"
+)
+
+addCommandAlias(
+  "devPublish",
+  "publishLocal; localBindgenArtifact/publishLocal; show bindgen/version"
+)
+addCommandAlias("preCI", "scalafmtAll; scalafmtSbt")
+
+logoColor := scala.Console.MAGENTA

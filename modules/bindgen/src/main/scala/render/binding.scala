@@ -15,6 +15,9 @@ enum RenderedOutput:
   case Single(lb: LineBuilder)
   case Multi(mp: Map[StreamName, LineBuilder])
 
+private enum RenderMode:
+  case Objects, Files
+
 case class TypeImports(
     enums: Boolean,
     aliases: Boolean,
@@ -37,7 +40,7 @@ end TypeImports
 def binding(
     binding: Binding,
     lang: Lang,
-    mode: OutputMode
+    outputMode: OutputMode
 )(using
     Config
 ): RenderedOutput =
@@ -54,7 +57,7 @@ def binding(
     unions = hasUnions
   )
 
-  val multiFileMode = mode.isInstanceOf[OutputMode.MultiFile]
+  val multiFileMode = outputMode.isInstanceOf[OutputMode.MultiFile]
 
   given AliasResolver =
     AliasResolver.create(binding.all)
@@ -65,8 +68,7 @@ def binding(
   def create(name: String) =
     val lb = LineBuilder()
     lb.appendLine(s"package $packageName")
-    if mode.isInstanceOf[OutputMode.MultiFile] then
-      lb.appendLine(s"package $name")
+    if multiFileMode then lb.appendLine(s"package $name")
     lb.emptyLine
     lb.append("""
       |import _root_.scala.scalanative.unsafe.*
@@ -85,13 +87,13 @@ def binding(
   val multi =
     collection.mutable.Map.empty[StreamName, LineBuilder]
 
-  val (stream, asObject): (String => LineBuilder, Boolean) =
+  val (stream, renderMode): (String => LineBuilder, RenderMode) =
     if multiFileMode then
       (
         (str: String) => multi.getOrElseUpdate(StreamName(str), create(str)),
-        false
+        RenderMode.Files
       )
-    else ((_: String) => scalaOutput, true)
+    else ((_: String) => scalaOutput, RenderMode.Objects)
 
   if hasAnyEnums then
     renderEnumerations(
@@ -99,14 +101,14 @@ def binding(
       binding.enums.toList
         .sortBy(_.name)
         .filter(_.name.isDefined),
-      asObject = asObject
+      mode = renderMode
     )
 
   if hasAliases then
     renderAliases(
       binding.aliases.toList.sortBy(_.name),
       stream("aliases"),
-      asObject = asObject,
+      mode = renderMode,
       typeImports
     )
 
@@ -114,7 +116,7 @@ def binding(
     renderStructs(
       binding.structs.toList.sortBy(_.name),
       stream("structs"),
-      asObject = asObject,
+      mode = renderMode,
       typeImports
     )
 
@@ -122,7 +124,7 @@ def binding(
     renderUnions(
       binding.unions.toList.sortBy(_.name),
       stream("unions"),
-      asObject = asObject,
+      mode = renderMode,
       typeImports
     )
 
@@ -131,7 +133,7 @@ def binding(
     renderScalaFunctions(
       stream("functions"),
       resolvedFunctions.toSet,
-      asObject = asObject,
+      mode = renderMode,
       hasAnyTypes = hasAnyTypes,
       typeImports
     )
@@ -156,7 +158,7 @@ def binding(
     renderConstants(
       stream("constants"),
       binding.unnamedEnums.toList,
-      asObject = asObject
+      mode = renderMode
     )
 
   if !multiFileMode && hasAnyTypes then
@@ -187,12 +189,14 @@ end commentException
 private def renderAliases(
     aliases: List[Def.Alias],
     out: LineBuilder,
-    asObject: Boolean,
+    mode: RenderMode,
     typeImports: TypeImports
 )(using Config, AliasResolver) =
-  if asObject && aliases.nonEmpty then out.appendLine("object aliases:")
-  nestIf(asObject) {
-    if asObject then typeImports.render(out)
+  if mode == RenderMode.Files then typeImports.render(out)
+  if mode == RenderMode.Objects then out.appendLine("object aliases:")
+
+  nestIf(mode == RenderMode.Objects) {
+    if mode == RenderMode.Objects then typeImports.render(out)
     renderAll(aliases, out, alias)
   }
 end renderAliases
@@ -200,12 +204,13 @@ end renderAliases
 private def renderUnions(
     unions: List[Def.Union],
     out: LineBuilder,
-    asObject: Boolean,
+    mode: RenderMode,
     typeImports: TypeImports
 )(using Config, AliasResolver) =
-  if asObject && unions.nonEmpty then out.appendLine("object unions:")
-  nestIf(asObject) {
-    if asObject then typeImports.render(out)
+  if mode == RenderMode.Files then typeImports.render(out)
+  if mode == RenderMode.Objects then out.appendLine("object unions:")
+  nestIf(mode == RenderMode.Objects) {
+    if mode == RenderMode.Objects then typeImports.render(out)
     renderAll(unions, out, union)
   }
 end renderUnions
@@ -213,12 +218,14 @@ end renderUnions
 private def renderStructs(
     structs: List[Def.Struct],
     out: LineBuilder,
-    asObject: Boolean,
+    mode: RenderMode,
     typeImports: TypeImports
 )(using Config, AliasResolver) =
-  if asObject then out.appendLine("object structs:")
-  nestIf(asObject) {
-    if asObject then typeImports.render(out)
+  if mode == RenderMode.Files then typeImports.render(out)
+  if mode == RenderMode.Objects then out.appendLine("object structs:")
+
+  nestIf(mode == RenderMode.Objects) {
+    if mode == RenderMode.Objects then typeImports.render(out)
     renderAll(structs, out, struct)
   }
 end renderStructs
@@ -226,11 +233,11 @@ end renderStructs
 private def renderConstants(
     out: LineBuilder,
     enums: List[Def.Enum],
-    asObject: Boolean
+    mode: RenderMode
 )(using Config, AliasResolver) =
   if enums.nonEmpty then
-    if asObject then to(out)("object constants:")
-    nestIf(asObject) {
+    if mode == RenderMode.Objects then to(out)("object constants:")
+    nestIf(mode == RenderMode.Objects) {
       constants(Constants(enums), to(out))
     }
 
@@ -262,7 +269,7 @@ private def renderAll[A <: (Def | GeneratedFunction)](
 private def renderEnumerations(
     out: LineBuilder,
     enums: List[Def.Enum],
-    asObject: Boolean
+    mode: RenderMode
 )(using
     Config,
     AliasResolver
@@ -275,8 +282,8 @@ private def renderEnumerations(
       en.intType.exists(_.sign == SignType.Signed) || en.intType.isEmpty
     )
   if hasAnyEnums then
-    if asObject then out.appendLine("object predef:")
-    nestIf(asObject) {
+    if mode == RenderMode.Objects then out.appendLine("object predef:")
+    nestIf(mode == RenderMode.Objects) {
 
       val predefSigned = s"""
         |private[$packageName] trait CEnum[T](using eq: T =:= Int):
@@ -298,9 +305,10 @@ private def renderEnumerations(
       if (hasSignedEnums) then predefSigned.foreach(to(out))
       if (hasUnsignedEnums) then predefUnsigned.foreach(to(out))
     }
-    if asObject then out.appendLine("\n\nobject enumerations:")
-    nestIf(asObject) {
-      if asObject then to(out)("import predef.*")
+    if mode == RenderMode.Objects then
+      out.appendLine("\n\nobject enumerations:")
+    nestIf(mode == RenderMode.Objects) {
+      if mode == RenderMode.Objects then to(out)("import predef.*")
       renderAll(
         enums,
         out,
@@ -313,7 +321,7 @@ end renderEnumerations
 private def renderScalaFunctions(
     out: LineBuilder,
     functions: Set[GeneratedFunction],
-    asObject: Boolean,
+    mode: RenderMode,
     hasAnyTypes: Boolean,
     typeImports: TypeImports
 )(using Config, AliasResolver) =
@@ -333,6 +341,7 @@ private def renderScalaFunctions(
   val hasRegularFunctions = scalaRegularFunctions.nonEmpty
 
   if functions.nonEmpty then
+    if mode == RenderMode.Files then typeImports.render(out)
     if hasExternFunctions then
       summon[Config].linkName.foreach { l =>
         out.append(s"""@link("$l")""")
@@ -341,7 +350,7 @@ private def renderScalaFunctions(
         s"\n@extern\nprivate[$packageName] object extern_functions:"
       )
       nest {
-        if asObject then typeImports.render(out)
+        if mode == RenderMode.Objects then typeImports.render(out)
         renderAll(
           scalaExternFunctions.toList.sortBy(_.name),
           out,
@@ -351,9 +360,9 @@ private def renderScalaFunctions(
     end if
 
     if hasRegularFunctions || hasExternFunctions then
-      if asObject then out.appendLine(s"\nobject functions:")
-      nestIf(asObject) {
-        if asObject then typeImports.render(out)
+      if mode == RenderMode.Objects then out.appendLine(s"\nobject functions:")
+      nestIf(mode == RenderMode.Objects) {
+        if mode == RenderMode.Objects then typeImports.render(out)
 
         if hasExternFunctions then
           to(out)("import extern_functions.*")
