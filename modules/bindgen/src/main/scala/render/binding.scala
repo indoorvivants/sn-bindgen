@@ -15,7 +15,7 @@ enum RenderedOutput:
   case Single(lb: LineBuilder)
   case Multi(mp: Map[StreamName, LineBuilder])
 
-private enum RenderMode:
+enum RenderMode:
   case Objects, Files
 
 case class TypeImports(
@@ -95,48 +95,51 @@ def binding(
       )
     else ((_: String) => scalaOutput, RenderMode.Objects)
 
-  if hasAnyEnums then
-    renderEnumerations(
-      stream("enumerations"),
-      binding.enums.toList
-        .sortBy(_.name)
-        .filter(_.name.isDefined),
-      mode = renderMode
-    )
+  if lang == Lang.Scala then
 
-  if hasAliases then
-    renderAliases(
-      binding.aliases.toList.sortBy(_.name),
-      stream("aliases"),
-      mode = renderMode,
-      typeImports
-    )
+    if hasAnyEnums then
+      renderEnumerations(
+        stream("enumerations"),
+        binding.enums.toList
+          .sortBy(_.name)
+          .filter(_.name.isDefined),
+        mode = renderMode
+      )
 
-  if hasStructs then
-    renderStructs(
-      binding.structs.toList.sortBy(_.name),
-      stream("structs"),
-      mode = renderMode,
-      typeImports
-    )
+    if hasAliases then
+      renderAliases(
+        binding.aliases.toList.sortBy(_.name),
+        stream("aliases"),
+        mode = renderMode,
+        typeImports
+      )
 
-  if hasUnions then
-    renderUnions(
-      binding.unions.toList.sortBy(_.name),
-      stream("unions"),
-      mode = renderMode,
-      typeImports
-    )
+    if hasStructs then
+      renderStructs(
+        binding.structs.toList.sortBy(_.name),
+        stream("structs"),
+        mode = renderMode,
+        typeImports
+      )
 
-  if resolvedFunctions.exists(_.isInstanceOf[GeneratedFunction.ScalaFunction])
-  then
-    renderScalaFunctions(
-      stream("functions"),
-      resolvedFunctions.toSet,
-      mode = renderMode,
-      hasAnyTypes = hasAnyTypes,
-      typeImports
-    )
+    if hasUnions then
+      renderUnions(
+        binding.unions.toList.sortBy(_.name),
+        stream("unions"),
+        mode = renderMode,
+        typeImports
+      )
+
+    if resolvedFunctions.exists(_.isInstanceOf[GeneratedFunction.ScalaFunction])
+    then
+      renderScalaFunctions(
+        stream("functions"),
+        resolvedFunctions.toSet,
+        mode = renderMode,
+        hasAnyTypes = hasAnyTypes,
+        typeImports
+      )
+    end if
   end if
 
   val cFunctions = resolvedFunctions.collect {

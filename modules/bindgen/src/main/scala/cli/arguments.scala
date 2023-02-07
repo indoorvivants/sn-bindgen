@@ -192,11 +192,14 @@ object CLI:
     val noConstructor = Opts
       .option[String](
         "render.no-constructor",
-        help = "Comma-separated list of names of structs, for which to NOT render the constructor\n" + "(apply method that takes all the parameters), useful when \n" + "you see a 'UTF8 string too large while running genBCode'\n" +
-          "example: --render.no-constructor _GFileOutputStreamClass,_GFileIface"
+        help =
+          "Comma-separated list of names (or wildcards) of structs, for which to NOT render the constructor\n" + "(apply method that takes all the parameters), useful when \n" + "you see a 'UTF8 string too large while running genBCode'\n" +
+            """examples: 
+            --render.no-constructor _GFileOutputStreamClass,_GFileIface
+            --render.no-constructor 'nk_context,nk_style*'"""
       )
-      .map(_.split(",").toSet)
-      .withDefault(Set.empty[String])
+      .map(_.split(",").toSet.map(RenderingConfig.NoConstructor(_)))
+      .withDefault(Set.empty)
 
     noConstructor.map(nc => RenderingConfig(noConstructor = nc))
   end renderingConfig
