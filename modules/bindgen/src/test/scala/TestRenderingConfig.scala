@@ -8,8 +8,8 @@ import scala.scalanative.unsigned.*
 import java.nio.file.Files
 
 class TestRenderingConfig:
-  @Test def test_noConstructor() =
-    import RenderingConfig.NoConstructor.apply as nc
+  @Test def test_NameFilter() =
+    import RenderingConfig.NameFilter.apply as nc
 
     assertEquals(Some("hello"), nc("hello").matches("hello"))
     assertEquals(None, nc("hello").matches("hello1"))
@@ -20,5 +20,5 @@ class TestRenderingConfig:
       Some("hello*world*"),
       nc("hello*world*").matches("hello1asdasdworldasdasd")
     )
-  end test_noConstructor
+  end test_NameFilter
 end TestRenderingConfig

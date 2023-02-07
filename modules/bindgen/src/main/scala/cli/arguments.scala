@@ -198,10 +198,25 @@ object CLI:
             --render.no-constructor _GFileOutputStreamClass,_GFileIface
             --render.no-constructor 'nk_context,nk_style*'"""
       )
-      .map(_.split(",").toSet.map(RenderingConfig.NoConstructor(_)))
+      .map(_.split(",").toSet.map(RenderingConfig.NameFilter(_)))
       .withDefault(Set.empty)
 
-    noConstructor.map(nc => RenderingConfig(noConstructor = nc))
+    val opaqueStruct = Opts
+      .option[String](
+        "render.opaque-structs",
+        help =
+          "Comma-separated list of names (or wildcards) of structs, which will be rendered as CArray[...], rather than precise CStruct* - \n" +
+            "this can be necessary to circumvent the UTF8 string too large issue\n" +
+            """examples: 
+            --render.opaque-struct_GFileOutputStreamClass,_GFileIface
+            --render.opaque-struct 'nk_context,nk_style*'"""
+      )
+      .map(_.split(",").toSet.map(RenderingConfig.NameFilter(_)))
+      .withDefault(Set.empty)
+
+    (noConstructor, opaqueStruct).mapN { case (nc, os) =>
+      RenderingConfig(noConstructor = nc, opaqueStruct = os)
+    }
   end renderingConfig
 
   val outputMode: Opts[OutputMode] =

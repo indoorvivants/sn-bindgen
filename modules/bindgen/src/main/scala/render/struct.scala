@@ -34,18 +34,46 @@ def struct(model: Def.Struct, line: Appender)(using
   )
   val fieldOffsets = offsets(structType)
 
+  val madeOpaque = c.rendering.matches(_.opaqueStruct)(structName.value)
+
+  val structIsOpaque =
+    if struct.fields.size > 22 then true
+    else if struct.fields.size == 0 then false
+    else
+      madeOpaque match
+        case None => false
+        case Some(value) =>
+          warning(
+            s"${structName.value} will be rendered as a static array, as requested by '$value' filter"
+          )
+          true
+
+  val finalStructType =
+    if structIsOpaque then structArrayType(rewrittenStructType)
+    else rewrittenStructType
+
   def setter(name: String): String =
     import Sanitation.*
     sanitise(name) match
+      case Good | Escaped if structIsOpaque && name == "length" =>
+        "_length_="
       case Good | Escaped => name + "_="
       case Renamed(value) => value + "_="
 
   def getter(name: String): String =
     import Sanitation.*
     sanitise(name) match
+      case Good | Escaped if structIsOpaque && name == "length" =>
+        warning(
+          s"Struct ${structName.value} has its `length` parameter renamed as `_length` because it's rewritten as CArray"
+        )
+        "_length"
+
       case Good           => name
       case Renamed(value) => value
       case Escaped        => s"`$name`"
+    end match
+  end getter
 
   if rewriteRules.nonEmpty then
     trace(
@@ -55,7 +83,7 @@ def struct(model: Def.Struct, line: Appender)(using
         .map(_._2)
         .map(p => p.name.value -> p.newRawType)
     )
-  line(s"opaque type $structName = ${scalaType(rewrittenStructType)}")
+  line(s"opaque type $structName = ${scalaType(finalStructType)}")
   line(s"object ${sanitiseBeforeColon(structName.value)}:")
   nest {
     struct.anonymous.foreach {
@@ -70,7 +98,7 @@ def struct(model: Def.Struct, line: Appender)(using
           rewriteRules.get(idx).map(_.newRawType).getOrElse(typ)
         }
       val tag =
-        s"given _tag: Tag[$structName] = ${scalaTag(rewrittenStructType)}"
+        s"given _tag: Tag[$structName] = ${scalaTag(finalStructType)}"
       line(tag)
 
       line(
@@ -83,10 +111,7 @@ def struct(model: Def.Struct, line: Appender)(using
         applyArgList.addOne(s"${getter(name.value)} : ${scalaType(inputType)}")
       }
 
-      val ignored = c.rendering.noConstructor.iterator
-        .map(_.matches(structName.value))
-        .collectFirst { case a if a.isDefined => a }
-        .flatten
+      val ignored = c.rendering.matches(_.noConstructor)(structName.value)
 
       ignored match
         case None =>
@@ -110,7 +135,7 @@ def struct(model: Def.Struct, line: Appender)(using
 
       line(s"extension (struct: $structName)")
       nest {
-        if struct.fields.size <= 22 then
+        if !structIsOpaque then
           struct.fields.zipWithIndex.foreach {
             case ((fieldName, fieldType), idx) =>
               val setterName = setter(fieldName.value)

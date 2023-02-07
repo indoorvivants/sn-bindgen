@@ -26,9 +26,9 @@ class TestCLI:
     import RenderingConfig.*
     assertEquals(
       Set(
-        NoConstructor.Single("StructA"),
-        NoConstructor.Single("StructB"),
-        NoConstructor.Wildcard("nk_style*")
+        NameFilter.Single("StructA"),
+        NameFilter.Single("StructB"),
+        NameFilter.Wildcard("nk_style*")
       ),
       parseExtra(
         "--render.no-constructor",
@@ -36,6 +36,21 @@ class TestCLI:
       ).rendering.noConstructor
     )
   end `test_render.no-constructor`
+
+  @Test def `test_render.opaque-structs`() =
+    import RenderingConfig.*
+    assertEquals(
+      Set(
+        NameFilter.Single("StructA"),
+        NameFilter.Single("StructB"),
+        NameFilter.Wildcard("nk_style*")
+      ),
+      parseExtra(
+        "--render.opaque-structs",
+        "StructA,StructB,nk_style*"
+      ).rendering.opaqueStruct
+    )
+  end `test_render.opaque-structs`
 
   @Test def test_langs() =
     assertEquals(Lang.Scala, parseExtra("--scala").lang)

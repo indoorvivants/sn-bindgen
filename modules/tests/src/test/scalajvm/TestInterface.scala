@@ -178,7 +178,53 @@ class TestInterface {
     )
   }
 
-  @Test def doesnt_render_some_Structs(): Unit = isolate { probe =>
+  @Test def test_rendering_opaque_structs(): Unit = isolate { probe =>
+    val customCFile = probe.cFiles / "test.h"
+    fileWriter(customCFile) { fw =>
+      val contents =
+        """ 
+        | struct Hello {int helloParam;};
+        | struct World {int worldParam;};
+        | struct StructA {int structAPAram;};
+        | struct StructB {int structBPAram;};
+        """.stripMargin
+      fw.write(contents)
+    }
+
+    val binding =
+      Binding(
+        customCFile,
+        "lib_my_awesome_library",
+        opaqueStructs = Set("StructA", "StructB")
+      )
+
+    probe.builder
+      .generate(Seq(binding), probe.scalaFiles, BindingLang.Scala, plat)
+
+    // this is very crude
+
+    assertEquals(
+      Nil,
+      lines(probe.scalaFiles / "lib_my_awesome_library.scala").filter { l =>
+        val line =
+          l.replace(" ", "")
+
+        line.contains("StructA=CStruct") || line.contains("StructB=CStruct")
+      }
+    )
+
+    assertNotEquals(
+      Nil,
+      lines(probe.scalaFiles / "lib_my_awesome_library.scala").filter { l =>
+        val line =
+          l.replace(" ", "")
+
+        line.contains("StructA=CArray") || line.contains("StructB=CArray") ||
+        line.contains("Hello=CStruct") || line.contains("World=CStruct")
+      }
+    )
+  }
+  @Test def test_rendering_no_constructor(): Unit = isolate { probe =>
     val customCFile = probe.cFiles / "test.h"
     fileWriter(customCFile) { fw =>
       val contents =

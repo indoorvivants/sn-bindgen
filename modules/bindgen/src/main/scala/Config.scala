@@ -3,33 +3,7 @@ package bindgen
 import opaque_newtypes.*
 import java.io.File
 import scala.util.matching.Regex
-import bindgen.RenderingConfig.NoConstructor
 import scala.util.chaining.*
-
-case class RenderingConfig(
-    noConstructor: Set[NoConstructor]
-)
-
-object RenderingConfig:
-  enum NoConstructor(value: String):
-    case Single(value: String) extends NoConstructor(value)
-    case Wildcard(value: String) extends NoConstructor(value)
-
-    val compiled: Regex = this match
-      case Single(value) => Regex.quote(value).r
-      case Wildcard(value) =>
-        val parts = value.split(Regex.quote("*"), -1).toList
-        parts.mkString(".*").r.anchored
-
-    def matches(s: String): Option[String] =
-      Option.when(compiled.matches(s))(value)
-  end NoConstructor
-
-  object NoConstructor:
-    def apply(value: String) =
-      if value.contains("*") then NoConstructor.Wildcard(value)
-      else NoConstructor.Single(value)
-end RenderingConfig
 
 enum OutputMode:
   case StdOut
