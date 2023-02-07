@@ -13,15 +13,17 @@ class TestInterface {
   val plat = sys.env.get("BINDGEN_CLANG_PATH").map(Paths.get(_))
 
   val c_code = """
-      | unsigned run(int i, float h);
-      | typedef struct Hello {
-      |   int bla; 
-      |} Hello;
-      |
       | union Test {int x; char y;};
       | enum Bla {A, B};
       | typedef float Howdy;
+      | typedef struct Hello {
+      |   int bla; 
+      |   Howdy yes;
+      |} Hello;
       |
+      | typedef Hello HelloAlias;
+      |
+      | unsigned run(int i, float h, HelloAlias test, union Test verify);
       | void naughty(Hello st);
       | void nice(char st);
       | enum {Constant1, Constant2};

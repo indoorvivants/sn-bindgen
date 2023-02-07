@@ -16,5 +16,9 @@ class TestRenderingConfig:
 
     assertEquals(None, nc("hello*").matches("1hello1"))
     assertEquals(Some("hello*"), nc("hello*").matches("hello1"))
-    assertEquals(Some("hello*world*"), nc("hello*world*").matches("hello1asdasdworldasdasd"))
+    assertEquals(
+      Some("hello*world*"),
+      nc("hello*world*").matches("hello1asdasdworldasdasd")
+    )
+  end test_noConstructor
 end TestRenderingConfig
