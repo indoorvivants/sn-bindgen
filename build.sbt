@@ -592,5 +592,7 @@ lazy val buildWebsite = taskKey[Unit]("Build website in _site folder")
 buildWebsite := Def.taskDyn {
   val root = (ThisBuild / baseDirectory).value / "_site"
 
-  (docs / Compile / run).toTask(s" build --destination ${root.toString} --force")
+  (docs / Compile / run).toTask(
+    s" build --destination ${root.toString} --force"
+  )
 }.value
