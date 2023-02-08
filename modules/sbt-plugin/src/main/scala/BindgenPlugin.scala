@@ -28,7 +28,7 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenGenerateScalaSources = taskKey[Seq[File]]("")
     val bindgenGenerateCSources = taskKey[Seq[File]]("")
     val bindgenClangPath = taskKey[java.nio.file.Path]("")
-    val bindgenMode = taskKey[BindgenMode]("")
+    val bindgenMode = settingKey[BindgenMode]("")
   }
 
   override def requires: Plugins = ScalaNativePlugin
@@ -130,8 +130,14 @@ object BindgenPlugin extends AutoPlugin {
         streams.value
       )
     },
-    sourceGenerators += bindgenGenerateScalaSources,
-    resourceGenerators += bindgenGenerateCSources
+    sourceGenerators ++= {
+      if (bindgenMode.value.isInstanceOf[BindgenMode.Manual]) Seq.empty
+      else Seq(bindgenGenerateScalaSources.taskValue)
+    },
+    resourceGenerators ++= {
+      if (bindgenMode.value.isInstanceOf[BindgenMode.Manual]) Seq.empty
+      else Seq(bindgenGenerateCSources.taskValue)
+    }
   )
 
   implicit object LogLevelFormat extends JsonFormat[LogLevel] {
