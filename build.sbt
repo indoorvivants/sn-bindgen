@@ -1,3 +1,5 @@
+import scala.collection.immutable
+import _root_.bindgen.plugin.BindgenMode
 import scala.scalanative.build.GC
 import coursierapi.ResolutionParams
 import coursierapi.Repository
@@ -212,13 +214,38 @@ lazy val plugin = projectMatrix
 
 lazy val libclang = project
   .in(file("modules/libclang"))
-  .enablePlugins(ScalaNativePlugin)
+  .enablePlugins(ScalaNativePlugin, BindgenPlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
     moduleName := "bindgen-libclang",
-    Compile / doc / scalacOptions ~= { opts =>
-      opts.filterNot(_.contains("-Xplugin"))
+    bindgenMode := BindgenMode.Manual(
+      scalaDir = ((Compile / sourceDirectory).value / "scala" / "generated"),
+      cDir = (Compile / resourceDirectory).value / "scala-native" / "generated"
+    ),
+    bindgenBindings := {
+      val detected =
+        llvmFolder(nativeConfig.value.clang.toAbsolutePath()).llvmInclude
+
+      detected match {
+        case head :: tl =>
+          val include = new File(head)
+          Seq(
+            Binding(
+              headerFile = include / "clang-c" / "Index.h",
+              packageName = "libclang",
+              clangFlags = List(s"-I$head"),
+              cImports = List("clang-c/Index.h"),
+              multiFile = true
+            )
+          )
+        case immutable.Nil =>
+          sLog.value.error(
+            "Failed to detect LLVM installation - you won't be able to link the binary and regenerate libclang bindings. " +
+              "Please use LLVM_BIN environment variable to point at the `bin/` folder of your LLVM installation"
+          )
+          Seq.empty
+      }
     }
   )
 
@@ -397,7 +424,7 @@ def usesLibClang(conf: NativeConfig) = {
     .withLinkingOptions(
       conf.linkingOptions ++
         Seq("-l" + libraryName) ++
-        detected.llvmLib.map("-L'" + _ + "'") ++ arm64
+        detected.llvmLib.map("-L" + _) ++ arm64
     )
     .withCompileOptions(
       conf.compileOptions ++ detected.llvmInclude.map("-I" + _) ++ arm64
@@ -470,20 +497,28 @@ versionDump := {
   IO.write(file, (Compile / version).value)
 }
 
-def llvmFolder(clangPath: java.nio.file.Path) = {
+def llvmFolder(clangPath: java.nio.file.Path): LLVMInfo = {
   import Platform.OS.*
 
   Platform.os match {
     case MacOS =>
       val detected =
-        sys.env.get("LLVM_BIN").map(Paths.get(_)).map(_.getParent).toList
+        sys.env
+          .get("LLVM_BIN")
+          .map(Paths.get(_))
+          .map(_.getParent)
+          .filter(_.toFile.exists)
+          .toList
 
-      val speculative = List(
-        Paths.get("/usr/local/opt/llvm@14"),
-        Paths.get("/usr/local/opt/llvm"),
-        Paths.get("/opt/homebrew/opt/llvm@14"),
-        Paths.get("/opt/homebrew/opt/llvm")
-      )
+      val speculative =
+        if (detected.isEmpty)
+          List(
+            Paths.get("/usr/local/opt/llvm@14"),
+            Paths.get("/usr/local/opt/llvm"),
+            Paths.get("/opt/homebrew/opt/llvm@14"),
+            Paths.get("/opt/homebrew/opt/llvm")
+          )
+        else Nil
 
       val all = (detected ++ speculative).dropWhile(!_.toFile.exists())
 

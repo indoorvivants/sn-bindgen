@@ -1,10 +1,8 @@
 package bindgen
 
-import libclang.defs.*
+import libclang.functions.*
 import libclang.enumerations.*
-import libclang.types
 import libclang.fluent.*
-import libclang.types.*
 
 import scala.collection.mutable
 import scala.scalanative.unsafe.*
@@ -12,6 +10,7 @@ import scala.scalanative.unsigned.*
 import scala.util.control.NoStackTrace
 
 import scalanative.libc.*
+import libclang.structs.CXType
 
 def constructType(typ: CXType)(using
     Zone,
@@ -48,7 +47,9 @@ def constructType(typ: CXType)(using
       val resultType = clang_getResultType(typ)
       val numArgs = clang_getNumArgTypes(typ)
       val parameterTypes =
-        (0 until numArgs).map(i => constructType(clang_getArgType(typ, i)))
+        (0 until numArgs).map(i =>
+          constructType(clang_getArgType(typ, i.toUInt))
+        )
 
       CType.Function(
         returnType = constructType(resultType),
@@ -106,7 +107,17 @@ def constructType(typ: CXType)(using
       val elementType = constructType(clang_getArrayElementType(typ))
       CType.IncompleteArray(elementType)
 
-    case other => warning(s"Unknown type: $spelling"); CType.Void;
+    case CXType_Vector =>
+      val elementType = constructType(clang_getElementType(typ))
+      val numElements = clang_getNumElements(typ)
+
+      CType.Struct(List.fill(numElements.toInt)(elementType))
+
+    case other =>
+      warning(
+        s"Unknown type: $spelling"
+      )
+      CType.Void;
   end result
 
   trace(
@@ -116,5 +127,5 @@ def constructType(typ: CXType)(using
 
 end constructType
 
-def constArrayType(elementType: CType, numElements: Int) =
+def constArrayType(elementType: CType, numElements: Long) =
   CType.Arr(elementType, Some(numElements))

@@ -1,19 +1,24 @@
 package bindgen
 
+import _root_.libclang.structs.*
+import _root_.libclang.enumerations.*
+import _root_.libclang.aliases.*
+import _root_.libclang.functions.*
+import _root_.libclang.fluent.*
+
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 import scalanative.libc.*
-import libclang.defs.*
-import libclang.types.*
-import libclang.enumerations.*
 import scala.collection.mutable
 
-def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using
+import libclang.*
+
+def visitEnum(rootCursor: CXCursor, isTypeDef: Boolean)(using
     Zone,
     Config
 ): bindgen.Def.Enum =
   val intType =
-    Option(constructType(clang_getEnumDeclIntegerType(cursor))).collect {
+    Option(constructType(clang_getEnumDeclIntegerType(rootCursor))).collect {
       case n: CType.NumericIntegral => n
     }
 
@@ -24,34 +29,36 @@ def visitEnum(cursor: CXCursor, isTypeDef: Boolean)(using
       intType = intType
     )
   )
-  val typ = clang_getCursorType(cursor)
+  val typ = clang_getCursorType(rootCursor)
   val name = clang_getTypeSpelling(typ).string
 
-  if clang_Cursor_isAnonymous(cursor) == 0.toUInt then
+  if clang_Cursor_isAnonymous(rootCursor) == 0.toUInt then
     (!ptr)._1.name = Some(
       EnumName(if name.startsWith("enum ") then name.drop(5) else name)
     )
 
   val visitor =
-    CXCursorVisitor { (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
-      val (ref, config) = !d.unwrap[Captured[DefBuilder.Enum]]
+    CXCursorVisitorPtr {
+      (cursorPtr: Ptr[CXCursor], parent: Ptr[CXCursor], d: CXClientData) =>
+        val (ref, config) = !d.unwrap[Captured[DefBuilder.Enum]]
+        val cursor = !cursorPtr
 
-      given Config = config
+        given Config = config
 
-      zone {
-        if cursor.kind == CXCursorKind.CXCursor_EnumConstantDecl then
-          val enumConstant = clang_getCursorSpelling(cursor).string
-          ref.values.addOne(
-            enumConstant -> clang_getEnumConstantDeclValue(cursor)
-          )
-          CXChildVisitResult.CXChildVisit_Continue
-        else CXChildVisitResult.CXChildVisit_Recurse
-      }
+        zone {
+          if cursor.kind == CXCursorKind.CXCursor_EnumConstantDecl then
+            val enumConstant = clang_getCursorSpelling(cursorPtr).string
+            ref.values.addOne(
+              enumConstant -> clang_getEnumConstantDeclValue(cursorPtr)
+            )
+            CXChildVisitResult.CXChildVisit_Continue
+          else CXChildVisitResult.CXChildVisit_Recurse
+        }
     }
 
   try
-    clang_visitChildren(
-      cursor,
+    libclang.fluent.clang_visitChildren(
+      rootCursor,
       visitor,
       CXClientData.wrap(ptr)
     )
