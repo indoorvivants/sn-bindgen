@@ -1,7 +1,25 @@
+# In manual mode, we need to regenerate everything manually
+-> run
+$ absent src/main/resources/scala-native/bindings.c 
+$ absent src/main/scala/generated/bindings.scala
+
+> bindgenGenerateScalaSources
+> run
+$ absent src/main/resources/scala-native/bindings.c 
+$ exists src/main/scala/generated/bindings.scala
+
+> bindgenGenerateCSources
 > run
 $ exists src/main/resources/scala-native/bindings.c 
 $ exists src/main/scala/generated/bindings.scala
 
+-> test
+$ absent src/test/resources/scala-native/testbindings.c 
+$ absent src/test/scala/generated/testbindings.scala
+
+
+> Test / bindgenGenerateScalaSources
+> Test / bindgenGenerateCSources
 > test
 $ exists src/test/resources/scala-native/testbindings.c 
 $ exists src/test/scala/generated/testbindings.scala
