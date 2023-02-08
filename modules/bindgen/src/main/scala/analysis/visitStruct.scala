@@ -1,9 +1,10 @@
 package bindgen
 
-import libclang.defs.*
-import libclang.enumerations.*
-import libclang.types.*
-import libclang.fluent.*
+import _root_.libclang.structs.*
+import _root_.libclang.enumerations.*
+import _root_.libclang.aliases.*
+import _root_.libclang.functions.*
+import _root_.libclang.fluent.*
 
 import scala.collection.mutable.ListBuffer
 import scala.scalanative.unsafe.*
@@ -23,10 +24,11 @@ def visitStruct(cursor: CXCursor, name: String)(using
     )
   )
 
-  val visitor = CXCursorVisitor {
-    (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
+  val visitor = CXCursorVisitorPtr {
+    (cursorPtr: Ptr[CXCursor], parentPtr: Ptr[CXCursor], d: CXClientData) =>
       val (collector, config) = !d.unwrap[Captured[StructCollector]]
       given Config = config
+      val cursor = !cursorPtr
 
       zone {
 
@@ -107,14 +109,16 @@ def visitStruct(cursor: CXCursor, name: String)(using
       }
   }
 
-  try
-    clang_visitChildren(
-      cursor,
-      visitor,
-      CXClientData.wrap(ptr)
-    )
+  zone {
+    try
+      libclang.fluent.clang_visitChildren(
+        cursor,
+        visitor,
+        CXClientData.wrap(ptr)
+      )
 
-    (!ptr)._1.struct.build
-  finally memory.deallocate()
-  end try
+      (!ptr)._1.struct.build
+    finally memory.deallocate()
+    end try
+  }
 end visitStruct

@@ -57,7 +57,7 @@ def scalaTag(typ: CType)(using AliasResolver): String =
   end match
 end scalaTag
 
-def natDigitsTag(i: Int): String =
+def natDigitsTag(i: Long): String =
   if i <= 9 then s"Tag.Nat$i"
   else
     val digits = i.toString.toIterator.toList

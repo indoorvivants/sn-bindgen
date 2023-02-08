@@ -1,9 +1,10 @@
 package bindgen
 
-import libclang.defs.*
-import libclang.enumerations.*
-import libclang.fluent.*
-import libclang.types.*
+import _root_.libclang.structs.*
+import _root_.libclang.enumerations.*
+import _root_.libclang.aliases.*
+import _root_.libclang.functions.*
+import _root_.libclang.fluent.*
 
 import java.io.FileWriter
 import java.nio.file.Files
@@ -32,19 +33,28 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
   val translationUnitCursor = clang_getTranslationUnitCursor(unit)
 
-  if translationUnitCursor == CXCursor.NULL then
+  if translationUnitCursor == null.asInstanceOf[CXCursor] then
     throw Exception(
       s"Translation unit cursor is NULL, which indicates that libclang failed to do _something_ (there's no extra information)"
     )
 
   val visitor =
-    CXCursorVisitor.apply {
-      (cursor: CXCursor, parent: CXCursor, data: CXClientData) =>
+    CXCursorVisitorPtr.apply {
+      (
+          cursorPtr: Ptr[CXCursor],
+          parentPtr: Ptr[CXCursor],
+          data: CXClientData
+      ) =>
         val (binding, conf) = !(data.unwrap[Captured[BindingBuilder]])
+
+        val cursor = !cursorPtr
+        val parent = !parentPtr
 
         given Config = conf
 
         zone {
+          trace(cursor.spelling)
+
           val loc = cursor.location
 
           val location = Location(loc.isFromMainFile, loc.isFromSystemHeader)
@@ -61,7 +71,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
             /** Definitions such as this: typedef enum MY_BOOL {m_false, m_true}
               * my_bool;
               */
-            val typ = clang_getTypedefDeclUnderlyingType(cursor)
+            val typ = clang_getTypedefDeclUnderlyingType(cursorPtr)
             val name = cursor.spelling
             val referencedType = clang_Type_getNamedType(typ)
             val typeDecl = clang_getTypeDeclaration(referencedType)
@@ -146,7 +156,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     }
 
   try
-    clang_visitChildren(
+    libclang.fluent.clang_visitChildren(
       translationUnitCursor,
       visitor,
       CXClientData.wrap(cxClientData)
@@ -268,13 +278,13 @@ def createTranslationUnit(
     index,
     filename,
     mem,
-    allClangFlags.size.toUInt,
+    allClangFlags.size,
     null,
     0.toUInt,
-    flags.CXTranslationUnit_None
+    flags.CXTranslationUnit_None.value
   )
 
-  if unit == CXTranslationUnit.NULL then
+  if unit == null.asInstanceOf[CXTranslationUnit] then
     throw new Exception(
       "Translation unit is `null`, which is sort of a big problem"
     )

@@ -9,7 +9,7 @@ import Def.*
 import CType.*
 
 enum CType:
-  case Arr(of: CType, size: Option[Int])
+  case Arr(of: CType, size: Option[Long])
   case Pointer(of: CType)
   case Enum(underlying: NumericIntegral)
   case Struct(fields: List[CType])

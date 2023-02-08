@@ -1,10 +1,8 @@
 package bindgen
 
-import libclang.defs.*
+import libclang.functions.*
 import libclang.enumerations.*
-import libclang.types
 import libclang.fluent.*
-import libclang.types.*
 
 import scala.collection.mutable
 import scala.scalanative.unsafe.*
@@ -12,6 +10,7 @@ import scala.scalanative.unsigned.*
 import scala.util.control.NoStackTrace
 
 import scalanative.libc.*
+import libclang.structs.CXType
 
 def constructType(typ: CXType)(using
     Zone,
@@ -48,7 +47,9 @@ def constructType(typ: CXType)(using
       val resultType = clang_getResultType(typ)
       val numArgs = clang_getNumArgTypes(typ)
       val parameterTypes =
-        (0 until numArgs).map(i => constructType(clang_getArgType(typ, i)))
+        (0 until numArgs).map(i =>
+          constructType(clang_getArgType(typ, i.toUInt))
+        )
 
       CType.Function(
         returnType = constructType(resultType),
@@ -126,5 +127,5 @@ def constructType(typ: CXType)(using
 
 end constructType
 
-def constArrayType(elementType: CType, numElements: Int) =
+def constArrayType(elementType: CType, numElements: Long) =
   CType.Arr(elementType, Some(numElements))

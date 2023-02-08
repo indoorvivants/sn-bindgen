@@ -71,7 +71,7 @@ end scalaType
 def structArrayType(ct: CType.Struct)(using Config, AliasResolver) =
   CType.Arr(CType.Byte, Some(staticSize(ct).toInt))
 
-def natDigits(i: Int): String =
+def natDigits(i: Long): String =
   if i <= 9 then s"Nat._$i"
   else
     val digits = i.toString.toIterator.toList

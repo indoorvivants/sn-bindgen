@@ -1,9 +1,6 @@
 package bindgen
 
 import bindgen.rendering.*
-import libclang.defs.*
-import libclang.enumerations.*
-import libclang.types.*
 
 import java.io.File
 import java.io.FileWriter

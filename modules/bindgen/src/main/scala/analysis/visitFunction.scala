@@ -1,8 +1,9 @@
 package bindgen
 
-import libclang.defs.*
-import libclang.enumerations.*
-import libclang.types.*
+import _root_.libclang.structs.*
+import _root_.libclang.enumerations.*
+import _root_.libclang.aliases.*
+import _root_.libclang.functions.*
 
 import scala.collection.mutable.ListBuffer
 import scala.scalanative.unsafe.*
@@ -29,9 +30,11 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
     )
   )
 
-  val visitor = CXCursorVisitor {
-    (cursor: CXCursor, parent: CXCursor, d: CXClientData) =>
+  val visitor = CXCursorVisitorPtr {
+    (cursorPtr: Ptr[CXCursor], parentPtr: Ptr[CXCursor], d: CXClientData) =>
       val (builder, config) = (!d.unwrap[Captured[DefBuilder.Function]])
+
+      val cursor = !cursorPtr
 
       given Config = config
 
@@ -63,7 +66,7 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
   }
 
   try
-    clang_visitChildren(
+    libclang.fluent.clang_visitChildren(
       functionCursor,
       visitor,
       CXClientData.wrap(ptr)
