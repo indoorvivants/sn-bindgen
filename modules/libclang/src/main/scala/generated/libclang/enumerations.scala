@@ -61,7 +61,6 @@ object CXCallingConv extends CEnumU[CXCallingConv]:
   val CXCallingConv_PreserveAll = define(15)
   val CXCallingConv_AArch64VectorCall = define(16)
   val CXCallingConv_SwiftAsync = define(17)
-  val CXCallingConv_AArch64SVEPCS = define(18)
   val CXCallingConv_Invalid = define(100)
   val CXCallingConv_Unexposed = define(200)
   inline def getName(inline value: CXCallingConv): Option[String] =
@@ -85,11 +84,10 @@ object CXCallingConv extends CEnumU[CXCallingConv]:
       case CXCallingConv_PreserveAll   => Some("CXCallingConv_PreserveAll")
       case CXCallingConv_AArch64VectorCall =>
         Some("CXCallingConv_AArch64VectorCall")
-      case CXCallingConv_SwiftAsync    => Some("CXCallingConv_SwiftAsync")
-      case CXCallingConv_AArch64SVEPCS => Some("CXCallingConv_AArch64SVEPCS")
-      case CXCallingConv_Invalid       => Some("CXCallingConv_Invalid")
-      case CXCallingConv_Unexposed     => Some("CXCallingConv_Unexposed")
-      case _                           => None
+      case CXCallingConv_SwiftAsync => Some("CXCallingConv_SwiftAsync")
+      case CXCallingConv_Invalid    => Some("CXCallingConv_Invalid")
+      case CXCallingConv_Unexposed  => Some("CXCallingConv_Unexposed")
+      case _                        => None
   extension (a: CXCallingConv)
     inline def &(b: CXCallingConv): CXCallingConv = a & b
     inline def |(b: CXCallingConv): CXCallingConv = a | b
@@ -403,9 +401,7 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
   val CXCursor_OMPArrayShapingExpr = define(150)
   val CXCursor_OMPIteratorExpr = define(151)
   val CXCursor_CXXAddrspaceCastExpr = define(152)
-  val CXCursor_ConceptSpecializationExpr = define(153)
-  val CXCursor_RequiresExpr = define(154)
-  val CXCursor_LastExpr = define(154)
+  val CXCursor_LastExpr = define(152)
   val CXCursor_FirstStmt = define(200)
   val CXCursor_UnexposedStmt = define(200)
   val CXCursor_LabelStmt = define(201)
@@ -504,17 +500,8 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
   val CXCursor_OMPUnrollDirective = define(293)
   val CXCursor_OMPMetaDirective = define(294)
   val CXCursor_OMPGenericLoopDirective = define(295)
-  val CXCursor_OMPTeamsGenericLoopDirective = define(296)
-  val CXCursor_OMPTargetTeamsGenericLoopDirective = define(297)
-  val CXCursor_OMPParallelGenericLoopDirective = define(298)
-  val CXCursor_OMPTargetParallelGenericLoopDirective = define(299)
-  val CXCursor_OMPParallelMaskedDirective = define(300)
-  val CXCursor_OMPMaskedTaskLoopDirective = define(301)
-  val CXCursor_OMPMaskedTaskLoopSimdDirective = define(302)
-  val CXCursor_OMPParallelMaskedTaskLoopDirective = define(303)
-  val CXCursor_OMPParallelMaskedTaskLoopSimdDirective = define(304)
-  val CXCursor_LastStmt = define(304)
-  val CXCursor_TranslationUnit = define(350)
+  val CXCursor_LastStmt = define(295)
+  val CXCursor_TranslationUnit = define(300)
   val CXCursor_FirstAttr = define(400)
   val CXCursor_UnexposedAttr = define(400)
   val CXCursor_IBActionAttr = define(401)
@@ -570,9 +557,8 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
   val CXCursor_TypeAliasTemplateDecl = define(601)
   val CXCursor_StaticAssert = define(602)
   val CXCursor_FriendDecl = define(603)
-  val CXCursor_ConceptDecl = define(604)
   val CXCursor_FirstExtraDecl = define(600)
-  val CXCursor_LastExtraDecl = define(604)
+  val CXCursor_LastExtraDecl = define(603)
   val CXCursor_OverloadCandidate = define(700)
   inline def getName(inline value: CXCursorKind): Option[String] =
     value match
@@ -704,9 +690,6 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
       case CXCursor_OMPIteratorExpr     => Some("CXCursor_OMPIteratorExpr")
       case CXCursor_CXXAddrspaceCastExpr =>
         Some("CXCursor_CXXAddrspaceCastExpr")
-      case CXCursor_ConceptSpecializationExpr =>
-        Some("CXCursor_ConceptSpecializationExpr")
-      case CXCursor_RequiresExpr      => Some("CXCursor_RequiresExpr")
       case CXCursor_LastExpr          => Some("CXCursor_LastExpr")
       case CXCursor_FirstStmt         => Some("CXCursor_FirstStmt")
       case CXCursor_UnexposedStmt     => Some("CXCursor_UnexposedStmt")
@@ -849,24 +832,6 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
       case CXCursor_OMPMetaDirective   => Some("CXCursor_OMPMetaDirective")
       case CXCursor_OMPGenericLoopDirective =>
         Some("CXCursor_OMPGenericLoopDirective")
-      case CXCursor_OMPTeamsGenericLoopDirective =>
-        Some("CXCursor_OMPTeamsGenericLoopDirective")
-      case CXCursor_OMPTargetTeamsGenericLoopDirective =>
-        Some("CXCursor_OMPTargetTeamsGenericLoopDirective")
-      case CXCursor_OMPParallelGenericLoopDirective =>
-        Some("CXCursor_OMPParallelGenericLoopDirective")
-      case CXCursor_OMPTargetParallelGenericLoopDirective =>
-        Some("CXCursor_OMPTargetParallelGenericLoopDirective")
-      case CXCursor_OMPParallelMaskedDirective =>
-        Some("CXCursor_OMPParallelMaskedDirective")
-      case CXCursor_OMPMaskedTaskLoopDirective =>
-        Some("CXCursor_OMPMaskedTaskLoopDirective")
-      case CXCursor_OMPMaskedTaskLoopSimdDirective =>
-        Some("CXCursor_OMPMaskedTaskLoopSimdDirective")
-      case CXCursor_OMPParallelMaskedTaskLoopDirective =>
-        Some("CXCursor_OMPParallelMaskedTaskLoopDirective")
-      case CXCursor_OMPParallelMaskedTaskLoopSimdDirective =>
-        Some("CXCursor_OMPParallelMaskedTaskLoopSimdDirective")
       case CXCursor_LastStmt        => Some("CXCursor_LastStmt")
       case CXCursor_TranslationUnit => Some("CXCursor_TranslationUnit")
       case CXCursor_FirstAttr       => Some("CXCursor_FirstAttr")
@@ -935,7 +900,6 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
         Some("CXCursor_TypeAliasTemplateDecl")
       case CXCursor_StaticAssert      => Some("CXCursor_StaticAssert")
       case CXCursor_FriendDecl        => Some("CXCursor_FriendDecl")
-      case CXCursor_ConceptDecl       => Some("CXCursor_ConceptDecl")
       case CXCursor_FirstExtraDecl    => Some("CXCursor_FirstExtraDecl")
       case CXCursor_LastExtraDecl     => Some("CXCursor_LastExtraDecl")
       case CXCursor_OverloadCandidate => Some("CXCursor_OverloadCandidate")
@@ -1218,7 +1182,6 @@ object CXIdxEntityKind extends CEnumU[CXIdxEntityKind]:
   val CXIdxEntity_CXXConversionFunction = define(24)
   val CXIdxEntity_CXXTypeAlias = define(25)
   val CXIdxEntity_CXXInterface = define(26)
-  val CXIdxEntity_CXXConcept = define(27)
   inline def getName(inline value: CXIdxEntityKind): Option[String] =
     value match
       case CXIdxEntity_Unexposed    => Some("CXIdxEntity_Unexposed")
@@ -1253,7 +1216,6 @@ object CXIdxEntityKind extends CEnumU[CXIdxEntityKind]:
         Some("CXIdxEntity_CXXConversionFunction")
       case CXIdxEntity_CXXTypeAlias => Some("CXIdxEntity_CXXTypeAlias")
       case CXIdxEntity_CXXInterface => Some("CXIdxEntity_CXXInterface")
-      case CXIdxEntity_CXXConcept   => Some("CXIdxEntity_CXXConcept")
       case _                        => None
   extension (a: CXIdxEntityKind)
     inline def &(b: CXIdxEntityKind): CXIdxEntityKind = a & b
@@ -2049,7 +2011,6 @@ object CXTypeKind extends CEnumU[CXTypeKind]:
   val CXType_OCLIntelSubgroupAVCImeDualRefStreamin = define(175)
   val CXType_ExtVector = define(176)
   val CXType_Atomic = define(177)
-  val CXType_BTFTagAttributed = define(178)
   inline def getName(inline value: CXTypeKind): Option[String] =
     value match
       case CXType_Invalid             => Some("CXType_Invalid")
@@ -2189,10 +2150,9 @@ object CXTypeKind extends CEnumU[CXTypeKind]:
         Some("CXType_OCLIntelSubgroupAVCImeSingleRefStreamin")
       case CXType_OCLIntelSubgroupAVCImeDualRefStreamin =>
         Some("CXType_OCLIntelSubgroupAVCImeDualRefStreamin")
-      case CXType_ExtVector        => Some("CXType_ExtVector")
-      case CXType_Atomic           => Some("CXType_Atomic")
-      case CXType_BTFTagAttributed => Some("CXType_BTFTagAttributed")
-      case _                       => None
+      case CXType_ExtVector => Some("CXType_ExtVector")
+      case CXType_Atomic    => Some("CXType_Atomic")
+      case _                => None
   extension (a: CXTypeKind)
     inline def &(b: CXTypeKind): CXTypeKind = a & b
     inline def |(b: CXTypeKind): CXTypeKind = a | b

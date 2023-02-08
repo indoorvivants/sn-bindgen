@@ -22,12 +22,6 @@ object CXCompletionString:
   inline def apply(inline o: Ptr[Byte]): CXCompletionString = o
   extension (v: CXCompletionString) inline def value: Ptr[Byte] = v
 
-type CXCursorAndRangeVisitorBlock = Unit
-object CXCursorAndRangeVisitorBlock:
-  given _tag: Tag[CXCursorAndRangeVisitorBlock] = Tag.Unit
-  inline def apply(inline o: Unit): CXCursorAndRangeVisitorBlock = o
-  extension (v: CXCursorAndRangeVisitorBlock) inline def value: Unit = v
-
 opaque type CXCursorSet = Ptr[CXCursorSetImpl]
 object CXCursorSet:
   given _tag: Tag[CXCursorSet] = Tag.Ptr[CXCursorSetImpl](CXCursorSetImpl._tag)
@@ -45,12 +39,6 @@ object CXCursorVisitor:
   extension (v: CXCursorVisitor)
     inline def value
         : CFuncPtr3[CXCursor, CXCursor, CXClientData, CXChildVisitResult] = v
-
-type CXCursorVisitorBlock = Unit
-object CXCursorVisitorBlock:
-  given _tag: Tag[CXCursorVisitorBlock] = Tag.Unit
-  inline def apply(inline o: Unit): CXCursorVisitorBlock = o
-  extension (v: CXCursorVisitorBlock) inline def value: Unit = v
 
 opaque type CXDiagnostic = Ptr[Byte]
 object CXDiagnostic:
