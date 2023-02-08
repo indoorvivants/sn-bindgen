@@ -424,7 +424,7 @@ def usesLibClang(conf: NativeConfig) = {
     .withLinkingOptions(
       conf.linkingOptions ++
         Seq("-l" + libraryName) ++
-        detected.llvmLib.map("-L'" + _ + "'") ++ arm64
+        detected.llvmLib.map("-L" + _) ++ arm64
     )
     .withCompileOptions(
       conf.compileOptions ++ detected.llvmInclude.map("-I" + _) ++ arm64
