@@ -4,7 +4,7 @@ package rendering
 def struct(model: Def.Struct, line: Appender)(using
     c: Config,
     ar: AliasResolver
-): Unit =
+): Exported =
   val hasFlexibleArrayMember = model.fields.lastOption.collectFirst {
     case (_, CType.IncompleteArray(_)) => true
   }.isDefined
@@ -180,4 +180,6 @@ def struct(model: Def.Struct, line: Appender)(using
     else line(s"given _tag: Tag[$structName] = Tag.materializeCStruct0Tag")
     end if
   }
+
+  Exported.Yes(structName.value)
 end struct

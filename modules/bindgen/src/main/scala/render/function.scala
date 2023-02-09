@@ -26,6 +26,7 @@ def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
       line(
         s"${access}def ${f.name}$arglist: ${scalaType(f.returnType)} = extern"
       )
+      if f.public then Exported.Yes(f.name.value) else Exported.No
     case ScalaFunctionBody.Delegate(
           to,
           a @ Allocations(indices, returnAsWell)
@@ -97,5 +98,7 @@ def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
         line(s"$to(${delegateCallArgList.map(escape).mkString(", ")})")
         if returnAsWell then line(s"!${return_ptr}")
       }
+
+      Exported.Yes(f.name.value)
   end match
 end renderFunction

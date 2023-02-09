@@ -6,7 +6,7 @@ import scala.collection.mutable.ListBuffer
 def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
     AliasResolver,
     Config
-) =
+): Unit =
   f.body match
     case CFunctionBody.Delegate(to, pointers, returnAsWell) =>
       val arglist = List.newBuilder[String]
@@ -53,3 +53,5 @@ def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
         )
         line("}\n")
       end if
+  end match
+end cFunctionForwarder
