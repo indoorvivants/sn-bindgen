@@ -160,6 +160,7 @@ class TestInterface {
         probe.scalaFiles / "lib_check" / "aliases.scala",
         probe.scalaFiles / "lib_check" / "structs.scala",
         probe.scalaFiles / "lib_check" / "functions.scala",
+        probe.scalaFiles / "lib_check" / "all.scala",
         probe.scalaFiles / "lib_check" / "unions.scala"
       ),
       allFilesMultiScala.toSet

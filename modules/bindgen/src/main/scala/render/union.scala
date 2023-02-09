@@ -5,8 +5,8 @@ import bindgen.*
 
 def union(model: Def.Union, line: Appender)(using Config)(using
     ar: AliasResolver
-): Unit =
-  val structName = model.name
+): Exported =
+  val unionName = model.name
   val unionType: CType.Union = CType.Union(model.fields.map(_._2).toList)
   val tpe = scalaType(unionType)
 
@@ -23,8 +23,8 @@ def union(model: Def.Union, line: Appender)(using Config)(using
       case Renamed(value) => value
       case Escaped        => s"`$name`"
 
-  line(s"opaque type $structName = $tpe")
-  line(s"object ${sanitiseBeforeColon(structName.value)}:")
+  line(s"opaque type $unionName = $tpe")
+  line(s"object ${sanitiseBeforeColon(unionName.value)}:")
   nest {
     model.anonymous.foreach {
       case s: Def.Struct =>
@@ -34,13 +34,13 @@ def union(model: Def.Union, line: Appender)(using Config)(using
     }
 
     val tag =
-      s"given _tag: Tag[$structName] = ${scalaTag(unionType)}"
+      s"given _tag: Tag[$unionName] = ${scalaTag(unionType)}"
     line(tag)
 
     if model.fields.nonEmpty then
-      line(s"def apply()(using Zone): Ptr[$structName] = ")
+      line(s"def apply()(using Zone): Ptr[$unionName] = ")
       nest {
-        line(s"val ___ptr = alloc[$structName](1)")
+        line(s"val ___ptr = alloc[$unionName](1)")
         line("___ptr")
       }
       model.fields.foreach { case (fieldName, fieldType) =>
@@ -50,10 +50,10 @@ def union(model: Def.Union, line: Appender)(using Config)(using
         // It's important we don't use the escape(...) function here
         line(s"@scala.annotation.targetName(\"apply_${fieldName.value}\")")
         line(
-          s"def apply($getterName: $typ)(using Zone): Ptr[$structName] ="
+          s"def apply($getterName: $typ)(using Zone): Ptr[$unionName] ="
         )
         nest {
-          line(s"val ___ptr = alloc[$structName](1)")
+          line(s"val ___ptr = alloc[$unionName](1)")
           line(s"val un = !___ptr")
           line(
             s"un.at(0).asInstanceOf[Ptr[$typ]].update(0, $getterName)"
@@ -61,7 +61,7 @@ def union(model: Def.Union, line: Appender)(using Config)(using
           line("___ptr")
         }
       }
-      line(s"extension (struct: $structName)")
+      line(s"extension (struct: $unionName)")
       nest {
         model.fields.foreach { case (fieldName, fieldType) =>
           val getterName = getter(fieldName.value)
@@ -78,4 +78,5 @@ def union(model: Def.Union, line: Appender)(using Config)(using
       }
     end if
   }
+  Exported.Yes(unionName.value)
 end union

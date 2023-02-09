@@ -6,7 +6,10 @@ import scala.scalanative.unsafe.CFuncPtr
 
 import CType.*
 
-def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
+def alias(model: Def.Alias, line: Appender)(using
+    AliasResolver,
+    Config
+): Exported =
   val (underlyingType, enableConstructor) =
     model.underlying match
       case Pointer(Reference(Name.Unnamed)) =>
@@ -36,5 +39,7 @@ def alias(model: Def.Alias, line: Appender)(using AliasResolver, Config) =
         line(s"inline def value: ${scalaType(underlyingType)} = v")
       }
   }
+
+  Exported.Yes(model.name)
 
 end alias
