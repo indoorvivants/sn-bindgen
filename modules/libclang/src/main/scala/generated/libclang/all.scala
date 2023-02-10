@@ -54,10 +54,8 @@ export _root_.libclang.enumerations.CX_CXXAccessSpecifier
 export _root_.libclang.enumerations.CX_StorageClass
 export _root_.libclang.aliases.CXClientData
 export _root_.libclang.aliases.CXCompletionString
-export _root_.libclang.aliases.CXCursorAndRangeVisitorBlock
 export _root_.libclang.aliases.CXCursorSet
 export _root_.libclang.aliases.CXCursorVisitor
-export _root_.libclang.aliases.CXCursorVisitorBlock
 export _root_.libclang.aliases.CXDiagnostic
 export _root_.libclang.aliases.CXDiagnosticSet
 export _root_.libclang.aliases.CXEvalResult
@@ -182,7 +180,6 @@ export _root_.libclang.functions.clang_disposeTokens
 export _root_.libclang.functions.clang_disposeTranslationUnit
 export _root_.libclang.functions.clang_enableStackTraces
 export _root_.libclang.functions.clang_executeOnThread
-export _root_.libclang.functions.clang_findIncludesInFileWithBlock
 export _root_.libclang.functions.clang_free
 export _root_.libclang.functions.clang_getAllSkippedRanges
 export _root_.libclang.functions.clang_getBuildSessionTimestamp
@@ -348,7 +345,6 @@ export _root_.libclang.functions.clang_equalRanges
 export _root_.libclang.functions.clang_equalTypes
 export _root_.libclang.functions.clang_findIncludesInFile
 export _root_.libclang.functions.clang_findReferencesInFile
-export _root_.libclang.functions.clang_findReferencesInFileWithBlock
 export _root_.libclang.functions.clang_formatDiagnostic
 export _root_.libclang.functions.clang_getAddressSpace
 export _root_.libclang.functions.clang_getArgType
@@ -456,4 +452,3 @@ export _root_.libclang.functions.clang_isVirtualBase
 export _root_.libclang.functions.clang_isVolatileQualifiedType
 export _root_.libclang.functions.clang_tokenize
 export _root_.libclang.functions.clang_visitChildren
-export _root_.libclang.functions.clang_visitChildrenWithBlock

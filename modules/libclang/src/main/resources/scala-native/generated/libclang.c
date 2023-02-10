@@ -518,11 +518,6 @@ CXResult __sn_wrap_libclang_clang_findReferencesInFile(CXCursor *cursor, CXFile 
 };
 
 
-CXResult __sn_wrap_libclang_clang_findReferencesInFileWithBlock(CXCursor *_0, CXFile _1, CXCursorAndRangeVisitorBlock _2) {
- return clang_findReferencesInFileWithBlock(*_0, _1, _2);
-};
-
-
 void __sn_wrap_libclang_clang_formatDiagnostic(CXDiagnostic Diagnostic, unsigned int Options, CXString *____return) {
   CXString ____ret = clang_formatDiagnostic(Diagnostic, Options);
   memcpy(____return, &____ret, sizeof(CXString));
@@ -1117,11 +1112,6 @@ void __sn_wrap_libclang_clang_tokenize(CXTranslationUnit TU, CXSourceRange *Rang
 
 unsigned int __sn_wrap_libclang_clang_visitChildren(CXCursor *parent, CXCursorVisitor visitor, CXClientData client_data) {
  return clang_visitChildren(*parent, visitor, client_data);
-};
-
-
-unsigned int __sn_wrap_libclang_clang_visitChildrenWithBlock(CXCursor *parent, CXCursorVisitorBlock block) {
- return clang_visitChildrenWithBlock(*parent, block);
 };
 
 

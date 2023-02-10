@@ -22,7 +22,7 @@ private[libclang] trait CEnumU[T](using eq: T =:= UInt):
   * the use of this entity will result in a warning or error due to it being
   * deprecated or unavailable.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXAvailabilityKind = CUnsignedInt
 object CXAvailabilityKind extends CEnumU[CXAvailabilityKind]:
@@ -47,7 +47,7 @@ end CXAvailabilityKind
 
 /** Describes the calling convention of a function type
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXCallingConv = CUnsignedInt
 object CXCallingConv extends CEnumU[CXCallingConv]:
@@ -108,7 +108,7 @@ end CXCallingConv
 /** Describes how the traversal of the children of a particular cursor should
   * proceed after visiting a particular child cursor.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXChildVisitResult = CUnsignedInt
 object CXChildVisitResult extends CEnumU[CXChildVisitResult]:
@@ -131,7 +131,7 @@ end CXChildVisitResult
 
 /** Flags that can be passed to clang_codeCompleteAt() to modify its behavior.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXCodeComplete_Flags = CUnsignedInt
 object CXCodeComplete_Flags extends CEnumU[CXCodeComplete_Flags]:
@@ -161,7 +161,7 @@ end CXCodeComplete_Flags
 
 /** Describes a single piece of text within a code-completion string.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXCompletionChunkKind = CUnsignedInt
 object CXCompletionChunkKind extends CEnumU[CXCompletionChunkKind]:
@@ -227,7 +227,7 @@ end CXCompletionChunkKind
 
 /** Bits that represent the context under which completion is occurring.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXCompletionContext = CUnsignedInt
 object CXCompletionContext extends CEnumU[CXCompletionContext]:
@@ -313,7 +313,7 @@ end CXCompletionContext
 
 /** Describes the kind of entity that a cursor refers to.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXCursorKind = CUnsignedInt
 object CXCursorKind extends CEnumU[CXCursorKind]:
@@ -944,7 +944,7 @@ end CXCursorKind
 
 /** Describes the exception specification of a cursor.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXCursor_ExceptionSpecificationKind = CUnsignedInt
 object CXCursor_ExceptionSpecificationKind
@@ -1000,7 +1000,7 @@ end CXCursor_ExceptionSpecificationKind
 
 /** Options to control the display of diagnostics.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXDiagnosticDisplayOptions = CUnsignedInt
 object CXDiagnosticDisplayOptions extends CEnumU[CXDiagnosticDisplayOptions]:
@@ -1035,7 +1035,7 @@ end CXDiagnosticDisplayOptions
 
 /** Describes the severity of a particular diagnostic.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXDiagnosticSeverity = CUnsignedInt
 object CXDiagnosticSeverity extends CEnumU[CXDiagnosticSeverity]:
@@ -1062,7 +1062,7 @@ end CXDiagnosticSeverity
 
 /** Error codes returned by libclang routines.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/CXErrorCode.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/CXErrorCode.h
   */
 opaque type CXErrorCode = CUnsignedInt
 object CXErrorCode extends CEnumU[CXErrorCode]:
@@ -1087,7 +1087,7 @@ object CXErrorCode extends CEnumU[CXErrorCode]:
     inline def is(b: CXErrorCode): Boolean = (a & b) == b
 end CXErrorCode
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXEvalResultKind = CUnsignedInt
 object CXEvalResultKind extends CEnumU[CXEvalResultKind]:
@@ -1116,7 +1116,7 @@ object CXEvalResultKind extends CEnumU[CXEvalResultKind]:
     inline def is(b: CXEvalResultKind): Boolean = (a & b) == b
 end CXEvalResultKind
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXGlobalOptFlags = CUnsignedInt
 object CXGlobalOptFlags extends CEnumU[CXGlobalOptFlags]:
@@ -1142,7 +1142,7 @@ object CXGlobalOptFlags extends CEnumU[CXGlobalOptFlags]:
     inline def is(b: CXGlobalOptFlags): Boolean = (a & b) == b
 end CXGlobalOptFlags
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIdxAttrKind = CUnsignedInt
 object CXIdxAttrKind extends CEnumU[CXIdxAttrKind]:
@@ -1165,7 +1165,7 @@ object CXIdxAttrKind extends CEnumU[CXIdxAttrKind]:
     inline def is(b: CXIdxAttrKind): Boolean = (a & b) == b
 end CXIdxAttrKind
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIdxDeclInfoFlags = CUnsignedInt
 object CXIdxDeclInfoFlags extends CEnumU[CXIdxDeclInfoFlags]:
@@ -1187,7 +1187,7 @@ end CXIdxDeclInfoFlags
   * CXIdxEntity_CXXInstanceMethod CXIdxEntity_CXXConstructor
   * CXIdxEntity_CXXConversionFunction CXIdxEntity_CXXTypeAlias
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIdxEntityCXXTemplateKind = CUnsignedInt
 object CXIdxEntityCXXTemplateKind extends CEnumU[CXIdxEntityCXXTemplateKind]:
@@ -1214,7 +1214,7 @@ object CXIdxEntityCXXTemplateKind extends CEnumU[CXIdxEntityCXXTemplateKind]:
     inline def is(b: CXIdxEntityCXXTemplateKind): Boolean = (a & b) == b
 end CXIdxEntityCXXTemplateKind
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIdxEntityKind = CUnsignedInt
 object CXIdxEntityKind extends CEnumU[CXIdxEntityKind]:
@@ -1288,7 +1288,7 @@ object CXIdxEntityKind extends CEnumU[CXIdxEntityKind]:
     inline def is(b: CXIdxEntityKind): Boolean = (a & b) == b
 end CXIdxEntityKind
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIdxEntityLanguage = CUnsignedInt
 object CXIdxEntityLanguage extends CEnumU[CXIdxEntityLanguage]:
@@ -1315,7 +1315,7 @@ end CXIdxEntityLanguage
 
 /** Data for IndexerCallbacks#indexEntityReference.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIdxEntityRefKind = CUnsignedInt
 object CXIdxEntityRefKind extends CEnumU[CXIdxEntityRefKind]:
@@ -1334,7 +1334,7 @@ object CXIdxEntityRefKind extends CEnumU[CXIdxEntityRefKind]:
     inline def is(b: CXIdxEntityRefKind): Boolean = (a & b) == b
 end CXIdxEntityRefKind
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIdxObjCContainerKind = CUnsignedInt
 object CXIdxObjCContainerKind extends CEnumU[CXIdxObjCContainerKind]:
@@ -1357,7 +1357,7 @@ object CXIdxObjCContainerKind extends CEnumU[CXIdxObjCContainerKind]:
     inline def is(b: CXIdxObjCContainerKind): Boolean = (a & b) == b
 end CXIdxObjCContainerKind
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIndexOptFlags = CUnsignedInt
 object CXIndexOptFlags extends CEnumU[CXIndexOptFlags]:
@@ -1390,7 +1390,7 @@ end CXIndexOptFlags
 
 /** Describe the "language" of the entity referred to by a cursor.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXLanguageKind = CUnsignedInt
 object CXLanguageKind extends CEnumU[CXLanguageKind]:
@@ -1415,7 +1415,7 @@ end CXLanguageKind
 
 /** Describe the linkage of the entity referred to by a cursor.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXLinkageKind = CUnsignedInt
 object CXLinkageKind extends CEnumU[CXLinkageKind]:
@@ -1443,7 +1443,7 @@ end CXLinkageKind
 /** Describes the kind of error that occurred (if any) in a call to
   * clang_loadDiagnostics.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXLoadDiag_Error = CUnsignedInt
 object CXLoadDiag_Error extends CEnumU[CXLoadDiag_Error]:
@@ -1466,7 +1466,7 @@ object CXLoadDiag_Error extends CEnumU[CXLoadDiag_Error]:
     inline def is(b: CXLoadDiag_Error): Boolean = (a & b) == b
 end CXLoadDiag_Error
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXNameRefFlags = CUnsignedInt
 object CXNameRefFlags extends CEnumU[CXNameRefFlags]:
@@ -1490,7 +1490,7 @@ end CXNameRefFlags
 /** 'Qualifiers' written next to the return and parameter types in Objective-C
   * method declarations.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXObjCDeclQualifierKind = CUnsignedInt
 object CXObjCDeclQualifierKind extends CEnumU[CXObjCDeclQualifierKind]:
@@ -1521,7 +1521,7 @@ end CXObjCDeclQualifierKind
 
 /** Property attributes for a CXCursor_ObjCPropertyDecl.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXObjCPropertyAttrKind = CUnsignedInt
 object CXObjCPropertyAttrKind extends CEnumU[CXObjCPropertyAttrKind]:
@@ -1567,7 +1567,7 @@ end CXObjCPropertyAttrKind
 
 /** Properties for the printing policy.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXPrintingPolicyProperty = CUnsignedInt
 object CXPrintingPolicyProperty extends CEnumU[CXPrintingPolicyProperty]:
@@ -1656,7 +1656,7 @@ object CXPrintingPolicyProperty extends CEnumU[CXPrintingPolicyProperty]:
     inline def is(b: CXPrintingPolicyProperty): Boolean = (a & b) == b
 end CXPrintingPolicyProperty
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXRefQualifierKind = CUnsignedInt
 object CXRefQualifierKind extends CEnumU[CXRefQualifierKind]:
@@ -1679,7 +1679,7 @@ end CXRefQualifierKind
 
 /** Flags that control the reparsing of translation units.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXReparse_Flags = CUnsignedInt
 object CXReparse_Flags extends CEnumU[CXReparse_Flags]:
@@ -1696,7 +1696,7 @@ object CXReparse_Flags extends CEnumU[CXReparse_Flags]:
     inline def is(b: CXReparse_Flags): Boolean = (a & b) == b
 end CXReparse_Flags
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXResult = CUnsignedInt
 object CXResult extends CEnumU[CXResult]:
@@ -1720,7 +1720,7 @@ end CXResult
 /** Describes the kind of error that occurred (if any) in a call to
   * clang_saveTranslationUnit().
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXSaveError = CUnsignedInt
 object CXSaveError extends CEnumU[CXSaveError]:
@@ -1746,7 +1746,7 @@ end CXSaveError
 
 /** Flags that control how translation units are saved.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXSaveTranslationUnit_Flags = CUnsignedInt
 object CXSaveTranslationUnit_Flags extends CEnumU[CXSaveTranslationUnit_Flags]:
@@ -1769,7 +1769,7 @@ end CXSaveTranslationUnit_Flags
 
 /** Roles that are attributed to symbol occurrences.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXSymbolRole = CUnsignedInt
 object CXSymbolRole extends CEnumU[CXSymbolRole]:
@@ -1807,7 +1807,7 @@ end CXSymbolRole
 /** Describe the "thread-local storage (TLS) kind" of the declaration referred
   * to by a cursor.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXTLSKind = CUnsignedInt
 object CXTLSKind extends CEnumU[CXTLSKind]:
@@ -1830,7 +1830,7 @@ end CXTLSKind
 
 /** Categorizes how memory is being used by a translation unit.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXTUResourceUsageKind = CUnsignedInt
 object CXTUResourceUsageKind extends CEnumU[CXTUResourceUsageKind]:
@@ -1897,7 +1897,7 @@ end CXTUResourceUsageKind
 
 /** Describes the kind of a template argument.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXTemplateArgumentKind = CUnsignedInt
 object CXTemplateArgumentKind extends CEnumU[CXTemplateArgumentKind]:
@@ -1941,7 +1941,7 @@ end CXTemplateArgumentKind
 
 /** Describes a kind of token.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXTokenKind = CUnsignedInt
 object CXTokenKind extends CEnumU[CXTokenKind]:
@@ -1968,7 +1968,7 @@ end CXTokenKind
 
 /** Flags that control the creation of translation units.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXTranslationUnit_Flags = CUnsignedInt
 object CXTranslationUnit_Flags extends CEnumU[CXTranslationUnit_Flags]:
@@ -2033,7 +2033,7 @@ end CXTranslationUnit_Flags
 
 /** Describes the kind of type
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXTypeKind = CUnsignedInt
 object CXTypeKind extends CEnumU[CXTypeKind]:
@@ -2311,7 +2311,7 @@ end CXTypeKind
 /** List the possible error codes for clang_Type_getSizeOf,
   * clang_Type_getAlignOf, clang_Type_getOffsetOf and clang_Cursor_getOffsetOf.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXTypeLayoutError = CInt
 object CXTypeLayoutError extends CEnum[CXTypeLayoutError]:
@@ -2340,7 +2340,7 @@ object CXTypeLayoutError extends CEnum[CXTypeLayoutError]:
     inline def is(b: CXTypeLayoutError): Boolean = (a & b) == b
 end CXTypeLayoutError
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXTypeNullabilityKind = CUnsignedInt
 object CXTypeNullabilityKind extends CEnumU[CXTypeNullabilityKind]:
@@ -2367,7 +2367,7 @@ object CXTypeNullabilityKind extends CEnumU[CXTypeNullabilityKind]:
     inline def is(b: CXTypeNullabilityKind): Boolean = (a & b) == b
 end CXTypeNullabilityKind
 
-/** [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXVisibilityKind = CUnsignedInt
 object CXVisibilityKind extends CEnumU[CXVisibilityKind]:
@@ -2392,7 +2392,7 @@ end CXVisibilityKind
 
 /** @{
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXVisitorResult = CUnsignedInt
 object CXVisitorResult extends CEnumU[CXVisitorResult]:
@@ -2414,7 +2414,7 @@ end CXVisitorResult
 /** Represents the C++ access control level to a base class for a cursor with
   * kind CX_CXXBaseSpecifier.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CX_CXXAccessSpecifier = CUnsignedInt
 object CX_CXXAccessSpecifier extends CEnumU[CX_CXXAccessSpecifier]:
@@ -2440,7 +2440,7 @@ end CX_CXXAccessSpecifier
 /** Represents the storage classes as declared in the source. CX_SC_Invalid was
   * added for the case that the passed cursor in not a declaration.
   *
-  * [bindgen] header: /opt/homebrew/opt/llvm@14/include/clang-c/Index.h
+  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CX_StorageClass = CUnsignedInt
 object CX_StorageClass extends CEnumU[CX_StorageClass]:
