@@ -87,9 +87,14 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
               if !en.name.exists(_.value == name) then
                 binding.add(
-                  Def.Alias(name, constructType(typ)),
+                  Def.Alias(
+                    name,
+                    constructType(typ),
+                    Some(extractMetadata(cursor))
+                  ),
                   location
                 )
+              end if
             else if (referencedType.kind == CXTypeKind.CXType_Record) then
               val struct = visitStruct(typeDecl, name)
 
@@ -108,7 +113,11 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
               if name != "" then binding.add(item, location)
             else if typ.kind != CXTypeKind.CXType_Invalid then
               val alias: Def.Alias =
-                Def.Alias(name, constructType(typ))
+                Def.Alias(
+                  name,
+                  constructType(typ),
+                  Some(extractMetadata(cursor))
+                )
               val canonical = clang_getCanonicalType(typ)
 
               binding.add(alias, location)
@@ -216,7 +225,11 @@ def addBuiltInAliases(binding: BindingBuilder)(using
 ): BindingBuilder =
   val replaceTypes = DefTag.all - DefTag.Function
   BuiltinType.all.foreach { tpe =>
-    val al = Def.Alias(tpe.short, CType.Reference(Name.BuiltIn(tpe)))
+    val al = Def.Alias(
+      name = tpe.short,
+      underlying = CType.Reference(Name.BuiltIn(tpe)),
+      meta = None
+    )
     replaceTypes.foreach { tg =>
 
       val annoyingBastards =
@@ -228,7 +241,8 @@ def addBuiltInAliases(binding: BindingBuilder)(using
                 "va_list",
                 CType.Reference(
                   Name.Model(ref)
-                )
+                ),
+                None
               ),
               _
             ) if annoyingBastards(ref) =>

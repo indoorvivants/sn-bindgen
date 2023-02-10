@@ -105,7 +105,7 @@ object AliasResolver:
           val typ = CType.Struct(fields.map(_._2).toList)
           mapping += name.value -> typ
           mapping ++= traverse(u)
-        case Def.Alias(name, underlying) =>
+        case Def.Alias(name, underlying, _) =>
           mapping += name -> underlying
         case Def.Enum(_, Some(name), Some(tp), _) =>
           mapping += name.value -> tp

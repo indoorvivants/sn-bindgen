@@ -22,6 +22,7 @@ def alias(model: Def.Alias, line: Appender)(using
     case _                                 => true
 
   val modifier = if isOpaque then "opaque " else ""
+  model.meta.foreach(renderComment(line, _))
   line(s"${modifier}type ${model.name} = ${scalaType(underlyingType)}")
   line(s"object ${sanitiseBeforeColon(model.name)}: ")
   nest {

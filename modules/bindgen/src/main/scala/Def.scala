@@ -66,14 +66,14 @@ enum Def:
       numArguments: Int,
       meta: Meta
   )
-  case Alias(name: String, underlying: CType)
+  case Alias(name: String, underlying: CType, meta: Option[Meta])
 
   def defName: Option[DefName] =
     this match
-      case Alias(name, _) => Some(DefName(name, DefTag.Alias))
-      case u: Union       => Some(DefName(u.name.value, DefTag.Union))
-      case f: Function    => Some(DefName(f.name.value, DefTag.Function))
-      case s: Struct      => Some(DefName(s.name.value, DefTag.Struct))
+      case Alias(name, _, _) => Some(DefName(name, DefTag.Alias))
+      case u: Union          => Some(DefName(u.name.value, DefTag.Union))
+      case f: Function       => Some(DefName(f.name.value, DefTag.Function))
+      case s: Struct         => Some(DefName(s.name.value, DefTag.Struct))
       case e: Enum =>
         e.name.map(enumName => DefName(enumName.value, DefTag.Enum))
 end Def
