@@ -242,7 +242,7 @@ def addBuiltInAliases(binding: BindingBuilder)(using
                 CType.Reference(
                   Name.Model(ref)
                 ),
-                None
+                _
               ),
               _
             ) if annoyingBastards(ref) =>
