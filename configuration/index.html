@@ -7,10 +7,10 @@ By default it's resolved from Sonatype for your particular platform.</p>
 <pre><code class="language-scala">bindgenBinary := baseDirectory.value / &quot;my-custom-binary&quot;
 </code></pre>
 <h2><a href="#cli" id="cli">CLI</a></h2>
-<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--out &lt;string&gt;] [--multi-file]
+<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--out &lt;string&gt;] [--multi-file]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.0.15+6-4017e8b3-SNAPSHOT
+Version: 0.0.15+7-31e798b7-SNAPSHOT
 Built using Scala 3.2.2 and Scala Native 0.4.10
 
 Options and flags:
@@ -73,6 +73,10 @@ Options and flags:
         examples: 
                     --render.opaque-struct_GFileOutputStreamClass,_GFileIface
                     --render.opaque-struct 'nk_context,nk_style*'
+    --render.no-comments
+        Don't render the comment strings from the source
+    --render.no-location
+        Don't render the header location for each symbol
     --out &lt;string&gt;
         Path to file where code will be generated. If not provided, result is sent to STDOUT
     --multi-file
