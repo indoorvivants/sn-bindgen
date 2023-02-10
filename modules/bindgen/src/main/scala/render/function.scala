@@ -21,6 +21,7 @@ def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
   val access =
     if f.public then "" else s"private[${summon[Config].packageName.value}] "
 
+  if f.public then f.meta.foreach(renderComment(line, _))
   f.body match
     case ScalaFunctionBody.Extern =>
       line(

@@ -31,37 +31,49 @@ object EnumName extends OpaqueString[EnumName]
 opaque type StructName = String
 object StructName extends OpaqueString[StructName]
 
+opaque type CommentText = String
+object CommentText extends OpaqueString[CommentText]
+
+opaque type DefinitionFile = String
+object DefinitionFile extends OpaqueString[DefinitionFile]
+
+case class Meta(comment: Option[CommentText], file: Option[DefinitionFile])
+
 enum Def:
   case Enum(
       values: List[(String, Long)],
       name: Option[EnumName],
-      intType: Option[CType.NumericIntegral]
+      intType: Option[CType.NumericIntegral],
+      meta: Meta
   )
   case Struct(
       fields: List[(StructParameterName, CType)],
       name: StructName,
-      anonymous: List[Def.Union | Def.Struct]
+      anonymous: List[Def.Union | Def.Struct],
+      meta: Meta
   )
   case Union(
       fields: List[(UnionParameterName, CType)],
       name: UnionName,
-      anonymous: List[Def.Union | Def.Struct]
+      anonymous: List[Def.Union | Def.Struct],
+      meta: Meta
   )
   case Function(
       name: FunctionName,
       returnType: CType,
       parameters: List[FunctionParameter],
       originalCType: OriginalCType,
-      numArguments: Int
+      numArguments: Int,
+      meta: Meta
   )
-  case Alias(name: String, underlying: CType)
+  case Alias(name: String, underlying: CType, meta: Option[Meta])
 
   def defName: Option[DefName] =
     this match
-      case Alias(name, _) => Some(DefName(name, DefTag.Alias))
-      case u: Union       => Some(DefName(u.name.value, DefTag.Union))
-      case f: Function    => Some(DefName(f.name.value, DefTag.Function))
-      case s: Struct      => Some(DefName(s.name.value, DefTag.Struct))
+      case Alias(name, _, _) => Some(DefName(name, DefTag.Alias))
+      case u: Union          => Some(DefName(u.name.value, DefTag.Union))
+      case f: Function       => Some(DefName(f.name.value, DefTag.Function))
+      case s: Struct         => Some(DefName(s.name.value, DefTag.Struct))
       case e: Enum =>
         e.name.map(enumName => DefName(enumName.value, DefTag.Enum))
 end Def

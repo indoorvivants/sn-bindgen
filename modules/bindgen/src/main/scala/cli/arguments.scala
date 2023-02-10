@@ -214,9 +214,27 @@ object CLI:
       .map(_.split(",").toSet.map(RenderingConfig.NameFilter(_)))
       .withDefault(Set.empty)
 
-    (noConstructor, opaqueStruct).mapN { case (nc, os) =>
-      RenderingConfig(noConstructor = nc, opaqueStruct = os)
-    }
+    val comments = Opts
+      .flag(
+        "render.no-comments",
+        help = "Don't render the comment strings from the source"
+      )
+      .orFalse
+      .map(!_)
+      .map(RenderComments(_))
+
+    val location = Opts
+      .flag(
+        "render.no-location",
+        help = "Don't render the header location for each symbol"
+      )
+      .orFalse
+      .map(!_)
+      .map(RenderLocation(_))
+
+    (noConstructor, opaqueStruct, comments, location).mapN(
+      RenderingConfig.apply
+    )
   end renderingConfig
 
   val outputMode: Opts[OutputMode] =

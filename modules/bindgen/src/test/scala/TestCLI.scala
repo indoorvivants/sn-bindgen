@@ -37,6 +37,34 @@ class TestCLI:
     )
   end `test_render.no-constructor`
 
+  @Test def `test_render.no-comments`() =
+    import RenderingConfig.*
+    assertEquals(
+      false,
+      parseExtra(
+        "--render.no-comments"
+      ).rendering.comments.value
+    )
+    assertEquals(
+      true,
+      parseExtra().rendering.comments.value
+    )
+  end `test_render.no-comments`
+
+  @Test def `test_render.no-location`() =
+    import RenderingConfig.*
+    assertEquals(
+      false,
+      parseExtra(
+        "--render.no-location"
+      ).rendering.location.value
+    )
+    assertEquals(
+      true,
+      parseExtra().rendering.location.value
+    )
+  end `test_render.no-location`
+
   @Test def `test_render.opaque-structs`() =
     import RenderingConfig.*
     assertEquals(

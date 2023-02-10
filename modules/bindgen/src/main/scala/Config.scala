@@ -36,6 +36,12 @@ enum SystemPathDetection:
 opaque type PrintFiles = Boolean
 object PrintFiles extends YesNo[PrintFiles]
 
+opaque type RenderComments = Boolean
+object RenderComments extends YesNo[RenderComments]
+
+opaque type RenderLocation = Boolean
+object RenderLocation extends YesNo[RenderLocation]
+
 opaque type Quiet = Boolean
 object Quiet extends YesNo[Quiet]
 

@@ -83,6 +83,8 @@ def struct(model: Def.Struct, line: Appender)(using
         .map(_._2)
         .map(p => p.name.value -> p.newRawType)
     )
+
+  renderComment(line, model.meta)
   line(s"opaque type $structName = ${scalaType(finalStructType)}")
   line(s"object ${sanitiseBeforeColon(structName.value)}:")
   nest {

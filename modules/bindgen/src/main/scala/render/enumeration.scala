@@ -10,6 +10,8 @@ def enumeration(model: Def.Enum, line: Appender)(using
   val numericType = model.intType.getOrElse(CType.Int)
   val enumSuffix = if numericType.sign == SignType.Unsigned then "U" else ""
   val underlyingTypeRender = scalaType(numericType)
+
+  renderComment(line, model.meta)
   line(s"opaque type $opaqueType = $underlyingTypeRender")
   line(s"object $opaqueType extends CEnum$enumSuffix[$opaqueType]:")
 
@@ -21,10 +23,10 @@ def enumeration(model: Def.Enum, line: Appender)(using
       )
     else
       val extension = numericType.base match
-        case IntegralBase.Int   => "Int"
-        case IntegralBase.Long  => "Long"
-        case IntegralBase.Short => "Short"
-        case IntegralBase.Char  => "Byte"
+        case IntegralBase.Int                          => "Int"
+        case IntegralBase.Long | IntegralBase.LongLong => "Long"
+        case IntegralBase.Short                        => "Short"
+        case IntegralBase.Char                         => "Byte"
       line(
         s"inline def define(inline a: Long): $opaqueType = a.toU$extension"
       )

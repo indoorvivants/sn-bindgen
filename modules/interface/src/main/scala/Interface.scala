@@ -77,7 +77,9 @@ case class Binding private (
     systemIncludes: Includes,
     noConstructor: Set[String],
     opaqueStructs: Set[String],
-    multiFile: Boolean
+    multiFile: Boolean,
+    noComments: Boolean,
+    noLocation: Boolean
 ) {
   def toCommand(lang: BindingLang): List[String] = {
     val sb = List.newBuilder[String]
@@ -119,6 +121,8 @@ case class Binding private (
       flag("c")
 
     if (multiFile && lang == BindingLang.Scala) flag("multi-file")
+    if (noComments && lang == BindingLang.Scala) flag("render.no-comments")
+    if (noLocation && lang == BindingLang.Scala) flag("render.no-location")
 
     sb.result()
   }
@@ -137,7 +141,9 @@ object Binding {
       systemIncludes: Includes = Includes.ClangSearchPath,
       noConstructor: Set[String] = Set.empty,
       opaqueStructs: Set[String] = Set.empty,
-      multiFile: Boolean = false
+      multiFile: Boolean = false,
+      noComments: Boolean = false,
+      noLocation: Boolean = false
   ) = {
     new Binding(
       headerFile = headerFile,
@@ -152,7 +158,9 @@ object Binding {
       systemIncludes = systemIncludes,
       noConstructor = noConstructor,
       opaqueStructs = opaqueStructs,
-      multiFile = multiFile
+      multiFile = multiFile,
+      noComments = noComments,
+      noLocation = noLocation
     )
   }
 }
