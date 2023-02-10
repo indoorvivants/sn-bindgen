@@ -13,10 +13,11 @@ sealed trait DefBuilder[Builds]:
   import DefBuilder.*
   def build: Builds =
     this match
-      case e: Enum => Def.Enum(e.values.result(), e.name, e.intType)
+      case e: Enum => Def.Enum(e.values.result(), e.name, e.intType, e.meta)
       case e: Struct =>
-        Def.Struct(e.fields.result(), e.name, e.anonymous.result())
-      case e: Union => Def.Union(e.fields.result, e.name, e.anonymous.result())
+        Def.Struct(e.fields.result(), e.name, e.anonymous.result(), e.meta)
+      case e: Union =>
+        Def.Union(e.fields.result, e.name, e.anonymous.result(), e.meta)
       case e: Function =>
         import e.*
         Def.Function(
@@ -24,7 +25,8 @@ sealed trait DefBuilder[Builds]:
           returnType,
           parameters.result(),
           originalCType,
-          numArguments
+          numArguments,
+          meta
         )
 end DefBuilder
 
@@ -32,19 +34,22 @@ object DefBuilder:
   case class Enum(
       var values: ListBuffer[(String, Long)],
       var name: Option[EnumName],
-      var intType: Option[CType.NumericIntegral]
+      var intType: Option[CType.NumericIntegral],
+      var meta: Meta
   ) extends DefBuilder[Def.Enum]
 
   case class Struct(
       var fields: ListBuffer[(StructParameterName, CType)],
       var name: StructName,
-      var anonymous: ListBuffer[Def.Union | Def.Struct]
+      var anonymous: ListBuffer[Def.Union | Def.Struct],
+      var meta: Meta
   ) extends DefBuilder[Def.Struct]
 
   case class Union(
       var fields: ListBuffer[(UnionParameterName, CType)],
       var name: UnionName,
-      var anonymous: ListBuffer[Def.Union | Def.Struct]
+      var anonymous: ListBuffer[Def.Union | Def.Struct],
+      var meta: Meta
   ) extends DefBuilder[Def.Union]
 
   case class Function(
@@ -52,7 +57,8 @@ object DefBuilder:
       var returnType: CType,
       var parameters: ListBuffer[FunctionParameter],
       val originalCType: OriginalCType,
-      var numArguments: Int
+      var numArguments: Int,
+      var meta: Meta
   ) extends DefBuilder[Def.Function]
 
   case class Alias(name: String, underlying: CType)

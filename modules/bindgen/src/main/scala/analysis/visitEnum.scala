@@ -26,7 +26,8 @@ def visitEnum(rootCursor: CXCursor, isTypeDef: Boolean)(using
     DefBuilder.Enum(
       mutable.ListBuffer.empty,
       name = None,
-      intType = intType
+      intType = intType,
+      meta = extractMetadata(rootCursor)
     )
   )
   val typ = clang_getCursorType(rootCursor)

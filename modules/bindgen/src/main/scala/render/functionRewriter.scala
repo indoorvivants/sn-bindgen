@@ -38,7 +38,8 @@ enum GeneratedFunction:
       returnType: CType,
       arguments: List[List[FunctionParameter]],
       body: ScalaFunctionBody,
-      public: Boolean
+      public: Boolean,
+      meta: Option[Meta]
   )
 
   case CFunction(
@@ -84,7 +85,8 @@ private def scalaForwarderFunction(
     returnType,
     List(parameters.result),
     ScalaFunctionBody.Extern,
-    public = false
+    public = false,
+    meta = None
   )
 end scalaForwarderFunction
 
@@ -108,7 +110,8 @@ private def scalaAllocatingFunction(bad: Def.Function)(using
         returnValue = isDirectStructAccess(bad.returnType)
       )
     ),
-    public = true
+    public = true,
+    meta = Some(bad.meta)
   )
 end scalaAllocatingFunction
 
@@ -136,7 +139,8 @@ private def scalaPtrFunctions(bad: Def.Function)(using
           returnValue = returnAsWell
         )
       ),
-      public = true
+      public = true,
+      meta = Some(bad.meta)
     )
   }
 
@@ -164,7 +168,8 @@ private def scalaPtrFunctions(bad: Def.Function)(using
             returnValue = false
           )
         ),
-        public = true
+        public = true,
+        meta = Some(bad.meta)
       )
 
     }
@@ -219,7 +224,8 @@ def functionRewriter(badFunction: Def.Function)(using
         badFunction.returnType,
         List(badFunction.parameters.toList),
         ScalaFunctionBody.Extern,
-        public = true
+        public = true,
+        meta = Some(badFunction.meta)
       )
     )
   end if

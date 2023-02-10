@@ -15,12 +15,18 @@ import scalanative.libc.*
 class StructCollector(val struct: DefBuilder.Struct, var numAnonymous: Int)
 
 def visitStruct(cursor: CXCursor, name: String)(using
-    Config
+    Config,
+    Zone
 ): Def.Struct =
   val (ptr, memory) = Captured.unsafe[StructCollector](
     StructCollector(
-      DefBuilder.Struct(ListBuffer.empty, StructName(name), ListBuffer.empty),
-      0
+      struct = DefBuilder.Struct(
+        fields = ListBuffer.empty,
+        name = StructName(name),
+        anonymous = ListBuffer.empty,
+        meta = extractMetadata(cursor)
+      ),
+      numAnonymous = 0
     )
   )
 
@@ -85,11 +91,12 @@ def visitStruct(cursor: CXCursor, name: String)(using
           val str = visitStruct(cursor, builder.name.value + "." + nestedName)
           builder.anonymous.addOne(
             Def.Union(
-              str.fields.map { case (n, field) =>
+              fields = str.fields.map { case (n, field) =>
                 n.into(UnionParameterName) -> field
               },
-              UnionName(nestedName),
-              str.anonymous
+              name = UnionName(nestedName),
+              anonymous = str.anonymous,
+              meta = extractMetadata(cursor)
             )
           )
           CXChildVisitResult.CXChildVisit_Continue
@@ -98,9 +105,10 @@ def visitStruct(cursor: CXCursor, name: String)(using
           val str = visitStruct(cursor, builder.name.value + "." + nestedName)
           builder.anonymous.addOne(
             Def.Struct(
-              str.fields,
-              StructName(nestedName),
-              str.anonymous
+              fields = str.fields,
+              name = StructName(nestedName),
+              anonymous = str.anonymous,
+              meta = extractMetadata(cursor)
             )
           )
           CXChildVisitResult.CXChildVisit_Continue

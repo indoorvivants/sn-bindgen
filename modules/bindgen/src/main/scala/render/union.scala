@@ -23,6 +23,7 @@ def union(model: Def.Union, line: Appender)(using Config)(using
       case Renamed(value) => value
       case Escaped        => s"`$name`"
 
+  renderComment(line, model.meta)
   line(s"opaque type $unionName = $tpe")
   line(s"object ${sanitiseBeforeColon(unionName.value)}:")
   nest {

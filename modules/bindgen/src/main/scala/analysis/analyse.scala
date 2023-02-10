@@ -14,6 +14,7 @@ import scala.scalanative.unsigned.*
 
 import scalanative.libc.*
 import scala.scalanative.runtime.libc
+import libclang.fluent.string
 
 def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
   import CXDiagnosticSeverity as sev
@@ -63,6 +64,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
           if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
             val function = visitFunction(cursor)
+
             binding.add(function, location)
           end if
 
@@ -94,11 +96,12 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
               val item =
                 if typ.spelling.startsWith("union ") then
                   Def.Union(
-                    struct.fields.map { case (n, f) =>
+                    fields = struct.fields.map { case (n, f) =>
                       n.into(UnionParameterName) -> f
                     },
-                    struct.name.into(UnionName),
-                    struct.anonymous
+                    name = struct.name.into(UnionName),
+                    anonymous = struct.anonymous,
+                    meta = extractMetadata(typeDecl)
                   )
                 else struct
 
@@ -121,11 +124,12 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
             if name != "" then
               val en = visitStruct(cursor, name)
               val union = Def.Union(
-                en.fields.map { case (n, f) =>
+                fields = en.fields.map { case (n, f) =>
                   n.into(UnionParameterName) -> f
                 },
-                en.name.into(UnionName),
-                en.anonymous
+                name = en.name.into(UnionName),
+                anonymous = en.anonymous,
+                meta = extractMetadata(cursor)
               )
               binding.add(union, location)
             end if

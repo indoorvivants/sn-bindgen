@@ -97,17 +97,17 @@ object AliasResolver:
     val mapping = Map.newBuilder[String, CType]
     def go(definitions: Seq[Def]): Unit =
       definitions.foreach {
-        case st @ Def.Struct(fields, name, _) =>
+        case st @ Def.Struct(fields, name, _, _) =>
           val typ = CType.Struct(fields.map(_._2).toList)
           mapping += name.value -> typ
           mapping ++= traverse(st)
-        case u @ Def.Union(fields, name, _) =>
+        case u @ Def.Union(fields, name, _, _) =>
           val typ = CType.Struct(fields.map(_._2).toList)
           mapping += name.value -> typ
           mapping ++= traverse(u)
         case Def.Alias(name, underlying) =>
           mapping += name -> underlying
-        case Def.Enum(_, Some(name), Some(tp)) =>
+        case Def.Enum(_, Some(name), Some(tp), _) =>
           mapping += name.value -> tp
         case _ =>
       }

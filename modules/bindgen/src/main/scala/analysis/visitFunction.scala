@@ -26,7 +26,8 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
         constructType(returnType),
         clang_getTypeSpelling(returnType).string
       ),
-      numArguments = clang_getNumArgTypes(typ)
+      numArguments = clang_getNumArgTypes(typ),
+      meta = extractMetadata(functionCursor)
     )
   )
 

@@ -30,9 +30,12 @@ import RenderingConfig.NameFilter
 
 case class RenderingConfig(
     noConstructor: Set[NameFilter],
-    opaqueStruct: Set[NameFilter]
+    opaqueStruct: Set[NameFilter],
+    comments: RenderComments,
+    location: RenderLocation
 ):
   def matches(f: this.type => Set[NameFilter])(name: String) = f(this).iterator
     .map(_.matches(name))
     .collectFirst { case a if a.isDefined => a }
     .flatten
+end RenderingConfig

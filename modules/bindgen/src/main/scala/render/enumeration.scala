@@ -10,6 +10,8 @@ def enumeration(model: Def.Enum, line: Appender)(using
   val numericType = model.intType.getOrElse(CType.Int)
   val enumSuffix = if numericType.sign == SignType.Unsigned then "U" else ""
   val underlyingTypeRender = scalaType(numericType)
+
+  renderComment(line, model.meta)
   line(s"opaque type $opaqueType = $underlyingTypeRender")
   line(s"object $opaqueType extends CEnum$enumSuffix[$opaqueType]:")
 
