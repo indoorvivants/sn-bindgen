@@ -2590,6 +2590,7 @@ def clang_Cursor_getObjCDeclQualifiers(C: CXCursor)(using Zone): CUnsignedInt =
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_Cursor_getObjCDeclQualifiers((__ptr_0 + 0))
+end clang_Cursor_getObjCDeclQualifiers
 
 /** Retrieve the CXStrings representing the mangled symbols of the ObjC class
   * interface or implementation at the cursor.
@@ -3338,6 +3339,7 @@ def clang_Cursor_isObjCOptional(C: CXCursor)(using Zone): CUnsignedInt =
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_Cursor_isObjCOptional((__ptr_0 + 0))
+end clang_Cursor_isObjCOptional
 
 /** Returns non-zero if the given cursor is a variadic function or method.
   *
