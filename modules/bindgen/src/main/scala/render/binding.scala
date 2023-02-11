@@ -185,7 +185,14 @@ def binding(
     }
   end if
 
-  renderExports(stream("all"), exports.result(), renderMode)
+  if multiFileMode then
+    val byType: Map[String, List[(String, String)]] =
+      exports.result().groupBy(_._1)
+
+    byType.toList.sortBy(_._1).foreach { (exportType, results) =>
+      renderExports(stream(s"all.$exportType"), results, renderMode)
+    }
+  else renderExports(stream(s"all"), exports.result(), renderMode)
 
   if multiFileMode then RenderedOutput.Multi(multi.toMap)
   else if lang == Lang.C then RenderedOutput.Single(cOutput)
