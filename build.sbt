@@ -92,7 +92,8 @@ lazy val iface = projectMatrix
   )
   .settings(
     moduleName := "bindgen-interface",
-    libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective
+    libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
+    scalacOptions += "-deprecation"
   )
   .enablePlugins(BuildInfoPlugin)
   .settings(

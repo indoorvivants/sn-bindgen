@@ -80,7 +80,10 @@ class TestInterface {
 
   @Test def adds_c_imports(): Unit = isolate { probe =>
     val bind =
-      Binding(headerFile, "lib_check", cImports = List("my_cool_library.h"))
+      Binding
+        .builder(headerFile, "lib_check")
+        .withCImports(List("my_cool_library.h"))
+        .build
 
     probe.builder
       .generate(Seq(bind), probe.cFiles, BindingLang.C, plat)
@@ -98,7 +101,10 @@ class TestInterface {
 
   @Test def adds_link_name(): Unit = isolate { probe =>
     val bind =
-      Binding(headerFile, "lib_check", linkName = Some("my-awesome-library"))
+      Binding
+        .builder(headerFile, "lib_check")
+        .withLinkName("my-awesome-library")
+        .build
 
     probe.builder
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
@@ -113,12 +119,11 @@ class TestInterface {
 
   @Test def multi_file(): Unit = isolate { probe =>
     val bind =
-      Binding(
-        headerFile,
-        "lib_check",
-        linkName = Some("my-awesome-library"),
-        multiFile = true
-      )
+      Binding
+        .builder(headerFile, "lib_check")
+        .withLinkName("my-awesome-library")
+        .withMultiFile(true)
+        .build
 
     val allFiles = probe.builder
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
@@ -133,12 +138,11 @@ class TestInterface {
 
   @Test def print_file(): Unit = isolate { probe =>
     def bind(multi: Boolean) =
-      Binding(
-        headerFile,
-        "lib_check",
-        linkName = Some("my-awesome-library"),
-        multiFile = multi
-      )
+      Binding
+        .builder(headerFile, "lib_check")
+        .withLinkName("my-awesome-library")
+        .withMultiFile(multi)
+        .build
 
     val allFilesScala = probe.builder
       .generate(Seq(bind(false)), probe.scalaFiles, BindingLang.Scala, plat)
@@ -160,7 +164,11 @@ class TestInterface {
         probe.scalaFiles / "lib_check" / "aliases.scala",
         probe.scalaFiles / "lib_check" / "structs.scala",
         probe.scalaFiles / "lib_check" / "functions.scala",
-        probe.scalaFiles / "lib_check" / "all.scala",
+        probe.scalaFiles / "lib_check" / "all.unions.scala",
+        probe.scalaFiles / "lib_check" / "all.structs.scala",
+        probe.scalaFiles / "lib_check" / "all.functions.scala",
+        probe.scalaFiles / "lib_check" / "all.aliases.scala",
+        probe.scalaFiles / "lib_check" / "all.enumerations.scala",
         probe.scalaFiles / "lib_check" / "unions.scala"
       ),
       allFilesMultiScala.toSet
@@ -170,12 +178,13 @@ class TestInterface {
   @Test def adds_package_name(): Unit = isolate { probe =>
     val bind =
       Binding(headerFile, "lib_my_awesome_library")
+
     probe.builder
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
     assertEquals(
-      lines(probe.scalaFiles / "lib_my_awesome_library.scala").head,
-      "package lib_my_awesome_library"
+      "package lib_my_awesome_library",
+      lines(probe.scalaFiles / "lib_my_awesome_library.scala").head
     )
   }
 
@@ -193,11 +202,10 @@ class TestInterface {
     }
 
     val binding =
-      Binding(
-        customCFile,
-        "lib_my_awesome_library",
-        opaqueStructs = Set("StructA", "StructB")
-      )
+      Binding
+        .builder(customCFile, "lib_my_awesome_library")
+        .withOpaqueStructs(Set("StructA", "StructB"))
+        .build
 
     probe.builder
       .generate(Seq(binding), probe.scalaFiles, BindingLang.Scala, plat)
@@ -239,11 +247,12 @@ class TestInterface {
     }
 
     val binding =
-      Binding(
-        customCFile,
-        "lib_my_awesome_library",
-        noConstructor = Set("StructA", "StructB")
-      )
+      Binding
+        .builder(customCFile, "lib_my_awesome_library")
+        .withNoConstructor(
+          Set("StructA", "StructB")
+        )
+        .build
 
     probe.builder
       .generate(Seq(binding), probe.scalaFiles, BindingLang.Scala, plat)
@@ -290,11 +299,11 @@ class TestInterface {
     assertTrue(opt.isFailure)
 
     val withFlags =
-      Binding(
-        customCFile,
-        "lib_check",
-        clangFlags = List(s"-I${headerFile.getParentFile()}")
-      )
+      Binding
+        .builder(customCFile, "lib_check")
+        .withClangFlags(List(s"-I${headerFile.getParentFile()}"))
+        .build
+
     // if we add additional `-I` flag with correct location, it should succeed
     val optFixed = Try(
       probe.builder
