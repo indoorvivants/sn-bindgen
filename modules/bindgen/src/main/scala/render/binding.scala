@@ -50,10 +50,10 @@ def binding(
   val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
     deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))
 
-  def create(name: String) =
+  def create(name: String)(subPackage: String = name) =
     val lb = LineBuilder()
     lb.appendLine(s"package $packageName")
-    if multiFileMode then lb.appendLine(s"package $name")
+    if multiFileMode then lb.appendLine(s"package $subPackage")
     lb.emptyLine
     lb.append("""
       |import _root_.scala.scalanative.unsafe.*
@@ -66,7 +66,7 @@ def binding(
     lb
   end create
 
-  val scalaOutput = create("")
+  val scalaOutput = create("")()
   val cOutput = LineBuilder()
 
   val exports = List.newBuilder[(String, String)]
@@ -74,13 +74,16 @@ def binding(
   val multi =
     collection.mutable.Map.empty[StreamName, LineBuilder]
 
-  val (stream, renderMode): (String => LineBuilder, RenderMode) =
+  val (stream, renderMode): ((String, String) => LineBuilder, RenderMode) =
     if multiFileMode then
       (
-        (str: String) => multi.getOrElseUpdate(StreamName(str), create(str)),
+        (str: String, packageName: String) =>
+          multi.getOrElseUpdate(StreamName(str), create(str)(packageName)),
         RenderMode.Files
       )
-    else ((_: String) => scalaOutput, RenderMode.Objects)
+    else ((_: String, _: String) => scalaOutput, RenderMode.Objects)
+
+  val simpleStream = (name: String) => stream(name, name)
 
   def updateExports(location: String, names: Seq[Exported]) =
     exports ++= names.collect { case Exported.Yes(v) => v }.map(location -> _)
@@ -91,7 +94,7 @@ def binding(
       updateExports(
         "enumerations",
         renderEnumerations(
-          stream("enumerations"),
+          simpleStream("enumerations"),
           binding.enums.toList
             .sortBy(_.name)
             .filter(_.name.isDefined),
@@ -105,7 +108,7 @@ def binding(
         "aliases",
         renderAliases(
           binding.aliases.toList.sortBy(_.name),
-          stream("aliases"),
+          simpleStream("aliases"),
           mode = renderMode,
           typeImports
         )
@@ -117,7 +120,7 @@ def binding(
         "structs",
         renderStructs(
           binding.structs.toList.sortBy(_.name),
-          stream("structs"),
+          simpleStream("structs"),
           mode = renderMode,
           typeImports
         )
@@ -129,7 +132,7 @@ def binding(
         "unions",
         renderUnions(
           binding.unions.toList.sortBy(_.name),
-          stream("unions"),
+          simpleStream("unions"),
           mode = renderMode,
           typeImports
         )
@@ -141,7 +144,7 @@ def binding(
       updateExports(
         "functions",
         renderScalaFunctions(
-          stream("functions"),
+          simpleStream("functions"),
           resolvedFunctions.toSet,
           mode = renderMode,
           hasAnyTypes = hasAnyTypes,
@@ -168,16 +171,16 @@ def binding(
 
   if hasConstants then
     renderConstants(
-      stream("constants"),
+      simpleStream("constants"),
       binding.unnamedEnums.toList,
       mode = renderMode
     )
 
   if !multiFileMode && hasAnyTypes then
-    val l = to(stream("types"))
+    val l = to(simpleStream("types"))
     l("object types:")
     nest {
-      val l = to(stream("types"))
+      val l = to(simpleStream("types"))
       if hasStructs then l(s"export _root_.${packageName}.structs.*")
       if hasAliases then l(s"export _root_.${packageName}.aliases.*")
       if hasUnions then l(s"export _root_.${packageName}.unions.*")
@@ -190,9 +193,9 @@ def binding(
       exports.result().groupBy(_._1)
 
     byType.toList.sortBy(_._1).foreach { (exportType, results) =>
-      renderExports(stream(s"all.$exportType"), results, renderMode)
+      renderExports(stream(s"all.$exportType", "all"), results, renderMode)
     }
-  else renderExports(stream(s"all"), exports.result(), renderMode)
+  else renderExports(simpleStream(s"all"), exports.result(), renderMode)
 
   if multiFileMode then RenderedOutput.Multi(multi.toMap)
   else if lang == Lang.C then RenderedOutput.Single(cOutput)

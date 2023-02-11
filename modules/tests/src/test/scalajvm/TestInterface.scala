@@ -174,12 +174,13 @@ class TestInterface {
   @Test def adds_package_name(): Unit = isolate { probe =>
     val bind =
       Binding(headerFile, "lib_my_awesome_library")
+
     probe.builder
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
     assertEquals(
-      lines(probe.scalaFiles / "lib_my_awesome_library.scala").head,
-      "package lib_my_awesome_library"
+      "package lib_my_awesome_library",
+      lines(probe.scalaFiles / "lib_my_awesome_library.scala").head
     )
   }
 
