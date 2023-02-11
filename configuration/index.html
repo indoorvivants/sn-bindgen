@@ -1,4 +1,21 @@
 <html><head><title>SN bindgen: Configuration </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/androidstudio.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn" href="/index.html">Home</a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn nav-selected" href="/configuration/index.html">Configuration </a><a class="nav-btn" href="/cookbook/index.html">Cookbook</a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><h1><a href="#sbt-plugin" id="sbt-plugin">SBT plugin</a></h1>
+<!--toc:start-->
+<ul>
+<li><a href="#sbt-plugin">SBT plugin</a>
+<ul>
+<li><a href="#bindgenversion-string"><code>bindgenVersion</code>: <em>String</em></a></li>
+<li><a href="#bindgenbinary-javaiofile"><code>bindgenBinary</code>: <em>java.io.File</em></a></li>
+<li><a href="#bindgenmode-bindgeninterfacebindgenmode"><code>bindgenMode</code>: <code>bindgen.interface.BindgenMode</code></a>
+<ul>
+<li><a href="#sourceresource-generator-mode">Source/resource generator mode</a></li>
+<li><a href="#manual-mode">Manual mode</a></li>
+</ul>
+</li>
+<li><a href="#cli">CLI</a></li>
+</ul>
+</li>
+</ul>
+<!--toc:end-->
 <h2><a href="#bindgenversion-string" id="bindgenversion-string"><code>bindgenVersion</code>: <em>String</em></a></h2>
 <p>Use this to choose another version of bindgen (by default it matches the plugin version)</p>
 <h2><a href="#bindgenbinary-javaiofile" id="bindgenbinary-javaiofile"><code>bindgenBinary</code>: <em>java.io.File</em></a></h2>
@@ -6,11 +23,24 @@
 By default it's resolved from Sonatype for your particular platform.</p>
 <pre><code class="language-scala">bindgenBinary := baseDirectory.value / &quot;my-custom-binary&quot;
 </code></pre>
+<h2><a href="#bindgenmode-bindgeninterfacebindgenmode" id="bindgenmode-bindgeninterfacebindgenmode"><code>bindgenMode</code>: <code>bindgen.interface.BindgenMode</code></a></h2>
+<p>This parameter controls the way the bindgen is invoked and the location where the generated files will be placed</p>
+<h3><a href="#sourceresource-generator-mode" id="sourceresource-generator-mode">Source/resource generator mode</a></h3>
+<p>Value <code>ResourceGenerator</code>, the <strong>default</strong>.</p>
+<p>In this mode the bindings will be regenerated automatically when the project is compiled or run.</p>
+<p>The generated files are put in locations that are usually ignored by VCS (under <code>target</code>).</p>
+<h3><a href="#manual-mode" id="manual-mode">Manual mode</a></h3>
+<p>Value <code>Manual(scalaDir: File, cDir: File)</code>.</p>
+<p>In this mode you control the location of generated Scala/C files, and you need to manually invoke the generator
+by calling <code>bindgenGenerateScalaSources</code> and <code>bindgenGenerateCSources</code>.</p>
+<p>This mode is useful for bindings you don't intend to modify often, and want to the sources available in checked in
+code.</p>
+<p>For example, the bindings to libclang which underpin this very project are generated using this mode and checked in on Github.</p>
 <h2><a href="#cli" id="cli">CLI</a></h2>
 <pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--out &lt;string&gt;] [--multi-file]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.0.15+8-e0506710-SNAPSHOT
+Version: 0.0.15+9-5435b896-SNAPSHOT
 Built using Scala 3.2.2 and Scala Native 0.4.10
 
 Options and flags:
