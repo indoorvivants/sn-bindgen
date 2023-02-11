@@ -80,7 +80,6 @@ class Binding private (
     val multiFile: Boolean,
     val noComments: Boolean,
     val noLocation: Boolean,
-    // val renderAll: Boolean,
     val scalaFile: String,
     val cFile: String
 ) { self =>
@@ -99,7 +98,6 @@ class Binding private (
       multiFile: Boolean = self.multiFile,
       noComments: Boolean = self.noComments,
       noLocation: Boolean = self.noLocation,
-      // renderAll: Boolean = self.renderAll,
       scalaFile: String = self.scalaFile,
       cFile: String = self.cFile
   ) =
@@ -117,7 +115,6 @@ class Binding private (
       multiFile = multiFile,
       noComments = noComments,
       noLocation = noLocation,
-      // renderAll = renderAll,
       scalaFile = scalaFile,
       cFile = cFile
     )
@@ -166,7 +163,6 @@ class Binding private (
     if (multiFile && lang == BindingLang.Scala) flag("multi-file")
     if (noComments && lang == BindingLang.Scala) flag("render.no-comments")
     if (noLocation && lang == BindingLang.Scala) flag("render.no-location")
-    // if (!renderAll && lang == BindingLang.Scala) flag("render.no-all")
 
     sb.result()
   }
@@ -190,7 +186,6 @@ object Binding {
         multiFile = Defaults.multiFile,
         noComments = Defaults.noComments,
         noLocation = Defaults.noLocation,
-        // renderAll = Defaults.renderAll,
         cFile = s"$packageName.c",
         scalaFile = s"$packageName.scala"
       )
@@ -233,8 +228,6 @@ object Binding {
     def withOpaqueStructs(structs: Set[String]) = copy(
       _.copy(opaqueStructs = structs)
     )
-
-    // def withRenderAll(b: Boolean) = copy(_.copy(renderAll = b))
 
     def build: Binding = binding
   }
