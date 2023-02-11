@@ -64,23 +64,64 @@ object Utils {
 
 import Utils.*
 
-case class Binding private (
-    headerFile: File,
-    packageName: String,
-    scalaFile: String,
-    cFile: String,
-    linkName: Option[String],
-    cImports: List[String],
-    clangFlags: List[String],
-    exclusivePrefixes: List[String],
-    logLevel: LogLevel,
-    systemIncludes: Includes,
-    noConstructor: Set[String],
-    opaqueStructs: Set[String],
-    multiFile: Boolean,
-    noComments: Boolean,
-    noLocation: Boolean
-) {
+import Binding.Defaults
+
+class Binding private (
+    val headerFile: File,
+    val packageName: String,
+    val linkName: Option[String],
+    val cImports: List[String],
+    val clangFlags: List[String],
+    val exclusivePrefixes: List[String],
+    val logLevel: LogLevel,
+    val systemIncludes: Includes,
+    val noConstructor: Set[String],
+    val opaqueStructs: Set[String],
+    val multiFile: Boolean,
+    val noComments: Boolean,
+    val noLocation: Boolean,
+    // val renderAll: Boolean,
+    val scalaFile: String,
+    val cFile: String
+) { self =>
+
+  private def copy(
+      headerFile: File = self.headerFile,
+      packageName: String = self.packageName,
+      linkName: Option[String] = self.linkName,
+      cImports: List[String] = self.cImports,
+      clangFlags: List[String] = self.clangFlags,
+      exclusivePrefixes: List[String] = self.exclusivePrefixes,
+      logLevel: LogLevel = self.logLevel,
+      systemIncludes: Includes = self.systemIncludes,
+      noConstructor: Set[String] = self.noConstructor,
+      opaqueStructs: Set[String] = self.opaqueStructs,
+      multiFile: Boolean = self.multiFile,
+      noComments: Boolean = self.noComments,
+      noLocation: Boolean = self.noLocation,
+      // renderAll: Boolean = self.renderAll,
+      scalaFile: String = self.scalaFile,
+      cFile: String = self.cFile
+  ) =
+    new Binding(
+      headerFile = headerFile,
+      packageName = packageName,
+      linkName = linkName,
+      cImports = cImports,
+      clangFlags = clangFlags,
+      exclusivePrefixes = exclusivePrefixes,
+      logLevel = logLevel,
+      systemIncludes = systemIncludes,
+      noConstructor = noConstructor,
+      opaqueStructs = opaqueStructs,
+      multiFile = multiFile,
+      noComments = noComments,
+      noLocation = noLocation,
+      // renderAll = renderAll,
+      scalaFile = scalaFile,
+      cFile = cFile
+    )
+
   def toCommand(lang: BindingLang): List[String] = {
     val sb = List.newBuilder[String]
 
@@ -94,7 +135,9 @@ case class Binding private (
       "header",
       headerFile.toPath().toAbsolutePath().toString
     )
+
     arg("package", packageName)
+
     linkName.foreach { link =>
       arg("link-name", link)
     }
@@ -123,6 +166,7 @@ case class Binding private (
     if (multiFile && lang == BindingLang.Scala) flag("multi-file")
     if (noComments && lang == BindingLang.Scala) flag("render.no-comments")
     if (noLocation && lang == BindingLang.Scala) flag("render.no-location")
+    // if (!renderAll && lang == BindingLang.Scala) flag("render.no-all")
 
     sb.result()
   }
@@ -130,21 +174,109 @@ case class Binding private (
 }
 
 object Binding {
+  def builder(header: File, packageName: String) =
+    new Builder(
+      new Binding(
+        headerFile = header,
+        packageName = packageName,
+        linkName = Defaults.linkName,
+        cImports = Defaults.cImports,
+        clangFlags = Defaults.clangFlags,
+        exclusivePrefixes = Defaults.exclusivePrefixes,
+        logLevel = Defaults.logLevel,
+        systemIncludes = Defaults.systemIncludes,
+        noConstructor = Defaults.noConstructor,
+        opaqueStructs = Defaults.opaqueStructs,
+        multiFile = Defaults.multiFile,
+        noComments = Defaults.noComments,
+        noLocation = Defaults.noLocation,
+        // renderAll = Defaults.renderAll,
+        cFile = s"$packageName.c",
+        scalaFile = s"$packageName.scala"
+      )
+    )
+
+  class Builder private[Binding] (binding: Binding) {
+    private def copy(f: Binding => Binding): Builder =
+      new Builder(f(binding))
+
+    def withLinkName(name: String) = copy(_.copy(linkName = Some(name)))
+
+    def addCImport(header: String): Builder =
+      copy(b => b.copy(cImports = b.cImports :+ header))
+    def addCImports(headers: Seq[String]): Builder =
+      copy(b => b.copy(cImports = b.cImports ++ headers))
+    def withCImports(headers: Seq[String]): Builder =
+      copy(b => b.copy(cImports = headers.toList))
+
+    def addClangFlag(flag: String): Builder =
+      copy(b => b.copy(clangFlags = b.clangFlags :+ flag))
+    def addClangFlag(flags: Seq[String]): Builder =
+      copy(b => b.copy(clangFlags = b.clangFlags ++ flags))
+    def withClangFlags(flags: Seq[String]): Builder =
+      copy(b => b.copy(clangFlags = flags.toList))
+
+    def withLogLevel(level: LogLevel): Builder = copy(_.copy(logLevel = level))
+    def withSystemIncludes(includes: Includes): Builder = copy(
+      _.copy(systemIncludes = includes)
+    )
+    def withMultiFile(b: Boolean): Builder = copy(_.copy(multiFile = b))
+    def withNoComments(b: Boolean): Builder = copy(_.copy(noComments = b))
+    def withNoLocation(b: Boolean): Builder = copy(_.copy(noLocation = b))
+
+    def withPackageName(name: String) = copy(_.copy(packageName = name))
+    def withHeaderFile(header: File) = copy(_.copy(headerFile = header))
+
+    def withNoConstructor(structs: Set[String]) = copy(
+      _.copy(noConstructor = structs)
+    )
+    def withOpaqueStructs(structs: Set[String]) = copy(
+      _.copy(opaqueStructs = structs)
+    )
+
+    // def withRenderAll(b: Boolean) = copy(_.copy(renderAll = b))
+
+    def build: Binding = binding
+  }
+
+  object Defaults {
+    val linkName = None
+    val cImports = List.empty[String]
+    val clangFlags = List.empty[String]
+    val logLevel = LogLevel.Info
+    val systemIncludes = Includes.ClangSearchPath
+    val noConstructor = Set.empty[String]
+    val opaqueStructs = Set.empty[String]
+    val exclusivePrefixes = List.empty[String]
+    val multiFile = false
+    val noComments = false
+    val noLocation = false
+    val renderAll = true
+  }
+
+  def apply(headerFile: File, packageName: String): Binding =
+    builder(headerFile, packageName).build
+
+  @deprecated(
+    "This method will be removed, please use the builder pattern instead" +
+      " - Binding.builder(headerFile, packageName).withParam.build...",
+    "0.0.16"
+  )
   def apply(
       headerFile: File,
       packageName: String,
-      linkName: Option[String] = None,
-      cImports: List[String] = Nil,
-      clangFlags: List[String] = Nil,
+      linkName: Option[String] = Defaults.linkName,
+      cImports: List[String] = Defaults.cImports,
+      clangFlags: List[String] = Defaults.clangFlags,
       exclusivePrefixes: List[String] = Nil,
-      logLevel: LogLevel = LogLevel.Info,
-      systemIncludes: Includes = Includes.ClangSearchPath,
-      noConstructor: Set[String] = Set.empty,
-      opaqueStructs: Set[String] = Set.empty,
-      multiFile: Boolean = false,
-      noComments: Boolean = false,
-      noLocation: Boolean = false
-  ) = {
+      logLevel: LogLevel = Defaults.logLevel,
+      systemIncludes: Includes = Defaults.systemIncludes,
+      noConstructor: Set[String] = Defaults.noConstructor,
+      opaqueStructs: Set[String] = Defaults.opaqueStructs,
+      multiFile: Boolean = Defaults.multiFile,
+      noComments: Boolean = Defaults.noComments,
+      noLocation: Boolean = Defaults.noLocation
+  ): Binding = {
     new Binding(
       headerFile = headerFile,
       packageName = packageName,
@@ -161,6 +293,7 @@ object Binding {
       multiFile = multiFile,
       noComments = noComments,
       noLocation = noLocation
+      // renderAll = Defaults.renderAll
     )
   }
 }
@@ -252,7 +385,7 @@ class BindingBuilder(
 
       io.Source
         .fromInputStream(process.getErrorStream())
-        .getLines
+        .getLines()
         .foreach(errPrintln(_))
 
       io.Source
