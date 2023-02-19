@@ -90,7 +90,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                   Def.Alias(
                     name,
                     constructType(typ),
-                    Some(extractMetadata(cursor))
+                    extractMetadata(cursor)
                   ),
                   location
                 )
@@ -116,7 +116,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                 Def.Alias(
                   name,
                   constructType(typ),
-                  Some(extractMetadata(cursor))
+                  extractMetadata(cursor)
                 )
               val canonical = clang_getCanonicalType(typ)
 
@@ -228,7 +228,7 @@ def addBuiltInAliases(binding: BindingBuilder)(using
     val al = Def.Alias(
       name = tpe.short,
       underlying = CType.Reference(Name.BuiltIn(tpe)),
-      meta = None
+      meta = Meta.empty
     )
     replaceTypes.foreach { tg =>
 
@@ -240,7 +240,7 @@ def addBuiltInAliases(binding: BindingBuilder)(using
               Def.Alias(
                 "va_list",
                 CType.Reference(
-                  Name.Model(ref)
+                  Name.Model(ref, _)
                 ),
                 _
               ),

@@ -2,6 +2,7 @@ package bindgen
 
 import com.monovore.decline.Opts
 import java.io.File
+import bindgen.RenderingConfig.NameFilter
 
 object CLI:
   import com.monovore.decline.*
@@ -232,7 +233,54 @@ object CLI:
       .map(!_)
       .map(RenderLocation(_))
 
-    (noConstructor, opaqueStruct, comments, location).mapN(
+    val externalPath = Opts
+      .options[String](
+        "render.external-path",
+        help =
+          "Render all definitions from a matching path as if they were imported from some package" +
+            "\nexample: --render.external-path '*/cairo.h=libcairo'"
+      )
+      .mapValidated { results =>
+        results.traverse { spec =>
+          spec.split("=").toList match
+            case filter :: pkgName :: Nil =>
+              (NameFilter(filter) -> PackageName(pkgName)).validNel
+            case other =>
+              s"`$spec` is invalid - it must have the format `<path glob>=package.name`".invalidNel
+
+        }
+      }
+      .map(_.toList.toMap)
+      .withDefault(Map.empty)
+
+    val externalName = Opts
+      .options[String](
+        "render.external-name",
+        help =
+          "Render all definitions with matchign names as if they were imported from some package" +
+            "\nexample: --render.external-name 'cairo_*=libcairo'",
+      )
+      .mapValidated { results =>
+        results.traverse { spec =>
+          spec.split("=").toList match
+            case filter :: pkgName :: Nil =>
+              (NameFilter(filter) -> PackageName(pkgName)).validNel
+            case other =>
+              s"`$spec` is invalid - it must have the format `<name glob>=package.name`".invalidNel
+
+        }
+      }
+      .map(_.toList.toMap)
+      .withDefault(Map.empty)
+
+    (
+      noConstructor,
+      opaqueStruct,
+      comments,
+      location,
+      externalPath,
+      externalName
+    ).mapN(
       RenderingConfig.apply
     )
   end renderingConfig

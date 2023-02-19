@@ -30,15 +30,19 @@ def constructType(typ: CXType)(using
       val decl = clang_getTypeDeclaration(typ)
       val name = clang_getCursorSpelling(decl).string
 
-      CType.Reference(if name.isEmpty then Name.Unnamed else Name.Model(name))
+      CType.Reference(
+        if name.isEmpty then Name.Unnamed
+        else Name.Model(name, extractMetadata(decl))
+      )
 
     case CXType_Elaborated =>
       val name = constructType(clang_Type_getNamedType(typ))
       name
 
     case CXType_Enum =>
+      val decl = clang_getTypeDeclaration(typ)
       val enumName = clang_getCursorSpelling(
-        clang_getTypeDeclaration(typ)
+        decl
       ).string
 
       CType.Reference(Name.Model(enumName))
@@ -64,8 +68,9 @@ def constructType(typ: CXType)(using
     case CXType_Typedef =>
       val definition = clang_getTypedefName(typ)
       val str = definition.string
-      val declaration = clang_getTypeDeclaration(typ).kind
-      CType.Reference(Name.Model(str))
+      val decl = clang_getTypeDeclaration(typ)
+
+      CType.Reference(Name.Model(str, extractMetadata(decl)))
 
     case CXType_ConstantArray =>
       val elementType = clang_getArrayElementType(typ)

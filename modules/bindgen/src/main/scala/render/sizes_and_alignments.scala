@@ -42,10 +42,10 @@ def alignment(typ: CType)(using AliasResolver): CSize =
     case _: Function               => 8.toULong
     case Struct(fields) =>
       fields.map(alignment).maxOption.getOrElse(1.toULong)
-    case Bool                          => 1.toULong
-    case Reference(Name.Model(name))   => alignment(aliasResolver(name))
-    case Reference(Name.BuiltIn(name)) => name.alignment
-    case IncompleteArray(_)            => 1.toULong
+    case Bool                           => 1.toULong
+    case Reference(Name.Model(name, _)) => alignment(aliasResolver(name))
+    case Reference(Name.BuiltIn(name))  => name.alignment
+    case IncompleteArray(_)             => 1.toULong
     case Union(fields) =>
       1.toULong // TODO: are unions aligned at all?
   end match
@@ -81,9 +81,9 @@ def staticSize(typ: CType)(using AliasResolver): CSize =
     case Union(fields) =>
       // TODO: are unions aligned on any boundary?
       fields.map(staticSize).maxOption.getOrElse(1.toULong)
-    case Reference(Name.Model(name))   => staticSize(aliasResolver(name))
-    case Reference(Name.BuiltIn(name)) => name.size
-    case Bool                          => 1.toULong
+    case Reference(Name.Model(name, _)) => staticSize(aliasResolver(name))
+    case Reference(Name.BuiltIn(name))  => name.size
+    case Bool                           => 1.toULong
 
   end match
 end staticSize

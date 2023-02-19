@@ -2,7 +2,7 @@ package bindgen.rendering
 
 import bindgen.*
 
-def scalaTag(typ: CType)(using AliasResolver): String =
+def scalaTag(typ: CType)(using AliasResolver, Config): String =
   import CType.*
   typ match
     case model @ Struct(fields) if fields.size <= 22 =>
@@ -32,7 +32,7 @@ def scalaTag(typ: CType)(using AliasResolver): String =
         case _        => ""
 
       s"Tag.$sign$base"
-    case Reference(Name.Model(n)) => s"$n._tag"
+    case Reference(Name.Model(n, _)) => s"$n._tag"
 
     case Function(ret, params) =>
       val paramTypes =

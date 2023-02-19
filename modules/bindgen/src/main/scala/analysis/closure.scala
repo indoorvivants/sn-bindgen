@@ -12,9 +12,9 @@ def referencedNames(typ: CType): Set[String] =
       case ct :: rest =>
         val (next, names) =
           ct match
-            case Reference(Name.Model(n)) => Nil -> Set(n)
-            case Struct(fields)           => fields -> Set.empty
-            case Union(fields)            => fields -> Set.empty
+            case Reference(Name.Model(n, _)) => Nil -> Set(n)
+            case Struct(fields)              => fields -> Set.empty
+            case Union(fields)               => fields -> Set.empty
             case Function(retType, params) =>
               (retType :: params.map(_.of)) -> Set.empty
             case Arr(of, _)  => List(of) -> Set.empty

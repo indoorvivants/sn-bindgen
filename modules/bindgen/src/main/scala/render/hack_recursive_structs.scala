@@ -10,7 +10,7 @@ def isCyclical(typ: CType, structName: StructName)(using
   def go(t: CType, visited: List[String], level: Int): Option[List[String]] =
     import CType.*
     t match
-      case Reference(Name.Model(name)) =>
+      case Reference(Name.Model(name, _)) =>
         Option.when(visited.contains(name))(visited ++ List(name)) orElse
           go(
             aliasResolver(name),
@@ -124,9 +124,9 @@ def hack_recursive_structs(
             )
           )
 
-        case Reference(Name.Model(name)) =>
+        case ref @ Reference(Name.Model(name, _)) =>
           aliasResolver(name) match
-            case Pointer(_: Function) => result(Reference(Name.Model(name)))
+            case Pointer(_: Function) => result(ref)
 
             case other => None
       // throw Error(

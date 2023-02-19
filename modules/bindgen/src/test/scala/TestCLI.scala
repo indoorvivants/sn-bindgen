@@ -26,9 +26,9 @@ class TestCLI:
     import RenderingConfig.*
     assertEquals(
       Set(
-        NameFilter.Single("StructA"),
-        NameFilter.Single("StructB"),
-        NameFilter.Wildcard("nk_style*")
+        NameFilter.Single(FilterSpec("StructA")),
+        NameFilter.Single(FilterSpec("StructB")),
+        NameFilter.Wildcard(FilterSpec("nk_style*"))
       ),
       parseExtra(
         "--render.no-constructor",
@@ -69,9 +69,9 @@ class TestCLI:
     import RenderingConfig.*
     assertEquals(
       Set(
-        NameFilter.Single("StructA"),
-        NameFilter.Single("StructB"),
-        NameFilter.Wildcard("nk_style*")
+        NameFilter.Single(FilterSpec("StructA")),
+        NameFilter.Single(FilterSpec("StructB")),
+        NameFilter.Wildcard(FilterSpec("nk_style*"))
       ),
       parseExtra(
         "--render.opaque-structs",

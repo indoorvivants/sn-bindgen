@@ -80,6 +80,8 @@ class Binding private (
     val multiFile: Boolean,
     val noComments: Boolean,
     val noLocation: Boolean,
+    val externalPaths: Map[String, String],
+    val externalNames: Map[String, String],
     val scalaFile: String,
     val cFile: String
 ) { self =>
@@ -98,6 +100,8 @@ class Binding private (
       multiFile: Boolean = self.multiFile,
       noComments: Boolean = self.noComments,
       noLocation: Boolean = self.noLocation,
+      externalPaths: Map[String, String] = self.externalPaths,
+      externalNames: Map[String, String] = self.externalNames,
       scalaFile: String = self.scalaFile,
       cFile: String = self.cFile
   ) =
@@ -115,6 +119,8 @@ class Binding private (
       multiFile = multiFile,
       noComments = noComments,
       noLocation = noLocation,
+      externalPaths = externalPaths,
+      externalNames = externalNames,
       scalaFile = scalaFile,
       cFile = cFile
     )
@@ -164,6 +170,14 @@ class Binding private (
     if (noComments && lang == BindingLang.Scala) flag("render.no-comments")
     if (noLocation && lang == BindingLang.Scala) flag("render.no-location")
 
+    externalPaths.toList.sorted.map { case (filter, pkg) =>
+      arg("render.external-path", s"$filter=$pkg")
+    }
+
+    externalNames.toList.sorted.map { case (filter, pkg) =>
+      arg("render.external-name", s"$filter=$pkg")
+    }
+
     sb.result()
   }
 
@@ -186,6 +200,8 @@ object Binding {
         multiFile = Defaults.multiFile,
         noComments = Defaults.noComments,
         noLocation = Defaults.noLocation,
+        externalPaths = Defaults.externalPaths,
+        externalNames = Defaults.externalNames,
         cFile = s"$packageName.c",
         scalaFile = s"$packageName.scala"
       )
@@ -229,6 +245,24 @@ object Binding {
       _.copy(opaqueStructs = structs)
     )
 
+    def withExternalPaths(externals: Map[String, String]) = copy(
+      _.copy(externalPaths = externals)
+    )
+    def addExternalPath(fileFilter: String, packageName: String) = copy(b =>
+      b.copy(externalPaths = b.externalPaths.updated(fileFilter, packageName))
+    )
+    def addExternalPaths(externals: Map[String, String]) =
+      copy(b => b.copy(externalPaths = b.externalPaths ++ externals))
+
+    def withExternalNames(externals: Map[String, String]) = copy(
+      _.copy(externalNames = externals)
+    )
+    def addExternalName(nameFilter: String, packageName: String) = copy(b =>
+      b.copy(externalNames = b.externalNames.updated(nameFilter, packageName))
+    )
+    def addExternalNames(externals: Map[String, String]) =
+      copy(b => b.copy(externalNames = b.externalNames ++ externals))
+
     def build: Binding = binding
   }
 
@@ -244,7 +278,8 @@ object Binding {
     val multiFile = false
     val noComments = false
     val noLocation = false
-    val renderAll = true
+    val externalPaths = Map.empty[String, String]
+    val externalNames = Map.empty[String, String]
   }
 
   def apply(headerFile: File, packageName: String): Binding =
@@ -285,8 +320,9 @@ object Binding {
       opaqueStructs = opaqueStructs,
       multiFile = multiFile,
       noComments = noComments,
-      noLocation = noLocation
-      // renderAll = Defaults.renderAll
+      noLocation = noLocation,
+      externalPaths = Defaults.externalPaths,
+      externalNames = Defaults.externalNames
     )
   }
 }
@@ -383,7 +419,7 @@ class BindingBuilder(
 
       io.Source
         .fromInputStream(process.getInputStream())
-        .getLines
+        .getLines()
         .foreach(logger.out(_))
 
       val result = process.waitFor()

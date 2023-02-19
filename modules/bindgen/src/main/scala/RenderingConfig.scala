@@ -4,11 +4,15 @@ import opaque_newtypes.*
 import java.io.File
 import scala.util.matching.Regex
 import scala.util.chaining.*
+import bindgen.RenderingConfig.FilterSpec
 
 object RenderingConfig:
-  enum NameFilter(value: String):
-    case Single(value: String) extends NameFilter(value)
-    case Wildcard(value: String) extends NameFilter(value)
+  opaque type FilterSpec = String
+  object FilterSpec extends OpaqueString[FilterSpec]
+
+  enum NameFilter(value: FilterSpec):
+    case Single(value: FilterSpec) extends NameFilter(value)
+    case Wildcard(value: FilterSpec) extends NameFilter(value)
 
     val compiled: Regex = this match
       case Single(value) => Regex.quote(value).r
@@ -16,8 +20,10 @@ object RenderingConfig:
         val parts = value.split(Regex.quote("*"), -1).toList
         parts.mkString(".*").r.anchored
 
-    def matches(s: String): Option[String] =
+    def matches(s: String): Option[FilterSpec] =
       Option.when(compiled.matches(s))(value)
+
+    override def toString(): String = value
   end NameFilter
 
   object NameFilter:
@@ -32,10 +38,24 @@ case class RenderingConfig(
     noConstructor: Set[NameFilter],
     opaqueStruct: Set[NameFilter],
     comments: RenderComments,
-    location: RenderLocation
+    location: RenderLocation,
+    externalPaths: Map[NameFilter, PackageName],
+    externalNames: Map[NameFilter, PackageName]
 ):
-  def matches(f: this.type => Set[NameFilter])(name: String) = f(this).iterator
+  def matches(
+      f: this.type => Set[NameFilter]
+  )(name: String): Option[FilterSpec] = f(this).iterator
     .map(_.matches(name))
     .collectFirst { case a if a.isDefined => a }
     .flatten
+
+  def matchesPackage(f: this.type => Map[NameFilter, PackageName])(
+      name: String
+  ): Option[(FilterSpec, PackageName)] =
+    val filters = f(this)
+    filters.iterator
+      .map((filterName, pkgName) => filterName.matches(name).map(_ -> pkgName))
+      .collectFirst { case a if a.isDefined => a }
+      .flatten
+
 end RenderingConfig
