@@ -20,6 +20,6 @@ def renderComment(line: Appender, meta: Meta)(using config: Config) =
         if meta.comment.nonEmpty && shouldRenderComment then line("")
         line(s" * [bindgen] header: $file")
     }
-    line("*/")
+    if meta.comment.nonEmpty || meta.file.nonEmpty then line("*/")
   end if
 end renderComment

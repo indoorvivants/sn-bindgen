@@ -9,7 +9,7 @@ def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
   typ match
     case _: Struct  => true
     case _: Pointer => false
-    case Reference(Name.Model(name)) =>
+    case Reference(Name.Model(name, _)) =>
       isDirectStructAccess(aliasResolver(name))
     case _ => false
 

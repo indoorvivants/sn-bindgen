@@ -2,10 +2,25 @@ package bindgen.rendering
 
 import bindgen.*
 
-def scalaType(typ: CType)(using AliasResolver): String =
+def renderName(name: Name.Model)(using config: Config) =
+  val nameMatches = config.rendering.matchesPackage(_.externalNames)(name.value)
+  val pathMatches = name.meta.file.map(_.value).flatMap { f =>
+    config.rendering.matchesPackage(_.externalPaths)(f)
+  }
+
+  (nameMatches orElse pathMatches)
+    .map(_._2.value)
+    .map { pkgName =>
+      s"_root_.$pkgName.all.${name.value}"
+    }
+    .getOrElse(name.value)
+end renderName
+
+def scalaType(typ: CType)(using AliasResolver, Config): String =
   import CType.*
   typ match
-    case Reference(Name.Model(name))   => name
+    case Reference(n: Name.Model) =>
+      renderName(n)
     case Reference(Name.BuiltIn(name)) => name.full
     case Pointer(to) =>
       to match

@@ -67,9 +67,11 @@ lazy val root = project
     publish / skip := true,
     publishLocal / skip := true
   )
+  .settings(remoteCacheSettings)
 
 lazy val iface = projectMatrix
   .in(file("modules/interface"))
+  .settings(remoteCacheMatrixSettings)
   .someVariations(
     Versions.Scala2 :+ Versions.Scala3,
     List(
@@ -114,6 +116,7 @@ lazy val bindgen = project
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
   .settings(nativeConfig ~= (_.withIncrementalCompilation(true)))
+  .settings(remoteCacheSettings)
   .settings(
     buildInfoPackage := "bindgen",
     buildInfoKeys := Seq[BuildInfoKey](
@@ -190,9 +193,10 @@ lazy val localBindgenArtifact = project
 
 lazy val plugin = projectMatrix
   .in(file("modules/sbt-plugin"))
+  .dependsOn(iface)
   .defaultAxes(VirtualAxis.scalaABIVersion(Versions.Scala212), VirtualAxis.jvm)
   .allVariations(List(Versions.Scala212), List(VirtualAxis.jvm))
-  .dependsOn(iface)
+  .settings(remoteCacheMatrixSettings)
   .settings(
     sbtPlugin := true,
     addSbtPlugin(
@@ -218,6 +222,7 @@ lazy val libclang = project
   .enablePlugins(ScalaNativePlugin, BindgenPlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= usesLibClang)
+  .settings(remoteCacheSettings)
   .settings(
     moduleName := "bindgen-libclang",
     bindgenMode := BindgenMode.Manual(
@@ -232,13 +237,12 @@ lazy val libclang = project
         case head :: tl =>
           val include = new File(head)
           Seq(
-            Binding(
-              headerFile = include / "clang-c" / "Index.h",
-              packageName = "libclang",
-              clangFlags = List(s"-I$head"),
-              cImports = List("clang-c/Index.h"),
-              multiFile = true
-            )
+            Binding
+              .builder(include / "clang-c" / "Index.h", "libclang")
+              .withClangFlags(List(s"-I$head"))
+              .addCImport("clang-c/Index.h")
+              .withMultiFile(true)
+              .build
           )
         case immutable.Nil =>
           sLog.value.error(
@@ -253,6 +257,7 @@ lazy val libclang = project
 lazy val tests = projectMatrix
   .in(file("modules/tests"))
   .dependsOn(iface)
+  .settings(remoteCacheMatrixSettings)
   .someVariations(
     Versions.Scala2 :+ Versions.Scala3,
     List(
@@ -297,12 +302,13 @@ lazy val tests = projectMatrix
                   .toMap
 
                 headerSpec.toSeq.map { case (header, name) =>
-                  Binding(
-                    header,
-                    s"lib_test_$name",
-                    cImports = List(s"$name.h"),
-                    logLevel = LogLevel.Info
-                  )
+                  Binding
+                    .builder(header, s"lib_test_$name")
+                    .addCImport(s"$name.h")
+                    .withLogLevel(
+                      LogLevel.Info
+                    )
+                    .build
                 }
               }
             }
@@ -632,3 +638,37 @@ buildWebsite := Def.taskDyn {
     s" build --destination ${root.toString} --force"
   )
 }.value
+
+def artifactName(nm: String, axes: Seq[VirtualAxis]) = {
+  nm + axes
+    .sortBy[Int] {
+      case _: VirtualAxis.ScalaVersionAxis => 0
+      case _: VirtualAxis.PlatformAxis     => 1
+      case _: VirtualAxis.StrongAxis       => 2
+      case _: VirtualAxis.WeakAxis         => 3
+    }
+    .map(_.idSuffix)
+    .mkString("-", "-", "")
+}
+
+lazy val remoteCacheMatrixSettings = Seq(
+  pushRemoteCacheTo := Some(
+    MavenCache(
+      "local-cache",
+      (ThisBuild / baseDirectory).value / "target" / "remote-cache"
+    )
+  ),
+  Compile / packageCache / moduleName := artifactName(
+    moduleName.value,
+    virtualAxes.value
+  )
+)
+
+lazy val remoteCacheSettings = Seq(
+  pushRemoteCacheTo := Some(
+    MavenCache(
+      "local-cache",
+      (ThisBuild / baseDirectory).value / "target" / "remote-cache"
+    )
+  )
+)

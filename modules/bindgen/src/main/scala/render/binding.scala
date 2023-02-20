@@ -22,13 +22,43 @@ enum Exported:
 enum RenderMode:
   case Objects, Files
 
+def shouldRender(definition: Def)(using config: Config) =
+  definition.defName
+    .map(_.n)
+    .flatMap { n =>
+      val filename = definition.metadata.file.map(_.value)
+
+      val fileMatches =
+        filename.flatMap(f =>
+          config.rendering.matchesPackage(_.externalPaths)(f)
+        )
+      val nameMatches =
+        config.rendering.matchesPackage(_.externalNames)(n)
+
+      fileMatches.map((filterSpec, pkg) =>
+        trace(
+          s"Definition `$n` was not rendered because it matched path " +
+            s"filter `$filterSpec`, and will be referenced instead from `$pkg` package"
+        )
+      ) orElse
+        nameMatches.map((filterSpec, pkg) =>
+          trace(
+            s"Definition `$n` was not rendered because its name matched" +
+              s"filter `$filterSpec`, and will be referenced instead from `$pkg` package"
+          )
+        )
+    }
+    .isEmpty
+
 def binding(
-    binding: Binding,
+    rawBinding: Binding,
     lang: Lang,
     outputMode: OutputMode
 )(using
     Config
 ): RenderedOutput =
+  val binding = rawBinding.filterAll(shouldRender)
+
   val hasAnyEnums = binding.enums.nonEmpty
   val hasAliases = binding.aliases.nonEmpty
   val hasUnions = binding.unions.nonEmpty
@@ -45,7 +75,7 @@ def binding(
   val multiFileMode = outputMode.isInstanceOf[OutputMode.MultiFile]
 
   given AliasResolver =
-    AliasResolver.create(binding.all)
+    AliasResolver.create(rawBinding.all)
 
   val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
     deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))

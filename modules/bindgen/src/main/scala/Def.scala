@@ -38,26 +38,28 @@ opaque type DefinitionFile = String
 object DefinitionFile extends OpaqueString[DefinitionFile]
 
 case class Meta(comment: Option[CommentText], file: Option[DefinitionFile])
+object Meta:
+  def empty: Meta = Meta(None, None)
 
-enum Def:
+enum Def(meta: Meta):
   case Enum(
       values: List[(String, Long)],
       name: Option[EnumName],
       intType: Option[CType.NumericIntegral],
       meta: Meta
-  )
+  ) extends Def(meta)
   case Struct(
       fields: List[(StructParameterName, CType)],
       name: StructName,
       anonymous: List[Def.Union | Def.Struct],
       meta: Meta
-  )
+  ) extends Def(meta)
   case Union(
       fields: List[(UnionParameterName, CType)],
       name: UnionName,
       anonymous: List[Def.Union | Def.Struct],
       meta: Meta
-  )
+  ) extends Def(meta)
   case Function(
       name: FunctionName,
       returnType: CType,
@@ -65,8 +67,10 @@ enum Def:
       originalCType: OriginalCType,
       numArguments: Int,
       meta: Meta
-  )
-  case Alias(name: String, underlying: CType, meta: Option[Meta])
+  ) extends Def(meta)
+  case Alias(name: String, underlying: CType, meta: Meta) extends Def(meta)
+
+  def metadata: Meta = meta
 
   def defName: Option[DefName] =
     this match
@@ -102,7 +106,7 @@ case class FunctionParameter(
 case class OriginalCType(typ: CType, s: String)
 
 enum Name:
-  case Model(value: String)
+  case Model(value: String, meta: Meta = Meta.empty)
   case BuiltIn(value: BuiltinType)
   case Unnamed
 

@@ -36,9 +36,9 @@ def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
       else
         val returnParamName = "____return"
         val returnStructName = f.originalCType.typ match
-          case CType.Reference(Name.Model(name)) => name
+          case CType.Reference(Name.Model(name, _)) => name
           case _ =>
-            throw Error(
+            raiseError(
               s"${f.originalCType.typ} should be a Reference"
             )
         arglist.addOne(
