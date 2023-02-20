@@ -84,17 +84,20 @@ addSbtPlugin("com.indoorvivants" % "bindgen-sbt-plugin" % "@VERSION@")
 // only add this line if you're living on the edge and using 
 // a version that has "SNAPSHOT" in it
 resolvers += Resolver.sonatypeRepo("snapshots")
-scalaVersion := "3.1.1"
+scalaVersion := "3.2.2"
 
 enablePlugins(ScalaNativePlugin, BindgenPlugin)
 
 import bindgen.interface.Binding
 
 bindgenBindings := Seq(
-  Binding(
-  /* 1 */  baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
-  /* 2 */  "libtest",
-  /* 3 */  cImports = List("header.h")
+  Binding
+    .builder(
+      /* 1 */  (Compile / resourceDirectory).value / "scala-native" / "header.h",
+      /* 2 */  "libtest"
+    )
+    .addCImport("header.h") /* 3 */
+    .build
   )
 )
 ```

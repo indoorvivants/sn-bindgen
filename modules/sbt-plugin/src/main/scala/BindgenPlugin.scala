@@ -29,6 +29,7 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenGenerateCSources = taskKey[Seq[File]]("")
     val bindgenClangPath = taskKey[java.nio.file.Path]("")
     val bindgenMode = settingKey[BindgenMode]("")
+    val bindgenGenerateAll = taskKey[Seq[File]]("")
   }
 
   override def requires: Plugins = ScalaNativePlugin
@@ -93,6 +94,9 @@ object BindgenPlugin extends AutoPlugin {
       Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
 
   private def definedSettings(addConf: Configuration) = Seq(
+    bindgenGenerateAll := {
+      bindgenGenerateScalaSources.value ++ bindgenGenerateCSources.value
+    },
     bindgenGenerateScalaSources := {
       val selected = (addConf / bindgenBindings).value
 

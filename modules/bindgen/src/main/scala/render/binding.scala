@@ -36,13 +36,13 @@ def shouldRender(definition: Def)(using config: Config) =
         config.rendering.matchesPackage(_.externalNames)(n)
 
       fileMatches.map((filterSpec, pkg) =>
-        info(
+        trace(
           s"Definition `$n` was not rendered because it matched path " +
             s"filter `$filterSpec`, and will be referenced instead from `$pkg` package"
         )
       ) orElse
         nameMatches.map((filterSpec, pkg) =>
-          info(
+          trace(
             s"Definition `$n` was not rendered because its name matched" +
               s"filter `$filterSpec`, and will be referenced instead from `$pkg` package"
           )

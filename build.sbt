@@ -232,13 +232,12 @@ lazy val libclang = project
         case head :: tl =>
           val include = new File(head)
           Seq(
-            Binding(
-              headerFile = include / "clang-c" / "Index.h",
-              packageName = "libclang",
-              clangFlags = List(s"-I$head"),
-              cImports = List("clang-c/Index.h"),
-              multiFile = true
-            )
+            Binding
+              .builder(include / "clang-c" / "Index.h", "libclang")
+              .withClangFlags(List(s"-I$head"))
+              .addCImport("clang-c/Index.h")
+              .withMultiFile(true)
+              .build
           )
         case immutable.Nil =>
           sLog.value.error(
@@ -297,12 +296,13 @@ lazy val tests = projectMatrix
                   .toMap
 
                 headerSpec.toSeq.map { case (header, name) =>
-                  Binding(
-                    header,
-                    s"lib_test_$name",
-                    cImports = List(s"$name.h"),
-                    logLevel = LogLevel.Info
-                  )
+                  Binding
+                    .builder(header, s"lib_test_$name")
+                    .addCImport(s"$name.h")
+                    .withLogLevel(
+                      LogLevel.Info
+                    )
+                    .build
                 }
               }
             }

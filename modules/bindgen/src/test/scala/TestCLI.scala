@@ -6,6 +6,7 @@ import org.junit.Test
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 import java.nio.file.Files
+import bindgen.RenderingConfig.NameFilter
 
 class TestCLI:
 
@@ -108,10 +109,32 @@ class TestCLI:
   @Test def test_print_files() =
     assertTrue(parseExtra("--print-files").printFiles == PrintFiles.Yes)
 
-  @Test def test_linkName() =
+  @Test def test_externalPaths() =
     assertEquals(
-      Some("mylib"),
-      parseExtra("--link-name", "mylib").linkName.map(_.value)
+      Map(
+        NameFilter("*glib-2.0*") -> PackageName("glib"),
+        NameFilter("test.h") -> PackageName("gobject")
+      ),
+      parseExtra(
+        "--render.external-path",
+        "*glib-2.0*=glib",
+        "--render.external-path",
+        "test.h=gobject"
+      ).rendering.externalPaths
+    )
+
+  @Test def test_externalNames() =
+    assertEquals(
+      Map(
+        NameFilter("Gtk*") -> PackageName("gtk"),
+        NameFilter("G*") -> PackageName("glib")
+      ),
+      parseExtra(
+        "--render.external-name",
+        "Gtk*=gtk",
+        "--render.external-name",
+        "G*=glib"
+      ).rendering.externalNames
     )
 
 end TestCLI
