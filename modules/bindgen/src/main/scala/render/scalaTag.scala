@@ -32,7 +32,7 @@ def scalaTag(typ: CType)(using AliasResolver, Config): String =
         case _        => ""
 
       s"Tag.$sign$base"
-    case Reference(Name.Model(n, _)) => s"$n._tag"
+    case Reference(name: Name.Model) => s"${renderName(name)}._tag"
 
     case Function(ret, params) =>
       val paramTypes =
