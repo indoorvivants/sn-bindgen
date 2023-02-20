@@ -181,6 +181,8 @@ class Binding private (
       arg("render.external-name", s"$filter=$pkg")
     }
 
+    sb ++= bindgenArguments
+
     sb.result()
   }
 
