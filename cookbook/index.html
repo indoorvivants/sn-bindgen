@@ -1,7 +1,13 @@
-<html><head><title>SN bindgen: Cookbook</title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/androidstudio.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn" href="/index.html">Home</a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn" href="/configuration/index.html">Configuration </a><a class="nav-btn nav-selected" href="/cookbook/index.html">Cookbook</a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><!--toc:start-->
+<html><head><title>SN bindgen: Cookbook</title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/androidstudio.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn" href="/index.html">Home</a><a class="nav-btn nav-selected" href="/cookbook/index.html">Cookbook</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn" href="/configuration/index.html">Configuration </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><!--toc:start-->
 <ul>
 <li><a href="#generating-bindings-from-multiple-header-files">Generating bindings from multiple header files</a></li>
 <li><a href="#rendering-the-binding-as-multiple-files">Rendering the binding as multiple files</a></li>
+<li><a href="#advanced-splitting-the-binding-into-multiple-packages">(advanced) Splitting the binding into multiple packages</a>
+<ul>
+<li><a href="#by-definition-header-file-location">By definition header file location</a></li>
+<li><a href="#by-definition-name">By definition name</a></li>
+</ul>
+</li>
 </ul>
 <!--toc:end-->
 <h2><a href="#generating-bindings-from-multiple-header-files" id="generating-bindings-from-multiple-header-files">Generating bindings from multiple header files</a></h2>
@@ -14,15 +20,15 @@ to merge results would be quite complex to be attempted.</p>
 #include &quot;openssl/evp.h&quot;
 </code></pre>
 <p>And point the binding generator at it:</p>
-<pre><code class="language-scala">bindgenBindings := {
-  Seq(
-    Binding(
-      (Compile / baseDirectory).value / &quot;openssl-amalgam.h&quot;,
-      &quot;openssl&quot;,
-      cImports = List(&quot;openssl/sha.h&quot;, &quot;openssl/evp.h&quot;),
-      clangFlags = List(&quot;-I&quot; + vcpkgConfigurator.value.includes(&quot;openssl&quot;))
-    )
-  )
+<pre><code class="language-scala">bindgenBindings += {
+    Binding
+      .builder(
+        (Compile / baseDirectory).value / &quot;openssl-amalgam.h&quot;,
+        &quot;openssl&quot;
+      )
+      .withCImports(List(&quot;openssl/sha.h&quot;, &quot;openssl/evp.h&quot;))
+      .withClangFlags(List(&quot;-I&quot; + vcpkgConfigurator.value.includes(&quot;openssl&quot;)))
+      .build
 }
 </code></pre>
 <p>Example taken from <a href="https://github.com/indoorvivants/sn-bindgen-examples/blob/82c109aac423c1adacaf1a2a1458d6d0afdea7b6/build.sbt#L374">sn-bindgen-examples</a></p>
@@ -35,6 +41,34 @@ as a folder and create several files there with definitions broken down by type.
 <li>To enable multi-file mode in CLI, use <code>--multi-file</code> parameter.</li>
 <li>To enable multi-file mode in SBT, use <code>multiFile = true</code> in Binding specification.</li>
 </ul>
+<h2><a href="#advanced-splitting-the-binding-into-multiple-packages" id="advanced-splitting-the-binding-into-multiple-packages">(advanced) Splitting the binding into multiple packages</a></h2>
+<p><em>Note: this technique is annoyingly manual, prone to errors and should only be used if rendering the binding as a single entity breaks the compiler</em></p>
+<p>This option was heavily inspired by Gtk bindings, which are actually comprised of:</p>
+<ol>
+<li>Glib, which itself consists of
+<ul>
+<li>Glib itself</li>
+<li>GIO</li>
+<li>GObject</li>
+</ul>
+</li>
+<li>Pango (which depends on Glib)</li>
+<li>Cairo</li>
+<li>Harfbuzz</li>
+<li>etc.</li>
+</ol>
+<p>Because of how includes in C work, you get <em>all</em> of those libraries bundled in the binding, which can be very annoying and difficult for compiler to work with.</p>
+<p>To work around it, we can build bindings to constituent libraries separately, and then,
+when building the Gtk bindings, tell the generator to not render Pango, Cairo, etc. definitions again, but rather assume that they will come from a certain package.</p>
+<p>We can indicate this binding splitting in two ways - by header file location, or by definition name.</p>
+<h3><a href="#by-definition-header-file-location" id="by-definition-header-file-location">By definition header file location</a></h3>
+<p>In the CLI: <code>--render.external-path */glib-2.0/*=glib</code></p>
+<p>In the Binding builder: <code>.withExternalPaths(Map(&quot;*/glib-2.0/*&quot; -&gt; &quot;glib&quot;))</code></p>
+<p>This will ensure that for all definitions that are defined in header files that match <code>*/glib-2.0/*</code> glob, they will be rendered as references in package <code>glib</code> instead.</p>
+<h3><a href="#by-definition-name" id="by-definition-name">By definition name</a></h3>
+<p>In the CLI: <code>--render.external-name Gtk*=gtk</code></p>
+<p>In the Binding builder: <code>.withExternalNames(Map(&quot;Gtk*&quot; -&gt; &quot;gtk&quot;))</code></p>
+<p>This will ensure that all definitions that whose name matches <code>Gtk*</code> will be rendered as references in package <code>gtk</code> instead.</p>
 </div></div><footer>© 2021-2023 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               gtag('js', new Date());

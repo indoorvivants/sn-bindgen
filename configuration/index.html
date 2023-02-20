@@ -1,4 +1,4 @@
-<html><head><title>SN bindgen: Configuration </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/androidstudio.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn" href="/index.html">Home</a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn nav-selected" href="/configuration/index.html">Configuration </a><a class="nav-btn" href="/cookbook/index.html">Cookbook</a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><h1><a href="#sbt-plugin" id="sbt-plugin">SBT plugin</a></h1>
+<html><head><title>SN bindgen: Configuration </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/androidstudio.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn" href="/index.html">Home</a><a class="nav-btn" href="/cookbook/index.html">Cookbook</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn nav-selected" href="/configuration/index.html">Configuration </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><h1><a href="#sbt-plugin" id="sbt-plugin">SBT plugin</a></h1>
 <!--toc:start-->
 <ul>
 <li><a href="#sbt-plugin">SBT plugin</a>
@@ -37,10 +37,10 @@ by calling <code>bindgenGenerateScalaSources</code> and <code>bindgenGenerateCSo
 code.</p>
 <p>For example, the bindings to libclang which underpin this very project are generated using this mode and checked in on Github.</p>
 <h2><a href="#cli" id="cli">CLI</a></h2>
-<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--out &lt;string&gt;] [--multi-file]
+<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.0.16
+Version: 0.0.16+1-f12b1354-SNAPSHOT
 Built using Scala 3.2.2 and Scala Native 0.4.10
 
 Options and flags:
@@ -107,6 +107,12 @@ Options and flags:
         Don't render the comment strings from the source
     --render.no-location
         Don't render the header location for each symbol
+    --render.external-path &lt;string&gt;
+        Render all definitions from a matching path as if they were imported from some package
+        example: --render.external-path '*/cairo.h=libcairo'
+    --render.external-name &lt;string&gt;
+        Render all definitions with matchign names as if they were imported from some package
+        example: --render.external-name 'cairo_*=libcairo'
     --out &lt;string&gt;
         Path to file where code will be generated. If not provided, result is sent to STDOUT
     --multi-file
