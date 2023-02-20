@@ -46,11 +46,24 @@ jobs:
       - name: Setup Unix-like
         run: ./build/setup_unix.sh
 
+      - name: SBT remote cache
+        id: remote-cache
+        uses: actions/cache@v3
+        with:
+          path: ./target/remote-cache
+          key: ${{ runner.os }}-remote-cache
+
+      - name: Pull cache 
+        run: sbt --client pullRemoteCache || echo 'remote cache not found'
+
       - name: CI (unix-like)
         run: sbt ci buildBinary
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
-      
+
+      - name: Push cache 
+        run: sbt --client pushRemoteCache     
+
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
@@ -101,11 +114,24 @@ jobs:
           choco install sbt --version=1.8.0
           clang --version
 
+      - name: SBT remote cache
+        id: remote-cache
+        uses: actions/cache@v3
+        with:
+          path: ./target/remote-cache
+          key: ${{ runner.os }}-remote-cache
+
+      - name: Pull cache 
+        run: sbt --client pullRemoteCache || echo 'remote cache not found'
+
       # Can't make shell type come from a matrix parameter: 
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
       - name: CI (windows)
         run: sbt ci buildBinary
         shell: cmd
+
+      - name: Push cache 
+        run: sbt --client pushRemoteCache     
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master

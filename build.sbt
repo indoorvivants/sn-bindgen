@@ -632,3 +632,10 @@ buildWebsite := Def.taskDyn {
     s" build --destination ${root.toString} --force"
   )
 }.value
+
+pushRemoteCacheTo := Some(
+  MavenCache(
+    "local-cache",
+    (ThisBuild / baseDirectory).value / "target" / "remote-cache"
+  )
+)

@@ -69,19 +69,20 @@ import Binding.Defaults
 class Binding private (
     val headerFile: File,
     val packageName: String,
-    val linkName: Option[String],
-    val cImports: List[String],
-    val clangFlags: List[String],
-    val exclusivePrefixes: List[String],
-    val logLevel: LogLevel,
-    val systemIncludes: Includes,
-    val noConstructor: Set[String],
-    val opaqueStructs: Set[String],
-    val multiFile: Boolean,
-    val noComments: Boolean,
-    val noLocation: Boolean,
-    val externalPaths: Map[String, String],
-    val externalNames: Map[String, String],
+    val linkName: Option[String] = Defaults.linkName,
+    val cImports: List[String] = Defaults.cImports,
+    val clangFlags: List[String] = Defaults.clangFlags,
+    val exclusivePrefixes: List[String] = Defaults.exclusivePrefixes,
+    val logLevel: LogLevel = Defaults.logLevel,
+    val systemIncludes: Includes = Defaults.systemIncludes,
+    val noConstructor: Set[String] = Defaults.noConstructor,
+    val opaqueStructs: Set[String] = Defaults.opaqueStructs,
+    val multiFile: Boolean = Defaults.multiFile,
+    val noComments: Boolean = Defaults.noComments,
+    val noLocation: Boolean = Defaults.noLocation,
+    val externalPaths: Map[String, String] = Defaults.externalPaths,
+    val externalNames: Map[String, String] = Defaults.externalNames,
+    val bindgenArguments: List[String] = Defaults.bindgenArguments,
     val scalaFile: String,
     val cFile: String
 ) { self =>
@@ -102,6 +103,7 @@ class Binding private (
       noLocation: Boolean = self.noLocation,
       externalPaths: Map[String, String] = self.externalPaths,
       externalNames: Map[String, String] = self.externalNames,
+      bindgenArguments: List[String] = Defaults.bindgenArguments,
       scalaFile: String = self.scalaFile,
       cFile: String = self.cFile
   ) =
@@ -121,6 +123,7 @@ class Binding private (
       noLocation = noLocation,
       externalPaths = externalPaths,
       externalNames = externalNames,
+      bindgenArguments = bindgenArguments,
       scalaFile = scalaFile,
       cFile = cFile
     )
@@ -189,19 +192,6 @@ object Binding {
       new Binding(
         headerFile = header,
         packageName = packageName,
-        linkName = Defaults.linkName,
-        cImports = Defaults.cImports,
-        clangFlags = Defaults.clangFlags,
-        exclusivePrefixes = Defaults.exclusivePrefixes,
-        logLevel = Defaults.logLevel,
-        systemIncludes = Defaults.systemIncludes,
-        noConstructor = Defaults.noConstructor,
-        opaqueStructs = Defaults.opaqueStructs,
-        multiFile = Defaults.multiFile,
-        noComments = Defaults.noComments,
-        noLocation = Defaults.noLocation,
-        externalPaths = Defaults.externalPaths,
-        externalNames = Defaults.externalNames,
         cFile = s"$packageName.c",
         scalaFile = s"$packageName.scala"
       )
@@ -263,6 +253,13 @@ object Binding {
     def addExternalNames(externals: Map[String, String]) =
       copy(b => b.copy(externalNames = b.externalNames ++ externals))
 
+    def withBindgenArguments(arguments: List[String]) =
+      copy(_.copy(bindgenArguments = arguments))
+    def addBindgenArgument(argument: String) =
+      copy(b => b.copy(bindgenArguments = b.bindgenArguments :+ argument))
+    def addBindgenArguments(arguments: List[String]) =
+      copy(b => b.copy(bindgenArguments = b.bindgenArguments ++ arguments))
+
     def build: Binding = binding
   }
 
@@ -280,6 +277,7 @@ object Binding {
     val noLocation = false
     val externalPaths = Map.empty[String, String]
     val externalNames = Map.empty[String, String]
+    val bindgenArguments = List.empty[String]
   }
 
   def apply(headerFile: File, packageName: String): Binding =
