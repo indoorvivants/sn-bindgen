@@ -54,7 +54,7 @@ jobs:
           key: ${{ runner.os }}-remote-cache
 
       - name: Pull cache 
-        run: sbt --client pullRemoteCache || echo 'remote cache not found'
+        run: sbt pullRemoteCache || echo 'remote cache not found'
 
       - name: CI (unix-like)
         run: sbt ci buildBinary pushRemoteCache
@@ -119,7 +119,7 @@ jobs:
           key: ${{ runner.os }}-remote-cache
 
       - name: Pull cache 
-        run: sbt --client pullRemoteCache || echo 'remote cache not found'
+        run: sbt pullRemoteCache || echo 'remote cache not found'
 
       # Can't make shell type come from a matrix parameter: 
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
