@@ -57,12 +57,9 @@ jobs:
         run: sbt --client pullRemoteCache || echo 'remote cache not found'
 
       - name: CI (unix-like)
-        run: sbt ci buildBinary
+        run: sbt ci buildBinary pushRemoteCache
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
-
-      - name: Push cache 
-        run: sbt --client pushRemoteCache     
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
@@ -129,9 +126,6 @@ jobs:
       - name: CI (windows)
         run: sbt ci buildBinary
         shell: cmd
-
-      - name: Push cache 
-        run: sbt --client pushRemoteCache     
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
