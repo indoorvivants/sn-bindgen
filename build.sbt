@@ -302,12 +302,25 @@ lazy val tests = projectMatrix
                   .toMap
 
                 headerSpec.toSeq.map { case (header, name) =>
+                  val PREF = "//!bindgen"
+                  val contents = IO
+                    .readLines(header)
+                    .map(_.trim)
+                    .filter(_.startsWith(PREF))
+                    .map(_.stripPrefix(PREF).trim)
+                    .flatMap(_.split(" "))
+                    .map(_.trim)
+
+                  val isMultiFile = contents.contains("--multi-file")
+
                   Binding
                     .builder(header, s"lib_test_$name")
                     .addCImport(s"$name.h")
                     .withLogLevel(
                       LogLevel.Info
                     )
+                    .withBindgenArguments(contents)
+                    .withMultiFile(isMultiFile)
                     .build
                 }
               }
