@@ -12,47 +12,60 @@ enum Sanitation:
   case Escaped
   case Good
 
+val scalaKeyWords =
+  Set(
+    "abstract",
+    "case",
+    "catch",
+    "class",
+    "def",
+    "do",
+    "else",
+    "extends",
+    "false",
+    "final",
+    "finally",
+    "for",
+    "forSome",
+    "if",
+    "implicit",
+    "import",
+    "lazy",
+    "match",
+    "new",
+    "null",
+    "object",
+    "override",
+    "package",
+    "private",
+    "protected",
+    "return",
+    "sealed",
+    "super",
+    "this",
+    "throw",
+    "trait",
+    "try",
+    "true",
+    "type",
+    "val",
+    "var",
+    "while",
+    "with",
+    "yield"
+  )
+
 def sanitise(name: String) =
-  val keywords =
-    Set(
-      "type",
-      "val",
-      "var",
-      "class",
-      "def",
-      "object",
-      "null",
-      "match",
-      "true",
-      "false",
-      "final",
-      "new"
-    )
   val reserved = Set("notify", "wait")
   if name == "_" then Sanitation.Renamed("$underscore")
   else if reserved(name) then Sanitation.Renamed(s"_$name")
-  else if keywords.contains(name) || name.endsWith("_") then Sanitation.Escaped
+  else if scalaKeyWords.contains(name) || name.endsWith("_") then Sanitation.Escaped
   else Sanitation.Good
 end sanitise
 
 def escape(name: String) =
-  val keywords =
-    Set(
-      "type",
-      "val",
-      "var",
-      "class",
-      "def",
-      "object",
-      "null",
-      "match",
-      "true",
-      "false",
-      "final",
-      "new"
-    )
   if name == "_" then "$underscore"
-  else if keywords.contains(name) || name.endsWith("_") then s"`$name`"
+  else if scalaKeyWords.contains(name) || name.endsWith("_") then s"`$name`"
   else name
 end escape
 

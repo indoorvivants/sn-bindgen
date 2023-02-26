@@ -65,11 +65,17 @@ object Generator {
             val scopeName = o.name.value
             o.collect {
               case t: Defn.Type if allowed(t) =>
-                val fqn = (top +: pkg :+ scopeName :+ t.name).mkString(".")
+                val segments =
+                  (top +: pkg :+ scopeName :+ t.name).map(_.toString)
+                val fqn = segments
+                  .mkString(".")
+                val fqnEscaped = segments
+                  .map(s => if (scalaKeywords(s)) s"`$s`" else s)
+                  .mkString(".")
                 val header = (pkg :+ scopeName).mkString("/") + ".h"
                 Option.when(!ignore(fqn)) {
                   s"""
-                apply[$fqn](short = "${t.name}", full = "$fqn", header = "$header")
+                apply[$fqnEscaped](short = "${t.name}", full = "$fqnEscaped", header = "$header")
                 """.strip()
                 }
             }.flatten
@@ -154,5 +160,48 @@ object Generator {
         false
     }
   }
+
+  val scalaKeywords =
+    Set(
+      "abstract",
+      "case",
+      "catch",
+      "class",
+      "def",
+      "do",
+      "else",
+      "extends",
+      "false",
+      "final",
+      "finally",
+      "for",
+      "forSome",
+      "if",
+      "implicit",
+      "import",
+      "lazy",
+      "match",
+      "new",
+      "null",
+      "object",
+      "override",
+      "package",
+      "private",
+      "protected",
+      "return",
+      "sealed",
+      "super",
+      "this",
+      "throw",
+      "trait",
+      "try",
+      "true",
+      "type",
+      "val",
+      "var",
+      "while",
+      "with",
+      "yield"
+    )
 
 }

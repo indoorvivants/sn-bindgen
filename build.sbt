@@ -685,3 +685,36 @@ lazy val remoteCacheSettings = Seq(
     )
   )
 )
+
+lazy val generateScalaNativeDefinitions = taskKey[Unit]("")
+
+generateScalaNativeDefinitions := Def.taskDyn {
+  val tg = (scalaNativeLibParser / Keys.target).value / "github"
+  val destination = tg / "scala-native"
+  IO.createDirectory(destination)
+
+  import sys.process.*
+  def fetchTags =
+    Process(s"git fetch --tags", destination).!
+
+  def checkout =
+    Process(s"git checkout v${nativeVersion}", destination).!
+
+  def clone =
+    Process(
+      s"git clone https://github.com/scala-native/scala-native.git $destination",
+      tg
+    ).!!
+
+  if ((destination / "build.sbt").isFile()) {
+    fetchTags; checkout
+  } else {
+    println(clone); fetchTags; checkout
+  }
+
+  val targetFile =
+    (bindgen / sourceDirectory).value / "main" / "scala" / "BuiltinType.scala"
+  assert(targetFile.isFile(), s"$targetFile must exist (or was it renamed?)")
+
+  (scalaNativeLibParser / Compile / run).toTask(s" $destination $targetFile")
+}.value
