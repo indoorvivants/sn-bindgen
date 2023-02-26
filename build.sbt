@@ -368,7 +368,10 @@ lazy val docs =
       publish / skip := true,
       Compile / run / envVars := Map(
         "BINDGEN_BINARY" -> (bindgen / Compile / nativeLink).value.toString()
-      )
+      ),
+      subatomicMdocVariables ++= previousStableVersion.value
+        .map("STABLE_VERSION" -> _)
+        .toMap
     )
 // --------------HELPERS-------------------------
 
