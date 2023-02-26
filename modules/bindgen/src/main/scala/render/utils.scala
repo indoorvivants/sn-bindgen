@@ -59,7 +59,8 @@ def sanitise(name: String) =
   val reserved = Set("notify", "wait")
   if name == "_" then Sanitation.Renamed("$underscore")
   else if reserved(name) then Sanitation.Renamed(s"_$name")
-  else if scalaKeyWords.contains(name) || name.endsWith("_") then Sanitation.Escaped
+  else if scalaKeyWords.contains(name) || name.endsWith("_") then
+    Sanitation.Escaped
   else Sanitation.Good
 end sanitise
 

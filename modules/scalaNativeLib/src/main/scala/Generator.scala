@@ -96,7 +96,7 @@ object Generator {
         .result()
         .map("    " + _ + "," + System.lineSeparator())
         .foreach(fw.write(_))
-      fw.write(linesAfter.mkString(System.lineSeparator()))
+      fw.write((linesAfter :+ "").mkString(System.lineSeparator()))
     }
   }
 
