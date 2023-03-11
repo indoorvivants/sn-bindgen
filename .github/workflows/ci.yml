@@ -22,6 +22,11 @@ jobs:
             output_filename: bindgen
             uploaded_filename: sn-bindgen-x86_64-apple-darwin
             llvm_bin_path: /usr/local/opt/llvm@14/bin
+            
+          - os: self-hosted
+            output_filename: bindgen
+            uploaded_filename: sn-bindgen-aarch64-apple-darwin
+            llvm_bin_path: /usr/local/opt/llvm@14/bin
 
           - os: ubuntu-20.04
             output_filename: bindgen
