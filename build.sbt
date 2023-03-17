@@ -456,7 +456,7 @@ def usesLibClang(conf: NativeConfig) = {
 
 // --------------SETTINGS-------------------------
 
-ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
+ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 lazy val markdownDocuments = taskKey[Seq[java.nio.file.Path]]("")
 markdownDocuments := {
@@ -472,25 +472,7 @@ markdownDocuments / fileInputs ++=
     ).value.toGlob / "**" / "*.js"
   )
 
-lazy val buildSite = inputKey[Unit]("")
-buildSite := Def.inputTaskDyn {
-  val defaultArgs =
-    Seq("--destination", ((ThisBuild / baseDirectory).value / "_site").toString)
-  val parsed = sbt.complete.DefaultParsers.spaceDelimited("<arg>").parsed
-
-  val args = (defaultArgs ++ parsed).mkString(" ")
-
-  val _ = markdownDocuments.value
-
-  Def.taskDyn {
-    (docs / Compile / runMain)
-      .toTask(s" bindgen.docs.Docs build $args")
-  }
-
-}.evaluated
-
 lazy val buildBinary = taskKey[File]("")
-
 buildBinary := {
   val built = (bindgen / Compile / nativeLink).value
   val name =

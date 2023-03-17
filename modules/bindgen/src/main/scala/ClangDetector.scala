@@ -58,6 +58,8 @@ object ClangDetector:
 
     val a @ ProcessResult(stdout, stderr, exitCode, _) = process(cmd*)
 
+    tempFolder.toFile().delete()
+
     if exitCode != 0 then Left(a)
     else
       Right(
