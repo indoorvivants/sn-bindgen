@@ -66,6 +66,7 @@ enum Def(meta: Meta):
       parameters: List[FunctionParameter],
       originalCType: OriginalCType,
       numArguments: Int,
+      variadic: Boolean,
       meta: Meta
   ) extends Def(meta)
   case Alias(name: String, underlying: CType, meta: Meta) extends Def(meta)

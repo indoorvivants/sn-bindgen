@@ -39,6 +39,7 @@ enum GeneratedFunction:
       arguments: List[List[FunctionParameter]],
       body: ScalaFunctionBody,
       public: Boolean,
+      variadic: Boolean,
       meta: Option[Meta]
   )
 
@@ -86,6 +87,7 @@ private def scalaForwarderFunction(
     List(parameters.result),
     ScalaFunctionBody.Extern,
     public = false,
+    variadic = bad.variadic,
     meta = None
   )
 end scalaForwarderFunction
@@ -111,6 +113,7 @@ private def scalaAllocatingFunction(bad: Def.Function)(using
       )
     ),
     public = true,
+    variadic = bad.variadic,
     meta = Some(bad.meta)
   )
 end scalaAllocatingFunction
@@ -140,6 +143,7 @@ private def scalaPtrFunctions(bad: Def.Function)(using
         )
       ),
       public = true,
+      variadic = bad.variadic,
       meta = Some(bad.meta)
     )
   }
@@ -169,6 +173,7 @@ private def scalaPtrFunctions(bad: Def.Function)(using
           )
         ),
         public = true,
+        variadic = bad.variadic,
         meta = Some(bad.meta)
       )
 
@@ -225,6 +230,7 @@ def functionRewriter(badFunction: Def.Function)(using
         List(badFunction.parameters.toList),
         ScalaFunctionBody.Extern,
         public = true,
+        variadic = badFunction.variadic,
         meta = Some(badFunction.meta)
       )
     )
