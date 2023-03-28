@@ -395,8 +395,8 @@ private def renderEnumerations(
         |   inline def value: CUnsignedInt = eq.apply(t)
         """.stripMargin.trim.linesIterator
 
-      if (hasSignedEnums) then predefSigned.foreach(to(out))
-      if (hasUnsignedEnums) then predefUnsigned.foreach(to(out))
+      if hasSignedEnums then predefSigned.foreach(to(out))
+      if hasUnsignedEnums then predefUnsigned.foreach(to(out))
     }
     if mode == RenderMode.Objects then
       out.appendLine("\n\nobject enumerations:")
