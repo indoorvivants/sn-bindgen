@@ -4,32 +4,28 @@ mdoc:true
 
 ---
 
-# SBT plugin 
 
-<!--toc:start-->
-- [SBT plugin](#sbt-plugin)
-  - [`bindgenVersion`: _String_](#bindgenversion-string)
-  - [`bindgenBinary`: _java.io.File_](#bindgenbinary-javaiofile)
-  - [`bindgenMode`: `bindgen.interface.BindgenMode`](#bindgenmode-bindgeninterfacebindgenmode)
-    - [Source/resource generator mode](#sourceresource-generator-mode)
-    - [Manual mode](#manual-mode)
-  - [CLI](#cli)
-<!--toc:end-->
+## SBT plugin
 
-## `bindgenVersion`: _String_
+### Choosing a different version
 
-Use this to choose another version of bindgen (by default it matches the plugin version)
+Use `bindgenVersion` to choose another version of bindgen (by default it matches the plugin version)
 
-## `bindgenBinary`: _java.io.File_
+### Overriding path to bindgen binary
 
-Use this to override the path to bindgen binary.
+`bindgenBinary` (`File`) 
+
 By default it's resolved from Sonatype for your particular platform.
 
 ```scala
 bindgenBinary := baseDirectory.value / "my-custom-binary"
 ```
 
-## `bindgenMode`: `bindgen.interface.BindgenMode`
+### Different modes of operation 
+
+```scala
+bindgenMode: bindgen.interface.bindgenMode
+```
 
 This parameter controls the way the bindgen is invoked and the location where the generated files will be placed
 

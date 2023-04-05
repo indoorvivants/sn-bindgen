@@ -4,18 +4,6 @@ mdoc: true
 mdoc-version: 2.3.7
 ---
 
-<!--toc:start-->
-- [Structs are converted to opaque types](#structs-are-converted-to-opaque-types)
-  - [You can disable constructor generation](#you-can-disable-constructor-generation)
-- [Unions are converted to opaque types](#unions-are-converted-to-opaque-types)
-  - [Simple functions are converted to direct `@extern` functions](#simple-functions-are-converted-to-direct-extern-functions)
-- [Problematic functions generate C forwarders](#problematic-functions-generate-c-forwarders)
-- [Enums are generated for specific C type](#enums-are-generated-for-specific-c-type)
-- [Function pointers are defined as opaque types](#function-pointers-are-defined-as-opaque-types)
-- [Recursive structs are rewritten with opaque pointers](#recursive-structs-are-rewritten-with-opaque-pointers)
-- [Global enums are rendered as constants](#global-enums-are-rendered-as-constants)
-<!--toc:end-->
-
 ## Structs are converted to opaque types
 
 For those types, we generate getters, setters, `Tag` definition, and two `apply` methods:
@@ -26,16 +14,16 @@ For those types, we generate getters, setters, `Tag` definition, and two `apply`
 ```scala mdoc:passthrough
 val cSource = 
 """
-typedef struct {
-  long long number;
-} Small;
-
-typedef struct {
-  int x;
-  char* hello;
-  Small sm;
-} Big;
-"""
+|typedef struct {
+|  long long number;
+|} Small;
+|
+|typedef struct {
+|  int x;
+|  char* hello;
+|  Small sm;
+|} Big;
+""".trim.stripMargin
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
@@ -57,16 +45,16 @@ parameter in the `Binding(...)` specification.
 ```scala mdoc:nest:passthrough
 val cSource = 
 """
-typedef struct {
-  int x;
-  char* hello;
-} Enabled;
-
-typedef struct {
-  int x;
-  char* hello;
-} Disabled;
-"""
+|typedef struct {
+|  int x;
+|  char* hello;
+|} Enabled;
+|
+|typedef struct {
+|  int x;
+|  char* hello;
+|} Disabled;
+""".trim.stripMargin
 println(bindgen.BindgenRender.render(cSource, "libtest", "--render.no-constructor", "Disabled"))
 ```
 
@@ -79,16 +67,16 @@ along with getters and setters.
 ```scala mdoc:nest:passthrough
 val cSource = 
 """
-typedef struct {
-  long long number;
-} Small;
-
-typedef union {
-  int x;
-  char* hello;
-  Small sm;
-} Big;
-"""
+|typedef struct {
+|  long long number;
+|} Small;
+|
+|typedef union {
+|  int x;
+|  char* hello;
+|  Small sm;
+|} Big;
+""".trim.stripMargin
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
@@ -100,13 +88,14 @@ Where "Simple" means "not passing naked `structs`", because Scala Native cannot 
 ```scala mdoc:nest:passthrough
 val cSource = 
 """
-typedef struct {
-  long long number;
-} Small;
+|typedef struct {
+|  long long number;
+|} Small;
+|
+|long simple(int x, char *y);
+|Small* with_pointers(Small *x, int y);
+""".trim.stripMargin
 
-long simple(int x, char *y);
-Small* with_pointers(Small *x, int y);
-"""
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
@@ -119,13 +108,14 @@ but they all delegate to an external C function which takes its arguments as **p
 ```scala mdoc:nest:passthrough
 val cSource = 
 """
-typedef struct {
-  long long number;
-} Small;
+|typedef struct {
+|  long long number;
+|} Small;
+|
+|void bad_arguments(Small n, Small n2);
+|Small bad_return_type();
+""".trim.stripMargin
 
-void bad_arguments(Small n, Small n2);
-Small bad_return_type();
-"""
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
@@ -141,18 +131,19 @@ This documentation is built on Linux.
 ```scala mdoc:nest:passthrough
 val cSource = 
 """
-typedef enum {
-  U_X = 1,
-  U_Y = 4,
-  U_Z = 228
-} MyUnsigned;
+|typedef enum {
+|  U_X = 1,
+|  U_Y = 4,
+|  U_Z = 228
+|} MyUnsigned;
+|
+|typedef enum {
+|  X = -1,
+|  Y = 4,
+|  Z = 228
+|} MySigned;
+""".trim.stripMargin
 
-typedef enum {
-  X = -1,
-  Y = 4,
-  Z = 228
-} MySigned;
-"""
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
@@ -164,9 +155,10 @@ that the function must be statically known.
 ```scala mdoc:nest:passthrough
 val cSource = 
 """
-typedef void* Cursor;
-typedef int (*Visitor)(Cursor*);
-"""
+|typedef void* Cursor;
+|typedef int (*Visitor)(Cursor*);
+""".trim.stripMargin
+
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
@@ -180,12 +172,12 @@ Scala cannot have recursive type aliases.
 ```scala mdoc:nest:passthrough
 val cSource = 
 """
-typedef struct Arr;
-
-typedef struct {
-  struct Arr* nested;
-} Arr;
-"""
+|typedef struct Arr;
+|
+|typedef struct {
+|  struct Arr* nested;
+|} Arr;
+""".trim.stripMargin
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
@@ -194,16 +186,17 @@ println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```scala mdoc:nest:passthrough
 val cSource = 
 """
-enum {
-  HELLO = 25,
-  BYEBYE = 11
-};
+|enum {
+|  HELLO = 25,
+|  BYEBYE = 11
+|};
+|
+|enum {
+|  HOW=-1,
+|  DOESTHIS=-2,
+|  WORK=0
+|};
+""".trim.stripMargin
 
-enum {
-  HOW=-1,
-  DOESTHIS=-2,
-  WORK=0
-};
-"""
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```

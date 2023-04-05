@@ -2,11 +2,6 @@
 title: Limitations
 ---
 
-<!--toc:start-->
-- [Definitions like `#define SOME_VALUE 25` are not exported](#definitions-like-define-somevalue-25-are-not-exported)
-- [Variadic functions are not rendered (only before version 0.0.16)](#variadic-functions-are-not-rendered-only-before-version-0016)
-<!--toc:end-->
-
 ## Definitions like `#define SOME_VALUE 25` are not exported
 
 The world of C preprocessor directives is dark and impossible to formalise.

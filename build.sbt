@@ -347,12 +347,13 @@ lazy val docs =
     .in(file("docs"))
     .enablePlugins(SubatomicPlugin)
     .settings(
-      scalaVersion := "3.1.3",
+      scalaVersion := Versions.Scala3,
       fork := true,
       publish / skip := true,
       Compile / run / envVars := Map(
         "BINDGEN_BINARY" -> (bindgen / Compile / nativeLink).value.toString()
-      )
+      ),
+      libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.12.0"
     )
 // --------------HELPERS-------------------------
 
