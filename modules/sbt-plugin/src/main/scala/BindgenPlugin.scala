@@ -22,14 +22,31 @@ object BindgenMode {
 
 object BindgenPlugin extends AutoPlugin {
   object autoImport {
-    val bindgenVersion = settingKey[String]("")
-    val bindgenBinary = taskKey[File]("")
-    val bindgenBindings = taskKey[Seq[Binding]]("")
-    val bindgenGenerateScalaSources = taskKey[Seq[File]]("")
-    val bindgenGenerateCSources = taskKey[Seq[File]]("")
-    val bindgenClangPath = taskKey[java.nio.file.Path]("")
-    val bindgenMode = settingKey[BindgenMode]("")
-    val bindgenGenerateAll = taskKey[Seq[File]]("")
+    val bindgenVersion = settingKey[String](
+      s"Version of bindgen to download. Default: ${BuildInfo.version} (matches the plugin version)"
+    )
+    val bindgenBinary = taskKey[File](
+      "Path to bindgen binary. By default it will be downloaded from Maven Central, but you can override it"
+    )
+
+    val bindgenBindings = taskKey[Seq[Binding]]("Binding definitions")
+
+    val bindgenGenerateScalaSources =
+      taskKey[Seq[File]]("Generate Scala bindings")
+
+    val bindgenGenerateCSources =
+      taskKey[Seq[File]]("Generate C glue code for the bindings")
+
+    val bindgenGenerateAll =
+      taskKey[Seq[File]]("Generate both Scala bindings and C code")
+
+    val bindgenClangPath = taskKey[java.nio.file.Path](
+      "Path to `clang` command, used to figure out the paths to standard C/C++ library." +
+        "\nDefault: same as `nativeConfig` from Scala Native plugin"
+    )
+    val bindgenMode = settingKey[BindgenMode](
+      s"Source generation mode. Default: ${BindgenMode.ResourceGenerator}"
+    )
   }
 
   override def requires: Plugins = ScalaNativePlugin

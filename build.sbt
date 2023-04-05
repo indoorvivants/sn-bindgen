@@ -302,9 +302,22 @@ lazy val tests = projectMatrix
                   .toMap
 
                 headerSpec.toSeq.map { case (header, name) =>
+                  val PREF = "//!bindgen"
+                  val contents = IO
+                    .readLines(header)
+                    .map(_.trim)
+                    .filter(_.startsWith(PREF))
+                    .map(_.stripPrefix(PREF).trim)
+                    .flatMap(_.split(" "))
+                    .map(_.trim)
+
+                  val isMultiFile = contents.contains("--multi-file")
+
                   Binding
                     .builder(header, s"lib_test_$name")
                     .addCImport(s"$name.h")
+                    .withBindgenArguments(contents)
+                    .withMultiFile(isMultiFile)
                     .build
                 }
               }
@@ -353,6 +366,9 @@ lazy val docs =
       Compile / run / envVars := Map(
         "BINDGEN_BINARY" -> (bindgen / Compile / nativeLink).value.toString()
       ),
+      subatomicMdocVariables ++= previousStableVersion.value
+        .map("STABLE_VERSION" -> _)
+        .toMap,
       libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.12.0"
     )
 // --------------HELPERS-------------------------
@@ -438,7 +454,7 @@ def usesLibClang(conf: NativeConfig) = {
 
 // --------------SETTINGS-------------------------
 
-ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
+ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 lazy val markdownDocuments = taskKey[Seq[java.nio.file.Path]]("")
 markdownDocuments := {
@@ -454,25 +470,7 @@ markdownDocuments / fileInputs ++=
     ).value.toGlob / "**" / "*.js"
   )
 
-lazy val buildSite = inputKey[Unit]("")
-buildSite := Def.inputTaskDyn {
-  val defaultArgs =
-    Seq("--destination", ((ThisBuild / baseDirectory).value / "_site").toString)
-  val parsed = sbt.complete.DefaultParsers.spaceDelimited("<arg>").parsed
-
-  val args = (defaultArgs ++ parsed).mkString(" ")
-
-  val _ = markdownDocuments.value
-
-  Def.taskDyn {
-    (docs / Compile / runMain)
-      .toTask(s" bindgen.docs.Docs build $args")
-  }
-
-}.evaluated
-
 lazy val buildBinary = taskKey[File]("")
-
 buildBinary := {
   val built = (bindgen / Compile / nativeLink).value
   val name =
@@ -670,3 +668,36 @@ lazy val remoteCacheSettings = Seq(
     )
   )
 )
+
+lazy val generateScalaNativeDefinitions = taskKey[Unit]("")
+
+generateScalaNativeDefinitions := Def.taskDyn {
+  val tg = (scalaNativeLibParser / Keys.target).value / "github"
+  val destination = tg / "scala-native"
+  IO.createDirectory(destination)
+
+  import sys.process.*
+  def fetchTags =
+    Process(s"git fetch --tags", destination).!
+
+  def checkout =
+    Process(s"git checkout v${nativeVersion}", destination).!
+
+  def clone =
+    Process(
+      s"git clone https://github.com/scala-native/scala-native.git $destination",
+      tg
+    ).!!
+
+  if ((destination / "build.sbt").isFile()) {
+    fetchTags; checkout
+  } else {
+    println(clone); fetchTags; checkout
+  }
+
+  val targetFile =
+    (bindgen / sourceDirectory).value / "main" / "scala" / "BuiltinType.scala"
+  assert(targetFile.isFile(), s"$targetFile must exist (or was it renamed?)")
+
+  (scalaNativeLibParser / Compile / run).toTask(s" $destination $targetFile")
+}.value
