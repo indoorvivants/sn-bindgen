@@ -2,14 +2,6 @@
 title: Cookbook
 ---
 
-<!--toc:start-->
-- [Generating bindings from multiple header files](#generating-bindings-from-multiple-header-files)
-- [Rendering the binding as multiple files](#rendering-the-binding-as-multiple-files)
-- [(advanced) Splitting the binding into multiple packages](#advanced-splitting-the-binding-into-multiple-packages)
-  - [By definition header file location](#by-definition-header-file-location)
-  - [By definition name](#by-definition-name)
-<!--toc:end-->
-
 ## Generating bindings from multiple header files
 
 Some libraries break apart their functionality among several header files, that you are supposed to pick and choose.
