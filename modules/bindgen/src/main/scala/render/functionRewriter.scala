@@ -4,7 +4,52 @@ package rendering
 import scala.collection.mutable.ListBuffer
 import opaque_newtypes.*
 
-def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
+def functionRewriter(badFunction: Def.Function)(using
+    AliasResolver,
+    Config
+): Seq[GeneratedFunction] =
+  val isReturnTypeAStruct = isDirectStructAccess(badFunction.returnType)
+  val anyParameterIsAStruct =
+    badFunction.parameters.map(_._2).exists(isDirectStructAccess)
+
+  if isReturnTypeAStruct || anyParameterIsAStruct then
+    if badFunction.variadic then
+      warning(
+        s"Function ${badFunction.name} was not generated because it " +
+          "requires forwarders (as it passes structs by value), but fowarders cannot have variadic arguments"
+      )
+      Seq.empty
+    else
+      // we will generate three functions
+      val generated = Seq.newBuilder[GeneratedFunction]
+      // 1. a private Scala forwarder function
+      if !badFunction.variadic then
+        generated.addOne(scalaForwarderFunction(badFunction))
+      // 2. a public Scala wrapper function, which leaves parameter types untouched
+      generated.addOne(scalaAllocatingFunction(badFunction))
+      // 2.1. a public Scala wrapper function, which takes parameters by references
+      generated.addAll(scalaPtrFunctions(badFunction))
+      // 3. a C forwarder function
+      generated.addOne(cForwarderFunction(badFunction))
+
+      generated.result
+  else
+    Seq(
+      GeneratedFunction.ScalaFunction(
+        badFunction.name.into(ScalaFunctionName),
+        badFunction.returnType,
+        List(badFunction.parameters.toList),
+        ScalaFunctionBody.Extern,
+        public = true,
+        variadic = badFunction.variadic,
+        meta = Some(badFunction.meta)
+      )
+    )
+  end if
+
+end functionRewriter
+
+private def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
   import CType.*
   typ match
     case _: Struct  => true
@@ -200,40 +245,3 @@ private def cForwarderFunction(
       isDirectStructAccess(bad.returnType)
     )
   )
-
-def functionRewriter(badFunction: Def.Function)(using
-    AliasResolver,
-    Config
-): Seq[GeneratedFunction] =
-  val isReturnTypeAStruct = isDirectStructAccess(badFunction.returnType)
-  val anyParameterIsAStruct =
-    badFunction.parameters.map(_._2).exists(isDirectStructAccess)
-
-  if isReturnTypeAStruct || anyParameterIsAStruct then
-    // we will generate three functions
-    val generated = Seq.newBuilder[GeneratedFunction]
-    // 1. a private Scala forwarder function
-    generated.addOne(scalaForwarderFunction(badFunction))
-    // 2. a public Scala wrapper function, which leaves parameter types untouched
-    generated.addOne(scalaAllocatingFunction(badFunction))
-    // 2.1. a public Scala wrapper function, which takes parameters by references
-    generated.addAll(scalaPtrFunctions(badFunction))
-    // 3. a C forwarder function
-    generated.addOne(cForwarderFunction(badFunction))
-
-    generated.result
-  else
-    Seq(
-      GeneratedFunction.ScalaFunction(
-        badFunction.name.into(ScalaFunctionName),
-        badFunction.returnType,
-        List(badFunction.parameters.toList),
-        ScalaFunctionBody.Extern,
-        public = true,
-        variadic = badFunction.variadic,
-        meta = Some(badFunction.meta)
-      )
-    )
-  end if
-
-end functionRewriter

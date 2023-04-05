@@ -305,9 +305,6 @@ lazy val tests = projectMatrix
                   Binding
                     .builder(header, s"lib_test_$name")
                     .addCImport(s"$name.h")
-                    .withLogLevel(
-                      LogLevel.Info
-                    )
                     .build
                 }
               }
