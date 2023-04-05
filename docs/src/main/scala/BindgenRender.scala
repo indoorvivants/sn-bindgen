@@ -2,8 +2,17 @@ package bindgen
 
 import os.ProcessOutput
 
+import scalatags.Text.all.*
+
 object BindgenRender:
   lazy val binary = sys.env("BINDGEN_BINARY")
+
+  def escapeHtml(s: String): String =
+    val pattern = """([&<>"])""".r
+    val replacements =
+      Map("&" -> "&amp;", "<" -> "&lt;", ">" -> "&gt;", "\"" -> "&quot;")
+    pattern.replaceAllIn(s, m => replacements(m.group(1)))
+  end escapeHtml
 
   private def sideBySide(
       filename: String,
@@ -11,27 +20,51 @@ object BindgenRender:
       scalaSource: String,
       generatedCSource: Option[String] = None
   ) =
-    val head =
-      """<div style = "display:flex;width:100%; font-size:16px; justify-content: space-between;">"""
-    val c =
-      s"""<div style = "width: 40%; text-align: left"><b>$filename</b><pre><code class = "hljs language-c">""" + cSource
-        .replace("\n", "<br />") + "</pre></code></div>"
-    val scala =
-      """<div style = "overflow: scroll;"><b>Generated Scala</b><div style = "max-height:400px"><pre><code class = "hljs language-scala">""" + scalaSource + "</code></pre></div></div>"
-    val foot = "</div>"
-
-    val generatedC =
-      generatedCSource.map { code =>
-        """<div style = "overflow: scroll;"><b>Generated C</b><div style = "max-height:400px"><pre><code class = "hljs">""" + code + "</code></pre></div></div>"
+    val genCCode = generatedCSource
+      .map { cs =>
+        s"""
+          |**Generated `C` code**
+          |```c
+          |${cs}
+          |```
+          """.trim.stripMargin
       }
+      .getOrElse("")
 
-    head + c + """<div style = "width:55%">""" + scala + generatedC.getOrElse(
-      ""
-    ) + "</div>" + foot
+    s"""
+    |
+    |
+    |<div class = "flex w-full gap-4">
+    |<div class = "w-5/12">
+    |
+    |**Source `C` code**
+    |```c
+    |${cSource}
+    |```
+    |
+    |</div>
+    |
+    |<div class = "w-7/12">
+    |
+    |**Generated `Scala` code**
+    |```scala
+    |${scalaSource}
+    |```
+    |
+    |$genCCode
+    |
+    |</div>
+    |</div>
+    |
+    """.stripMargin
+
   end sideBySide
 
   def safe(s: String) =
-    s.replace(">", "&gt;").replace("<", "&lt;").replace("#", "&#35;")
+    s.replace(">", "&gt;")
+      .replace("<", "&lt;")
+      .replace("#", "&#35;")
+      .replace('"'.toString(), "&quot;")
 
   def render(
       cSource: String,
@@ -72,7 +105,7 @@ object BindgenRender:
         .call(
           os.pwd,
           stdout =
-            ProcessOutput.Readlines(str => generatedScala.append(str + "<br>"))
+            ProcessOutput.Readlines(str => generatedScala.append(str + "\n"))
         )
     )
     val generatedC = StringBuilder()
@@ -81,9 +114,7 @@ object BindgenRender:
       os.proc(cmdC)
         .call(
           os.pwd,
-          stdout = ProcessOutput.Readlines(str =>
-            generatedC.append(safe(str) + "<br>")
-          )
+          stdout = ProcessOutput.Readlines(str => generatedC.append(str + "\n"))
         )
     )
 

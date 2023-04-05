@@ -3,14 +3,6 @@ title: Quick start
 mdoc: true
 ---
 
-<!--toc:start-->
-- [Pre-requisites](#pre-requisites)
-- [Supported platforms](#supported-platforms)
-- [Installing SBT plugin (stable)](#installing-sbt-plugin-stable)
-- [Installing SBT plugin (latest)](#installing-sbt-plugin-latest)
-- [Usage](#usage)
-<!--toc:end-->
-
 Quickest way to start would be to use the [template](https://github.com/keynmol/sn-bindgen-template/).
 
 For more involved examples, see a [dedicated repository](https://github.com/keynmol/sn-bindgen-examples/)

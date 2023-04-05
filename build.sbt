@@ -363,7 +363,7 @@ lazy val docs =
     .in(file("docs"))
     .enablePlugins(SubatomicPlugin)
     .settings(
-      scalaVersion := "3.1.3",
+      scalaVersion := Versions.Scala3,
       fork := true,
       publish / skip := true,
       Compile / run / envVars := Map(
@@ -371,7 +371,8 @@ lazy val docs =
       ),
       subatomicMdocVariables ++= previousStableVersion.value
         .map("STABLE_VERSION" -> _)
-        .toMap
+        .toMap,
+      libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.12.0"
     )
 // --------------HELPERS-------------------------
 
