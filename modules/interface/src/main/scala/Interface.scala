@@ -269,7 +269,7 @@ object Binding {
     val linkName = None
     val cImports = List.empty[String]
     val clangFlags = List.empty[String]
-    val logLevel = LogLevel.Info
+    val logLevel = LogLevel.Warn
     val systemIncludes = Includes.ClangSearchPath
     val noConstructor = Set.empty[String]
     val opaqueStructs = Set.empty[String]

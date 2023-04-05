@@ -14,6 +14,7 @@ import scalanative.libc.*
 
 def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
   val typ = clang_getCursorType(functionCursor)
+  val isVariadic = clang_Cursor_isVariadic(functionCursor).toInt == 1
   val functionName = clang_getCursorSpelling(functionCursor).string
   val returnType = clang_getResultType(typ)
 
@@ -27,6 +28,7 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
         clang_getTypeSpelling(returnType).string
       ),
       numArguments = clang_getNumArgTypes(typ),
+      variadic = isVariadic,
       meta = extractMetadata(functionCursor)
     )
   )

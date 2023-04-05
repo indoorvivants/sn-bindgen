@@ -8,13 +8,14 @@ def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
     Config,
     AliasResolver
 ) =
+  val variadicArg = if f.variadic then ", rest: Any*" else ""
   val arglist = f.arguments
     .map { args =>
       args
         .map(fp => s"${escape(fp.name)} : ${scalaType(fp.typ)}")
         .mkString(", ")
     }
-    .mkString("(", ")(", ")")
+    .mkString("(", ")(", s"$variadicArg)")
 
   val flatArguments = f.arguments.flatten
 

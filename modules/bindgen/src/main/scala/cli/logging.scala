@@ -2,7 +2,9 @@ package bindgen
 
 case class LoggingConfig(minLogPriority: MinLogPriority)
 object LoggingConfig:
-  val default = LoggingConfig(MinLogPriority(LogLevel.priority(LogLevel.info)))
+  val default = LoggingConfig(
+    MinLogPriority(LogLevel.priority(LogLevel.warning))
+  )
   given infer(using c: Config): LoggingConfig = LoggingConfig(c.minLogPriority)
 
 val trace = new LogBuilder(LogLevel.trace)
