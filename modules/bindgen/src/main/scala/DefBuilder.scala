@@ -26,6 +26,7 @@ sealed trait DefBuilder[Builds]:
           parameters.result(),
           originalCType,
           numArguments,
+          variadic,
           meta
         )
 end DefBuilder
@@ -58,6 +59,7 @@ object DefBuilder:
       var parameters: ListBuffer[FunctionParameter],
       val originalCType: OriginalCType,
       var numArguments: Int,
+      var variadic: Boolean,
       var meta: Meta
   ) extends DefBuilder[Def.Function]
 

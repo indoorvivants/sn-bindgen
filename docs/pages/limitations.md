@@ -22,7 +22,9 @@ int get_EVP_MAX_MD_SIZE() { return EVP_MAX_MD_SIZE; }
 void get_OpenSSL_add_all_digests() { OpenSSL_add_all_digests(); }
 ```
 
-## Variadic functions
+## Variadic functions are not rendered (only before version 0.0.16)
+
+**Note: in `bindgen >= 0.0.17` and Scala Native 0.4.12+ you can now have variadic functions**
 
 Scala Native does support constructing a `va_list`, but a function taking such list must exist in the first place.
 
