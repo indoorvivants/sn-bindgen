@@ -593,7 +593,7 @@ usefulTasks := Seq(
   ).alias("ptt"),
   UsefulTask(
     "buildWebsite",
-    "Tests for generated code and its runtime correctness"
+    "Build the website"
   ).alias("bw"),
   UsefulTask(
     "devPublish",
