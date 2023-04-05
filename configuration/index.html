@@ -1,29 +1,14 @@
-<html><head><title>SN bindgen: Configuration </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/androidstudio.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/template.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body><div class="container"><header class="main-header"><div class="site-title"><h1><a href="/">SN bindgen</a></h1><small>Scala 3 Native binding generator to C libraries</small></div><div id="searchContainer" class="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img src="https://cdn.svgporn.com/logos/github-icon.svg" class="gh-logo" /></a></div></header><div><a class="nav-btn" href="/index.html">Home</a><a class="nav-btn nav-selected" href="/configuration/index.html">Configuration </a><a class="nav-btn" href="/limitations/index.html">Limitations</a><a class="nav-btn" href="/motivation/index.html">Motivation</a><a class="nav-btn" href="/cookbook/index.html">Cookbook</a><a class="nav-btn" href="/semantics/index.html">Semantics </a><a class="nav-btn" href="/quickstart/index.html">Quick start</a></div><hr /><div><h1><a href="#sbt-plugin" id="sbt-plugin">SBT plugin</a></h1>
-<!--toc:start-->
-<ul>
-<li><a href="#sbt-plugin">SBT plugin</a>
-<ul>
-<li><a href="#bindgenversion-string"><code>bindgenVersion</code>: <em>String</em></a></li>
-<li><a href="#bindgenbinary-javaiofile"><code>bindgenBinary</code>: <em>java.io.File</em></a></li>
-<li><a href="#bindgenmode-bindgeninterfacebindgenmode"><code>bindgenMode</code>: <code>bindgen.interface.BindgenMode</code></a>
-<ul>
-<li><a href="#sourceresource-generator-mode">Source/resource generator mode</a></li>
-<li><a href="#manual-mode">Manual mode</a></li>
-</ul>
-</li>
-<li><a href="#cli">CLI</a></li>
-</ul>
-</li>
-</ul>
-<!--toc:end-->
-<h2><a href="#bindgenversion-string" id="bindgenversion-string"><code>bindgenVersion</code>: <em>String</em></a></h2>
-<p>Use this to choose another version of bindgen (by default it matches the plugin version)</p>
-<h2><a href="#bindgenbinary-javaiofile" id="bindgenbinary-javaiofile"><code>bindgenBinary</code>: <em>java.io.File</em></a></h2>
-<p>Use this to override the path to bindgen binary.
-By default it's resolved from Sonatype for your particular platform.</p>
+<html><head><title>SN bindgen: Configuration </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/tomorrow-night-blue.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">SN bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#sbt-plugin">SBT plugin</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#choosing-a-different-version">Choosing a different version</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#overriding-path-to-bindgen-binary">Overriding path to bindgen binary</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#different-modes-of-operation">Different modes of operation</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#sourceresource-generator-mode">Source/resource generator mode</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#manual-mode">Manual mode</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#cli">CLI</a></li></ul></div><div><h2><a href="#sbt-plugin" id="sbt-plugin">SBT plugin</a></h2>
+<h3><a href="#choosing-a-different-version" id="choosing-a-different-version">Choosing a different version</a></h3>
+<p>Use <code>bindgenVersion</code> to choose another version of bindgen (by default it matches the plugin version)</p>
+<h3><a href="#overriding-path-to-bindgen-binary" id="overriding-path-to-bindgen-binary">Overriding path to bindgen binary</a></h3>
+<p><code>bindgenBinary</code> (<code>File</code>)</p>
+<p>By default it's resolved from Sonatype for your particular platform.</p>
 <pre><code class="language-scala">bindgenBinary := baseDirectory.value / &quot;my-custom-binary&quot;
 </code></pre>
-<h2><a href="#bindgenmode-bindgeninterfacebindgenmode" id="bindgenmode-bindgeninterfacebindgenmode"><code>bindgenMode</code>: <code>bindgen.interface.BindgenMode</code></a></h2>
+<h3><a href="#different-modes-of-operation" id="different-modes-of-operation">Different modes of operation</a></h3>
+<pre><code class="language-scala">bindgenMode: bindgen.interface.bindgenMode
+</code></pre>
 <p>This parameter controls the way the bindgen is invoked and the location where the generated files will be placed</p>
 <h3><a href="#sourceresource-generator-mode" id="sourceresource-generator-mode">Source/resource generator mode</a></h3>
 <p>Value <code>ResourceGenerator</code>, the <strong>default</strong>.</p>
@@ -40,8 +25,8 @@ code.</p>
 <pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--link-name &lt;string&gt;] [--scala] [--c] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.0.16+2-8d827e85-SNAPSHOT
-Built using Scala 3.2.2 and Scala Native 0.4.10
+Version: 0.0.16+6-f71bbb24-SNAPSHOT
+Built using Scala 3.2.2 and Scala Native 0.4.12
 
 Options and flags:
     --help
@@ -120,7 +105,7 @@ Options and flags:
     --print-files
         (internal use only) Output to stdout the files written by bindgen, 1 per line
 </code></pre>
-</div></div><footer>© 2021-2023 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
+</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2023 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               gtag('js', new Date());
 
