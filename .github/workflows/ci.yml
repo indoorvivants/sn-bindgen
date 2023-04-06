@@ -57,7 +57,7 @@ jobs:
         run: sbt pullRemoteCache || echo 'remote cache not found'
 
       - name: CI (unix-like)
-        run: sbt ci buildBinary pushRemoteCache
+        run: sbt ci buildBinary 
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
 
@@ -67,6 +67,11 @@ jobs:
           path: bin/${{ matrix.output_filename }}
           name: ${{ matrix.uploaded_filename }}
           if-no-files-found: error
+
+      - name: Push remote cache
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+        run: sbt pushRemoteCache || echo "Failed to push remote cache"
+
 
   windows_build:
     name: Windows CI
