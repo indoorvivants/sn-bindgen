@@ -13,6 +13,8 @@ import bindgen.interface.LogLevel
 import bindgen.interface.Includes
 import com.indoorvivants.detective.Platform
 import ArtifactNames.*
+import java.io.InputStream
+import java.io.FileOutputStream
 
 sealed trait BindgenMode extends Product with Serializable
 object BindgenMode {
@@ -60,6 +62,42 @@ object BindgenPlugin extends AutoPlugin {
     Def.task {
       val res = (dependencyResolution).value
 
+      def download(link: String, to: java.nio.file.Path, report: Int => Unit) =
+        Try {
+          val url = new URL(link)
+          val conn = url.openConnection()
+          val contentLength = conn.getContentLength()
+          var is = Option.empty[InputStream]
+          var out = Option(new FileOutputStream(to.toFile))
+          try {
+            val inputStream = conn.getInputStream()
+            is = Some(inputStream)
+            var downloaded = 0
+            val buffer = Array.ofDim[Byte](16384)
+            var length = 0
+
+            // Looping until server finishes
+            var percentage = 0
+            while ({ length = inputStream.read(buffer); length } != -1) {
+              // Writing data
+              out.foreach(_.write(buffer, 0, length))
+              downloaded += length
+              val newPercentage = (downloaded * 100) / contentLength
+              if (newPercentage != percentage) {
+                report(newPercentage)
+                percentage = newPercentage
+              }
+
+            }
+
+            to.toFile()
+          } finally {
+            is.foreach(_.close())
+            out.foreach(_.close())
+          }
+
+        }
+
       def getJars(mid: ModuleID) = {
 
         val depRes = (update / dependencyResolution).value
@@ -79,25 +117,54 @@ object BindgenPlugin extends AutoPlugin {
           .fold(uw => throw uw.resolveException, identity)
       }
 
-      def find(platform: Platform.Target) = {
+      def downloadFromMaven(platform: Platform.Target) = Try {
         getJars(
           ModuleID(
             "com.indoorvivants",
             "bindgen_native0.4_3",
             bindgenVersion.value
           ).intransitive().classifier(jarString(platform))
-        ).headOption
+        ).headOption.getOrElse(
+          throw new Exception("Could not download the binary for bindgen")
+        )
       }
 
-      val file = {
-        find(Platform.target)
-      }.getOrElse(
-        throw new Exception("Could not download the binary for bindgen")
-      )
+      downloadFromMaven(Platform.target)
+        .orElse {
+          val link =
+            s"https://github.com/indoorvivants/sn-bindgen/releases/download/v${bindgenVersion.value}/sn-bindgen-${coursierString(Platform.target)}"
 
-      file.setExecutable(true)
+          val cacheDir =
+            (ThisBuild / streams).value.cacheDirectory / "sn-bindgen-gh-release-binary"
 
-      file
+          cacheDir.mkdirs()
+
+          val path = cacheDir / s"v${bindgenVersion.value}"
+          if (path.exists() && path.canExecute())
+            Try(path)
+          else {
+            sLog.value.info(
+              s"Binary wasn't found on Maven Central, attempting to download from Github releases (to ${path})"
+            )
+
+            download(
+              link,
+              path.toPath(), {
+                var prev = 0
+                i =>
+                  if (i - prev >= 10) {
+                    prev = i
+                    sLog.value.info(s"Downloaded ${i}%")
+                  }
+              }
+            )
+          }
+        }
+        .map { file =>
+          file.setExecutable(true)
+          file
+        }
+
     }
 
   override def projectSettings =
@@ -106,7 +173,7 @@ object BindgenPlugin extends AutoPlugin {
       bindgenBindings := Seq.empty,
       bindgenMode := BindgenMode.ResourceGenerator,
       bindgenClangPath := nativeClang.value.toPath,
-      bindgenBinary := resolveBinaryTask.value
+      bindgenBinary := resolveBinaryTask.value.get
     ) ++
       Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
 

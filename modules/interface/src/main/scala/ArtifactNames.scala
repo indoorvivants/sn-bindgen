@@ -17,9 +17,9 @@ object ArtifactNames {
   def jarString(bits: Platform.Bits, arch: Platform.Arch): String = {
     (bits, arch) match {
       case (Bits.x64, Arch.Intel) => "x86_64"
-      case (Bits.x64, Arch.Arm)   => "aarch_64"
+      case (Bits.x64, Arch.Arm)   => "aarch64"
       case (Bits.x32, Arch.Intel) => "x86_32"
-      case (Bits.x32, Arch.Arm)   => "aarch_32"
+      case (Bits.x32, Arch.Arm)   => "aarch32"
     }
   }
 

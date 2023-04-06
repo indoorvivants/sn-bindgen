@@ -15,7 +15,7 @@ class TestPlatform {
       coursierString(Target(OS.MacOS, Arch.Intel, Bits.x64))
     )
     assertEquals(
-      "aarch_64-apple-darwin",
+      "aarch64-apple-darwin",
       coursierString(Target(OS.MacOS, Arch.Arm, Bits.x64))
     )
     assertEquals(
