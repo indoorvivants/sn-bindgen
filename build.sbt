@@ -635,6 +635,16 @@ buildWebsite := Def.taskDyn {
   )
 }.value
 
+lazy val buildWebsiteNoMdoc =
+  taskKey[Unit]("Build website in _site folder without running Mdoc")
+buildWebsiteNoMdoc := Def.taskDyn {
+  val root = (ThisBuild / baseDirectory).value / "_site"
+
+  (docs / Compile / run).toTask(
+    s" build --destination ${root.toString} --force --disable-mdoc"
+  )
+}.value
+
 def artifactName(nm: String, axes: Seq[VirtualAxis]) = {
   nm + axes
     .sortBy[Int] {
