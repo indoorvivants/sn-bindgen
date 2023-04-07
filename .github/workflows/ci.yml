@@ -72,6 +72,19 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
         run: sbt pushRemoteCache || echo "Failed to push remote cache"
 
+  arm64_build:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_COLOR: 1
+    steps:
+    - uses: earthly/actions/setup-earthly@v1
+      with:
+        version: v0.7.2
+    - uses: actions/checkout@v2
+
+    - name: Run build
+      run: earthly --ci --output +bindgen
+
 
   windows_build:
     name: Windows CI
