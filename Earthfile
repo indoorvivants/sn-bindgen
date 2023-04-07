@@ -10,6 +10,11 @@ llvm-base:
 bindgen:
     FROM +llvm-base
     WORKDIR /sources
+    ENV LLVM_BIN=/usr/lib/llvm-14/bin
+    ENV CC=/usr/lib/llvm-14/bin/clang
+    ENV CXX=/usr/lib/llvm-14/bin/clang++
+    ENV SN_RELEASE "fast"
+    ENV CI "true"
     
     # SBT dependencies
     COPY . /sources
