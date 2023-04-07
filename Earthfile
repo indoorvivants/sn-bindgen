@@ -12,9 +12,7 @@ bindgen:
     WORKDIR /sources
     
     # SBT dependencies
-    COPY build.sbt /sources
-    COPY project/*.sbt /sources/project/
-    COPY project/build.properties /sources/project/
-    RUN sbt update
+    COPY . /sources
+    RUN sbt buildBinary
     
     SAVE ARTIFACT bin/bindgen AS LOCAL bin/sn-bindgen-aarch64-pc-linux
