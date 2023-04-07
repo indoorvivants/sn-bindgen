@@ -83,7 +83,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Run build
-      run: earthly --ci --output +bindgen
+      run: earthly --ci --platform linux/arm64 --output +bindgen
 
 
   windows_build:
