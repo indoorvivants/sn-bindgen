@@ -7,5 +7,6 @@ apt update && apt install -y curl && \
     chmod +x /usr/local/bin/sbt && \
     curl -Lo llvm.sh https://apt.llvm.org/llvm.sh && \
     chmod +x llvm.sh && \
-    apt install -y lsb-release wget software-properties-common gnupg autopoint libtool && \
-    ./llvm.sh $LLVM_VERSION
+    apt install -y lsb-release wget software-properties-common gnupg autopoint libtool git && \
+    ./llvm.sh $LLVM_VERSION && \
+    apt install libclang-$LLVM_VERSION-dev
