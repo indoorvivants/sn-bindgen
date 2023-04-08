@@ -158,7 +158,7 @@ jobs:
       # Can't make shell type come from a matrix parameter: 
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
       - name: CI (windows)
-        run: sbt ci 'buildBinary sn-bindgen-x86_64-pc-win32.exe'
+        run: sbt ci "buildBinary sn-bindgen-x86_64-pc-win32.exe"
         shell: cmd
 
       - name: Upload artifacts
@@ -228,24 +228,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
 
-      # - name: Rename binaries 
-      #   run: |
-      #     cd "${{steps.download.outputs.download-path}}"
-      #     mv sn-bindgen-x86_64-apple-darwin sn-bindgen-x86_64-apple-darwin-dir
-      #     mv sn-bindgen-x86_64-apple-darwin-dir/bindgen sn-bindgen-x86_64-apple-darwin
-
-      #     mv sn-bindgen-x86_64-pc-linux sn-bindgen-x86_64-pc-linux-dir
-      #     mv sn-bindgen-x86_64-pc-linux-dir/bindgen sn-bindgen-x86_64-pc-linux
-
-      #     mv sn-bindgen-aarch64-pc-linux sn-bindgen-aarch64-pc-linux-dir
-      #     mv sn-bindgen-aarch64-pc-linux-dir/bindgen sn-bindgen-aarch64-pc-linux
-
-      #     mv sn-bindgen-x86_64-pc-win32 sn-bindgen-x86_64-pc-win32-dir
-      #     mv sn-bindgen-x86_64-pc-win32-dir/bindgen.exe sn-bindgen-x86_64-pc-win32.exe
-      #     ls -R .
-
       - name: Upload release binaries
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: "${{steps.download.outputs.download-path}}/**/sn-bindgen-*"
+          files: "${{steps.download.outputs.download-path}}/sn-bindgen-*"
