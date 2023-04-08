@@ -237,8 +237,8 @@ jobs:
           mv sn-bindgen-x86_64-pc-linux sn-bindgen-x86_64-pc-linux-dir
           mv sn-bindgen-x86_64-pc-linux-dir/bindgen sn-bindgen-x86_64-pc-linux
 
-          mv sn-bindgen-aarch64-pc-linux sn-bindgen-aarch64-pc-linux-dir
-          mv sn-bindgen-aarch64-pc-linux-dir/bindgen sn-bindgen-aarch64-pc-linux
+          # mv sn-bindgen-aarch64-pc-linux sn-bindgen-aarch64-pc-linux-dir
+          # mv sn-bindgen-aarch64-pc-linux-dir/bindgen sn-bindgen-aarch64-pc-linux
 
           mv sn-bindgen-x86_64-pc-win32 sn-bindgen-x86_64-pc-win32-dir
           mv sn-bindgen-x86_64-pc-win32-dir/bindgen.exe sn-bindgen-x86_64-pc-win32.exe
