@@ -396,11 +396,11 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     arch <- Seq(Arch.Intel, Arch.Arm)
     bits <- Seq(Bits.x32, Bits.x64)
     target = Platform.Target(os, arch, bits)
-    filename = os match {
-      case OS.Windows => "bindgen.exe"
-      case _          => "bindgen"
+    ext = os match {
+      case OS.Windows => ".exe"
+      case _          => ""
     }
-    file = folder / s"sn-bindgen-${coursierString(target)}" / filename
+    file = folder / s"sn-bindgen-${coursierString(target)}$ext"
     if file.exists()
   } yield build(jarString(target), file)
 
@@ -470,11 +470,16 @@ markdownDocuments / fileInputs ++=
     ).value.toGlob / "**" / "*.js"
   )
 
-lazy val buildBinary = taskKey[File]("")
+lazy val buildBinary = inputKey[File]("")
 buildBinary := {
+  import complete.DefaultParsers.*
+  val args: Seq[String] = spaceDelimited("<arg>").parsed
+
   val built = (bindgen / Compile / nativeLink).value
   val name =
-    if (Platform.os == Platform.OS.Windows) "bindgen.exe" else "bindgen"
+    args.headOption.getOrElse {
+      if (Platform.os == Platform.OS.Windows) "bindgen.exe" else "bindgen"
+    }
   val dest = (ThisBuild / baseDirectory).value / "bin" / name
 
   IO.copyFile(built, dest)
