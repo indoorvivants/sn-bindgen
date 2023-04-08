@@ -32,10 +32,10 @@ jobs:
           java-version: '17'
           cache: 'sbt'
 
-      - name: Setup Unix-like
+      - name: Install LLVM
         run: brew install llvm@$LLVM_VERSION
 
-      - name: CI (unix-like)
+      - name: CI and build the binary
         run: sbt ci buildBinary 
 
       - name: Upload artifacts
@@ -44,10 +44,6 @@ jobs:
           path: bin/bindgen
           name: sn-bindgen-x86_64-apple-darwin
           if-no-files-found: error
-
-      - name: Push remote cache
-        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
-        run: sbt pushRemoteCache || echo "Failed to push remote cache"
 
   linux_build:
     name: Linux
@@ -79,7 +75,7 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       FORCE_COLOR: 1
-    # if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+    if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
     steps:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
