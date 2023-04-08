@@ -91,15 +91,15 @@ jobs:
       with:
         fetch-depth: 0 
 
-    # - name: Arm64 build
-    #   run: earthly --ci --platform linux/arm64 --output +bindgen --BUILD_COMMAND="buildBinary" --BINARY_NAME="sn-bindgen-aarch64-pc-linux"
+    - name: Arm64 build
+      run: earthly --ci --platform linux/arm64 --output +bindgen --BUILD_COMMAND="buildBinary" --BINARY_NAME="sn-bindgen-aarch64-pc-linux"
 
-    # - name: Upload Arm64 artifacts
-    #   uses: actions/upload-artifact@master
-    #   with:
-    #     path: bin/sn-bindgen-aarch64-pc-linux
-    #     name: sn-bindgen-aarch64-pc-linux
-    #     if-no-files-found: error
+    - name: Upload Arm64 artifacts
+      uses: actions/upload-artifact@master
+      with:
+        path: bin/sn-bindgen-aarch64-pc-linux
+        name: sn-bindgen-aarch64-pc-linux
+        if-no-files-found: error
 
 
   windows_build:
@@ -204,7 +204,7 @@ jobs:
           ./cs resolve com.indoorvivants:bindgen-interface_2.12:$(cat version)
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-x86_64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
-          # ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-aarch64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-aarch64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier windows-x86_64 --artifact-type jar
 
       - name: Setup Unix-like
@@ -237,8 +237,8 @@ jobs:
           mv sn-bindgen-x86_64-pc-linux sn-bindgen-x86_64-pc-linux-dir
           mv sn-bindgen-x86_64-pc-linux-dir/bindgen sn-bindgen-x86_64-pc-linux
 
-          # mv sn-bindgen-aarch64-pc-linux sn-bindgen-aarch64-pc-linux-dir
-          # mv sn-bindgen-aarch64-pc-linux-dir/bindgen sn-bindgen-aarch64-pc-linux
+          mv sn-bindgen-aarch64-pc-linux sn-bindgen-aarch64-pc-linux-dir
+          mv sn-bindgen-aarch64-pc-linux-dir/bindgen sn-bindgen-aarch64-pc-linux
 
           mv sn-bindgen-x86_64-pc-win32 sn-bindgen-x86_64-pc-win32-dir
           mv sn-bindgen-x86_64-pc-win32-dir/bindgen.exe sn-bindgen-x86_64-pc-win32.exe
