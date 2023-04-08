@@ -402,6 +402,7 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     }
     file = folder / s"sn-bindgen-${coursierString(target)}$ext"
     if file.exists()
+    _ = println(s"Testing ${file.toPath().toAbsolutePath()}, ${file.exists()}")
   } yield build(jarString(target), file)
 
   artifacts.toMap

@@ -196,6 +196,7 @@ jobs:
 
       - name: Check published artifacts
         run: |
+          ls -R binaries
           sbt versionDump binaryArtifacts/publishLocal iface3/publishLocal iface/publishLocal iface2_12/publishLocal
           curl -fLo cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
           chmod +x cs
