@@ -31,7 +31,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/17957220807349051487header.h
+   * [bindgen] header: /tmp/3191620909792205976header.h
   */
   opaque type Big = CStruct3[CInt, CString, Small]
   object Big:
@@ -52,7 +52,7 @@ object structs:
       def sm_=(value: Small): Unit = !struct.at3 = value
 
   /**
-   * [bindgen] header: /tmp/17957220807349051487header.h
+   * [bindgen] header: /tmp/3191620909792205976header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -112,7 +112,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/3332686400411295199header.h
+   * [bindgen] header: /tmp/5748858658036597450header.h
   */
   opaque type Disabled = CStruct2[CInt, CString]
   object Disabled:
@@ -125,7 +125,7 @@ object structs:
       def hello_=(value: CString): Unit = !struct.at2 = value
 
   /**
-   * [bindgen] header: /tmp/3332686400411295199header.h
+   * [bindgen] header: /tmp/5748858658036597450header.h
   */
   opaque type Enabled = CStruct2[CInt, CString]
   object Enabled:
@@ -183,7 +183,7 @@ object structs:
   import _root_.libtest.unions.*
 
   /**
-   * [bindgen] header: /tmp/13653375349025799926header.h
+   * [bindgen] header: /tmp/3284515159336660604header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -202,7 +202,7 @@ object unions:
   import _root_.libtest.unions.*
 
   /**
-   * [bindgen] header: /tmp/13653375349025799926header.h
+   * [bindgen] header: /tmp/3284515159336660604header.h
   */
   opaque type Big = CArray[Byte, Nat._8]
   object Big:
@@ -273,7 +273,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/5467953018999499636header.h
+   * [bindgen] header: /tmp/8485553391995393203header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -293,12 +293,12 @@ private[libtest] object extern_functions:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/5467953018999499636header.h
+   * [bindgen] header: /tmp/8485553391995393203header.h
   */
   def simple(x : CInt, y : CString): CLongInt = extern
 
   /**
-   * [bindgen] header: /tmp/5467953018999499636header.h
+   * [bindgen] header: /tmp/8485553391995393203header.h
   */
   def with_pointers(x : Ptr[Small], y : CInt): Ptr[Small] = extern
 
@@ -348,7 +348,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/4341859889659327198header.h
+   * [bindgen] header: /tmp/7143027039954361066header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -379,13 +379,7 @@ object functions:
   export extern_functions.*
 
   /**
-   * [bindgen] header: /tmp/4341859889659327198header.h
-  */
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
-    __sn_wrap_libtest_bad_arguments(n, n2)
-
-  /**
-   * [bindgen] header: /tmp/4341859889659327198header.h
+   * [bindgen] header: /tmp/7143027039954361066header.h
   */
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit = 
     val __ptr_0: Ptr[Small] = alloc[Small](2)
@@ -394,13 +388,19 @@ object functions:
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
   /**
-   * [bindgen] header: /tmp/4341859889659327198header.h
+   * [bindgen] header: /tmp/7143027039954361066header.h
+  */
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
+    __sn_wrap_libtest_bad_arguments(n, n2)
+
+  /**
+   * [bindgen] header: /tmp/7143027039954361066header.h
   */
   def bad_return_type()(__return : Ptr[Small]): Unit = 
     __sn_wrap_libtest_bad_return_type(__return)
 
   /**
-   * [bindgen] header: /tmp/4341859889659327198header.h
+   * [bindgen] header: /tmp/7143027039954361066header.h
   */
   def bad_return_type()(using Zone): Small = 
     val __ptr_0: Ptr[Small] = alloc[Small](1)
@@ -481,7 +481,7 @@ object predef:
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/9191292035491882732header.h
+   * [bindgen] header: /tmp/4841699028227806659header.h
   */
   opaque type MySigned = CInt
   object MySigned extends CEnum[MySigned]:
@@ -502,7 +502,7 @@ object enumerations:
       inline def is(b: MySigned): Boolean = (a &amp; b) == b
 
   /**
-   * [bindgen] header: /tmp/9191292035491882732header.h
+   * [bindgen] header: /tmp/4841699028227806659header.h
   */
   opaque type MyUnsigned = CUnsignedInt
   object MyUnsigned extends CEnumU[MyUnsigned]:
@@ -555,7 +555,7 @@ object aliases:
   import _root_.libtest.aliases.*
 
   /**
-   * [bindgen] header: /tmp/10482155470154474151header.h
+   * [bindgen] header: /tmp/9619116552113990015header.h
   */
   opaque type Cursor = Ptr[Byte]
   object Cursor: 
@@ -565,7 +565,7 @@ object aliases:
       inline def value: Ptr[Byte] = v
 
   /**
-   * [bindgen] header: /tmp/10482155470154474151header.h
+   * [bindgen] header: /tmp/9619116552113990015header.h
   */
   opaque type Visitor = CFuncPtr1[Ptr[Cursor], CInt]
   object Visitor: 
@@ -611,7 +611,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/18372884956152375938header.h
+   * [bindgen] header: /tmp/17648653156582057726header.h
   */
   opaque type Arr = CStruct1[Ptr[Byte]]
   object Arr:
