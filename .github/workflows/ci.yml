@@ -12,26 +12,15 @@ env:
   SBT_OPTS: "-Xmx4G"
 
 jobs:
-  unix_build:
-    name: Unix CI on ${{ matrix.os }}
+  macos_build:
+    name: MacOS 
     strategy:
       fail-fast: true
-      matrix:
-        include:
-          - os: macos-11
-            output_filename: bindgen
-            uploaded_filename: sn-bindgen-x86_64-apple-darwin
-            llvm_bin_path: /usr/local/opt/llvm@14/bin
-
-          - os: ubuntu-20.04
-            output_filename: bindgen
-            uploaded_filename: sn-bindgen-x86_64-pc-linux
-            llvm_bin_path: /usr/lib/llvm-14/bin
-
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-11
     env:
       SN_RELEASE: fast
       LLVM_VERSION: 14
+      LLVM_BIN: /usr/local/opt/llvm@14/bin
     steps:
       - uses: actions/checkout@v3
         with:
@@ -44,38 +33,53 @@ jobs:
           cache: 'sbt'
 
       - name: Setup Unix-like
-        run: ./build/setup_unix.sh
-
-      - name: SBT remote cache
-        id: remote-cache
-        uses: actions/cache@v3
-        with:
-          path: ./target/remote-cache
-          key: ${{ runner.os }}-remote-cache
-
-      - name: Pull cache 
-        run: sbt pullRemoteCache || echo 'remote cache not found'
+        run: brew install llvm@$LLVM_VERSION
 
       - name: CI (unix-like)
         run: sbt ci buildBinary 
-        env: 
-          LLVM_BIN: ${{ matrix.llvm_bin_path }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
         with:
-          path: bin/${{ matrix.output_filename }}
-          name: ${{ matrix.uploaded_filename }}
+          path: bin/bindgen
+          name: sn-bindgen-x86_64-apple-darwin
           if-no-files-found: error
 
       - name: Push remote cache
         if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
         run: sbt pushRemoteCache || echo "Failed to push remote cache"
 
-  arm64_build:
-    runs-on: ubuntu-latest
+  linux_build:
+    name: Linux
+    runs-on: ubuntu-20.04
     env:
       FORCE_COLOR: 1
+    steps:
+    - uses: earthly/actions/setup-earthly@v1
+      with:
+        version: v0.7.2
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 
+
+    - name: Intel build
+      run: earthly --ci --platform linux/amd64 --output +bindgen --BINARY_NAME="sn-bindgen-x86_64-pc-linux"
+
+    - name: Upload Intel artifacts
+      uses: actions/upload-artifact@master
+      with:
+        path: bin/sn-bindgen-x86_64-pc-linux
+        name: sn-bindgen-x86_64-pc-linux
+        if-no-files-found: error
+
+
+  linux_arm64_build:
+    name: Linux (Arm64)
+    runs-on: ubuntu-20.04
+    env:
+      FORCE_COLOR: 1
+    # if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
     steps:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
@@ -86,12 +90,15 @@ jobs:
     - uses: earthly/actions/setup-earthly@v1
       with:
         version: v0.7.2
-    - uses: actions/checkout@v2
 
-    - name: Run build
-      run: earthly --ci --platform linux/arm64 --output +bindgen
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 
 
-    - name: Upload artifacts
+    - name: Arm64 build
+      run: earthly --ci --platform linux/arm64 --output +bindgen --BUILD_COMMAND="buildBinary" --BINARY_NAME="sn-bindgen-aarch64-pc-linux"
+
+    - name: Upload Arm64 artifacts
       uses: actions/upload-artifact@master
       with:
         path: bin/sn-bindgen-aarch64-pc-linux
@@ -100,7 +107,7 @@ jobs:
 
 
   windows_build:
-    name: Windows CI
+    name: Windows (Intel)
     strategy:
       fail-fast: false
     runs-on: windows-2019
@@ -166,7 +173,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    needs: [unix_build, windows_build, arm64_build]
+    needs: [linux_build, linux_arm64_build, windows_build, macos_build]
     name: Release
     if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
     runs-on: ubuntu-20.04

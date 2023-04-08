@@ -19,6 +19,8 @@ dependencies-base:
 
 bindgen:
     FROM +dependencies-base
+    ARG BUILD_COMMAND="ci; buildBinary"
+    ARG BINARY_NAME="bindgen"
 
     ENV LLVM_BIN=/usr/lib/llvm-14/bin
     ENV CC=/usr/lib/llvm-14/bin/clang
@@ -27,6 +29,6 @@ bindgen:
     ENV CI "true"
 
     COPY . /sources
-    RUN sbt buildBinary
+    RUN sbt "${BUILD_COMMAND}"
     
-    SAVE ARTIFACT bin/bindgen AS LOCAL bin/sn-bindgen-aarch64-pc-linux
+    SAVE ARTIFACT bin/bindgen AS LOCAL bin/$BINARY_NAME
