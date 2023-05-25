@@ -4,7 +4,7 @@ addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.12")
 
 addSbtPlugin("com.indoorvivants" % "sbt-commandmatrix" % "0.0.5")
 
-addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.11")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.12")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
 
