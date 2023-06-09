@@ -37,7 +37,10 @@ following, assuming you generate bindings in package `libtest`:
 contain all the functions from the header file 
 2. Generate a `libtest.functions` object that extends `libtest.ExportedFunctions`, where each function is given a body, which invokes `libtest.impl.Implementations.<funcName>` - where `libtest.impl.Implementations` _also_ extends `libtest.ExportedFunctions` - that's where you can define implementations for your functions.
 
-In CLI, this mode can be activated by using the `--export` flag.
+- In CLI, this mode can be activated by using the `--export` flag 
+
+- In SBT, you can enable it by using `.withExport(true)` on the Binding builder: 
+    `Binding.builder(<headerFile>, <packageName>).withExport(true).build`
 
 If this sounds confusing, let's take a look at a very simple example, where the interface doesn't use anything other than primitive types:
 
