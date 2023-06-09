@@ -131,6 +131,7 @@ object BuiltinType:
     apply[posix.signal.ucontext_t](short = "ucontext_t", full = "posix.signal.ucontext_t", header = "signal.h"),
     apply[posix.signal.stack_t](short = "stack_t", full = "posix.signal.stack_t", header = "signal.h"),
     apply[posix.signal.siginfo_t](short = "siginfo_t", full = "posix.signal.siginfo_t", header = "signal.h"),
+    apply[posix.dirent.DIR](short = "DIR", full = "posix.dirent.DIR", header = "dirent.h"),
     apply[posix.dirent.dirent](short = "dirent", full = "posix.dirent.dirent", header = "dirent.h"),
     apply[posix.utime.utimbuf](short = "utimbuf", full = "posix.utime.utimbuf", header = "utime.h"),
     apply[libc.locale.lconv](short = "lconv", full = "libc.locale.lconv", header = "locale.h"),

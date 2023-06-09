@@ -80,6 +80,7 @@ class Binding private (
     val multiFile: Boolean = Defaults.multiFile,
     val noComments: Boolean = Defaults.noComments,
     val noLocation: Boolean = Defaults.noLocation,
+    val exportMode: Boolean = Defaults.exportMode,
     val externalPaths: Map[String, String] = Defaults.externalPaths,
     val externalNames: Map[String, String] = Defaults.externalNames,
     val bindgenArguments: List[String] = Defaults.bindgenArguments,
@@ -101,6 +102,7 @@ class Binding private (
       multiFile: Boolean = self.multiFile,
       noComments: Boolean = self.noComments,
       noLocation: Boolean = self.noLocation,
+      exportMode: Boolean = self.exportMode,
       externalPaths: Map[String, String] = self.externalPaths,
       externalNames: Map[String, String] = self.externalNames,
       bindgenArguments: List[String] = Defaults.bindgenArguments,
@@ -121,6 +123,7 @@ class Binding private (
       multiFile = multiFile,
       noComments = noComments,
       noLocation = noLocation,
+      exportMode = exportMode,
       externalPaths = externalPaths,
       externalNames = externalNames,
       bindgenArguments = bindgenArguments,
@@ -172,6 +175,7 @@ class Binding private (
     if (multiFile && lang == BindingLang.Scala) flag("multi-file")
     if (noComments && lang == BindingLang.Scala) flag("render.no-comments")
     if (noLocation && lang == BindingLang.Scala) flag("render.no-location")
+    if (exportMode && lang == BindingLang.Scala) flag("export")
 
     externalPaths.toList.sorted.map { case (filter, pkg) =>
       arg("render.external-path", s"$filter=$pkg")
@@ -226,6 +230,7 @@ object Binding {
     def withMultiFile(b: Boolean): Builder = copy(_.copy(multiFile = b))
     def withNoComments(b: Boolean): Builder = copy(_.copy(noComments = b))
     def withNoLocation(b: Boolean): Builder = copy(_.copy(noLocation = b))
+    def withExport(b: Boolean): Builder = copy(_.copy(exportMode = b))
 
     def withPackageName(name: String) = copy(_.copy(packageName = name))
     def withHeaderFile(header: File) = copy(_.copy(headerFile = header))
@@ -280,6 +285,7 @@ object Binding {
     val externalPaths = Map.empty[String, String]
     val externalNames = Map.empty[String, String]
     val bindgenArguments = List.empty[String]
+    val exportMode = false
   }
 
   def apply(headerFile: File, packageName: String): Binding =

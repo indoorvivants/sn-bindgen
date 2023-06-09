@@ -34,8 +34,8 @@ object BindgenRender:
     s"""
     |
     |
-    |<div class = "flex w-full gap-4">
-    |<div class = "w-5/12">
+    |<div class = "flex-col w-full gap-4">
+    |<div class = "w-12/12">
     |
     |**Source `C` code**
     |```c
@@ -44,7 +44,7 @@ object BindgenRender:
     |
     |</div>
     |
-    |<div class = "w-7/12">
+    |<div class = "w-12/12">
     |
     |**Generated `Scala` code**
     |```scala
