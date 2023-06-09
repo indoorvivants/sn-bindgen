@@ -302,6 +302,15 @@ object CLI:
 
     }
 
+  val exportMode = Opts
+    .flag(
+      long = "export",
+      help =
+        "Generate functions as @exported, so that the generated Scala code can be used as part of a shared/static library"
+    )
+    .orFalse
+    .map(ExportMode.apply(_))
+
   val command = Command(
     name = s"bindgen",
     header = "Generate Scala 3 native bindings from C header files" +
@@ -322,7 +331,8 @@ object CLI:
       systemPathsDetection,
       renderingConfig,
       outputMode,
-      printFiles
+      printFiles,
+      exportMode
     ).mapN(Config.apply)
   }
 end CLI

@@ -72,7 +72,11 @@ def binding(
     unions = hasUnions
   )
 
-  val multiFileMode = outputMode.isInstanceOf[OutputMode.MultiFile]
+  val multiFileMode = outputMode match
+    case _: OutputMode.MultiFile => true
+    case _                       => false
+
+  val exportMode = summon[Config].exportMode
 
   given AliasResolver =
     AliasResolver.create(rawBinding.all)
@@ -176,9 +180,10 @@ def binding(
         renderScalaFunctions(
           simpleStream("functions"),
           resolvedFunctions.toSet,
-          mode = renderMode,
+          renderMode = renderMode,
           hasAnyTypes = hasAnyTypes,
-          typeImports
+          typeImports,
+          exportMode = exportMode
         )
       )
     end if
@@ -415,9 +420,10 @@ end renderEnumerations
 private def renderScalaFunctions(
     out: LineBuilder,
     functions: Set[GeneratedFunction],
-    mode: RenderMode,
+    renderMode: RenderMode,
     hasAnyTypes: Boolean,
-    typeImports: TypeImports
+    typeImports: TypeImports,
+    exportMode: ExportMode
 )(using Config, AliasResolver) =
   val exported = List.newBuilder[Exported]
   val scalaExternFunctions = functions.collect {
@@ -436,40 +442,82 @@ private def renderScalaFunctions(
   val hasRegularFunctions = scalaRegularFunctions.nonEmpty
 
   if functions.nonEmpty then
-    if mode == RenderMode.Files then typeImports.render(out)
-    if hasExternFunctions then
-      summon[Config].linkName.foreach { l =>
-        out.append(s"""@link("$l")""")
-      }
-      out.appendLine(
-        s"\n@extern\nprivate[$packageName] object extern_functions:"
-      )
+    if exportMode == ExportMode.No then
+      if renderMode == RenderMode.Files then typeImports.render(out)
+
+      if hasExternFunctions then
+        summon[Config].linkName.foreach { l =>
+          out.append(s"""@link("$l")""")
+        }
+        out.appendLine(
+          s"\n@extern\nprivate[$packageName] object extern_functions:"
+        )
+        nest {
+          if renderMode == RenderMode.Objects then typeImports.render(out)
+          exported ++= renderAll(
+            scalaExternFunctions.toList.sortBy(_.name),
+            out,
+            renderFunction
+          )
+        }
+      end if
+
+      if hasRegularFunctions || hasExternFunctions then
+        if renderMode == RenderMode.Objects then
+          out.appendLine(s"\nobject functions:")
+        nestIf(renderMode == RenderMode.Objects) {
+          if renderMode == RenderMode.Objects then typeImports.render(out)
+
+          if hasExternFunctions then
+            to(out)("import extern_functions.*")
+            to(out)("export extern_functions.*")
+            out.emptyLine
+
+          exported ++= renderAll(
+            scalaRegularFunctions.toList.sortBy(_.name),
+            out,
+            renderFunction
+          )
+        }
+      end if
+    else
+      def modified(loc: ExportLocation) =
+        scalaExternFunctions.toList
+          .sortBy(_.name)
+          .map { sf =>
+            sf.copy(body = ScalaFunctionBody.Export(loc))
+          }
+          .filter { sf =>
+            val isInit =
+              sf.name.value == "ScalaNativeInit" && sf.returnType == CType.Int && sf.arguments.flatten.isEmpty
+
+            if isInit then
+              info(
+                "ScalaNativeInit function found in the bindings, not rendering it"
+              )
+
+            !isInit
+          }
+
+      out.appendLine("trait ExportedFunctions:")
       nest {
-        if mode == RenderMode.Objects then typeImports.render(out)
-        exported ++= renderAll(
-          scalaExternFunctions.toList.sortBy(_.name),
+        if renderMode == RenderMode.Objects then typeImports.render(out)
+        renderAll(modified(ExportLocation.Trait), out, renderFunction)
+      }
+
+      if renderMode == RenderMode.Objects then
+        out.appendLine(s"\nobject functions extends ExportedFunctions:")
+      nestIf(renderMode == RenderMode.Objects) {
+        if renderMode == RenderMode.Objects then typeImports.render(out)
+        renderAll(
+          modified(
+            ExportLocation.Body(summon[Config].packageName.map(_ + ".impl"))
+          ),
           out,
           renderFunction
         )
       }
-    end if
 
-    if hasRegularFunctions || hasExternFunctions then
-      if mode == RenderMode.Objects then out.appendLine(s"\nobject functions:")
-      nestIf(mode == RenderMode.Objects) {
-        if mode == RenderMode.Objects then typeImports.render(out)
-
-        if hasExternFunctions then
-          to(out)("import extern_functions.*")
-          to(out)("export extern_functions.*")
-          out.emptyLine
-
-        exported ++= renderAll(
-          scalaRegularFunctions.toList.sortBy(_.name),
-          out,
-          renderFunction
-        )
-      }
     end if
   end if
   exported.result()
