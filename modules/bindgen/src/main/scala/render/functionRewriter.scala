@@ -76,7 +76,7 @@ enum ScalaFunctionBody:
   case Export(loc: ExportLocation)
 
 enum ExportLocation:
-  case Trait 
+  case Trait
   case Body(implPackage: PackageName)
 
 enum CFunctionBody:
