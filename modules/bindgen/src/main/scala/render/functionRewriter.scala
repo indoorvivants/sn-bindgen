@@ -73,6 +73,11 @@ object ScalaFunctionName extends OpaqueString[ScalaFunctionName]
 enum ScalaFunctionBody:
   case Extern
   case Delegate(to: ScalaFunctionName, allocations: Allocations)
+  case Export(loc: ExportLocation)
+
+enum ExportLocation:
+  case Trait
+  case Body(implPackage: PackageName)
 
 enum CFunctionBody:
   case Delegate(to: CFunctionName, dereference: Set[Int], returnAsWell: Boolean)

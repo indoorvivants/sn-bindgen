@@ -30,8 +30,8 @@ lazy val Versions = new {
   val opaqueNewtypes = "0.0.2"
 
   val Scala3 = "3.2.2"
-  val Scala212 = "2.12.17"
-  val Scala213 = "2.13.10"
+  val Scala212 = "2.12.18"
+  val Scala213 = "2.13.11"
   val Scala2 = List(Scala212, Scala213)
 
 }
@@ -572,7 +572,8 @@ logo :=
      | #     # # #   ## #    # #    # #      #   ## 
      | ######  # #    # #####   ####  ###### #    # 
      |
-     |${version.value}
+     |Version: ${version.value}
+     |Scala Native: ${nativeVersion}
      |
      |${scala.Console.YELLOW}Scala ${(bindgen / scalaVersion).value}${scala.Console.RESET}
      |

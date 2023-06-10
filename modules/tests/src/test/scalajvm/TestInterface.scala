@@ -175,6 +175,22 @@ class TestInterface {
     )
   }
 
+  @Test def exports(): Unit = isolate { probe =>
+    val bind =
+      Binding.builder(headerFile, "lib_exports").withExport(true).build
+
+    probe.builder
+      .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
+
+    assertEquals(
+      List("@exported"),
+      lines(probe.scalaFiles / "lib_exports.scala")
+        .filter(_.contains("@exported"))
+        .map(_.trim)
+        .distinct
+    )
+  }
+
   @Test def adds_package_name(): Unit = isolate { probe =>
     val bind =
       Binding(headerFile, "lib_my_awesome_library")

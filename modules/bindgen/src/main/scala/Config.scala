@@ -25,13 +25,46 @@ case class Config(
     systemPathDetection: SystemPathDetection,
     rendering: RenderingConfig,
     outputMode: OutputMode,
-    printFiles: PrintFiles
+    printFiles: PrintFiles,
+    exportMode: ExportMode
 )
+
+object Config:
+  def withDefaults(
+      headerFile: HeaderFile,
+      packageName: PackageName,
+      lang: Lang
+  ) =
+    Config(
+      packageName = packageName,
+      headerFile = headerFile,
+      linkName = None,
+      indentSize = defaults.indentSize,
+      indents = defaults.indents,
+      lang = lang,
+      cImports = Nil,
+      clangFlags = Nil,
+      quiet = Quiet.No,
+      minLogPriority = MinLogPriority(LogLevel.priority(LogLevel.warning)),
+      exclusivePrefix = Nil,
+      systemPathDetection = SystemPathDetection.Auto,
+      rendering = RenderingConfig.withDefaults,
+      outputMode = OutputMode.StdOut,
+      printFiles = PrintFiles.No,
+      exportMode = ExportMode.No
+    )
+  object defaults:
+    val indentSize = IndentationSize(3)
+    val indents = Indentation(0)
+end Config
 
 enum SystemPathDetection:
   case FromLLVM(bin: LLVMBin)
   case FromClang(clang: ClangPath)
   case Auto, No
+
+opaque type ExportMode = Boolean
+object ExportMode extends YesNo[ExportMode]
 
 opaque type PrintFiles = Boolean
 object PrintFiles extends YesNo[PrintFiles]

@@ -7,6 +7,16 @@ import scala.util.chaining.*
 import bindgen.RenderingConfig.FilterSpec
 
 object RenderingConfig:
+  def withDefaults: RenderingConfig =
+    RenderingConfig(
+      noConstructor = Set.empty,
+      opaqueStruct = Set.empty,
+      comments = RenderComments.Yes,
+      location = RenderLocation.No,
+      externalNames = Map.empty,
+      externalPaths = Map.empty
+    )
+
   opaque type FilterSpec = String
   object FilterSpec extends OpaqueString[FilterSpec]
 
