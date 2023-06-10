@@ -1,11 +1,11 @@
-<html><head><title>SN bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/tomorrow-night-blue.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">SN bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
+<html><head><title>SN bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/tomorrow-night-blue.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js"></script><script src="/assets/search-index.js"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">SN bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
 <p>For those types, we generate getters, setters, <code>Tag</code> definition, and two <code>apply</code> methods:</p>
 <ol>
 <li>A constructor, which takes all the parameters as arguments</li>
 <li>An allocator, which only creates an instance on the heap, without initialising it</li>
 </ol>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">typedef struct {
   long long number;
@@ -18,7 +18,7 @@ typedef struct {
 } Big;
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
@@ -31,7 +31,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/8208218221780081649header.h
+   * [bindgen] header: /tmp/16443678111392041308header.h
   */
   opaque type Big = CStruct3[CInt, CString, Small]
   object Big:
@@ -52,7 +52,7 @@ object structs:
       def sm_=(value: Small): Unit = !struct.at3 = value
 
   /**
-   * [bindgen] header: /tmp/8208218221780081649header.h
+   * [bindgen] header: /tmp/16443678111392041308header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -85,8 +85,8 @@ code):</p>
 <p>To work around it, you can disable constructor generation by passing a comma-separated
 list of struct names using the <code>--render.no-constructor</code> option in CLI, and <code>noConstructor</code>
 parameter in the <code>Binding(...)</code> specification.</p>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">typedef struct {
   int x;
@@ -99,7 +99,7 @@ typedef struct {
 } Disabled;
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
@@ -112,7 +112,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/7819181865356585680header.h
+   * [bindgen] header: /tmp/7661813697171670361header.h
   */
   opaque type Disabled = CStruct2[CInt, CString]
   object Disabled:
@@ -125,7 +125,7 @@ object structs:
       def hello_=(value: CString): Unit = !struct.at2 = value
 
   /**
-   * [bindgen] header: /tmp/7819181865356585680header.h
+   * [bindgen] header: /tmp/7661813697171670361header.h
   */
   opaque type Enabled = CStruct2[CInt, CString]
   object Enabled:
@@ -155,8 +155,8 @@ object all:
 <h2><a href="#unions-are-converted-to-opaque-types" id="unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></h2>
 <p>For a union with <code>N</code> members, <code>N</code> constructors will be generated,
 along with getters and setters.</p>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">typedef struct {
   long long number;
@@ -169,7 +169,7 @@ typedef union {
 } Big;
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
@@ -183,7 +183,7 @@ object structs:
   import _root_.libtest.unions.*
 
   /**
-   * [bindgen] header: /tmp/8432840493711904389header.h
+   * [bindgen] header: /tmp/2014255190636106659header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -202,7 +202,7 @@ object unions:
   import _root_.libtest.unions.*
 
   /**
-   * [bindgen] header: /tmp/8432840493711904389header.h
+   * [bindgen] header: /tmp/2014255190636106659header.h
   */
   opaque type Big = CArray[Byte, Nat._8]
   object Big:
@@ -249,8 +249,8 @@ object all:
 </div>
 <h3><a href="#simple-functions-are-converted-to-direct-extern-functions" id="simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct <code>@extern</code> functions</a></h3>
 <p>Where &quot;Simple&quot; means &quot;not passing naked <code>structs</code>&quot;, because Scala Native cannot handle that (passing by pointer is okay)</p>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">typedef struct {
   long long number;
@@ -260,7 +260,7 @@ long simple(int x, char *y);
 Small* with_pointers(Small *x, int y);
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
@@ -273,7 +273,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/16619693724866917190header.h
+   * [bindgen] header: /tmp/2727558268796684246header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -293,12 +293,12 @@ private[libtest] object extern_functions:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/16619693724866917190header.h
+   * [bindgen] header: /tmp/2727558268796684246header.h
   */
   def simple(x : CInt, y : CString): CLongInt = extern
 
   /**
-   * [bindgen] header: /tmp/16619693724866917190header.h
+   * [bindgen] header: /tmp/2727558268796684246header.h
   */
   def with_pointers(x : Ptr[Small], y : CInt): Ptr[Small] = extern
 
@@ -324,8 +324,8 @@ object all:
 <p>Where &quot;Problematic&quot; means having a struct as one of its arguments or return type.
 In this case we generate several variations of public Scala functions,
 but they all delegate to an external C function which takes its arguments as <strong>pointers</strong>, and (optionally) returns its value in a provided heap-allocated location.</p>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">typedef struct {
   long long number;
@@ -335,7 +335,7 @@ void bad_arguments(Small n, Small n2);
 Small bad_return_type();
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
@@ -348,7 +348,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/11320645544289426303header.h
+   * [bindgen] header: /tmp/13983695522288937329header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -379,7 +379,7 @@ object functions:
   export extern_functions.*
 
   /**
-   * [bindgen] header: /tmp/11320645544289426303header.h
+   * [bindgen] header: /tmp/13983695522288937329header.h
   */
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit = 
     val __ptr_0: Ptr[Small] = alloc[Small](2)
@@ -388,13 +388,13 @@ object functions:
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
   /**
-   * [bindgen] header: /tmp/11320645544289426303header.h
+   * [bindgen] header: /tmp/13983695522288937329header.h
   */
   def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
     __sn_wrap_libtest_bad_arguments(n, n2)
 
   /**
-   * [bindgen] header: /tmp/11320645544289426303header.h
+   * [bindgen] header: /tmp/13983695522288937329header.h
   */
   def bad_return_type()(using Zone): Small = 
     val __ptr_0: Ptr[Small] = alloc[Small](1)
@@ -402,7 +402,7 @@ object functions:
     !(__ptr_0 + 0)
 
   /**
-   * [bindgen] header: /tmp/11320645544289426303header.h
+   * [bindgen] header: /tmp/13983695522288937329header.h
   */
   def bad_return_type()(__return : Ptr[Small]): Unit = 
     __sn_wrap_libtest_bad_return_type(__return)
@@ -439,8 +439,8 @@ void __sn_wrap_libtest_bad_return_type(Small *____return) {
 used for the enum.</p>
 <p>This is important, as on Windows enums are <code>int</code> by default, whereas on Linux and OS X they are <code>unsigned int</code> (if there's no negative elements).</p>
 <p>This documentation is built on Linux.</p>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">typedef enum {
   U_X = 1,
@@ -455,7 +455,7 @@ typedef enum {
 } MySigned;
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
@@ -481,7 +481,7 @@ object predef:
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/3590133183051465107header.h
+   * [bindgen] header: /tmp/11862638516383712218header.h
   */
   opaque type MySigned = CInt
   object MySigned extends CEnum[MySigned]:
@@ -502,7 +502,7 @@ object enumerations:
       inline def is(b: MySigned): Boolean = (a &amp; b) == b
 
   /**
-   * [bindgen] header: /tmp/3590133183051465107header.h
+   * [bindgen] header: /tmp/11862638516383712218header.h
   */
   opaque type MyUnsigned = CUnsignedInt
   object MyUnsigned extends CEnumU[MyUnsigned]:
@@ -535,14 +535,14 @@ object all:
 <h2><a href="#function-pointers-are-defined-as-opaque-types" id="function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></h2>
 <p>The inlining in <code>apply</code> method is important - it's a restricting of Scala Native
 that the function must be statically known.</p>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">typedef void* Cursor;
 typedef int (*Visitor)(Cursor*);
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
@@ -555,7 +555,7 @@ object aliases:
   import _root_.libtest.aliases.*
 
   /**
-   * [bindgen] header: /tmp/784363316336232083header.h
+   * [bindgen] header: /tmp/3267207747962678285header.h
   */
   opaque type Cursor = Ptr[Byte]
   object Cursor: 
@@ -565,7 +565,7 @@ object aliases:
       inline def value: Ptr[Byte] = v
 
   /**
-   * [bindgen] header: /tmp/784363316336232083header.h
+   * [bindgen] header: /tmp/3267207747962678285header.h
   */
   opaque type Visitor = CFuncPtr1[Ptr[Cursor], CInt]
   object Visitor: 
@@ -588,8 +588,8 @@ object all:
 <p>This is invisible to the user, so doesn't impact the experience, but
 can complicate reading the code.</p>
 <p>Scala cannot have recursive type aliases.</p>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">typedef struct Arr;
 
@@ -598,7 +598,7 @@ typedef struct {
 } Arr;
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
@@ -611,7 +611,7 @@ object structs:
   import _root_.libtest.structs.*
 
   /**
-   * [bindgen] header: /tmp/18391645785952882768header.h
+   * [bindgen] header: /tmp/14719315246685353206header.h
   */
   opaque type Arr = CStruct1[Ptr[Byte]]
   object Arr:
@@ -635,8 +635,8 @@ object all:
 </div>
 </div>
 <h2><a href="#global-enums-are-rendered-as-constants" id="global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></h2>
-<div class = "flex w-full gap-4">
-<div class = "w-5/12">
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
 <p><strong>Source <code>C</code> code</strong></p>
 <pre><code class="language-c">enum {
   HELLO = 25,
@@ -650,7 +650,7 @@ enum {
 };
 </code></pre>
 </div>
-<div class = "w-7/12">
+<div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
 <pre><code class="language-scala">package libtest
 
