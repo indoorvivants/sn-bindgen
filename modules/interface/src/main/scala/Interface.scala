@@ -105,7 +105,7 @@ class Binding private (
       exportMode: Boolean = self.exportMode,
       externalPaths: Map[String, String] = self.externalPaths,
       externalNames: Map[String, String] = self.externalNames,
-      bindgenArguments: List[String] = Defaults.bindgenArguments,
+      bindgenArguments: List[String] = self.bindgenArguments,
       scalaFile: String = self.scalaFile,
       cFile: String = self.cFile
   ) =
