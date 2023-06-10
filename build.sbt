@@ -1,3 +1,5 @@
+import scala.scalanative.build
+import sbt.internal.bsp.BuildTarget
 import scala.collection.immutable
 import _root_.bindgen.plugin.BindgenMode
 import scala.scalanative.build.GC
@@ -63,11 +65,7 @@ lazy val root = project
   .aggregate(iface.projectRefs*)
   .aggregate(plugin.projectRefs*)
   .aggregate(tests.projectRefs*)
-  .settings(
-    publish / skip := true,
-    publishLocal / skip := true
-  )
-  .settings(remoteCacheSettings)
+  .settings(remoteCacheSettings, noPublish)
 
 lazy val iface = projectMatrix
   .in(file("modules/interface"))
@@ -254,6 +252,39 @@ lazy val libclang = project
     }
   )
 
+lazy val exportTestsLibrary: Project = project
+  .in(file("modules/export-tests/library"))
+  .enablePlugins(ScalaNativePlugin, BindgenPlugin)
+  .settings(
+    scalaVersion := Versions.Scala3,
+    bindgenBinary := (bindgen / Compile / nativeLink).value,
+    bindgenBindings := {
+      val dir =
+        (ThisBuild / baseDirectory).value / "modules" / "export-tests" / "build" / "src" / "main" / "resources"
+
+      collectBindings(dir)
+    },
+    nativeConfig ~= (_.withBuildTarget(build.BuildTarget.libraryDynamic)),
+    noPublish
+  )
+
+lazy val exportTestsBuild = project
+  .in(file("modules/export-tests/build"))
+  .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin)
+  .settings(
+    scalaVersion := Versions.Scala3,
+    // We're linking to Scala library twice so need to ignore duplicated symbols
+    nativeLinkingOptions ++= Seq(
+      "-lexporttestslibrary-out",
+      "-L" + (exportTestsLibrary / Compile / crossTarget).value
+    ),
+    nativeLink := {
+      (exportTestsLibrary / Compile / nativeLink).value
+      (Compile / nativeLink).value
+    },
+    noPublish
+  )
+
 lazy val tests = projectMatrix
   .in(file("modules/tests"))
   .dependsOn(iface)
@@ -283,44 +314,7 @@ lazy val tests = projectMatrix
             Test / bindgenBindings := {
               val resourcesDirs = (Test / unmanagedResourceDirectories).value
 
-              resourcesDirs.flatMap { resourceDir =>
-                val headersPath = resourceDir / "scala-native"
-                val files = headersPath.toGlob / "**" / "*.h"
-                import scala.collection.JavaConverters.*
-                val headerSpec = Files
-                  .walk(headersPath.toPath, 1)
-                  .collect(Collectors.toList())
-                  .asScala
-                  .filter(_.toFile().isFile())
-                  .filter(_.toFile.ext == "h")
-                  .map(h =>
-                    h.toFile -> headersPath.toPath
-                      .relativize(h)
-                      .toString
-                      .dropRight(2)
-                  )
-                  .toMap
-
-                headerSpec.toSeq.map { case (header, name) =>
-                  val PREF = "//!bindgen"
-                  val contents = IO
-                    .readLines(header)
-                    .map(_.trim)
-                    .filter(_.startsWith(PREF))
-                    .map(_.stripPrefix(PREF).trim)
-                    .flatMap(_.split(" "))
-                    .map(_.trim)
-
-                  val isMultiFile = contents.contains("--multi-file")
-
-                  Binding
-                    .builder(header, s"lib_test_$name")
-                    .addCImport(s"$name.h")
-                    .withBindgenArguments(contents)
-                    .withMultiFile(isMultiFile)
-                    .build
-                }
-              }
+              resourcesDirs.flatMap(collectBindings)
             }
           )
       ),
@@ -495,6 +489,11 @@ lazy val noTests = Seq(
   test := {}
 )
 
+lazy val noPublish = Seq(
+  publish / skip := true,
+  publishLocal / skip := true
+)
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 lazy val versionDump =
@@ -503,6 +502,45 @@ lazy val versionDump =
 versionDump := {
   val file = (ThisBuild / baseDirectory).value / "version"
   IO.write(file, (Compile / version).value)
+}
+
+def collectBindings(folder: File) = {
+  val headersPath = folder / "scala-native"
+  val files = headersPath.toGlob / "**" / "*.h"
+  import scala.collection.JavaConverters.*
+  val headerSpec = Files
+    .walk(headersPath.toPath, 1)
+    .collect(Collectors.toList())
+    .asScala
+    .filter(_.toFile().isFile())
+    .filter(_.toFile.ext == "h")
+    .map(h =>
+      h.toFile -> headersPath.toPath
+        .relativize(h)
+        .toString
+        .dropRight(2)
+    )
+    .toMap
+
+  headerSpec.toSeq.map { case (header, name) =>
+    val PREF = "//!bindgen"
+    val contents = IO
+      .readLines(header)
+      .map(_.trim)
+      .filter(_.startsWith(PREF))
+      .map(_.stripPrefix(PREF).trim)
+      .flatMap(_.split(" "))
+      .map(_.trim)
+
+    val isMultiFile = contents.contains("--multi-file")
+
+    Binding
+      .builder(header, s"lib_test_$name")
+      .addCImport(s"$name.h")
+      .withBindgenArguments(contents)
+      .withMultiFile(isMultiFile)
+      .build
+  }
 }
 
 def llvmFolder(clangPath: java.nio.file.Path): LLVMInfo = {
@@ -598,6 +636,10 @@ usefulTasks := Seq(
     "Run SBT plugin tests"
   ).alias("ptt"),
   UsefulTask(
+    "exportTests",
+    "Tests for generated exported definitions"
+  ).alias("ett"),
+  UsefulTask(
     "buildWebsite",
     "Build the website"
   ).alias("bw"),
@@ -618,10 +660,11 @@ usefulTasks := Seq(
 addCommandAlias("generatorTests", "testsNative3/clean; testsNative3/test")
 addCommandAlias("cliTests", "bindgen/test")
 addCommandAlias("pluginTests", "plugin/scripted")
+addCommandAlias("exportTests", "exportTestsBuild/run")
 addCommandAlias("interfaceTests", "tests/test; tests3/test; tests2_12/test")
 addCommandAlias(
   "ci",
-  "scalafmtCheckAll; scalafmtSbtCheck; cliTests; interfaceTests; pluginTests; generatorTests"
+  "scalafmtCheckAll; scalafmtSbtCheck; cliTests; interfaceTests; pluginTests; generatorTests; exportTests"
 )
 
 addCommandAlias(
