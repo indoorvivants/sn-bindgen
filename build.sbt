@@ -532,12 +532,13 @@ def collectBindings(folder: File) = {
       .flatMap(_.split(" "))
       .map(_.trim)
 
-    val isMultiFile = contents.contains("--multi-file")
+    val multiFileFlag = "--multi-file"
+    val isMultiFile = contents.contains(multiFileFlag)
 
     Binding
       .builder(header, s"lib_test_$name")
       .addCImport(s"$name.h")
-      .withBindgenArguments(contents)
+      .withBindgenArguments(contents.filterNot(_ == multiFileFlag))
       .withMultiFile(isMultiFile)
       .build
   }
