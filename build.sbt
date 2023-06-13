@@ -359,9 +359,7 @@ lazy val tests = projectMatrix
             bindgenBindings := Seq.empty,
             bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBindings := {
-              val resourcesDirs = (Test / unmanagedResourceDirectories).value
-
-              resourcesDirs.flatMap(collectBindings)
+              collectBindings((Test / resourceDirectory).value / "scala-native")
             }
           )
       ),
