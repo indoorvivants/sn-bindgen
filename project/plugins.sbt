@@ -13,7 +13,7 @@ addSbtPlugin(
 )
 
 addSbtPlugin(
-  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.17+6-f6ce9c7c-SNAPSHOT"
+  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.0.17+7-fece3de1-SNAPSHOT"
 )
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.11.0")

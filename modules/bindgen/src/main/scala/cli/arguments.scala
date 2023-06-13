@@ -298,7 +298,8 @@ object CLI:
         if f.value.isDirectory then
           OutputMode.MultiFile(OutputDirectory(f.value)).validNel
         else
-          "In multi-file mode, the --out parameter must be an existing directory".invalidNel
+          ("In multi-file mode, the --out " +
+            "parameter must be an existing directory").invalidNel
 
     }
 

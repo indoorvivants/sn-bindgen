@@ -1,3 +1,5 @@
+import scala.scalanative.build
+import sbt.internal.bsp.BuildTarget
 import scala.collection.immutable
 import _root_.bindgen.plugin.BindgenMode
 import scala.scalanative.build.GC
@@ -63,11 +65,7 @@ lazy val root = project
   .aggregate(iface.projectRefs*)
   .aggregate(plugin.projectRefs*)
   .aggregate(tests.projectRefs*)
-  .settings(
-    publish / skip := true,
-    publishLocal / skip := true
-  )
-  .settings(remoteCacheSettings)
+  .settings(remoteCacheSettings, noPublish)
 
 lazy val iface = projectMatrix
   .in(file("modules/interface"))
@@ -254,6 +252,86 @@ lazy val libclang = project
     }
   )
 
+val runExportTests = taskKey[Unit]("")
+
+lazy val exportTestsLibrary: Project = project
+  .in(file("modules/export-tests/library"))
+  .enablePlugins(ScalaNativePlugin, BindgenPlugin)
+  .settings(
+    scalaVersion := Versions.Scala3,
+    bindgenBinary := (bindgen / Compile / nativeLink).value,
+    bindgenBindings := {
+      val dir = (Compile / sourceDirectory).value / "c"
+
+      collectBindings(dir)
+    },
+    nativeConfig ~= (_.withBuildTarget(build.BuildTarget.libraryDynamic)),
+    noPublish,
+    runExportTests := {
+
+      if (Platform.os != Platform.OS.Windows) {
+        val library = (Compile / nativeLink).value
+        val clang = (Compile / nativeClang).value
+        val sourcesDir = (Compile / sourceDirectory).value / "c"
+        val workDir = library.getParentFile()
+        import scala.sys.process.*
+
+        val destination = workDir / "a.out"
+        val cmd = Seq(
+          clang,
+          sourcesDir / "run_tests.c",
+          "-o",
+          destination,
+          "-lexporttestslibrary-out",
+          s"-L${workDir}"
+        ).map(_.toString())
+
+        val stderr = List.newBuilder[String]
+        val stdout = List.newBuilder[String]
+
+        val logger = ProcessLogger.apply(
+          (o: String) => stdout += o,
+          (e: String) => stderr += e
+        )
+
+        val errPrintln: String => Unit = s => System.err.println(s)
+
+        val process = new java.lang.ProcessBuilder(cmd*)
+          .directory(workDir)
+          .start()
+
+        scala.io.Source
+          .fromInputStream(process.getErrorStream())
+          .getLines()
+          .foreach(errPrintln(_))
+
+        assert(
+          process.waitFor() == 0,
+          "Building export tests binary (with clang) failed"
+        )
+
+        val testsProcessB = (new java.lang.ProcessBuilder(destination.toString))
+          .directory(workDir)
+
+        testsProcessB.environment().put("LD_LIBRARY_PATH", workDir.toString)
+        testsProcessB.environment().put("DYLD_LIBRARY_PATH", workDir.toString)
+
+        val testsProcess = testsProcessB.start()
+
+        scala.io.Source
+          .fromInputStream(testsProcess.getErrorStream())
+          .getLines()
+          .foreach(errPrintln(_))
+
+        assert(
+          testsProcess.waitFor() == 0,
+          "Running export tests failed"
+        )
+      } else
+        System.err.println("Skipping export tests on windows")
+    }
+  )
+
 lazy val tests = projectMatrix
   .in(file("modules/tests"))
   .dependsOn(iface)
@@ -281,46 +359,7 @@ lazy val tests = projectMatrix
             bindgenBindings := Seq.empty,
             bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBindings := {
-              val resourcesDirs = (Test / unmanagedResourceDirectories).value
-
-              resourcesDirs.flatMap { resourceDir =>
-                val headersPath = resourceDir / "scala-native"
-                val files = headersPath.toGlob / "**" / "*.h"
-                import scala.collection.JavaConverters.*
-                val headerSpec = Files
-                  .walk(headersPath.toPath, 1)
-                  .collect(Collectors.toList())
-                  .asScala
-                  .filter(_.toFile().isFile())
-                  .filter(_.toFile.ext == "h")
-                  .map(h =>
-                    h.toFile -> headersPath.toPath
-                      .relativize(h)
-                      .toString
-                      .dropRight(2)
-                  )
-                  .toMap
-
-                headerSpec.toSeq.map { case (header, name) =>
-                  val PREF = "//!bindgen"
-                  val contents = IO
-                    .readLines(header)
-                    .map(_.trim)
-                    .filter(_.startsWith(PREF))
-                    .map(_.stripPrefix(PREF).trim)
-                    .flatMap(_.split(" "))
-                    .map(_.trim)
-
-                  val isMultiFile = contents.contains("--multi-file")
-
-                  Binding
-                    .builder(header, s"lib_test_$name")
-                    .addCImport(s"$name.h")
-                    .withBindgenArguments(contents)
-                    .withMultiFile(isMultiFile)
-                    .build
-                }
-              }
+              collectBindings((Test / resourceDirectory).value / "scala-native")
             }
           )
       ),
@@ -495,6 +534,11 @@ lazy val noTests = Seq(
   test := {}
 )
 
+lazy val noPublish = Seq(
+  publish / skip := true,
+  publishLocal / skip := true
+)
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 lazy val versionDump =
@@ -503,6 +547,45 @@ lazy val versionDump =
 versionDump := {
   val file = (ThisBuild / baseDirectory).value / "version"
   IO.write(file, (Compile / version).value)
+}
+
+def collectBindings(headersPath: File) = {
+  val files = headersPath.toGlob / "**" / "*.h"
+  import scala.collection.JavaConverters.*
+  val headerSpec = Files
+    .walk(headersPath.toPath, 1)
+    .collect(Collectors.toList())
+    .asScala
+    .filter(_.toFile().isFile())
+    .filter(_.toFile.ext == "h")
+    .map(h =>
+      h.toFile -> headersPath.toPath
+        .relativize(h)
+        .toString
+        .dropRight(2)
+    )
+    .toMap
+
+  headerSpec.toSeq.map { case (header, name) =>
+    val PREF = "//!bindgen"
+    val contents = IO
+      .readLines(header)
+      .map(_.trim)
+      .filter(_.startsWith(PREF))
+      .map(_.stripPrefix(PREF).trim)
+      .flatMap(_.split(" "))
+      .map(_.trim)
+
+    val multiFileFlag = "--multi-file"
+    val isMultiFile = contents.contains(multiFileFlag)
+
+    Binding
+      .builder(header, s"lib_test_$name")
+      .addCImport(s"$name.h")
+      .withBindgenArguments(contents.filterNot(_ == multiFileFlag))
+      .withMultiFile(isMultiFile)
+      .build
+  }
 }
 
 def llvmFolder(clangPath: java.nio.file.Path): LLVMInfo = {
@@ -598,6 +681,10 @@ usefulTasks := Seq(
     "Run SBT plugin tests"
   ).alias("ptt"),
   UsefulTask(
+    "exportTests",
+    "Tests for generated exported definitions"
+  ).alias("ett"),
+  UsefulTask(
     "buildWebsite",
     "Build the website"
   ).alias("bw"),
@@ -618,10 +705,14 @@ usefulTasks := Seq(
 addCommandAlias("generatorTests", "testsNative3/clean; testsNative3/test")
 addCommandAlias("cliTests", "bindgen/test")
 addCommandAlias("pluginTests", "plugin/scripted")
+addCommandAlias(
+  "exportTests",
+  "exportTestsLibrary/runExportTests"
+)
 addCommandAlias("interfaceTests", "tests/test; tests3/test; tests2_12/test")
 addCommandAlias(
   "ci",
-  "scalafmtCheckAll; scalafmtSbtCheck; cliTests; interfaceTests; pluginTests; generatorTests"
+  "scalafmtCheckAll; scalafmtSbtCheck; cliTests; interfaceTests; pluginTests; generatorTests; exportTests"
 )
 
 addCommandAlias(

@@ -25,20 +25,23 @@ def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
   if f.public then f.meta.foreach(renderComment(line, _))
   f.body match
     case ScalaFunctionBody.Export(loc) =>
-      val signature = s"def ${f.name}$arglist: ${scalaType(f.returnType)}"
+      if f.public then
+        val signature = s"def ${f.name}$arglist: ${scalaType(f.returnType)}"
 
-      loc match
-        case ExportLocation.Trait => line(signature)
-        case ExportLocation.Body(implPackage) =>
-          val argumentsPassing =
-            flatArguments.map(_.name).mkString(", ")
-          line("@exported")
-          line(
-            s"override ${access}$signature = $implPackage.Implementations.${f.name}($argumentsPassing)"
-          )
-      end match
+        loc match
+          case ExportLocation.Trait => line(signature)
+          case ExportLocation.Body(implPackage) =>
+            val argumentsPassing =
+              flatArguments.map(_.name).mkString(", ")
+            line("@exported")
+            line(
+              s"override ${access}$signature = $implPackage.Implementations.${f.name}($argumentsPassing)"
+            )
+        end match
 
-      if f.public then Exported.Yes(f.name.value) else Exported.No
+        Exported.Yes(f.name.value)
+      else Exported.No
+
     case ScalaFunctionBody.Extern =>
       line(
         s"${access}def ${f.name}$arglist: ${scalaType(f.returnType)} = extern"
