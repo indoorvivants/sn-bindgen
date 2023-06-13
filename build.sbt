@@ -99,7 +99,7 @@ lazy val iface = projectMatrix
   .settings(
     buildInfoPackage := "bindgen.interface",
     buildInfoKeys := Seq[BuildInfoKey](
-      version,
+      dynver,
       scalaVersion,
       scalaBinaryVersion
     )
@@ -252,6 +252,8 @@ lazy val libclang = project
     }
   )
 
+val runExportTests = taskKey[Unit]("")
+
 lazy val exportTestsLibrary: Project = project
   .in(file("modules/export-tests/library"))
   .enablePlugins(ScalaNativePlugin, BindgenPlugin)
@@ -259,30 +261,75 @@ lazy val exportTestsLibrary: Project = project
     scalaVersion := Versions.Scala3,
     bindgenBinary := (bindgen / Compile / nativeLink).value,
     bindgenBindings := {
-      val dir =
-        (ThisBuild / baseDirectory).value / "modules" / "export-tests" / "build" / "src" / "main" / "resources"
+      val dir = (Compile / sourceDirectory).value / "c"
 
       collectBindings(dir)
     },
     nativeConfig ~= (_.withBuildTarget(build.BuildTarget.libraryDynamic)),
-    noPublish
-  )
+    noPublish,
+    runExportTests := {
 
-lazy val exportTestsBuild = project
-  .in(file("modules/export-tests/build"))
-  .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin)
-  .settings(
-    scalaVersion := Versions.Scala3,
-    // We're linking to Scala library twice so need to ignore duplicated symbols
-    nativeLinkingOptions ++= Seq(
-      "-lexporttestslibrary-out",
-      "-L" + (exportTestsLibrary / Compile / crossTarget).value
-    ),
-    nativeLink := {
-      (exportTestsLibrary / Compile / nativeLink).value
-      (Compile / nativeLink).value
-    },
-    noPublish
+      if (Platform.os != Platform.OS.Windows) {
+        val library = (Compile / nativeLink).value
+        val clang = (Compile / nativeClang).value
+        val sourcesDir = (Compile / sourceDirectory).value / "c"
+        val workDir = library.getParentFile()
+        import scala.sys.process.*
+
+        val destination = workDir / "a.out"
+        val cmd = Seq(
+          clang,
+          sourcesDir / "run_tests.c",
+          "-o",
+          destination,
+          "-lexporttestslibrary-out",
+          s"-L${workDir}"
+        ).map(_.toString())
+
+        val stderr = List.newBuilder[String]
+        val stdout = List.newBuilder[String]
+
+        val logger = ProcessLogger.apply(
+          (o: String) => stdout += o,
+          (e: String) => stderr += e
+        )
+
+        val errPrintln: String => Unit = s => System.err.println(s)
+
+        val process = new java.lang.ProcessBuilder(cmd*)
+          .directory(workDir)
+          .start()
+
+        scala.io.Source
+          .fromInputStream(process.getErrorStream())
+          .getLines()
+          .foreach(errPrintln(_))
+
+        assert(
+          process.waitFor() == 0,
+          "Building export tests binary (with clang) failed"
+        )
+
+        val testsProcessB = (new java.lang.ProcessBuilder(destination.toString))
+          .directory(workDir)
+
+        testsProcessB.environment().put("LD_LIBRARY_PATH", workDir.toString)
+        testsProcessB.environment().put("DYLD_LIBRARY_PATH", workDir.toString)
+
+        val testsProcess = testsProcessB.start()
+
+        scala.io.Source
+          .fromInputStream(testsProcess.getErrorStream())
+          .getLines()
+          .foreach(errPrintln(_))
+
+        assert(
+          testsProcess.waitFor() == 0,
+          "Running export tests failed"
+        )
+      } else
+        System.err.println("Skipping export tests on windows")
+    }
   )
 
 lazy val tests = projectMatrix
@@ -504,8 +551,7 @@ versionDump := {
   IO.write(file, (Compile / version).value)
 }
 
-def collectBindings(folder: File) = {
-  val headersPath = folder / "scala-native"
+def collectBindings(headersPath: File) = {
   val files = headersPath.toGlob / "**" / "*.h"
   import scala.collection.JavaConverters.*
   val headerSpec = Files
@@ -663,7 +709,7 @@ addCommandAlias("cliTests", "bindgen/test")
 addCommandAlias("pluginTests", "plugin/scripted")
 addCommandAlias(
   "exportTests",
-  "exportTestsLibrary/nativeLink; exportTestsBuild/run"
+  "exportTestsLibrary/runExportTests"
 )
 addCommandAlias("interfaceTests", "tests/test; tests3/test; tests2_12/test")
 addCommandAlias(

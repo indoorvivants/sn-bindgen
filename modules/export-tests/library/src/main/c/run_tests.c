@@ -2,8 +2,14 @@
 #include "export_basics.h"
 #include <memory.h>
 #include <stdio.h>
-void my_tests() {
+
+int main() {
+  printf("Yep, that worked");
+  assert(ScalaNativeInit() == 0);
+
   assert(myscalalib_exports(25, 100) == 2500);
+
+  printf("Yep, that worked");
 
   myscalalib_struct str;
   str.a = 'h';
@@ -14,4 +20,6 @@ void my_tests() {
 
   printf("Result: '%s'", result);
   assert(strcmp(result, "hhhhhooooo") == 0);
+
+  return 0;
 }

@@ -8,3 +8,5 @@ typedef struct {
 } myscalalib_struct;
 
 extern void myscalalib_complex(int times, myscalalib_struct* clamp, char* result);
+
+extern int ScalaNativeInit(void);
