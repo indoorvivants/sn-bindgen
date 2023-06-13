@@ -99,7 +99,7 @@ lazy val iface = projectMatrix
   .settings(
     buildInfoPackage := "bindgen.interface",
     buildInfoKeys := Seq[BuildInfoKey](
-      dynver,
+      version,
       scalaVersion,
       scalaBinaryVersion
     )
