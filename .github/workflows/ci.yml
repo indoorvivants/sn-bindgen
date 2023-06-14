@@ -171,7 +171,6 @@ jobs:
   release:
     needs: [linux_build, linux_arm64_build, windows_build, macos_build]
     name: Release
-    if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
     runs-on: ubuntu-20.04
     env: 
       BINARIES: binaries/
@@ -196,7 +195,9 @@ jobs:
 
       - name: Check published artifacts
         run: |
-          sbt versionDump binaryArtifacts/publishLocal iface3/publishLocal iface/publishLocal iface2_12/publishLocal
+          set -e
+          ls -R binaries/
+          sbt checkDetectedArtifacts versionDump binaryArtifacts/publishLocal iface3/publishLocal iface/publishLocal iface2_12/publishLocal
           curl -fLo cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
           chmod +x cs
           ./cs resolve com.indoorvivants:bindgen-interface_2.13:$(cat version)
@@ -211,6 +212,7 @@ jobs:
         run: ./build/setup_unix.sh
 
       - name: Publish
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
         run: |
           sbt ci-release
         env:
@@ -223,6 +225,7 @@ jobs:
         run: sbt buildWebsite
 
       - name: Publish gh-pages
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

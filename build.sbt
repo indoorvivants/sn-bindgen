@@ -122,9 +122,7 @@ lazy val bindgen = project
       scalaVersion,
       scalaBinaryVersion,
       BuildInfoKey("nativeVersion" -> nativeVersion)
-    )
-  )
-  .settings(
+    ),
     moduleName := "bindgen",
     libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
     libraryDependencies += "com.monovore" %%% "decline" % Versions.decline,
@@ -135,14 +133,33 @@ lazy val bindgen = project
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v")
   )
   .settings {
-    val detected = detectBinaryArtifacts
-    detected
+    detectBinaryArtifacts
       .map { case (_, (artifact, file)) =>
         addArtifact(Def.setting(artifact), Def.task(file))
       }
       .toSeq
       .flatten
   }
+  .settings(
+    checkDetectedArtifacts := {
+      import Platform.*, Target.*, OS.*, Arch.*, Bits.*
+      val expected = Seq(
+        Target(Windows, Intel, x64),
+        Target(MacOS, Intel, x64),
+        Target(Linux, Intel, x64)
+      ).map(jarString)
+      val packaged = packagedArtifacts.value
+
+      expected.foreach { classifier =>
+        assert(
+          packaged.exists(_._1.classifier.contains(classifier)),
+          s"Artifact with $classifier was not found"
+        )
+      }
+    }
+  )
+
+val checkDetectedArtifacts = taskKey[Unit]("")
 
 lazy val binaryArtifacts = project
   .in(file("build/binary-artifacts"))
@@ -412,6 +429,26 @@ lazy val docs =
     )
 // --------------HELPERS-------------------------
 
+def artifactFileNames: Map[Target, String] = {
+  import Platform.OS
+  import Platform.Arch
+  import Platform.Bits
+
+  val artifacts = for {
+    os <- Seq(OS.Windows, OS.Linux, OS.MacOS)
+    arch <- Seq(Arch.Intel, Arch.Arm)
+    bits <- Seq(Bits.x32, Bits.x64)
+    target = Platform.Target(os, arch, bits)
+    ext = os match {
+      case OS.Windows => ".exe"
+      case _          => ""
+    }
+    fileName = s"sn-bindgen-${coursierString(target)}$ext"
+  } yield target -> fileName
+
+  artifacts.toMap
+}
+
 def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
   sys.env.contains("BINARIES")
 ) {
@@ -426,24 +463,24 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     classifier -> (artif, file)
   }
 
-  import Platform.OS
-  import Platform.Arch
-  import Platform.Bits
+  import scala.collection.JavaConverters.*
 
-  val artifacts = for {
-    os <- Seq(OS.Windows, OS.Linux, OS.MacOS)
-    arch <- Seq(Arch.Intel, Arch.Arm)
-    bits <- Seq(Bits.x32, Bits.x64)
-    target = Platform.Target(os, arch, bits)
-    ext = os match {
-      case OS.Windows => ".exe"
-      case _          => ""
+  val allFiles = Files
+    .walk(folder.toPath)
+    .filter(path => path.toFile().isFile())
+    .collect(Collectors.toList())
+    .asScala
+    .map { path =>
+      path.getFileName().toString -> path.toFile
     }
-    file = folder / s"sn-bindgen-${coursierString(target)}$ext"
-    if file.exists()
-  } yield build(jarString(target), file)
+    .toMap
 
-  artifacts.toMap
+  artifactFileNames.flatMap { case (target, fileName) =>
+    allFiles.get(fileName).map { file =>
+      build(jarString(target), file)
+    }
+  }.toMap
+
 } else Map.empty
 
 def environmentConfiguration(conf: NativeConfig): NativeConfig = {
