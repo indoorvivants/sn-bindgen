@@ -88,7 +88,7 @@
 <h2><a href="#installing-sbt-plugin-latest" id="installing-sbt-plugin-latest">Installing SBT plugin (latest)</a></h2>
 <p><strong>project/plugins.sbt</strong></p>
 <pre><code class="language-scala">resolvers += Resolver.sonatypeRepo(&quot;snapshots&quot;)
-addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.0.19+1-5e49d847-SNAPSHOT&quot;)
+addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.0.19+2-9e0c3d18-SNAPSHOT&quot;)
 </code></pre>
 <h2><a href="#usage" id="usage">Usage</a></h2>
 <p><strong>build.sbt</strong></p>
@@ -151,7 +151,7 @@ object predef:
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/8836087521812304021header.h
+   * [bindgen] header: /tmp/15737549329773430293header.h
   */
   opaque type bla = CUnsignedInt
   object bla extends CEnumU[bla]:
@@ -175,7 +175,7 @@ private[libtest] object extern_functions:
   import _root_.libtest.enumerations.*
 
   /**
-   * [bindgen] header: /tmp/8836087521812304021header.h
+   * [bindgen] header: /tmp/15737549329773430293header.h
   */
   def sum(one : bla, two : bla): Unit = extern
 
