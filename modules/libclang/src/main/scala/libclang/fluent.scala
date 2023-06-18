@@ -69,6 +69,12 @@ extension (loc: CXSourceLocation)
     clang_Location_isFromMainFile(loc) == 1
   def isFromSystemHeader(using Zone): Boolean =
     clang_Location_isInSystemHeader(loc) == 1
+  def getFilename(using Zone) =
+    import libclang.aliases.*
+    val file = stackalloc[CXFile](1)
+    clang_getFileLocation(loc, file, null, null, null)
+    clang_getFileName(!file).string
+end extension
 
 extension (cx: CXClientData.type)
   inline def wrap[T: Tag](ptr: Ptr[T]): CXClientData =

@@ -23,14 +23,31 @@ def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
     case sev.CXDiagnostic_Warning                         => warning(_)
     case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
 
+class SystemHeaderDetector(clangInfo: ClangInfo):
+  private val mut = collection.mutable.Map.empty[String, Boolean]
+
+  def isSystem(filename: String) =
+    val path = java.nio.file.Paths.get(filename)
+    mut.getOrElseUpdate(
+      filename,
+      clangInfo.includePaths.exists { ip =>
+        path.startsWith(ip)
+      }
+    )
+end SystemHeaderDetector
+
 def analyse(file: String)(using Zone)(using config: Config): Binding =
-  val clangInfo = systemHeaders(config.systemPathDetection)
+  val clangInfo =
+    systemHeaders(config.systemPathDetection).fold(throw _, identity)
   val index = clang_createIndex(0, 0)
 
-  val unit =
-    createTranslationUnit(index, file, clangInfo.fold(throw _, identity))
+  val systemDetector = SystemHeaderDetector(clangInfo)
 
-  val (cxClientData, memory) = Captured.unsafe(BindingBuilder())
+  val unit =
+    createTranslationUnit(index, file, clangInfo)
+
+  val (cxClientData, memory) =
+    Captured.unsafe(systemDetector -> BindingBuilder())
 
   val translationUnitCursor = clang_getTranslationUnitCursor(unit)
 
@@ -46,7 +63,8 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
           parentPtr: Ptr[CXCursor],
           data: CXClientData
       ) =>
-        val (binding, conf) = !(data.unwrap[Captured[BindingBuilder]])
+        val ((systemDetector, binding), conf) =
+          !(data.unwrap[Captured[(SystemHeaderDetector, BindingBuilder)]])
 
         val cursor = !cursorPtr
         val parent = !parentPtr
@@ -54,13 +72,15 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
         given Config = conf
 
         zone {
-          trace(cursor.spelling)
 
           val loc = cursor.location
 
-          val location = Location(loc.isFromMainFile, loc.isFromSystemHeader)
-
           val spell = cursor.spelling
+
+          val location = Location(
+            loc.isFromMainFile,
+            loc.isFromSystemHeader || systemDetector.isSystem(loc.getFilename)
+          )
 
           if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
             val function = visitFunction(cursor)
@@ -178,7 +198,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     clang_disposeTranslationUnit(unit)
     clang_disposeIndex(index)
 
-    val binding: BindingBuilder = (!cxClientData)._1
+    val binding: BindingBuilder = (!cxClientData)._1._2
 
     trace(
       "Binding information before adding system aliases:",
