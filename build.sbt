@@ -40,6 +40,9 @@ lazy val Versions = new {
 
 inThisBuild(
   Seq(
+    semanticdbEnabled := true,
+    semanticdbVersion := "4.7.8",
+    semanticdbIncludeInJar := false,
     organization := "com.indoorvivants",
     organizationName := "Anton Sviridov",
     homepage := Some(url("https://github.com/indoorvivants/sn-bindgen")),

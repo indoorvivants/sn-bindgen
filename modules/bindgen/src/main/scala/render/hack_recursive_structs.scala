@@ -34,6 +34,9 @@ def isCyclical(typ: CType, structName: StructName)(using
       case Pointer(to) =>
         go(to, visited, level + 1)
 
+      case Arr(of, _) =>
+        go(of, visited, level + 1)
+
       case _ => Option.empty
     end match
   // trace((" " * level) + s"result of $t is '$result', visited: $visited")
@@ -121,6 +124,15 @@ def hack_recursive_structs(
               originalType = originalType,
               newRawType = Pointer(Void),
               newRichType = Pointer(to)
+            )
+          )
+        case arr @ Arr(to, sz) =>
+          Some(
+            ParameterRewrite(
+              name = parameterName,
+              originalType = originalType,
+              newRawType = Arr(Pointer(Void), sz),
+              newRichType = arr
             )
           )
 

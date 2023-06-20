@@ -22,20 +22,23 @@ typedef struct Recrusive_Simple {
   double d;
 } Recrusive_Simple;
 
-struct Recursive_Func;
-
-typedef struct {
+typedef struct Recursive_Func {
   double d;
   void (*free)(struct Recursive_Func *entry);
   int freed;
 } Recursive_Func;
 
-typedef struct {
+typedef struct Ptr_Recursive {
   double d;
   struct Ptr_Recursive **elements;
 } Ptr_Recursive;
 
-typedef struct {
+typedef struct Ptr_Recursive2 {
   double d;
   struct Ptr_Recursive2 ***elements;
 } Ptr_Recursive2;
+
+struct Ptr_Recursive_Array {
+  struct Ptr_Recursive_Array *opt[3];
+  int ne;
+};
