@@ -5,6 +5,7 @@ import org.junit.Test
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
+import lib_test_recursive_structs.structs.Ptr_Recursive_Array
 
 class TestRecursiveStructs:
   import lib_test_recursive_structs.types.*
@@ -26,6 +27,26 @@ class TestRecursiveStructs:
         nested0.unary_!.hello.unary_!.hello.unary_!.d,
         0.01d
       )
+    }
+
+  @Test def test_array_recursive(): Unit =
+    zone {
+      val arr = stackalloc[CArray[Ptr[Ptr_Recursive_Array], Nat._3]]()
+
+      val st1 = Ptr_Recursive_Array(null, _ne = 25)
+      val st2 = Ptr_Recursive_Array(null, _ne = 26)
+      val st3 = Ptr_Recursive_Array(null, _ne = 27)
+
+      (!arr)(0) = st1
+      (!arr)(1) = st2
+      (!arr)(2) = st3
+
+      val st_all = Ptr_Recursive_Array(!arr, 150)
+
+      assertEquals((!st_all)._ne, 150)
+      assertEquals(25, (!(!st_all).opt(0))._ne)
+      assertEquals(26, (!(!st_all).opt(1))._ne)
+      assertEquals(27, (!(!st_all).opt(2))._ne)
     }
 
   @Test def test_mutually_recursive(): Unit =

@@ -38,6 +38,8 @@ lazy val Versions = new {
 
 }
 
+Global / semanticdbEnabled := true
+
 inThisBuild(
   Seq(
     organization := "com.indoorvivants",
