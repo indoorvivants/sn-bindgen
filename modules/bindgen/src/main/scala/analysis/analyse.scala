@@ -98,7 +98,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
             val referencedType = clang_Type_getNamedType(typ)
             val typeDecl = clang_getTypeDeclaration(referencedType)
 
-            if (referencedType.kind == CXTypeKind.CXType_Enum) then
+            if referencedType.kind == CXTypeKind.CXType_Enum then
               val en = visitEnum(typeDecl, true)
               binding.add(en, location)
 
@@ -115,7 +115,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
                   location
                 )
               end if
-            else if (referencedType.kind == CXTypeKind.CXType_Record) then
+            else if referencedType.kind == CXTypeKind.CXType_Record then
               val struct = visitStruct(typeDecl, name)
 
               val item =
@@ -218,7 +218,7 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
     val closure = computeClosure(binding.named.filter { n =>
       val name = n._1.n
 
-      if (config.exclusivePrefix.isEmpty) then true
+      if config.exclusivePrefix.isEmpty then true
       else config.exclusivePrefix.exists(ep => name.startsWith(ep.value))
     }.toMap)
 
