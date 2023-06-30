@@ -246,18 +246,46 @@ end CXIdxContainerInfo
 /** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
   */
 opaque type CXIdxDeclInfo =
-  CStruct13[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[
-    CXIdxContainerInfo
-  ], Ptr[CXIdxContainerInfo], CInt, CInt, CInt, Ptr[
-    CXIdxContainerInfo
-  ], CInt, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt, CUnsignedInt]
+  CStruct13[
+    Ptr[CXIdxEntityInfo],
+    CXCursor,
+    CXIdxLoc,
+    Ptr[
+      CXIdxContainerInfo
+    ],
+    Ptr[CXIdxContainerInfo],
+    CInt,
+    CInt,
+    CInt,
+    Ptr[
+      CXIdxContainerInfo
+    ],
+    CInt,
+    Ptr[Ptr[CXIdxAttrInfo]],
+    CUnsignedInt,
+    CUnsignedInt
+  ]
 object CXIdxDeclInfo:
   given _tag: Tag[CXIdxDeclInfo] =
-    Tag.materializeCStruct13Tag[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[
-      CXIdxContainerInfo
-    ], Ptr[CXIdxContainerInfo], CInt, CInt, CInt, Ptr[
-      CXIdxContainerInfo
-    ], CInt, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt, CUnsignedInt]
+    Tag.materializeCStruct13Tag[
+      Ptr[CXIdxEntityInfo],
+      CXCursor,
+      CXIdxLoc,
+      Ptr[
+        CXIdxContainerInfo
+      ],
+      Ptr[CXIdxContainerInfo],
+      CInt,
+      CInt,
+      CInt,
+      Ptr[
+        CXIdxContainerInfo
+      ],
+      CInt,
+      Ptr[Ptr[CXIdxAttrInfo]],
+      CUnsignedInt,
+      CUnsignedInt
+    ]
   def apply()(using Zone): Ptr[CXIdxDeclInfo] =
     scala.scalanative.unsafe.alloc[CXIdxDeclInfo](1)
   def apply(
@@ -1135,24 +1163,33 @@ opaque type IndexerCallbacks = CStruct8[
 ]
 object IndexerCallbacks:
   given _tag: Tag[IndexerCallbacks] = Tag
-    .materializeCStruct8Tag[CFuncPtr2[CXClientData, Ptr[Byte], CInt], CFuncPtr3[
-      CXClientData,
-      CXDiagnosticSet,
-      Ptr[Byte],
-      Unit
-    ], CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile], CFuncPtr2[
-      CXClientData,
-      Ptr[CXIdxIncludedFileInfo],
-      CXIdxClientFile
-    ], CFuncPtr2[
-      CXClientData,
-      Ptr[CXIdxImportedASTFileInfo],
-      CXIdxClientASTFile
-    ], CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer], CFuncPtr2[
-      CXClientData,
-      Ptr[CXIdxDeclInfo],
-      Unit
-    ], CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]]
+    .materializeCStruct8Tag[
+      CFuncPtr2[CXClientData, Ptr[Byte], CInt],
+      CFuncPtr3[
+        CXClientData,
+        CXDiagnosticSet,
+        Ptr[Byte],
+        Unit
+      ],
+      CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile],
+      CFuncPtr2[
+        CXClientData,
+        Ptr[CXIdxIncludedFileInfo],
+        CXIdxClientFile
+      ],
+      CFuncPtr2[
+        CXClientData,
+        Ptr[CXIdxImportedASTFileInfo],
+        CXIdxClientASTFile
+      ],
+      CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer],
+      CFuncPtr2[
+        CXClientData,
+        Ptr[CXIdxDeclInfo],
+        Unit
+      ],
+      CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]
+    ]
   def apply()(using Zone): Ptr[IndexerCallbacks] =
     scala.scalanative.unsafe.alloc[IndexerCallbacks](1)
   def apply(
