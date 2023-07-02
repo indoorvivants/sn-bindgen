@@ -193,14 +193,19 @@ def binding(
     case f: GeneratedFunction.CFunction => f
   }
 
-  if cFunctions.nonEmpty && lang == Lang.C then
+  if cFunctions.nonEmpty && lang.isGlue then
     to(cOutput)("#include <string.h>")
     summon[Config].cImports.foreach { s =>
       to(cOutput)(s"#include \"$s\"")
     }
     cOutput.emptyLine
 
-    renderAll(cFunctions.toList.sortBy(_.name), cOutput, cFunctionForwarder)
+    if lang == Lang.GlueCPP then cOutput.appendLine("extern \"C\" {")
+
+    nestIf(lang == Lang.GlueCPP) {
+      renderAll(cFunctions.toList.sortBy(_.name), cOutput, cFunctionForwarder)
+    }
+    if lang == Lang.GlueCPP then cOutput.appendLine("}")
 
   end if
 
@@ -233,7 +238,7 @@ def binding(
   else renderExports(simpleStream(s"all"), exports.result(), renderMode)
 
   if multiFileMode then RenderedOutput.Multi(multi.toMap)
-  else if lang == Lang.C then RenderedOutput.Single(cOutput)
+  else if lang.isGlue then RenderedOutput.Single(cOutput)
   else RenderedOutput.Single(scalaOutput)
 
 end binding

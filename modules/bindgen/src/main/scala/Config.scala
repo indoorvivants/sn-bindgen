@@ -5,11 +5,6 @@ import java.io.File
 import scala.util.matching.Regex
 import scala.util.chaining.*
 
-enum OutputMode:
-  case StdOut
-  case SingleFile(out: OutputFile)
-  case MultiFile(out: OutputDirectory)
-
 case class Config(
     packageName: PackageName,
     headerFile: HeaderFile,
@@ -58,11 +53,6 @@ object Config:
     val indents = Indentation(0)
 end Config
 
-enum SystemPathDetection:
-  case FromLLVM(bin: LLVMBin)
-  case FromClang(clang: ClangPath)
-  case Auto, No
-
 opaque type ExportMode = Boolean
 object ExportMode extends YesNo[ExportMode]
 
@@ -82,7 +72,11 @@ opaque type MultiFile = Boolean
 object MultiFile extends YesNo[MultiFile]
 
 enum Lang:
-  case Scala, C
+  case Scala, GlueC, GlueCPP
+
+  def isGlue: Boolean = this match
+    case Scala           => false
+    case GlueC | GlueCPP => true
 
 opaque type ExclusivePrefix = String
 object ExclusivePrefix extends OpaqueString[ExclusivePrefix]

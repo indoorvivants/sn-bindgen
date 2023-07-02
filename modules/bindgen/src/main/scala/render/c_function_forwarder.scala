@@ -12,9 +12,15 @@ def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
       val arglist = List.newBuilder[String]
       f.arguments.zipWithIndex
         .foreach { case (fp, i) =>
+          println(fp.originalTyp.typ)
+          // TOOD: figure
+          val cppType = fp.originalTyp.typ match
+            case CType.Bool                => "bool"
+            case CType.Pointer(CType.Bool) => "bool *"
+            case _                         => fp.originalTyp.s
           arglist.addOne {
             if pointers.contains(i) then s"${fp.originalTyp.s} *${fp.name}"
-            else s"${fp.originalTyp.s} ${fp.name}"
+            else s"${cppType} ${fp.name}"
           }
         }
 

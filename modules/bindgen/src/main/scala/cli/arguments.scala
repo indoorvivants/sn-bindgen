@@ -70,14 +70,41 @@ object CLI:
     .map(IndentationSize.apply(_))
 
   private val isScala =
-    Opts.flag("scala", help = "Generate Scala part of the binding").orFalse
+    Opts
+      .flag(
+        "scala",
+        help =
+          "(shortcut for `--lang scala`) Generate Scala part of the binding"
+      )
+      .orFalse
 
   private val isC =
-    Opts.flag("c", help = "Generate C part of the binding").orFalse
+    Opts
+      .flag(
+        "c",
+        help = "(shortcut for `--lang c`) Generate C part of the binding"
+      )
+      .orFalse
 
-  private val lang: Opts[Lang] = (isScala, isC).mapN { case (scala, c) =>
-    if scala then Lang.Scala else Lang.C
+  private val langShortcut: Opts[Lang] = (isScala, isC).mapN {
+    case (scala, c) =>
+      if scala then Lang.Scala else Lang.GlueC
   }
+
+  private val langDirect: Opts[Lang] = Opts
+    .option[String](
+      "lang",
+      help =
+        "Language of the binding: scala (also scala-native), c (also glue-c), cpp (also glue-cpp)\nDefault: scala"
+    )
+    .mapValidated {
+      case "scala" | "scala-native" => Lang.Scala.validNel
+      case "c" | "glue-c"           => Lang.GlueC.validNel
+      case "cpp" | "glue-cpp"       => Lang.GlueCPP.validNel
+      case other                    => s"Unknown language `$other`".invalidNel
+    }
+
+  private val lang = langDirect.orElse(langShortcut) withDefault (Lang.Scala)
 
   private val printFiles =
     Opts
