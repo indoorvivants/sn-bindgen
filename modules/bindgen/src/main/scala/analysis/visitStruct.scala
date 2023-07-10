@@ -104,11 +104,14 @@ def visitStruct(cursor: CXCursor, name: String)(using
           val nestedName = "Struct" + builder.anonymous.size
           val str = visitStruct(cursor, builder.name.value + "." + nestedName)
           builder.anonymous.addOne(
-            Def.Struct(
-              fields = str.fields,
-              name = StructName(nestedName),
-              anonymous = str.anonymous,
-              meta = extractMetadata(cursor)
+            removeFAM(
+              Def.Struct(
+                fields = str.fields,
+                name = StructName(nestedName),
+                anonymous = str.anonymous,
+                meta = extractMetadata(cursor)
+              ),
+              Some(cursor.spelling)
             )
           )
           CXChildVisitResult.CXChildVisit_Continue
@@ -125,8 +128,27 @@ def visitStruct(cursor: CXCursor, name: String)(using
         CXClientData.wrap(ptr)
       )
 
-      (!ptr)._1.struct.build
+      removeFAM((!ptr)._1.struct.build)
     finally memory.deallocate()
     end try
   }
 end visitStruct
+
+def removeFAM(model: Def.Struct, name: Option[String] = None)(using
+    LoggingConfig
+): Def.Struct =
+
+  val hasFlexibleArrayMember = model.fields.lastOption.collectFirst {
+    case (_, CType.IncompleteArray(_)) => true
+  }.isDefined
+
+  if hasFlexibleArrayMember then
+    warning(
+      s"Struct '${name.getOrElse(model.name)}' has a Flexible Array Member, so it was dropped from the definition. " +
+        "See https://github.com/indoorvivants/sn-bindgen/issues/62 for details"
+    )
+
+    model.copy(fields = model.fields.dropRight(1))
+  else model
+
+end removeFAM
