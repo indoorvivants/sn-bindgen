@@ -5,21 +5,6 @@ def struct(struct: Def.Struct, line: Appender)(using
     c: Config,
     ar: AliasResolver
 ): Exported =
-  // val hasFlexibleArrayMember = model.fields.lastOption.collectFirst {
-  //   case (_, CType.IncompleteArray(_)) => true
-  // }.isDefined
-
-  // val struct: Def.Struct =
-  //   if hasFlexibleArrayMember then
-  //     model.copy(fields = model.fields.dropRight(1))
-  //   else model
-
-  // if hasFlexibleArrayMember then
-  //   warning(
-  //     s"Struct '${model.name}' has a Flexible Array Member, so it was dropped from the definition. " +
-  //       "See https://github.com/indoorvivants/sn-bindgen/issues/62 for details"
-  //   )
-
   val rewriteRules = hack_recursive_structs(struct)
   val structName = struct.name
   val structType: CType.Struct = CType.Struct(struct.fields.map(_._2).toList)
