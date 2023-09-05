@@ -6,7 +6,7 @@ addSbtPlugin("com.indoorvivants" % "sbt-commandmatrix" % "0.0.5")
 
 addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.12")
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
 
 addSbtPlugin(
   "com.indoorvivants" % "subatomic-plugin" % "0.0.7+111-b6459692-SNAPSHOT"
