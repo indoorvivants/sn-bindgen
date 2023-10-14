@@ -26,14 +26,14 @@ lazy val Versions = new {
   val junit = "0.13.3"
   val scalameta = "4.5.13"
   val b2s = "0.3.17"
-  val pluginTargetSN = "0.4.9"
+  val pluginTargetSN = "0.4.16"
   val pluginTargetSBT = "1.6.1"
   val detective = "0.0.2"
   val opaqueNewtypes = "0.0.2"
 
-  val Scala3 = "3.2.2"
+  val Scala3 = "3.3.1"
   val Scala212 = "2.12.18"
-  val Scala213 = "2.13.11"
+  val Scala213 = "2.13.12"
   val Scala2 = List(Scala212, Scala213)
 
 }
