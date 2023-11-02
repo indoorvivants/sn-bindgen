@@ -44,7 +44,40 @@ jobs:
           path: bin/sn-bindgen-*
           name: binaries
           if-no-files-found: error
+          
+macos_arm_build:
+    name: MacOS (Arm64)
+    strategy:
+      fail-fast: true
+    runs-on: macos-arm64
+    env:
+      SN_RELEASE: fast
+      LLVM_VERSION: 14
+      LLVM_BIN: /opt/homebrew/opt/llvm@14/bin
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
 
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' 
+          java-version: '17'
+          cache: 'sbt'
+
+      - name: Install LLVM
+        run: brew install llvm@$LLVM_VERSION
+
+      - name: CI and build the binary
+        run: sbt ci 'buildBinary sn-bindgen-aarch64-apple-darwin'
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          path: bin/sn-bindgen-*
+          name: binaries
+          if-no-files-found: error
+          
   linux_build:
     name: Linux
     runs-on: ubuntu-20.04
