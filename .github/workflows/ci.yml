@@ -151,7 +151,6 @@ jobs:
       fail-fast: false
     runs-on: windows-2019
     env:
-      SN_RELEASE: fast
       LLVM_BIN: 'C:\Program Files\LLVM\bin'
       LLVM_VERSION: "14.0.6"
     steps:
@@ -181,11 +180,17 @@ jobs:
       - run: clang -v
         shell: cmd
 
-      - name: Install clang
+      - name: Sets env vars for release
+        run: |
+          echo "SN_RELEASE=fast" >> $env:GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+        shell: pwsh
+
+      - name: Install clang and SBT
         shell: pwsh
         run: |
           choco install llvm --version="$Env:LLVM_VERSION" --allow-downgrade
-          choco install sbt --version=1.8.0
+          choco install sbt --version=1.9.7
           clang --version
 
       - name: SBT remote cache
