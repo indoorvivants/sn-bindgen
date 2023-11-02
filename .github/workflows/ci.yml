@@ -68,6 +68,9 @@ jobs:
         - name: Install LLVM
           run: brew install llvm@$LLVM_VERSION
 
+        - name: Install SBT 
+          run: brew install sbt
+
         - name: CI and build the binary
           run: sbt ci 'buildBinary sn-bindgen-aarch64-apple-darwin'
 
