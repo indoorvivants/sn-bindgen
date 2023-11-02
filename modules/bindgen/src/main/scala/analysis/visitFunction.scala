@@ -13,6 +13,7 @@ import libclang.fluent.*
 import scalanative.libc.*
 
 def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
+  info("We're in function for some reason")
   val typ = clang_getCursorType(functionCursor)
   val isVariadic = clang_Cursor_isVariadic(functionCursor).toInt == 1
   val functionName = clang_getCursorSpelling(functionCursor).string

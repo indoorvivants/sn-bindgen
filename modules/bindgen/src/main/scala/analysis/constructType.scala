@@ -10,9 +10,9 @@ import scala.scalanative.unsigned.*
 import scala.util.control.NoStackTrace
 
 import scalanative.libc.*
-import libclang.structs.CXType
+import libclang.structs.*
 
-def constructType(typ: CXType)(using
+def constructType(typ: CXType, cur: Option[CXCursor] = None)(using
     Zone,
     Config
 ): CType =
@@ -54,6 +54,11 @@ def constructType(typ: CXType)(using
         (0 until numArgs).map(i =>
           constructType(clang_getArgType(typ, i.toUInt))
         )
+      cur.foreach { cur =>
+        (0 until numArgs).foreach { i =>
+          info(clang_Cursor_getArgument(cur, i.toUInt).kind.spelling)
+        }
+      }
 
       CType.Function(
         returnType = constructType(resultType),
@@ -63,7 +68,11 @@ def constructType(typ: CXType)(using
 
     case CXType_Pointer =>
       val pointee = clang_getPointeeType(typ)
-      CType.Pointer(of = constructType(pointee))
+      val typeDecl = clang_getTypeDeclaration(typ)
+      cur.foreach {cur => 
+        println(cur.spelling)
+      }
+      CType.Pointer(of = constructType(pointee, Option(typeDecl)))
 
     case CXType_Typedef =>
       val definition = clang_getTypedefName(typ)

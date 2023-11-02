@@ -27,6 +27,7 @@ enum CType:
   case Reference(name: Name)
 end CType
 
+
 object CType:
   case class Parameter(name: Option[ParameterName], of: CType)
 

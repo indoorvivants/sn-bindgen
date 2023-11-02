@@ -105,11 +105,13 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
               // If the typedef's name is different from the alias name,
               // we should add both definitions
 
+              info(s"Typedecl: $typeDecl")
+
               if !en.name.exists(_.value == name) then
                 binding.add(
                   Def.Alias(
                     name,
-                    constructType(typ),
+                    constructType(typ, Some(typeDecl)),
                     extractMetadata(cursor)
                   ),
                   location
@@ -132,10 +134,11 @@ def analyse(file: String)(using Zone)(using config: Config): Binding =
 
               if name != "" then binding.add(item, location)
             else if typ.kind != CXTypeKind.CXType_Invalid then
+              info(s"Typedecl: $typeDecl")
               val alias: Def.Alias =
                 Def.Alias(
                   name,
-                  constructType(typ),
+                  constructType(typ, Some(typeDecl)),
                   extractMetadata(cursor)
                 )
               val canonical = clang_getCanonicalType(typ)
