@@ -54,6 +54,8 @@ jobs:
       strategy:
         fail-fast: true
       runs-on: macos-aarch64
+      if: startsWith(github.ref, 'refs/tags/v')
+      continue-on-error: true
       env:
         LLVM_VERSION: 14
         LLVM_BIN: /opt/homebrew/opt/llvm@14/bin
@@ -77,7 +79,6 @@ jobs:
         - name: Sets env vars for release
           run: |
             echo "SN_RELEASE=fast" >> $GITHUB_ENV
-          if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
 
         - name: CI and build the binary
           run: sbt ci 'buildBinary sn-bindgen-aarch64-apple-darwin'
@@ -217,7 +218,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    needs: [linux_build, linux_arm64_build, windows_build, macos_build]
+    needs: [linux_build, linux_arm64_build, windows_build, macos_build, macos_arm_build]
     name: Release
     runs-on: ubuntu-20.04
     env: 
@@ -252,6 +253,7 @@ jobs:
           ./cs resolve com.indoorvivants:bindgen-interface_3:$(cat version)
           ./cs resolve com.indoorvivants:bindgen-interface_2.12:$(cat version)
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-x86_64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-aarch64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-aarch64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier windows-x86_64 --artifact-type jar
