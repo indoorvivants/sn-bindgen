@@ -99,10 +99,6 @@ jobs:
   linux_build:
       name: Linux
       runs-on: ubuntu-20.04
-      env: 
-        BINARIES: binaries/
-        LLVM_BIN: /usr/lib/llvm-14/bin
-        LLVM_VERSION: 14
       steps:
       - uses: earthly/actions/setup-earthly@v1
         with:
