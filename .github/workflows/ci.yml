@@ -18,7 +18,6 @@ jobs:
       fail-fast: true
     runs-on: macos-11
     env:
-      SN_RELEASE: fast
       LLVM_VERSION: 14
       LLVM_BIN: /usr/local/opt/llvm@14/bin
     steps:
@@ -34,6 +33,11 @@ jobs:
 
       - name: Install LLVM
         run: brew install llvm@$LLVM_VERSION
+
+      - name: Sets env vars for release
+        run: |
+          echo "SN_RELEASE=fast" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
 
       - name: CI and build the binary
         run: sbt ci 'buildBinary sn-bindgen-x86_64-apple-darwin'
@@ -51,7 +55,6 @@ jobs:
         fail-fast: true
       runs-on: macos-aarch64
       env:
-        SN_RELEASE: fast
         LLVM_VERSION: 14
         LLVM_BIN: /opt/homebrew/opt/llvm@14/bin
       steps:
@@ -70,6 +73,11 @@ jobs:
 
         - name: Install SBT 
           run: brew install sbt
+
+        - name: Sets env vars for release
+          run: |
+            echo "SN_RELEASE=fast" >> $GITHUB_ENV
+          if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
 
         - name: CI and build the binary
           run: sbt ci 'buildBinary sn-bindgen-aarch64-apple-darwin'
