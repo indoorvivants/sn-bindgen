@@ -49,7 +49,7 @@ jobs:
       name: MacOS (Arm64)
       strategy:
         fail-fast: true
-      runs-on: macos-arm64
+      runs-on: macos-aarch64
       env:
         SN_RELEASE: fast
         LLVM_VERSION: 14
