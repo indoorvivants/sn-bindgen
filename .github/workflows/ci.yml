@@ -10,6 +10,7 @@ env:
   JAVA_OPTS: "-Xmx4G"
   JVM_OPTS: "-Xmx4G"
   SBT_OPTS: "-Xmx4G"
+  LLVM_VERSION: 14
 
 jobs:
   macos_build:
@@ -18,7 +19,6 @@ jobs:
       fail-fast: true
     runs-on: macos-11
     env:
-      SN_RELEASE: fast
       LLVM_VERSION: 14
       LLVM_BIN: /usr/local/opt/llvm@14/bin
     steps:
@@ -35,6 +35,15 @@ jobs:
       - name: Install LLVM
         run: brew install llvm@$LLVM_VERSION
 
+      - name: Sets env vars for release
+        run: |
+          echo "SN_RELEASE=fast" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+
+      - name: Sets env vars for LLVM
+        run: |
+          echo "LLVM_BIN=/usr/local/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
+
       - name: CI and build the binary
         run: sbt ci 'buildBinary sn-bindgen-x86_64-apple-darwin'
 
@@ -44,31 +53,84 @@ jobs:
           path: bin/sn-bindgen-*
           name: binaries
           if-no-files-found: error
+          
+  macos_arm_build:
+      name: MacOS (Arm64)
+      strategy:
+        fail-fast: true
+      runs-on: macos-aarch64
+      if: startsWith(github.ref, 'refs/tags/v')
+      continue-on-error: true
+      steps:
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: 0 
+
+        - uses: actions/setup-java@v3
+          with:
+            distribution: 'temurin' 
+            java-version: '17'
+            cache: 'sbt'
+
+        - name: Install LLVM
+          run: brew install llvm@$LLVM_VERSION
+
+        - name: Install SBT 
+          run: brew install sbt
+
+        - name: Sets env vars for release
+          run: |
+            echo "SN_RELEASE=fast" >> $GITHUB_ENV
+
+        - name: Sets env vars for LLVM
+          run: |
+            echo "LLVM_BIN=/opt/homebrew/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
+
+        - name: CI and build the binary
+          run: sbt ci 'buildBinary sn-bindgen-aarch64-apple-darwin'
+
+        - name: Upload artifacts
+          uses: actions/upload-artifact@master
+          with:
+            path: bin/sn-bindgen-*
+            name: binaries
+            if-no-files-found: error
 
   linux_build:
-    name: Linux
-    runs-on: ubuntu-20.04
-    env:
-      FORCE_COLOR: 1
-    steps:
-    - uses: earthly/actions/setup-earthly@v1
-      with:
-        version: v0.7.2
+      name: Linux
+      runs-on: ubuntu-20.04
+      steps:
+      - uses: earthly/actions/setup-earthly@v1
+        with:
+          version: v0.7.2
 
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
 
-    - name: Intel build
-      run: earthly --ci --platform linux/amd64 --output +bindgen --BINARY_NAME="sn-bindgen-x86_64-pc-linux"
+      - name: Setup Unix-like
+        run: ./build/setup_unix.sh
 
-    - name: Upload Intel artifacts
-      uses: actions/upload-artifact@master
-      with:
-        path: bin/sn-bindgen-*
-        name: binaries
-        if-no-files-found: error
+      - name: Sets env vars for release
+        run: |
+          echo "SN_RELEASE=fast" >> $GITHUB_ENV
 
+      - name: Sets env vars for LLVM
+        run: |
+          echo "LLVM_BIN=/usr/lib/llvm-$LLVM_VERSION/bin" >> $GITHUB_ENV
+
+      - name: CI and build the binary
+        run: sbt ci 'buildBinary sn-bindgen-x86_64-pc-linux'
+
+      - name: Build site
+        run: sbt buildWebsite
+
+      - name: Upload Intel artifacts
+        uses: actions/upload-artifact@master
+        with:
+          path: bin/sn-bindgen-*
+          name: binaries
+          if-no-files-found: error
 
   linux_arm64_build:
     name: Linux (Arm64)
@@ -108,7 +170,6 @@ jobs:
       fail-fast: false
     runs-on: windows-2019
     env:
-      SN_RELEASE: fast
       LLVM_BIN: 'C:\Program Files\LLVM\bin'
       LLVM_VERSION: "14.0.6"
     steps:
@@ -138,11 +199,17 @@ jobs:
       - run: clang -v
         shell: cmd
 
-      - name: Install clang
+      - name: Sets env vars for release
+        run: |
+          echo "SN_RELEASE=fast" >> $env:GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+        shell: pwsh
+
+      - name: Install clang and SBT
         shell: pwsh
         run: |
           choco install llvm --version="$Env:LLVM_VERSION" --allow-downgrade
-          choco install sbt --version=1.8.0
+          choco install sbt --version=1.9.7
           clang --version
 
       - name: SBT remote cache
@@ -169,7 +236,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    needs: [linux_build, linux_arm64_build, windows_build, macos_build]
+    needs: [linux_build, linux_arm64_build, windows_build, macos_build, macos_arm_build]
     name: Release
     runs-on: ubuntu-20.04
     env: 
@@ -204,6 +271,7 @@ jobs:
           ./cs resolve com.indoorvivants:bindgen-interface_3:$(cat version)
           ./cs resolve com.indoorvivants:bindgen-interface_2.12:$(cat version)
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-x86_64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-aarch64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-aarch64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier windows-x86_64 --artifact-type jar

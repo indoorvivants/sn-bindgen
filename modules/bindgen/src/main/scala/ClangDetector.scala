@@ -7,6 +7,7 @@ import com.indoorvivants.detective.Platform
 import Platform.OS.*
 import java.lang.ProcessBuilder.Redirect
 import scala.sys.process.ProcessLogger
+import scala.util.Try
 
 case class ClangInfo(
     includePaths: List[String]
@@ -49,7 +50,11 @@ object ClangDetector:
   end process
 
   def detect(path: Path, args: String*): Either[ProcessResult, ClangInfo] =
-    val tempFolder = Files.createTempDirectory("sn-bindgen-clang")
+    val tempFolder = LazyList
+      .fill(5)(Try(Files.createTempDirectory("sn-bindgen-clang")))
+      .dropWhile(_.isFailure)
+      .head
+      .get
     val destination = tempFolder.resolve("output.o").toString
     val tempC = Files.createTempFile(tempFolder, "test", ".c").toString()
 
