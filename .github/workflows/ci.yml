@@ -77,8 +77,8 @@ macos_arm_build:
           path: bin/sn-bindgen-*
           name: binaries
           if-no-files-found: error
-          
-  linux_build:
+
+linux_build:
     name: Linux
     runs-on: ubuntu-20.04
     env:
@@ -101,7 +101,6 @@ macos_arm_build:
         path: bin/sn-bindgen-*
         name: binaries
         if-no-files-found: error
-
 
   linux_arm64_build:
     name: Linux (Arm64)
