@@ -30,6 +30,8 @@ def visitStruct(cursor: CXCursor, name: String)(using
     )
   )
 
+  trace(s"visitStruct: ${cursor.spelling}")
+
   val visitor = CXCursorVisitorPtr {
     (cursorPtr: Ptr[CXCursor], parentPtr: Ptr[CXCursor], d: CXClientData) =>
       val (collector, config) = !d.unwrap[Captured[StructCollector]]
@@ -40,6 +42,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
 
         val builder = collector.struct
         trace(s"Cursor kind: ${cursor.kind.spelling}")
+        trace(s"Cursor: ${cursor.spelling}")
         if cursor.kind == CXCursorKind.CXCursor_FieldDecl then
           val fieldName =
             StructParameterName(clang_getCursorSpelling(cursor).string)
@@ -56,6 +59,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
             val nestedName = last match
               case un: Def.Union  => un.name.value
               case st: Def.Struct => st.name.value
+              case en: Def.Enum   => en.name.get.value
             builder.fields.addOne(
               fieldName -> CType.Reference(
                 Name.Model(builder.name.value + "." + nestedName)
@@ -113,6 +117,15 @@ def visitStruct(cursor: CXCursor, name: String)(using
               ),
               Some(cursor.spelling)
             )
+          )
+          CXChildVisitResult.CXChildVisit_Continue
+        else if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
+          val nestedName = "Enum" + builder.anonymous.size
+          val str: Def.Enum =
+            visitEnum(cursor, isTypeDef = true)
+              .copy(name = Some(EnumName(nestedName)))
+          builder.anonymous.addOne(
+            str
           )
           CXChildVisitResult.CXChildVisit_Continue
         else CXChildVisitResult.CXChildVisit_Continue

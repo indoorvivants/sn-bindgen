@@ -50,6 +50,14 @@ def shouldRender(definition: Def)(using config: Config) =
     }
     .isEmpty
 
+def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
+  st match
+    case e: Def.Enum => true
+    case d: Def.Union =>
+      d.anonymous.exists(hasEnum)
+    case d: Def.Struct =>
+      d.anonymous.exists(hasEnum)
+
 def binding(
     rawBinding: Binding,
     lang: Lang,
@@ -59,7 +67,9 @@ def binding(
 ): RenderedOutput =
   val binding = rawBinding.filterAll(shouldRender)
 
-  val hasAnyEnums = binding.enums.nonEmpty
+  val hasAnyEnums = binding.enums.nonEmpty || binding.unions.exists(
+    hasEnum
+  ) || binding.structs.exists(hasEnum)
   val hasAliases = binding.aliases.nonEmpty
   val hasUnions = binding.unions.nonEmpty
   val hasStructs = binding.structs.nonEmpty
@@ -71,6 +81,8 @@ def binding(
     structs = hasStructs,
     unions = hasUnions
   )
+
+  println(typeImports)
 
   val multiFileMode = outputMode match
     case _: OutputMode.MultiFile => true
@@ -252,11 +264,12 @@ private def renderAliases(
     typeImports: TypeImports
 )(using Config, AliasResolver) =
   val exported = List.newBuilder[Exported]
-  if mode == RenderMode.Files then typeImports.render(out)
+  if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
   if mode == RenderMode.Objects then out.appendLine("object aliases:")
 
   nestIf(mode == RenderMode.Objects) {
-    if mode == RenderMode.Objects then typeImports.render(out)
+    if mode == RenderMode.Objects then
+      typeImports.render(out, multiFile = false)
     exported ++= renderAll(aliases, out, alias)
   }
   exported.result()
@@ -291,10 +304,11 @@ private def renderUnions(
     typeImports: TypeImports
 )(using Config, AliasResolver) =
   val exported = List.newBuilder[Exported]
-  if mode == RenderMode.Files then typeImports.render(out)
+  if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
   if mode == RenderMode.Objects then out.appendLine("object unions:")
   nestIf(mode == RenderMode.Objects) {
-    if mode == RenderMode.Objects then typeImports.render(out)
+    if mode == RenderMode.Objects then
+      typeImports.render(out, multiFile = false)
     exported ++= renderAll(unions, out, union)
   }
   exported.result()
@@ -307,11 +321,12 @@ private def renderStructs(
     typeImports: TypeImports
 )(using Config, AliasResolver) =
   val exported = List.newBuilder[Exported]
-  if mode == RenderMode.Files then typeImports.render(out)
+  if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
   if mode == RenderMode.Objects then out.appendLine("object structs:")
 
   nestIf(mode == RenderMode.Objects) {
-    if mode == RenderMode.Objects then typeImports.render(out)
+    if mode == RenderMode.Objects then
+      typeImports.render(out, multiFile = false)
     exported ++= renderAll(structs, out, struct)
   }
   exported.result()
@@ -443,7 +458,8 @@ private def renderScalaFunctions(
 
   if functions.nonEmpty then
     if exportMode == ExportMode.No then
-      if renderMode == RenderMode.Files then typeImports.render(out)
+      if renderMode == RenderMode.Files then
+        typeImports.render(out, multiFile = true)
 
       if hasExternFunctions then
         summon[Config].linkName.foreach { l =>
@@ -453,7 +469,8 @@ private def renderScalaFunctions(
           s"\n@extern\nprivate[$packageName] object extern_functions:"
         )
         nest {
-          if renderMode == RenderMode.Objects then typeImports.render(out)
+          if renderMode == RenderMode.Objects then
+            typeImports.render(out, multiFile = false)
           exported ++= renderAll(
             scalaExternFunctions.toList.sortBy(_.name),
             out,
@@ -466,7 +483,8 @@ private def renderScalaFunctions(
         if renderMode == RenderMode.Objects then
           out.appendLine(s"\nobject functions:")
         nestIf(renderMode == RenderMode.Objects) {
-          if renderMode == RenderMode.Objects then typeImports.render(out)
+          if renderMode == RenderMode.Objects then
+            typeImports.render(out, multiFile = false)
 
           if hasExternFunctions then
             to(out)("import extern_functions.*")
@@ -501,14 +519,16 @@ private def renderScalaFunctions(
 
       out.appendLine("trait ExportedFunctions:")
       nest {
-        if renderMode == RenderMode.Objects then typeImports.render(out)
+        if renderMode == RenderMode.Objects then
+          typeImports.render(out, multiFile = false)
         renderAll(modified(ExportLocation.Trait), out, renderFunction)
       }
 
       if renderMode == RenderMode.Objects then
         out.appendLine(s"\nobject functions extends ExportedFunctions:")
       nestIf(renderMode == RenderMode.Objects) {
-        if renderMode == RenderMode.Objects then typeImports.render(out)
+        if renderMode == RenderMode.Objects then
+          typeImports.render(out, multiFile = false)
         renderAll(
           modified(
             ExportLocation.Body(summon[Config].packageName.map(_ + ".impl"))

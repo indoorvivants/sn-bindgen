@@ -46,6 +46,7 @@ def alignment(typ: CType)(using AliasResolver): CSize =
     case Reference(Name.Model(name, _)) => alignment(aliasResolver(name))
     case Reference(Name.BuiltIn(name))  => name.alignment
     case IncompleteArray(_)             => 1.toULong
+    case Enum(underlying)               => alignment(underlying)
     case Union(fields) =>
       1.toULong // TODO: are unions aligned at all?
   end match

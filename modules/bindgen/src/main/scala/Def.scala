@@ -48,16 +48,18 @@ enum Def(meta: Meta):
       intType: Option[CType.NumericIntegral],
       meta: Meta
   ) extends Def(meta)
+
   case Struct(
       fields: List[(StructParameterName, CType)],
       name: StructName,
-      anonymous: List[Def.Union | Def.Struct],
+      anonymous: List[Def.Union | Def.Struct | Def.Enum],
       meta: Meta
   ) extends Def(meta)
+
   case Union(
       fields: List[(UnionParameterName, CType)],
       name: UnionName,
-      anonymous: List[Def.Union | Def.Struct],
+      anonymous: List[Def.Union | Def.Struct | Def.Enum],
       meta: Meta
   ) extends Def(meta)
   case Function(
@@ -95,6 +97,8 @@ object Def:
     CType.Union(d.fields.map(_._2).toList)
   def typeOf(d: Struct): CType.Struct =
     CType.Struct(d.fields.map(_._2).toList)
+  def typeOf(d: Enum): CType.Enum =
+    CType.Enum(d.intType.get)
 end Def
 
 case class FunctionParameter(

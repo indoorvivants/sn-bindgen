@@ -55,9 +55,20 @@ class TestEnums:
     assertEquals(None, Enum1.getName(Enum1.define(4)))
   end test_getname
 
+  @Test def test_anon_enum(): Unit =
+    zone:
+      val test = EnumAnon()
+      (!test).protocol = EnumAnon.Enum0.WHAT
+      (!test).howdy = 25
+
+      assert((!test).protocol == EnumAnon.Enum0.WHAT)
+      assert((!test).howdy == 25)
+  end test_anon_enum
+
   @Test def test_tags(): Unit =
     summon[Tag[Enum1]]
     summon[Tag[Enum2]]
     summon[Tag[EnumKeywords]]
+    summon[Tag[EnumAnon.Enum0]]
 
 end TestEnums
