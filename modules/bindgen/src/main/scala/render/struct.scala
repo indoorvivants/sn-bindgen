@@ -78,6 +78,8 @@ def struct(struct: Def.Struct, line: Appender)(using
         rendering.struct(s, line)
       case u: Def.Union =>
         rendering.union(u, line)
+      case e: Def.Enum =>
+        rendering.enumeration(e, line)
     }
     if struct.fields.nonEmpty then
       val fieldTypes =

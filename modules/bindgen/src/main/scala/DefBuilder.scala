@@ -42,14 +42,14 @@ object DefBuilder:
   case class Struct(
       var fields: ListBuffer[(StructParameterName, CType)],
       var name: StructName,
-      var anonymous: ListBuffer[Def.Union | Def.Struct],
+      var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
       var meta: Meta
   ) extends DefBuilder[Def.Struct]
 
   case class Union(
       var fields: ListBuffer[(UnionParameterName, CType)],
       var name: UnionName,
-      var anonymous: ListBuffer[Def.Union | Def.Struct],
+      var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
       var meta: Meta
   ) extends DefBuilder[Def.Union]
 
