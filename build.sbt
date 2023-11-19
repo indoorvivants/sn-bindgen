@@ -566,6 +566,22 @@ buildBinary := {
   dest
 }
 
+lazy val buildPlatformBinary = taskKey[File]("")
+buildPlatformBinary := {
+
+  val target = Platform.target
+  val name = artifactFileNames(target)
+
+  val built = (bindgen / Compile / nativeLink).value
+  val dest = (ThisBuild / baseDirectory).value / "bin" / name
+
+  IO.copyFile(built, dest)
+
+  sLog.value.info(s"Platform binary built in ${dest}")
+
+  dest
+}
+
 lazy val nativeCommon = Seq(
   scalaVersion := Versions.Scala3
 )

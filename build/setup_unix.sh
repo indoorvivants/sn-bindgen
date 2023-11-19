@@ -11,10 +11,10 @@ if [ $PLATFORM == "Darwin" ]; then
 else
   echo "It's a linux"
   sudo apt update
-  sudo apt install lsb-release wget software-properties-common
+  sudo apt install -y lsb-release wget software-properties-common
   wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
   sudo add-apt-repository "deb http://apt.llvm.org/focal/     llvm-toolchain-focal-$LLVM_VERSION   main"
   sudo apt-get update 
-  sudo apt-get install clang-$LLVM_VERSION lldb-$LLVM_VERSION libclang-$LLVM_VERSION-dev llvm-$LLVM_VERSION-dev
+  sudo apt-get -y install clang-$LLVM_VERSION libclang-$LLVM_VERSION-dev llvm-$LLVM_VERSION-dev
 fi
 
