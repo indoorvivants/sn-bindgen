@@ -36,7 +36,7 @@ jobs:
 
       - name: Sets env vars for release
         run: |
-          echo "SN_RELEASE=fast" >> $GITHUB_ENV
+          echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
 
       - name: Sets env vars for LLVM
@@ -79,7 +79,7 @@ jobs:
 
         - name: Sets env vars for release
           run: |
-            echo "SN_RELEASE=fast" >> $GITHUB_ENV
+            echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
 
         - name: Sets env vars for LLVM
           run: |
@@ -114,7 +114,7 @@ jobs:
 
       - name: Sets env vars for release
         run: |
-          echo "SN_RELEASE=fast" >> $GITHUB_ENV
+          echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
 
       - name: Sets env vars for LLVM
         run: |
@@ -194,7 +194,7 @@ jobs:
 
       - name: Sets env vars for release
         run: |
-          echo "SN_RELEASE=fast" >> $env:GITHUB_ENV
+          echo "SCALANATIVE_MODE=release-fast" >> $env:GITHUB_ENV
         if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
         shell: pwsh
 
