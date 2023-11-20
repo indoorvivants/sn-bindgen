@@ -41,8 +41,7 @@ contain all the functions from the header file</li>
 </div>
 <div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
-<pre><code class="language-scala">TypeImports(enums = false, aliases = false, structs = false, unions = false)
-package libtest
+<pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -51,22 +50,18 @@ import _root_.scala.scalanative.*
 
 trait ExportedFunctions:
   /**
-   * [bindgen] header: /tmp/3278843238391930171header.h
+   * [bindgen] header: /tmp/15003495481388994573header.h
   */
   def myThing(n : CInt, i : CLongInt): CLongInt
 
 
 object functions extends ExportedFunctions:
   /**
-   * [bindgen] header: /tmp/3278843238391930171header.h
+   * [bindgen] header: /tmp/15003495481388994573header.h
   */
   @exported
   override def myThing(n : CInt, i : CLongInt): CLongInt = libtest.impl.Implementations.myThing(n, i)
 
-
-</code></pre>
-<p><strong>Generated <code>C</code> code</strong></p>
-<pre><code class="language-c">TypeImports(enums = false, aliases = false, structs = false, unions = false)
 
 </code></pre>
 </div>
@@ -98,8 +93,7 @@ long myThing(int n, const MyStuff* str);
 </div>
 <div class = "w-12/12">
 <p><strong>Generated <code>Scala</code> code</strong></p>
-<pre><code class="language-scala">TypeImports(enums = false, aliases = false, structs = true, unions = false)
-package libtest
+<pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -109,7 +103,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/7633895452064626108header.h
+   * [bindgen] header: /tmp/7756135914942982529header.h
   */
   opaque type MyStuff = CStruct2[CInt, CString]
   object MyStuff:
@@ -129,7 +123,7 @@ object structs:
 trait ExportedFunctions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/7633895452064626108header.h
+   * [bindgen] header: /tmp/7756135914942982529header.h
   */
   def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt
 
@@ -137,7 +131,7 @@ trait ExportedFunctions:
 object functions extends ExportedFunctions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/7633895452064626108header.h
+   * [bindgen] header: /tmp/7756135914942982529header.h
   */
   @exported
   override def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt = libtest.impl.Implementations.myThing(n, str)
@@ -147,10 +141,6 @@ object types:
 
 object all:
   export _root_.libtest.structs.MyStuff
-
-</code></pre>
-<p><strong>Generated <code>C</code> code</strong></p>
-<pre><code class="language-c">TypeImports(enums = false, aliases = false, structs = true, unions = false)
 
 </code></pre>
 </div>
