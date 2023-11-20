@@ -82,8 +82,6 @@ def binding(
     unions = hasUnions
   )
 
-  println(typeImports)
-
   val multiFileMode = outputMode match
     case _: OutputMode.MultiFile => true
     case _                       => false
