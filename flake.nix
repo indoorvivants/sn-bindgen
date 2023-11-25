@@ -8,12 +8,12 @@
 
   inputs.systems.url = "github:nix-systems/default";
 
-  outputs = {
-    self,
-    nixpkgs,
-    sbt,
-    systems
-  }:
+  outputs =
+    { self
+    , nixpkgs
+    , sbt
+    , systems
+    }:
     let
       eachSystem = nixpkgs.lib.genAttrs (import systems);
     in
@@ -24,7 +24,16 @@
           default = sbt.mkSbtDerivation.${system} {
             pname = "sn-bindgen";
             version = "0.1.0";
-            src = self;
+            src = with pkgs.lib.fileset; toSource {
+              root = ./.;
+              fileset = unions [
+                ./build
+                ./docs
+                ./modules
+                ./project
+                ./build.sbt
+              ];
+            };
             depsSha256 = "sha256-3sgPKN1/0lxSxOtetlWS/NobXIpQ6a7Ygk2GOprYIcg=";
             buildPhase = ''
               sbt 'show buildBinary'
@@ -48,6 +57,7 @@
               which
               zlib
             ];
+            meta.mainProgram = "bindgen";
           };
         }
       );
