@@ -61,5 +61,8 @@
           };
         }
       );
+      overlays.default = final: prev: {
+        sn-bindgen = self.packages.${final.system}.default;
+      };
     };
 }
