@@ -20,8 +20,8 @@ class TestCLI:
   val MINIMUM = Seq("--package", "helloworld", "--header", "test.h")
 
   @Test def test_minimum() =
-    assertEquals("helloworld", parseRight(MINIMUM).packageName.value)
-    assertEquals("test.h", parseRight(MINIMUM).headerFile.value)
+    assertEquals("helloworld", parseRight(MINIMUM).context.packageName.value)
+    assertEquals("test.h", parseRight(MINIMUM).context.headerFile.value)
 
   @Test def `test_render.no-constructor`() =
     import RenderingConfig.*
@@ -34,7 +34,7 @@ class TestCLI:
       parseExtra(
         "--render.no-constructor",
         "StructA,StructB,nk_style*"
-      ).rendering.noConstructor
+      ).config.rendering.noConstructor
     )
   end `test_render.no-constructor`
 
@@ -44,11 +44,11 @@ class TestCLI:
       false,
       parseExtra(
         "--render.no-comments"
-      ).rendering.comments.value
+      ).config.rendering.comments.value
     )
     assertEquals(
       true,
-      parseExtra().rendering.comments.value
+      parseExtra().config.rendering.comments.value
     )
   end `test_render.no-comments`
 
@@ -58,11 +58,11 @@ class TestCLI:
       false,
       parseExtra(
         "--render.no-location"
-      ).rendering.location.value
+      ).config.rendering.location.value
     )
     assertEquals(
       true,
-      parseExtra().rendering.location.value
+      parseExtra().config.rendering.location.value
     )
   end `test_render.no-location`
 
@@ -77,23 +77,23 @@ class TestCLI:
       parseExtra(
         "--render.opaque-structs",
         "StructA,StructB,nk_style*"
-      ).rendering.opaqueStruct
+      ).config.rendering.opaqueStruct
     )
   end `test_render.opaque-structs`
 
   @Test def test_langs() =
-    assertEquals(Lang.Scala, parseExtra("--scala").lang)
-    assertEquals(Lang.C, parseExtra("--c").lang)
+    assertEquals(Lang.Scala, parseExtra("--scala").context.lang)
+    assertEquals(Lang.C, parseExtra("--c").context.lang)
 
   @Test def test_out() =
     assertEquals(
       OutputMode.SingleFile(OutputFile("test.scala")),
-      parseExtra("--out", "test.scala").outputMode
+      parseExtra("--out", "test.scala").config.outputMode
     )
 
     assertEquals(
       OutputMode.StdOut,
-      parseRight(MINIMUM).outputMode
+      parseRight(MINIMUM).config.outputMode
     )
 
     val tmpDir = Files.createTempDirectory("bindgen")
@@ -102,12 +102,12 @@ class TestCLI:
 
     assertEquals(
       OutputMode.MultiFile(OutputDirectory(tmpDir.toString)),
-      parseExtra("--out", tmpDir.toString, "--multi-file").outputMode
+      parseExtra("--out", tmpDir.toString, "--multi-file").config.outputMode
     )
   end test_out
 
   @Test def test_print_files() =
-    assertTrue(parseExtra("--print-files").printFiles == PrintFiles.Yes)
+    assertTrue(parseExtra("--print-files").config.printFiles == PrintFiles.Yes)
 
   @Test def test_externalPaths() =
     assertEquals(
@@ -120,7 +120,7 @@ class TestCLI:
         "*glib-2.0*=glib",
         "--render.external-path",
         "test.h=gobject"
-      ).rendering.externalPaths
+      ).config.rendering.externalPaths
     )
 
   @Test def test_externalNames() =
@@ -134,7 +134,7 @@ class TestCLI:
         "Gtk*=gtk",
         "--render.external-name",
         "G*=glib"
-      ).rendering.externalNames
+      ).config.rendering.externalNames
     )
 
 end TestCLI
