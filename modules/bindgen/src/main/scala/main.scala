@@ -12,11 +12,13 @@ import scalanative.libc.*
 import scala.util.Using.apply
 import scala.util.Using
 
+import libclang.all.*
+
 inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
 
 object Generate:
   def main(args: Array[String]): Unit =
-    zone {
+    zone:
       CLI.command.parse(args) match
         case Left(help) =>
           val (modified, code) =
@@ -30,7 +32,7 @@ object Generate:
               given Config = config
               val result =
                 binding(
-                  analyse(config.headerFile.value),
+                  analyse(config.headerFile.value).fold(handleError, identity),
                   config.lang,
                   config.outputMode
                 )
@@ -69,6 +71,23 @@ object Generate:
             case Some(msg) =>
               config.outputChannel.stderr(msg + "\n")
               sys.exit(1)
-    }
+
+  private def outputDiagnostic(diag: ClangDiagnostic)(using Config, Zone) =
+    import ClangSeverity.*
+    diag.severity match
+      case Error | Fatal  => error(diag.message())
+      case Warning        => warning(diag.message())
+      case Ignored | Note => info(diag.message())
+
+  private def handleError(b: BindingError)(using config: Config)(using Zone) =
+    config.outputChannel.stderrLine(b.render)
+    b match
+      case BindingError.ClangErrors(errs) =>
+        errs.foreach: diag =>
+          outputDiagnostic(diag)
+
+      case _ =>
+    sys.exit(1)
+  end handleError
 
 end Generate

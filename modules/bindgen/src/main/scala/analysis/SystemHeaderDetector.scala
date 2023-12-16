@@ -17,7 +17,7 @@ import libclang.fluent.string
 class SystemHeaderDetector(clangInfo: ClangInfo):
   private val mut = collection.mutable.Map.empty[String, Boolean]
 
-  def isSystem(filename: String) =
+  def isSystem(filename: String): Boolean =
     val path = java.nio.file.Paths.get(filename)
     mut.getOrElseUpdate(
       filename,
