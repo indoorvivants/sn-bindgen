@@ -1,4 +1,4 @@
-<html><head><title>SN bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/tomorrow-night-blue.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">SN bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
+<html><head><title>SN bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/tomorrow-night-blue.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><link rel="stylesheet" href="/assets/subatomic-search.css" /><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">SN bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
 <p>For those types, we generate getters, setters, <code>Tag</code> definition, and two <code>apply</code> methods:</p>
 <ol>
 <li>A constructor, which takes all the parameters as arguments</li>
@@ -30,7 +30,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/17858408373010890753header.h
+   * [bindgen] header: /tmp/14965435083516660175header.h
   */
   opaque type Big = CStruct3[CInt, CString, Small]
   object Big:
@@ -51,7 +51,7 @@ object structs:
       def sm_=(value: Small): Unit = !struct.at3 = value
 
   /**
-   * [bindgen] header: /tmp/17858408373010890753header.h
+   * [bindgen] header: /tmp/14965435083516660175header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -71,6 +71,11 @@ object types:
 object all:
   export _root_.libtest.structs.Big
   export _root_.libtest.structs.Small
+
+
+</code></pre>
+<p><strong>Generated <code>C</code> code</strong></p>
+<pre><code class="language-c">
 
 </code></pre>
 </div>
@@ -110,7 +115,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/4639970584161298116header.h
+   * [bindgen] header: /tmp/16219607643124341492header.h
   */
   opaque type Disabled = CStruct2[CInt, CString]
   object Disabled:
@@ -123,7 +128,7 @@ object structs:
       def hello_=(value: CString): Unit = !struct.at2 = value
 
   /**
-   * [bindgen] header: /tmp/4639970584161298116header.h
+   * [bindgen] header: /tmp/16219607643124341492header.h
   */
   opaque type Enabled = CStruct2[CInt, CString]
   object Enabled:
@@ -146,6 +151,11 @@ object types:
 object all:
   export _root_.libtest.structs.Disabled
   export _root_.libtest.structs.Enabled
+
+
+</code></pre>
+<p><strong>Generated <code>C</code> code</strong></p>
+<pre><code class="language-c">
 
 </code></pre>
 </div>
@@ -180,7 +190,7 @@ object structs:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
   /**
-   * [bindgen] header: /tmp/12958338780520708038header.h
+   * [bindgen] header: /tmp/10319786314315312483header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -198,7 +208,7 @@ object unions:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
   /**
-   * [bindgen] header: /tmp/12958338780520708038header.h
+   * [bindgen] header: /tmp/10319786314315312483header.h
   */
   opaque type Big = CArray[Byte, Nat._8]
   object Big:
@@ -240,6 +250,11 @@ object all:
   export _root_.libtest.structs.Small
   export _root_.libtest.unions.Big
 
+
+</code></pre>
+<p><strong>Generated <code>C</code> code</strong></p>
+<pre><code class="language-c">
+
 </code></pre>
 </div>
 </div>
@@ -268,7 +283,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/12454401508705306130header.h
+   * [bindgen] header: /tmp/13098141353340868311header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -287,12 +302,12 @@ object structs:
 private[libtest] object extern_functions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/12454401508705306130header.h
+   * [bindgen] header: /tmp/13098141353340868311header.h
   */
   def simple(x : CInt, y : CString): CLongInt = extern
 
   /**
-   * [bindgen] header: /tmp/12454401508705306130header.h
+   * [bindgen] header: /tmp/13098141353340868311header.h
   */
   def with_pointers(x : Ptr[Small], y : CInt): Ptr[Small] = extern
 
@@ -309,6 +324,11 @@ object all:
   export _root_.libtest.structs.Small
   export _root_.libtest.functions.simple
   export _root_.libtest.functions.with_pointers
+
+
+</code></pre>
+<p><strong>Generated <code>C</code> code</strong></p>
+<pre><code class="language-c">
 
 </code></pre>
 </div>
@@ -340,7 +360,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/11848040737813986696header.h
+   * [bindgen] header: /tmp/13504349459109462939header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -369,13 +389,13 @@ object functions:
   export extern_functions.*
 
   /**
-   * [bindgen] header: /tmp/11848040737813986696header.h
+   * [bindgen] header: /tmp/13504349459109462939header.h
   */
   def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
     __sn_wrap_libtest_bad_arguments(n, n2)
 
   /**
-   * [bindgen] header: /tmp/11848040737813986696header.h
+   * [bindgen] header: /tmp/13504349459109462939header.h
   */
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit = 
     val __ptr_0: Ptr[Small] = alloc[Small](2)
@@ -384,13 +404,13 @@ object functions:
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
   /**
-   * [bindgen] header: /tmp/11848040737813986696header.h
+   * [bindgen] header: /tmp/13504349459109462939header.h
   */
   def bad_return_type()(__return : Ptr[Small]): Unit = 
     __sn_wrap_libtest_bad_return_type(__return)
 
   /**
-   * [bindgen] header: /tmp/11848040737813986696header.h
+   * [bindgen] header: /tmp/13504349459109462939header.h
   */
   def bad_return_type()(using Zone): Small = 
     val __ptr_0: Ptr[Small] = alloc[Small](1)
@@ -405,6 +425,7 @@ object all:
   export _root_.libtest.functions.bad_arguments
   export _root_.libtest.functions.bad_return_type
 
+
 </code></pre>
 <p><strong>Generated <code>C</code> code</strong></p>
 <pre><code class="language-c">#include &lt;string.h&gt;
@@ -418,6 +439,7 @@ void __sn_wrap_libtest_bad_return_type(Small *____return) {
   Small ____ret = bad_return_type();
   memcpy(____return, &amp;____ret, sizeof(Small));
 }
+
 
 
 
@@ -471,7 +493,7 @@ object predef:
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/11140001089190893380header.h
+   * [bindgen] header: /tmp/18227994834103256352header.h
   */
   opaque type MySigned = CInt
   object MySigned extends CEnum[MySigned]:
@@ -492,7 +514,7 @@ object enumerations:
       inline def is(b: MySigned): Boolean = (a &amp; b) == b
 
   /**
-   * [bindgen] header: /tmp/11140001089190893380header.h
+   * [bindgen] header: /tmp/18227994834103256352header.h
   */
   opaque type MyUnsigned = CUnsignedInt
   object MyUnsigned extends CEnumU[MyUnsigned]:
@@ -519,6 +541,11 @@ object all:
   export _root_.libtest.enumerations.MySigned
   export _root_.libtest.enumerations.MyUnsigned
 
+
+</code></pre>
+<p><strong>Generated <code>C</code> code</strong></p>
+<pre><code class="language-c">
+
 </code></pre>
 </div>
 </div>
@@ -544,7 +571,7 @@ import _root_.scala.scalanative.*
 object aliases:
   import _root_.libtest.aliases.*
   /**
-   * [bindgen] header: /tmp/18095515104772766306header.h
+   * [bindgen] header: /tmp/12349628053997654766header.h
   */
   opaque type Cursor = Ptr[Byte]
   object Cursor: 
@@ -554,7 +581,7 @@ object aliases:
       inline def value: Ptr[Byte] = v
 
   /**
-   * [bindgen] header: /tmp/18095515104772766306header.h
+   * [bindgen] header: /tmp/12349628053997654766header.h
   */
   opaque type Visitor = CFuncPtr1[Ptr[Cursor], CInt]
   object Visitor: 
@@ -571,6 +598,11 @@ object types:
 object all:
   export _root_.libtest.aliases.Cursor
   export _root_.libtest.aliases.Visitor
+
+
+</code></pre>
+<p><strong>Generated <code>C</code> code</strong></p>
+<pre><code class="language-c">
 
 </code></pre>
 </div>
@@ -601,7 +633,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/9269077134183757037header.h
+   * [bindgen] header: /tmp/15358731796391175025header.h
   */
   opaque type Arr = CStruct1[Ptr[Byte]]
   object Arr:
@@ -620,6 +652,11 @@ object types:
 
 object all:
   export _root_.libtest.structs.Arr
+
+
+</code></pre>
+<p><strong>Generated <code>C</code> code</strong></p>
+<pre><code class="language-c">
 
 </code></pre>
 </div>
@@ -657,6 +694,11 @@ object constants:
   val DOESTHIS: CInt = -2
   val WORK: CInt = 0
   
+
+
+</code></pre>
+<p><strong>Generated <code>C</code> code</strong></p>
+<pre><code class="language-c">
 
 </code></pre>
 </div>
