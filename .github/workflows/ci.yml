@@ -47,10 +47,10 @@ jobs:
         run: sbt ci buildPlatformBinary
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           path: bin/sn-bindgen-*
-          name: binaries
+          name: macos-intel-binaries
           if-no-files-found: error
           
   macos_arm_build:
@@ -90,10 +90,10 @@ jobs:
           run: sbt ci buildPlatformBinary
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@master
+          uses: actions/upload-artifact@v4
           with:
             path: bin/sn-bindgen-*
-            name: binaries
+            name: macos-arm-binaries
             if-no-files-found: error
 
   linux_build:
@@ -129,10 +129,10 @@ jobs:
         run: sbt buildWebsite
 
       - name: Upload Intel artifacts
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           path: bin/sn-bindgen-*
-          name: binaries
+          name: linux-binaries
           if-no-files-found: error
 
   linux_arm64_build:
@@ -224,10 +224,10 @@ jobs:
         shell: cmd
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           path: bin/sn-bindgen-*
-          name: binaries
+          name: windows-binaries
           if-no-files-found: error
 
   release:
@@ -250,10 +250,13 @@ jobs:
           cache: 'sbt'
 
       - name: Download binaries
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         id: download
         with:
           path: binaries
+
+      - name: List downloaded binaries
+        run: ls -R binaries
 
       - name: Check published artifacts
         run: |
