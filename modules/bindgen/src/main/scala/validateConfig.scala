@@ -10,6 +10,6 @@ private def fileExists(file: File) =
 
 private def noLinkNameInMultiFileMode(config: Option[LinkName]) = None
 
-def validateConfig(config: Config): Option[String] =
-  fileExists(new File(config.headerFile.value)) orElse
-    noLinkNameInMultiFileMode(config.linkName)
+def validateConfig(config: CLI.CLIConfig): Option[String] =
+  fileExists(new File(config.context.headerFile.value)) orElse
+    noLinkNameInMultiFileMode(config.config.linkName)

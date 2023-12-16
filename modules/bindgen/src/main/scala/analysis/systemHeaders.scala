@@ -8,9 +8,9 @@ import scala.util.Try
 import com.monovore.decline.*
 import java.nio.file.Path
 
-def systemHeaders(det: SystemPathDetection)(using
-    lc: LoggingConfig
-): Either[Throwable, ClangInfo] =
+def clangInfo(det: SystemPathDetection)(using
+    Config
+): Either[BindingError, ClangInfo] =
   det match
     case No =>
       info(
@@ -47,14 +47,22 @@ def systemHeaders(det: SystemPathDetection)(using
         error(
           s"If you want bindgen to proceed without system headers, please use a --no-system flag"
         )
-        Left(Error("Failed to invoke clang from PATH"))
+        Left(
+          BindingError.FailedToDetectSystemHeaders(
+            "Failed to invoke clang from PATH"
+          )
+        )
       end if
 
-private def handleDetect(path: Path)(using LoggingConfig) =
-  ClangDetector.detect(path) match
+private def handleDetect(path: Path)(using Config) =
+  ClangDetector.detect(path, summon[Config].tempDir.value.toPath) match
     case Left(pr) =>
       val msg =
         s"Command `${pr.command.mkString(" ")}` failed with exit code ${pr.exitCode}"
       error(msg, pr.stderr ++ pr.stdout)
-      Left(Error(msg))
+      Left(
+        BindingError.FailedToDetectSystemHeaders(
+          msg + s"stderr: ${pr.stderr}, stdout: ${pr.stdout}"
+        )
+      )
     case Right(r) => Right(r)

@@ -11,12 +11,9 @@ enum OutputMode:
   case MultiFile(out: OutputDirectory)
 
 case class Config(
-    packageName: PackageName,
-    headerFile: HeaderFile,
     linkName: Option[LinkName],
     indentSize: IndentationSize,
     indents: Indentation,
-    lang: Lang,
     cImports: List[CImport],
     clangFlags: List[ClangFlag],
     quiet: Quiet,
@@ -26,22 +23,31 @@ case class Config(
     rendering: RenderingConfig,
     outputMode: OutputMode,
     printFiles: PrintFiles,
-    exportMode: ExportMode
+    exportMode: ExportMode,
+    outputChannel: OutputChannel,
+    tempDir: TempPath
+)
+
+case class Context(
+    packageName: PackageName,
+    headerFile: HeaderFile,
+    lang: Lang
 )
 
 object Config:
   def withDefaults(
-      headerFile: HeaderFile,
-      packageName: PackageName,
-      lang: Lang
+      // headerFile: HeaderFile,
+      // packageName: PackageName,
+      // lang: Lang,
+      // outputChannel: OutputChannel
   ) =
     Config(
-      packageName = packageName,
-      headerFile = headerFile,
+      // packageName = packageName,
+      // headerFile = headerFile,
       linkName = None,
       indentSize = defaults.indentSize,
       indents = defaults.indents,
-      lang = lang,
+      // lang = lang,
       cImports = Nil,
       clangFlags = Nil,
       quiet = Quiet.No,
@@ -51,7 +57,9 @@ object Config:
       rendering = RenderingConfig.withDefaults,
       outputMode = OutputMode.StdOut,
       printFiles = PrintFiles.No,
-      exportMode = ExportMode.No
+      exportMode = ExportMode.No,
+      outputChannel = OutputChannel.cli,
+      tempDir = TempPath(sys.props("java.io.tmpdir"))
     )
   object defaults:
     val indentSize = IndentationSize(3)
@@ -104,6 +112,9 @@ object HeaderFile extends OpaqueString[HeaderFile]
 
 opaque type OutputFile = File
 object OutputFile extends OpaqueFile[OutputFile]
+
+opaque type TempPath = File
+object TempPath extends OpaqueFile[TempPath]
 
 opaque type OutputDirectory = File
 object OutputDirectory extends OpaqueFile[OutputDirectory]

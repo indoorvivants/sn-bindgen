@@ -11,7 +11,7 @@ case class TypeImports(
     structs: Boolean,
     unions: Boolean
 ):
-  def render(out: LineBuilder, multiFile: Boolean)(using Config) =
+  def render(out: LineBuilder, multiFile: Boolean)(using Config, Context) =
     var any = false
     val imp = (s: String) =>
       any = true

@@ -6,7 +6,8 @@ import opaque_newtypes.*
 
 def functionRewriter(badFunction: Def.Function)(using
     AliasResolver,
-    Config
+    Config,
+    Context
 ): Seq[GeneratedFunction] =
   val isReturnTypeAStruct = isDirectStructAccess(badFunction.returnType)
   val anyParameterIsAStruct =
@@ -102,12 +103,12 @@ enum GeneratedFunction:
   )
 end GeneratedFunction
 
-private def externFuncName(s: String)(using c: Config) =
+private def externFuncName(s: String)(using c: Context) =
   s"__sn_wrap_${c.packageName.value}_" + s
 
 private def scalaForwarderFunction(
     bad: Def.Function
-)(using AliasResolver, Config): GeneratedFunction.ScalaFunction =
+)(using AliasResolver, Config, Context): GeneratedFunction.ScalaFunction =
   val returnAsWell = isDirectStructAccess(bad.returnType)
 
   val parameters = List.newBuilder[FunctionParameter]
@@ -144,6 +145,7 @@ end scalaForwarderFunction
 
 private def scalaAllocatingFunction(bad: Def.Function)(using
     Config,
+    Context,
     AliasResolver
 ): GeneratedFunction.ScalaFunction =
   val invokes = externFuncName(bad.name.value)
@@ -170,7 +172,8 @@ end scalaAllocatingFunction
 
 private def scalaPtrFunctions(bad: Def.Function)(using
     Config,
-    AliasResolver
+    AliasResolver,
+    Context
 ): List[GeneratedFunction] =
   val invokes = externFuncName(bad.name.value)
   val returnAsWell = isDirectStructAccess(bad.returnType)
@@ -235,7 +238,7 @@ end scalaPtrFunctions
 
 private def cForwarderFunction(
     bad: Def.Function
-)(using Config, AliasResolver): GeneratedFunction.CFunction =
+)(using Config, AliasResolver, Context): GeneratedFunction.CFunction =
   GeneratedFunction.CFunction(
     externFuncName(bad.name.into(CFunctionName)),
     bad.returnType,

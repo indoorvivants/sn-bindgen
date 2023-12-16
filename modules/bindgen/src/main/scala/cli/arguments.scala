@@ -3,6 +3,7 @@ package bindgen
 import com.monovore.decline.Opts
 import java.io.File
 import bindgen.RenderingConfig.NameFilter
+import bindgen.OutputChannel
 
 object CLI:
   import com.monovore.decline.*
@@ -31,6 +32,17 @@ object CLI:
     )
     .map(OutputFile.apply(_))
     .orNone
+
+  private val tempDir = Opts
+    .option[String](
+      "temp-dir",
+      help =
+        "Path where temporary files will be created during clang interrogation (clang needs to be invoked to get the " +
+          "system headers paths",
+      visibility = Visibility.Partial
+    )
+    .withDefault(sys.props("java.io.tmpdir"))
+    .map(TempPath.apply(_))
 
   private val linkName = Opts
     .option[String](
@@ -130,7 +142,7 @@ object CLI:
       .map(_ => MinLogPriority(LogLevel.priority(level)))
       .orNone
   }.reduce(_.orElse(_))
-    .map(_.getOrElse(LoggingConfig.default.minLogPriority))
+    .map(_.getOrElse(LoggingConfig.DefaultPriority))
 
   private val exclusivePrefix = Opts
     .options[String](
@@ -312,18 +324,19 @@ object CLI:
     .orFalse
     .map(ExportMode.apply(_))
 
-  val command = Command(
-    name = s"bindgen",
-    header = "Generate Scala 3 native bindings from C header files" +
-      s"\nVersion: ${BuildInfo.version}\nBuilt using Scala ${BuildInfo.scalaVersion} and Scala Native ${BuildInfo.nativeVersion}"
-  ) {
+  case class CLIConfig(
+      context: Context,
+      config: Config
+  )
+
+  val context =
+    (packageName, headerfile, lang).mapN(Context.apply)
+
+  val config =
     (
-      packageName,
-      headerfile,
       linkName,
       indentationSize,
       indentation,
-      lang,
       cImport,
       (clangInclude, clangFlag).mapN(_ ++ _),
       quiet,
@@ -333,7 +346,19 @@ object CLI:
       renderingConfig,
       outputMode,
       printFiles,
-      exportMode
+      exportMode,
+      Opts(OutputChannel.cli),
+      tempDir
     ).mapN(Config.apply)
+
+  val command = Command(
+    name = s"bindgen",
+    header = "Generate Scala 3 native bindings from C header files" +
+      s"\nVersion: ${BuildInfo.version}\nBuilt using Scala ${BuildInfo.scalaVersion} and Scala Native ${BuildInfo.nativeVersion}"
+  ) {
+    (
+      context,
+      config
+    ).mapN(CLIConfig.apply)
   }
 end CLI

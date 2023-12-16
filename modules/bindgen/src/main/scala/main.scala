@@ -12,13 +12,13 @@ import scalanative.libc.*
 import scala.util.Using.apply
 import scala.util.Using
 
-inline def errln(inline a: Any) = System.err.println(a)
+import libclang.all.*
 
 inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
 
 object Generate:
   def main(args: Array[String]): Unit =
-    zone {
+    zone:
       CLI.command.parse(args) match
         case Left(help) =>
           val (modified, code) =
@@ -29,17 +29,19 @@ object Generate:
         case Right(config) =>
           validateConfig(config) match
             case None =>
-              given Config = config
+              given Config = config.config
+              val driver = InteractiveDriver.init.fold(handleError, identity)
               val result =
-                binding(
-                  analyse(config.headerFile.value),
-                  config.lang,
-                  config.outputMode
-                )
+                driver
+                  .createBinding(
+                    config.context,
+                    config.config.outputMode
+                  )
+                  .fold(handleError, identity)
 
-              (result, config.outputMode) match
+              (result, config.config.outputMode) match
                 case (RenderedOutput.Single(lb), OutputMode.StdOut) =>
-                  print(lb.result)
+                  config.config.outputChannel.stdoutLine(lb.result)
 
                 case (RenderedOutput.Single(lb), OutputMode.SingleFile(f)) =>
                   Using.resource(new FileWriter(f.value)) { fw =>
@@ -47,8 +49,10 @@ object Generate:
                   }
                   info(s"Generated ${f.value.toPath.toAbsolutePath()}")
 
-                  if config.printFiles == PrintFiles.Yes then
-                    println(f.value.toPath.toAbsolutePath())
+                  if config.config.printFiles == PrintFiles.Yes then
+                    config.config.outputChannel.stdoutLine(
+                      f.value.toPath.toAbsolutePath().toString()
+                    )
 
                 case (RenderedOutput.Multi(mp), OutputMode.MultiFile(d)) =>
                   val path = d.value.toPath()
@@ -58,24 +62,34 @@ object Generate:
                       fw.write(lb.result)
                     }
                     info(s"Generated ${file.toAbsolutePath()}")
-                    if config.printFiles == PrintFiles.Yes then
-                      println(file.toAbsolutePath())
+                    if config.config.printFiles == PrintFiles.Yes then
+                      config.config.outputChannel.stdoutLine(
+                        file.toAbsolutePath()
+                      )
 
                   }
               end match
 
             case Some(msg) =>
-              error(msg)(using LoggingConfig.default)
+              config.config.outputChannel.stderr(msg + "\n")
               sys.exit(1)
-    }
 
-  private def writeTo(out: Option[OutputFile], lb: LineBuilder) =
-    out match
-      case None => print(lb.result)
-      case Some(out) =>
-        val f = out.value
-        Using.resource(new FileWriter(f)) { fw =>
-          fw.write(lb.result)
-        }
+  private def outputDiagnostic(diag: ClangDiagnostic)(using Config, Zone) =
+    import ClangSeverity.*
+    diag.severity match
+      case Error | Fatal  => error(diag.message())
+      case Warning        => warning(diag.message())
+      case Ignored | Note => info(diag.message())
+
+  private def handleError(b: BindingError)(using config: Config)(using Zone) =
+    config.outputChannel.stderrLine(b.render)
+    b match
+      case BindingError.ClangErrors(errs) =>
+        errs.foreach: diag =>
+          outputDiagnostic(diag)
+
+      case _ =>
+    sys.exit(1)
+  end handleError
 
 end Generate
