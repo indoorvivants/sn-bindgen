@@ -26,14 +26,16 @@ case class Config(
     rendering: RenderingConfig,
     outputMode: OutputMode,
     printFiles: PrintFiles,
-    exportMode: ExportMode
+    exportMode: ExportMode,
+    outputChannel: OutputChannel
 )
 
 object Config:
   def withDefaults(
       headerFile: HeaderFile,
       packageName: PackageName,
-      lang: Lang
+      lang: Lang,
+      outputChannel: OutputChannel
   ) =
     Config(
       packageName = packageName,
@@ -51,7 +53,8 @@ object Config:
       rendering = RenderingConfig.withDefaults,
       outputMode = OutputMode.StdOut,
       printFiles = PrintFiles.No,
-      exportMode = ExportMode.No
+      exportMode = ExportMode.No,
+      outputChannel = outputChannel
     )
   object defaults:
     val indentSize = IndentationSize(3)

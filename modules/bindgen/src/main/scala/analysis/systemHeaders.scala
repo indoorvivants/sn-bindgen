@@ -9,7 +9,7 @@ import com.monovore.decline.*
 import java.nio.file.Path
 
 def systemHeaders(det: SystemPathDetection)(using
-    lc: LoggingConfig
+    Config
 ): Either[Throwable, ClangInfo] =
   det match
     case No =>
@@ -50,7 +50,7 @@ def systemHeaders(det: SystemPathDetection)(using
         Left(Error("Failed to invoke clang from PATH"))
       end if
 
-private def handleDetect(path: Path)(using LoggingConfig) =
+private def handleDetect(path: Path)(using Config) =
   ClangDetector.detect(path) match
     case Left(pr) =>
       val msg =

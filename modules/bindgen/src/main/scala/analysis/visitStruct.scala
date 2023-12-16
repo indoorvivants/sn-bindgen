@@ -148,7 +148,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
 end visitStruct
 
 def removeFAM(model: Def.Struct, name: Option[String] = None)(using
-    LoggingConfig
+    Config
 ): Def.Struct =
 
   val hasFlexibleArrayMember = model.fields.lastOption.collectFirst {

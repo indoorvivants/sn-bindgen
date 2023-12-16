@@ -14,7 +14,7 @@ object AliasResolver:
 
   inline def apply(inline f: String => CType): AliasResolver = f
 
-  def create(aliases: Seq[Def])(using LoggingConfig): AliasResolver =
+  def create(aliases: Seq[Def])(using Config): AliasResolver =
     val mapping = Map.newBuilder[String, CType]
     def go(definitions: Seq[Def]): Unit =
       definitions.foreach {

@@ -12,8 +12,6 @@ import scalanative.libc.*
 import scala.util.Using.apply
 import scala.util.Using
 
-inline def errln(inline a: Any) = System.err.println(a)
-
 inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
 
 object Generate:
@@ -39,7 +37,7 @@ object Generate:
 
               (result, config.outputMode) match
                 case (RenderedOutput.Single(lb), OutputMode.StdOut) =>
-                  print(lb.result)
+                  config.outputChannel.stdoutLine(lb.result)
 
                 case (RenderedOutput.Single(lb), OutputMode.SingleFile(f)) =>
                   Using.resource(new FileWriter(f.value)) { fw =>
@@ -48,7 +46,9 @@ object Generate:
                   info(s"Generated ${f.value.toPath.toAbsolutePath()}")
 
                   if config.printFiles == PrintFiles.Yes then
-                    println(f.value.toPath.toAbsolutePath())
+                    config.outputChannel.stdoutLine(
+                      f.value.toPath.toAbsolutePath().toString()
+                    )
 
                 case (RenderedOutput.Multi(mp), OutputMode.MultiFile(d)) =>
                   val path = d.value.toPath()
@@ -59,23 +59,16 @@ object Generate:
                     }
                     info(s"Generated ${file.toAbsolutePath()}")
                     if config.printFiles == PrintFiles.Yes then
-                      println(file.toAbsolutePath())
+                      config.outputChannel.stdoutLine(
+                        file.toAbsolutePath()
+                      )
 
                   }
               end match
 
             case Some(msg) =>
-              error(msg)(using LoggingConfig.default)
+              config.outputChannel.stderr(msg + "\n")
               sys.exit(1)
     }
-
-  private def writeTo(out: Option[OutputFile], lb: LineBuilder) =
-    out match
-      case None => print(lb.result)
-      case Some(out) =>
-        val f = out.value
-        Using.resource(new FileWriter(f)) { fw =>
-          fw.write(lb.result)
-        }
 
 end Generate

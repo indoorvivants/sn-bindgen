@@ -23,19 +23,6 @@ def outputDiagnostic(diag: CXDiagnostic)(using Config): Any => Unit =
     case sev.CXDiagnostic_Warning                         => warning(_)
     case sev.CXDiagnostic_Ignored | sev.CXDiagnostic_Note => info(_)
 
-class SystemHeaderDetector(clangInfo: ClangInfo):
-  private val mut = collection.mutable.Map.empty[String, Boolean]
-
-  def isSystem(filename: String) =
-    val path = java.nio.file.Paths.get(filename)
-    mut.getOrElseUpdate(
-      filename,
-      clangInfo.includePaths.exists { ip =>
-        path.startsWith(ip)
-      }
-    )
-end SystemHeaderDetector
-
 def analyse(file: String)(using Zone)(using config: Config): Binding =
   val clangInfo =
     systemHeaders(config.systemPathDetection).fold(throw _, identity)

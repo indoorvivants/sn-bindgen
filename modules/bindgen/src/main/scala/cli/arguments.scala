@@ -3,6 +3,7 @@ package bindgen
 import com.monovore.decline.Opts
 import java.io.File
 import bindgen.RenderingConfig.NameFilter
+import bindgen.OutputChannel
 
 object CLI:
   import com.monovore.decline.*
@@ -130,7 +131,7 @@ object CLI:
       .map(_ => MinLogPriority(LogLevel.priority(level)))
       .orNone
   }.reduce(_.orElse(_))
-    .map(_.getOrElse(LoggingConfig.default.minLogPriority))
+    .map(_.getOrElse(LoggingConfig.DefaultPriority))
 
   private val exclusivePrefix = Opts
     .options[String](
@@ -333,7 +334,8 @@ object CLI:
       renderingConfig,
       outputMode,
       printFiles,
-      exportMode
+      exportMode,
+      Opts(OutputChannel.cli)
     ).mapN(Config.apply)
   }
 end CLI
