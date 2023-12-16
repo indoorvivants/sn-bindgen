@@ -7,7 +7,7 @@ enum BindingError:
   case FailedToDetectSystemHeaders(msg: String)
 
   def render = this match
-    case FailedToCreateTranslationUnit => 
+    case FailedToCreateTranslationUnit =>
       "Failed to create translation unit"
     case FailedToCreateTranslationUnitCursor =>
       "Failed to create translation unit cursor"
@@ -15,5 +15,4 @@ enum BindingError:
       s"Clang reported [${diagnostics.count(_.severity.isError)}] errors"
     case FailedToDetectSystemHeaders(msg) =>
       s"Failed to detect system headers: $msg"
-  
-
+end BindingError

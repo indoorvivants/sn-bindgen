@@ -47,7 +47,11 @@ def clangInfo(det: SystemPathDetection)(using
         error(
           s"If you want bindgen to proceed without system headers, please use a --no-system flag"
         )
-        Left(BindingError.FailedToDetectSystemHeaders("Failed to invoke clang from PATH"))
+        Left(
+          BindingError.FailedToDetectSystemHeaders(
+            "Failed to invoke clang from PATH"
+          )
+        )
       end if
 
 private def handleDetect(path: Path)(using Config) =

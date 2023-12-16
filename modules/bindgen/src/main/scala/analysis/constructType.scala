@@ -18,12 +18,18 @@ def constructType(typ: CXType)(using
 ): CType =
   import CXTypeKind.*
   val typekind = typ.kind
+
   lazy val spelling =
+    val typeKindSpelling = clang_getTypeKindSpelling(
+      typekind
+    ).string
+
+    val typeSpelling = clang_getTypeSpelling(typ).string
+
     s"""
-    Kind: ${clang_getTypeKindSpelling(
-        typekind
-      ).string}, full type: ${clang_getTypeSpelling(typ).string}
+    |Kind: ${typeKindSpelling}, full type: ${typeSpelling}
     """.stripMargin.trim
+  end spelling
 
   val result = typekind match
     case CXType_Record =>
