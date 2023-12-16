@@ -11,12 +11,9 @@ enum OutputMode:
   case MultiFile(out: OutputDirectory)
 
 case class Config(
-    packageName: PackageName,
-    headerFile: HeaderFile,
     linkName: Option[LinkName],
     indentSize: IndentationSize,
     indents: Indentation,
-    lang: Lang,
     cImports: List[CImport],
     clangFlags: List[ClangFlag],
     quiet: Quiet,
@@ -31,20 +28,26 @@ case class Config(
     tempDir: TempPath
 )
 
+case class Context(
+    packageName: PackageName,
+    headerFile: HeaderFile,
+    lang: Lang
+)
+
 object Config:
   def withDefaults(
-      headerFile: HeaderFile,
-      packageName: PackageName,
-      lang: Lang,
-      outputChannel: OutputChannel
+      // headerFile: HeaderFile,
+      // packageName: PackageName,
+      // lang: Lang,
+      // outputChannel: OutputChannel
   ) =
     Config(
-      packageName = packageName,
-      headerFile = headerFile,
+      // packageName = packageName,
+      // headerFile = headerFile,
       linkName = None,
       indentSize = defaults.indentSize,
       indents = defaults.indents,
-      lang = lang,
+      // lang = lang,
       cImports = Nil,
       clangFlags = Nil,
       quiet = Quiet.No,
@@ -55,7 +58,7 @@ object Config:
       outputMode = OutputMode.StdOut,
       printFiles = PrintFiles.No,
       exportMode = ExportMode.No,
-      outputChannel = outputChannel,
+      outputChannel = OutputChannel.cli,
       tempDir = TempPath(sys.props("java.io.tmpdir"))
     )
   object defaults:

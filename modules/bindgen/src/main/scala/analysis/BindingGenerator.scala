@@ -6,15 +6,17 @@ import scalanative.unsafe.*
 import scala.util.boundary, boundary.break, boundary.Label
 
 object BindingGenerator:
-  def run(file: String, environment: ConfiguredEnvironment)(using Zone)(using
-      config: Config
+  def run(context: Context, environment: ConfiguredEnvironment)(using Zone)(
+      using config: Config
   ): Either[BindingError, Binding] =
     boundary:
 
       val index = clang_createIndex(0, 0)
 
       val unit =
-        ClangTranslationUnit.create(index, file, environment.clang).?
+        ClangTranslationUnit
+          .create(index, context.headerFile.value, environment.clang)
+          .?
 
       val (cxClientData, memory) =
         Captured.unsafe(environment.systemHeaderDetector -> BindingBuilder())

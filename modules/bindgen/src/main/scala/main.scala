@@ -29,20 +29,19 @@ object Generate:
         case Right(config) =>
           validateConfig(config) match
             case None =>
-              given Config = config
+              given Config = config.config
               val driver = InteractiveDriver.init.fold(handleError, identity)
               val result =
                 driver
                   .createBinding(
-                    config.headerFile.value,
-                    config.lang,
-                    config.outputMode
+                    config.context,
+                    config.config.outputMode
                   )
                   .fold(handleError, identity)
 
-              (result, config.outputMode) match
+              (result, config.config.outputMode) match
                 case (RenderedOutput.Single(lb), OutputMode.StdOut) =>
-                  config.outputChannel.stdoutLine(lb.result)
+                  config.config.outputChannel.stdoutLine(lb.result)
 
                 case (RenderedOutput.Single(lb), OutputMode.SingleFile(f)) =>
                   Using.resource(new FileWriter(f.value)) { fw =>
@@ -50,8 +49,8 @@ object Generate:
                   }
                   info(s"Generated ${f.value.toPath.toAbsolutePath()}")
 
-                  if config.printFiles == PrintFiles.Yes then
-                    config.outputChannel.stdoutLine(
+                  if config.config.printFiles == PrintFiles.Yes then
+                    config.config.outputChannel.stdoutLine(
                       f.value.toPath.toAbsolutePath().toString()
                     )
 
@@ -63,8 +62,8 @@ object Generate:
                       fw.write(lb.result)
                     }
                     info(s"Generated ${file.toAbsolutePath()}")
-                    if config.printFiles == PrintFiles.Yes then
-                      config.outputChannel.stdoutLine(
+                    if config.config.printFiles == PrintFiles.Yes then
+                      config.config.outputChannel.stdoutLine(
                         file.toAbsolutePath()
                       )
 
@@ -72,7 +71,7 @@ object Generate:
               end match
 
             case Some(msg) =>
-              config.outputChannel.stderr(msg + "\n")
+              config.config.outputChannel.stderr(msg + "\n")
               sys.exit(1)
 
   private def outputDiagnostic(diag: ClangDiagnostic)(using Config, Zone) =

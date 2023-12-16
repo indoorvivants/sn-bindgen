@@ -98,7 +98,7 @@ def to(sb: LineBuilder)(using config: Config): Appender =
 def aliasResolver(name: String)(using ar: AliasResolver): CType =
   ar(name)
 
-def packageName(using conf: Config): String = conf.packageName.value
+def packageName(using conf: Context): String = conf.packageName.value
 
 type Appender = Config ?=> String => Unit
 

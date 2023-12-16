@@ -60,9 +60,9 @@ def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
 
 def renderBinding(
     rawBinding: Binding,
-    lang: Lang,
     outputMode: OutputMode
 )(using
+    Context,
     Config
 ): RenderedOutput =
   val binding = rawBinding.filterAll(shouldRender)
@@ -132,7 +132,7 @@ def renderBinding(
   def updateExports(location: String, names: Seq[Exported]) =
     exports ++= names.collect { case Exported.Yes(v) => v }.map(location -> _)
 
-  if lang == Lang.Scala then
+  if summon[Context].lang == Lang.Scala then
 
     if hasAnyEnums then
       updateExports(
@@ -203,7 +203,7 @@ def renderBinding(
     case f: GeneratedFunction.CFunction => f
   }
 
-  if cFunctions.nonEmpty && lang == Lang.C then
+  if cFunctions.nonEmpty && summon[Context].lang == Lang.C then
     to(cOutput)("#include <string.h>")
     summon[Config].cImports.foreach { s =>
       to(cOutput)(s"#include \"$s\"")
@@ -243,7 +243,7 @@ def renderBinding(
   else renderExports(simpleStream(s"all"), exports.result(), renderMode)
 
   if multiFileMode then RenderedOutput.Multi(multi.toMap)
-  else if lang == Lang.C then RenderedOutput.Single(cOutput)
+  else if summon[Context].lang == Lang.C then RenderedOutput.Single(cOutput)
   else RenderedOutput.Single(scalaOutput)
 end renderBinding
 
@@ -259,7 +259,7 @@ private def renderAliases(
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
-)(using Config, AliasResolver) =
+)(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
   if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
   if mode == RenderMode.Objects then out.appendLine("object aliases:")
@@ -276,7 +276,7 @@ private def renderExports(
     out: LineBuilder,
     exports: List[(String, String)],
     mode: RenderMode
-)(using Config) =
+)(using Config, Context) =
   mode match
     case RenderMode.Objects =>
       if exports.nonEmpty then
@@ -299,7 +299,7 @@ private def renderUnions(
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
-)(using Config, AliasResolver) =
+)(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
   if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
   if mode == RenderMode.Objects then out.appendLine("object unions:")
@@ -316,7 +316,7 @@ private def renderStructs(
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
-)(using Config, AliasResolver) =
+)(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
   if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
   if mode == RenderMode.Objects then out.appendLine("object structs:")
@@ -379,7 +379,8 @@ private def renderEnumerations(
     mode: RenderMode
 )(using
     Config,
-    AliasResolver
+    AliasResolver,
+    Context
 ) =
   val hasAnyEnums = enums.nonEmpty
   val hasUnsignedEnums =
@@ -436,7 +437,7 @@ private def renderScalaFunctions(
     hasAnyTypes: Boolean,
     typeImports: TypeImports,
     exportMode: ExportMode
-)(using Config, AliasResolver) =
+)(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
   val scalaExternFunctions = functions.collect {
     case f: GeneratedFunction.ScalaFunction
@@ -528,7 +529,7 @@ private def renderScalaFunctions(
           typeImports.render(out, multiFile = false)
         renderAll(
           modified(
-            ExportLocation.Body(summon[Config].packageName.map(_ + ".impl"))
+            ExportLocation.Body(summon[Context].packageName.map(_ + ".impl"))
           ),
           out,
           renderFunction

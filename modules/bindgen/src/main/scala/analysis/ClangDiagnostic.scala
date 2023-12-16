@@ -19,7 +19,7 @@ case class ClangDiagnostic private (
 end ClangDiagnostic
 
 object ClangDiagnostic:
-  def apply(diag: CXDiagnostic) =
+  def apply(diag: CXDiagnostic): ClangDiagnostic =
     val sev = clang_getDiagnosticSeverity(diag)
 
     import CXDiagnosticSeverity.*

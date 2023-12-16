@@ -6,7 +6,8 @@ import scala.collection.mutable.ListBuffer
 
 def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
     Config,
-    AliasResolver
+    AliasResolver,
+    Context
 ) =
   val variadicArg = if f.variadic then ", rest: Any*" else ""
   val arglist = f.arguments
@@ -20,7 +21,7 @@ def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
   val flatArguments = f.arguments.flatten
 
   val access =
-    if f.public then "" else s"private[${summon[Config].packageName.value}] "
+    if f.public then "" else s"private[${summon[Context].packageName.value}] "
 
   if f.public then f.meta.foreach(renderComment(line, _))
   f.body match

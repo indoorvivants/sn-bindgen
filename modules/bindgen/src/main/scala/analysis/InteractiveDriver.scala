@@ -13,15 +13,16 @@ case class ConfiguredEnvironment(
 class InteractiveDriver(config: Config, environment: ConfiguredEnvironment):
   private given Config = config
 
-  def analyse(file: String)(using Zone): Either[BindingError, Binding] =
-    BindingGenerator.run(file, environment)
+  def analyse(context: Context)(using Zone): Either[BindingError, Binding] =
+    BindingGenerator.run(context, environment)
 
-  def createBinding(file: String, lang: Lang, outputMode: OutputMode)(using
+  def createBinding(context: Context, outputMode: OutputMode)(using
       Zone
   ): Either[BindingError, RenderedOutput] =
     boundary:
-      val binding = analyse(file).?
-      Right(renderBinding(binding, lang, outputMode))
+      val binding = analyse(context).?
+      given Context = context
+      Right(renderBinding(binding, outputMode))
 end InteractiveDriver
 
 object InteractiveDriver:

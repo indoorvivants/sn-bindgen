@@ -7,7 +7,7 @@ enum ClangSeverity:
   case Error
   case Fatal
 
-  def isError =
+  def isError: Boolean =
     this match
       case Error => true
       case Fatal => true

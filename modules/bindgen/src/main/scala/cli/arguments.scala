@@ -324,18 +324,19 @@ object CLI:
     .orFalse
     .map(ExportMode.apply(_))
 
-  val command = Command(
-    name = s"bindgen",
-    header = "Generate Scala 3 native bindings from C header files" +
-      s"\nVersion: ${BuildInfo.version}\nBuilt using Scala ${BuildInfo.scalaVersion} and Scala Native ${BuildInfo.nativeVersion}"
-  ) {
+  case class CLIConfig(
+      context: Context,
+      config: Config
+  )
+
+  val context =
+    (packageName, headerfile, lang).mapN(Context.apply)
+
+  val config =
     (
-      packageName,
-      headerfile,
       linkName,
       indentationSize,
       indentation,
-      lang,
       cImport,
       (clangInclude, clangFlag).mapN(_ ++ _),
       quiet,
@@ -349,5 +350,15 @@ object CLI:
       Opts(OutputChannel.cli),
       tempDir
     ).mapN(Config.apply)
+
+  val command = Command(
+    name = s"bindgen",
+    header = "Generate Scala 3 native bindings from C header files" +
+      s"\nVersion: ${BuildInfo.version}\nBuilt using Scala ${BuildInfo.scalaVersion} and Scala Native ${BuildInfo.nativeVersion}"
+  ) {
+    (
+      context,
+      config
+    ).mapN(CLIConfig.apply)
   }
 end CLI

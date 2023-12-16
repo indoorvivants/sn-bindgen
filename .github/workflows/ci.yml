@@ -78,6 +78,7 @@ jobs:
           run: brew install sbt
 
         - name: Sets env vars for release
+          if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
           run: |
             echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
 
@@ -113,6 +114,7 @@ jobs:
         run: ./build/setup_unix.sh
 
       - name: Sets env vars for release
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
         run: |
           echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
 
