@@ -55,7 +55,7 @@ def clangInfo(det: SystemPathDetection)(using
       end if
 
 private def handleDetect(path: Path)(using Config) =
-  ClangDetector.detect(path) match
+  ClangDetector.detect(path, summon[Config].tempDir.value.toPath) match
     case Left(pr) =>
       val msg =
         s"Command `${pr.command.mkString(" ")}` failed with exit code ${pr.exitCode}"

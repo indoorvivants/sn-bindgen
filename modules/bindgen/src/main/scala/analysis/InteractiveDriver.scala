@@ -12,6 +12,7 @@ case class ConfiguredEnvironment(
 
 class InteractiveDriver(config: Config, environment: ConfiguredEnvironment):
   private given Config = config
+
   def analyse(file: String)(using Zone): Either[BindingError, Binding] =
     BindingGenerator.run(file, environment)
 

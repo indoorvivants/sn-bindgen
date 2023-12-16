@@ -33,6 +33,17 @@ object CLI:
     .map(OutputFile.apply(_))
     .orNone
 
+  private val tempDir = Opts
+    .option[String](
+      "temp-dir",
+      help =
+        "Path where temporary files will be created during clang interrogation (clang needs to be invoked to get the " +
+          "system headers paths",
+      visibility = Visibility.Partial
+    )
+    .withDefault(sys.props("java.io.tmpdir"))
+    .map(TempPath.apply(_))
+
   private val linkName = Opts
     .option[String](
       "link-name",
@@ -335,7 +346,8 @@ object CLI:
       outputMode,
       printFiles,
       exportMode,
-      Opts(OutputChannel.cli)
+      Opts(OutputChannel.cli),
+      tempDir
     ).mapN(Config.apply)
   }
 end CLI

@@ -49,20 +49,34 @@ object ClangDetector:
     ProcessResult(stdout.result(), stderr.result(), exitCode, cmd.toList)
   end process
 
-  def detect(path: Path, args: String*): Either[ProcessResult, ClangInfo] =
+  def detect(
+      path: Path,
+      tmpFolder: Path,
+      args: String*
+  ): Either[ProcessResult, ClangInfo] =
     val tempFolder = LazyList
-      .fill(5)(Try(Files.createTempDirectory("sn-bindgen-clang")))
+      .fill(5)(Try(Files.createTempDirectory(tmpFolder, "sn-bindgen-clang")))
       .dropWhile(_.isFailure)
       .head
       .get
-    val destination = tempFolder.resolve("output.o").toString
-    val tempC = Files.createTempFile(tempFolder, "test", ".c").toString()
+    val destination = tempFolder.resolve("output.o")
+    val tempC = Files.createTempFile(tempFolder, "test", ".c")
 
     val cmd =
-      List(path.toString(), tempC, "-v", "-c", "-xc++", "-o", destination)
+      List[String](
+        path.toString(),
+        tempC.toString(),
+        "-v",
+        "-c",
+        "-xc++",
+        "-o",
+        destination.toString()
+      )
 
     val a @ ProcessResult(stdout, stderr, exitCode, _) = process(cmd*)
 
+    destination.toFile().delete()
+    tempC.toFile().delete()
     tempFolder.toFile().delete()
 
     if exitCode != 0 then Left(a)

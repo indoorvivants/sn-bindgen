@@ -27,7 +27,8 @@ case class Config(
     outputMode: OutputMode,
     printFiles: PrintFiles,
     exportMode: ExportMode,
-    outputChannel: OutputChannel
+    outputChannel: OutputChannel,
+    tempDir: TempPath
 )
 
 object Config:
@@ -54,7 +55,8 @@ object Config:
       outputMode = OutputMode.StdOut,
       printFiles = PrintFiles.No,
       exportMode = ExportMode.No,
-      outputChannel = outputChannel
+      outputChannel = outputChannel,
+      tempDir = TempPath(sys.props("java.io.tmpdir"))
     )
   object defaults:
     val indentSize = IndentationSize(3)
@@ -107,6 +109,9 @@ object HeaderFile extends OpaqueString[HeaderFile]
 
 opaque type OutputFile = File
 object OutputFile extends OpaqueFile[OutputFile]
+
+opaque type TempPath = File
+object TempPath extends OpaqueFile[TempPath]
 
 opaque type OutputDirectory = File
 object OutputDirectory extends OpaqueFile[OutputDirectory]
