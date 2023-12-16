@@ -30,12 +30,15 @@ object Generate:
           validateConfig(config) match
             case None =>
               given Config = config
+              val driver = InteractiveDriver.init.fold(handleError, identity)
               val result =
-                binding(
-                  analyse(config.headerFile.value).fold(handleError, identity),
-                  config.lang,
-                  config.outputMode
-                )
+                driver
+                  .createBinding(
+                    config.headerFile.value,
+                    config.lang,
+                    config.outputMode
+                  )
+                  .fold(handleError, identity)
 
               (result, config.outputMode) match
                 case (RenderedOutput.Single(lb), OutputMode.StdOut) =>

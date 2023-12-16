@@ -58,7 +58,7 @@ def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
     case d: Def.Struct =>
       d.anonymous.exists(hasEnum)
 
-def binding(
+def renderBinding(
     rawBinding: Binding,
     lang: Lang,
     outputMode: OutputMode
@@ -245,8 +245,7 @@ def binding(
   if multiFileMode then RenderedOutput.Multi(multi.toMap)
   else if lang == Lang.C then RenderedOutput.Single(cOutput)
   else RenderedOutput.Single(scalaOutput)
-
-end binding
+end renderBinding
 
 private def commentException(element: Any, exc: Throwable) =
   val stackTrace =
