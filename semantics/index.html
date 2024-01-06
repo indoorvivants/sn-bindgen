@@ -30,7 +30,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/14965435083516660175header.h
+   * [bindgen] header: /tmp/9462199843731192031header.h
   */
   opaque type Big = CStruct3[CInt, CString, Small]
   object Big:
@@ -51,7 +51,7 @@ object structs:
       def sm_=(value: Small): Unit = !struct.at3 = value
 
   /**
-   * [bindgen] header: /tmp/14965435083516660175header.h
+   * [bindgen] header: /tmp/9462199843731192031header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -115,7 +115,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/16219607643124341492header.h
+   * [bindgen] header: /tmp/7178107846882718054header.h
   */
   opaque type Disabled = CStruct2[CInt, CString]
   object Disabled:
@@ -128,7 +128,7 @@ object structs:
       def hello_=(value: CString): Unit = !struct.at2 = value
 
   /**
-   * [bindgen] header: /tmp/16219607643124341492header.h
+   * [bindgen] header: /tmp/7178107846882718054header.h
   */
   opaque type Enabled = CStruct2[CInt, CString]
   object Enabled:
@@ -190,7 +190,7 @@ object structs:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
   /**
-   * [bindgen] header: /tmp/10319786314315312483header.h
+   * [bindgen] header: /tmp/3101418558829698960header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -208,7 +208,7 @@ object unions:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
   /**
-   * [bindgen] header: /tmp/10319786314315312483header.h
+   * [bindgen] header: /tmp/3101418558829698960header.h
   */
   opaque type Big = CArray[Byte, Nat._8]
   object Big:
@@ -283,7 +283,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/13098141353340868311header.h
+   * [bindgen] header: /tmp/11371684375651978497header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -302,12 +302,12 @@ object structs:
 private[libtest] object extern_functions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/13098141353340868311header.h
+   * [bindgen] header: /tmp/11371684375651978497header.h
   */
   def simple(x : CInt, y : CString): CLongInt = extern
 
   /**
-   * [bindgen] header: /tmp/13098141353340868311header.h
+   * [bindgen] header: /tmp/11371684375651978497header.h
   */
   def with_pointers(x : Ptr[Small], y : CInt): Ptr[Small] = extern
 
@@ -360,7 +360,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/13504349459109462939header.h
+   * [bindgen] header: /tmp/684294623034632176header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -389,13 +389,7 @@ object functions:
   export extern_functions.*
 
   /**
-   * [bindgen] header: /tmp/13504349459109462939header.h
-  */
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
-    __sn_wrap_libtest_bad_arguments(n, n2)
-
-  /**
-   * [bindgen] header: /tmp/13504349459109462939header.h
+   * [bindgen] header: /tmp/684294623034632176header.h
   */
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit = 
     val __ptr_0: Ptr[Small] = alloc[Small](2)
@@ -404,18 +398,24 @@ object functions:
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
   /**
-   * [bindgen] header: /tmp/13504349459109462939header.h
+   * [bindgen] header: /tmp/684294623034632176header.h
   */
-  def bad_return_type()(__return : Ptr[Small]): Unit = 
-    __sn_wrap_libtest_bad_return_type(__return)
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
+    __sn_wrap_libtest_bad_arguments(n, n2)
 
   /**
-   * [bindgen] header: /tmp/13504349459109462939header.h
+   * [bindgen] header: /tmp/684294623034632176header.h
   */
   def bad_return_type()(using Zone): Small = 
     val __ptr_0: Ptr[Small] = alloc[Small](1)
     __sn_wrap_libtest_bad_return_type((__ptr_0 + 0))
     !(__ptr_0 + 0)
+
+  /**
+   * [bindgen] header: /tmp/684294623034632176header.h
+  */
+  def bad_return_type()(__return : Ptr[Small]): Unit = 
+    __sn_wrap_libtest_bad_return_type(__return)
 
 object types:
   export _root_.libtest.structs.*
@@ -493,7 +493,7 @@ object predef:
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/18227994834103256352header.h
+   * [bindgen] header: /tmp/8393949708690491526header.h
   */
   opaque type MySigned = CInt
   object MySigned extends CEnum[MySigned]:
@@ -514,7 +514,7 @@ object enumerations:
       inline def is(b: MySigned): Boolean = (a &amp; b) == b
 
   /**
-   * [bindgen] header: /tmp/18227994834103256352header.h
+   * [bindgen] header: /tmp/8393949708690491526header.h
   */
   opaque type MyUnsigned = CUnsignedInt
   object MyUnsigned extends CEnumU[MyUnsigned]:
@@ -571,7 +571,7 @@ import _root_.scala.scalanative.*
 object aliases:
   import _root_.libtest.aliases.*
   /**
-   * [bindgen] header: /tmp/12349628053997654766header.h
+   * [bindgen] header: /tmp/17431707382829881231header.h
   */
   opaque type Cursor = Ptr[Byte]
   object Cursor: 
@@ -581,7 +581,7 @@ object aliases:
       inline def value: Ptr[Byte] = v
 
   /**
-   * [bindgen] header: /tmp/12349628053997654766header.h
+   * [bindgen] header: /tmp/17431707382829881231header.h
   */
   opaque type Visitor = CFuncPtr1[Ptr[Cursor], CInt]
   object Visitor: 
@@ -633,7 +633,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/15358731796391175025header.h
+   * [bindgen] header: /tmp/11492121407803557554header.h
   */
   opaque type Arr = CStruct1[Ptr[Byte]]
   object Arr:
@@ -703,7 +703,7 @@ object constants:
 </code></pre>
 </div>
 </div>
-</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2023 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
+</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2024 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               gtag('js', new Date());
 
