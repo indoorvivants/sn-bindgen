@@ -1,4 +1,4 @@
-//!bindgen --multi-file
+//!bindgen: --multi-file
 
 union Test {
   int x;

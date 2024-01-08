@@ -622,21 +622,23 @@ def collectBindings(headersPath: File) = {
     )
     .toMap
 
-  headerSpec.toSeq.map { case (header, name) =>
-    val PREF = "//!bindgen"
-    val contents = IO
-      .readLines(header)
+  def directives(pref: String, lines: List[String]): List[String] =
+    lines
       .map(_.trim)
-      .filter(_.startsWith(PREF))
-      .map(_.stripPrefix(PREF).trim)
+      .filter(_.startsWith(pref))
+      .map(_.stripPrefix(pref).trim)
       .flatMap(_.split(" "))
       .map(_.trim)
 
+  headerSpec.toSeq.map { case (header, name) =>
+    val lines = IO.readLines(header)
+    val contents = directives("//!bindgen:", lines)
+    val pkg = directives("//!bindgen-package:", lines).headOption
     val multiFileFlag = "--multi-file"
     val isMultiFile = contents.contains(multiFileFlag)
 
     Binding
-      .builder(header, s"lib_test_$name")
+      .builder(header, pkg.getOrElse(s"lib_test_$name"))
       .addCImport(s"$name.h")
       .withBindgenArguments(contents.filterNot(_ == multiFileFlag))
       .withMultiFile(isMultiFile)

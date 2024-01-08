@@ -1,4 +1,4 @@
-//!bindgen --export
+//!bindgen: --export
 
 extern int myscalalib_exports(int i, int r);
 

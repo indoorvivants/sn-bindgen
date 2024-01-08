@@ -396,8 +396,9 @@ private def renderEnumerations(
     if mode == RenderMode.Objects then out.appendLine("object predef:")
     nestIf(mode == RenderMode.Objects) {
 
+      val safePackageName = packageName.split('.').last
       val predefSigned = s"""
-        |private[$packageName] trait CEnum[T](using eq: T =:= Int):
+        |private[$safePackageName] trait CEnum[T](using eq: T =:= Int):
         |  given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
         |  extension (inline t: T) 
         |    inline def int: CInt = eq.apply(t)
@@ -405,7 +406,7 @@ private def renderEnumerations(
        """.stripMargin.trim.linesIterator
 
       val predefUnsigned = s"""
-        |private[$packageName] trait CEnumU[T](using eq: T =:= UInt):
+        |private[${safePackageName}] trait CEnumU[T](using eq: T =:= UInt):
         |  given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
         |  extension (inline t: T)
         |   inline def int: CInt = eq.apply(t).toInt
@@ -463,8 +464,9 @@ private def renderScalaFunctions(
         summon[Config].linkName.foreach { l =>
           out.append(s"""@link("$l")""")
         }
+        val safePackageName = packageName.split('.').last
         out.appendLine(
-          s"\n@extern\nprivate[$packageName] object extern_functions:"
+          s"\n@extern\nprivate[$safePackageName] object extern_functions:"
         )
         nest {
           if renderMode == RenderMode.Objects then
