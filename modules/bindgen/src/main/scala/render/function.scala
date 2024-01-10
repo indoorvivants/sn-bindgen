@@ -50,7 +50,7 @@ def renderFunction(
 
     case ScalaFunctionBody.Extern =>
       val linkAnnotation = Option
-        .when(f.public)(
+        .when(f.public && mode == RenderMode.Files)(
           summon[Config].linkName
             .map { l =>
               s"""@link("$l") """

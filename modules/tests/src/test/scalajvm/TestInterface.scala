@@ -164,11 +164,6 @@ class TestInterface {
         probe.scalaFiles / "lib_check" / "aliases.scala",
         probe.scalaFiles / "lib_check" / "structs.scala",
         probe.scalaFiles / "lib_check" / "functions.scala",
-        probe.scalaFiles / "lib_check" / "all.unions.scala",
-        probe.scalaFiles / "lib_check" / "all.structs.scala",
-        probe.scalaFiles / "lib_check" / "all.functions.scala",
-        probe.scalaFiles / "lib_check" / "all.aliases.scala",
-        probe.scalaFiles / "lib_check" / "all.enumerations.scala",
         probe.scalaFiles / "lib_check" / "unions.scala"
       ),
       allFilesMultiScala.toSet
