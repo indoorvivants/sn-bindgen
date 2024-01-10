@@ -21,7 +21,8 @@ def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
   val flatArguments = f.arguments.flatten
 
   val access =
-    if f.public then "" else s"private[${summon[Context].packageName.value}] "
+    if f.public then ""
+    else s"private[${summon[Context].packageName.value.split('.').last}] "
 
   if f.public then f.meta.foreach(renderComment(line, _))
   f.body match
