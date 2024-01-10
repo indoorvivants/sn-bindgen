@@ -17,3 +17,5 @@ unsigned run(int i, float h, HelloAlias test, union Test verify);
 void naughty(Hello st);
 void nice(char st);
 enum { Constant1, Constant2 };
+
+int test_varargs(int i, ...);

@@ -4,7 +4,11 @@ package rendering
 import bindgen.*
 import scala.collection.mutable.ListBuffer
 
-def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
+def renderFunction(
+    f: GeneratedFunction.ScalaFunction,
+    line: Appender,
+    mode: RenderMode
+)(using
     Config,
     AliasResolver,
     Context
@@ -45,10 +49,24 @@ def renderFunction(f: GeneratedFunction.ScalaFunction, line: Appender)(using
       else Exported.No
 
     case ScalaFunctionBody.Extern =>
+      val linkAnnotation = Option
+        .when(f.public)(
+          summon[Config].linkName
+            .map { l =>
+              s"""@link("$l") """
+            }
+        )
+        .flatten
+        .getOrElse("")
+
+      val externAnnotation =
+        Option.when(mode == RenderMode.Files)("@extern ").getOrElse("")
+
       line(
-        s"${access}def ${f.name}$arglist: ${scalaType(f.returnType)} = extern"
+        s"$externAnnotation$linkAnnotation${access}def ${f.name}$arglist: ${scalaType(f.returnType)} = extern"
       )
       if f.public then Exported.Yes(f.name.value) else Exported.No
+
     case ScalaFunctionBody.Delegate(
           to,
           a @ Allocations(indices, returnAsWell)
