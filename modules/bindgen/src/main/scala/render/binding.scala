@@ -97,7 +97,6 @@ def renderBinding(
   def create(name: String)(subPackage: String = name) =
     val lb = LineBuilder()
     lb.appendLine(s"package $packageName")
-    if multiFileMode then lb.appendLine(s"package $subPackage")
     lb.emptyLine
     lb.append("""
       |import _root_.scala.scalanative.unsafe.*
@@ -233,14 +232,8 @@ def renderBinding(
     }
   end if
 
-  if multiFileMode then
-    val byType: Map[String, List[(String, String)]] =
-      exports.result().groupBy(_._1)
-
-    byType.toList.sortBy(_._1).foreach { (exportType, results) =>
-      renderExports(stream(s"all.$exportType", "all"), results, renderMode)
-    }
-  else renderExports(simpleStream(s"all"), exports.result(), renderMode)
+  if !multiFileMode then
+    renderExports(simpleStream(s"all"), exports.result(), renderMode)
 
   if multiFileMode then RenderedOutput.Multi(multi.toMap)
   else if summon[Context].lang == Lang.C then RenderedOutput.Single(cOutput)
@@ -261,12 +254,10 @@ private def renderAliases(
     typeImports: TypeImports
 )(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
-  if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
   if mode == RenderMode.Objects then out.appendLine("object aliases:")
 
   nestIf(mode == RenderMode.Objects) {
-    if mode == RenderMode.Objects then
-      typeImports.render(out, multiFile = false)
+    if mode == RenderMode.Objects then typeImports.render(out)
     exported ++= renderAll(aliases, out, alias)
   }
   exported.result()
@@ -301,11 +292,11 @@ private def renderUnions(
     typeImports: TypeImports
 )(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
-  if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
+
   if mode == RenderMode.Objects then out.appendLine("object unions:")
+
   nestIf(mode == RenderMode.Objects) {
-    if mode == RenderMode.Objects then
-      typeImports.render(out, multiFile = false)
+    if mode == RenderMode.Objects then typeImports.render(out)
     exported ++= renderAll(unions, out, union)
   }
   exported.result()
@@ -318,12 +309,10 @@ private def renderStructs(
     typeImports: TypeImports
 )(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
-  if mode == RenderMode.Files then typeImports.render(out, multiFile = true)
   if mode == RenderMode.Objects then out.appendLine("object structs:")
 
   nestIf(mode == RenderMode.Objects) {
-    if mode == RenderMode.Objects then
-      typeImports.render(out, multiFile = false)
+    if mode == RenderMode.Objects then typeImports.render(out)
     exported ++= renderAll(structs, out, struct)
   }
   exported.result()
@@ -452,29 +441,33 @@ private def renderScalaFunctions(
       f
   }
 
+  val safePackageName = packageName.split('.').last
+
   val hasExternFunctions = scalaExternFunctions.nonEmpty
   val hasRegularFunctions = scalaRegularFunctions.nonEmpty
 
   if functions.nonEmpty then
     if exportMode == ExportMode.No then
-      if renderMode == RenderMode.Files then
-        typeImports.render(out, multiFile = true)
 
       if hasExternFunctions then
-        summon[Config].linkName.foreach { l =>
-          out.append(s"""@link("$l")""")
-        }
-        val safePackageName = packageName.split('.').last
-        out.appendLine(
-          s"\n@extern\nprivate[$safePackageName] object extern_functions:"
-        )
-        nest {
+        if renderMode == RenderMode.Objects then
+          summon[Config].linkName.foreach { l =>
+            out.append(s"""@link("$l")""")
+          }
+        end if
+
+        nestIf(renderMode == RenderMode.Objects) {
           if renderMode == RenderMode.Objects then
-            typeImports.render(out, multiFile = false)
+            out.appendLine(
+              s"\n@extern\nprivate[$safePackageName] object extern_functions:"
+            )
+            typeImports.render(out)
+          else out.appendLine("\n")
+
           exported ++= renderAll(
             scalaExternFunctions.toList.sortBy(_.name),
             out,
-            renderFunction
+            renderFunction(_, _, renderMode)
           )
         }
       end if
@@ -483,10 +476,9 @@ private def renderScalaFunctions(
         if renderMode == RenderMode.Objects then
           out.appendLine(s"\nobject functions:")
         nestIf(renderMode == RenderMode.Objects) {
-          if renderMode == RenderMode.Objects then
-            typeImports.render(out, multiFile = false)
+          if renderMode == RenderMode.Objects then typeImports.render(out)
 
-          if hasExternFunctions then
+          if hasExternFunctions && renderMode == RenderMode.Objects then
             to(out)("import extern_functions.*")
             to(out)("export extern_functions.*")
             out.emptyLine
@@ -494,7 +486,7 @@ private def renderScalaFunctions(
           exported ++= renderAll(
             scalaRegularFunctions.toList.sortBy(_.name),
             out,
-            renderFunction
+            renderFunction(_, _, renderMode)
           )
         }
       end if
@@ -519,22 +511,24 @@ private def renderScalaFunctions(
 
       out.appendLine("trait ExportedFunctions:")
       nest {
-        if renderMode == RenderMode.Objects then
-          typeImports.render(out, multiFile = false)
-        renderAll(modified(ExportLocation.Trait), out, renderFunction)
+        if renderMode == RenderMode.Objects then typeImports.render(out)
+        renderAll(
+          modified(ExportLocation.Trait),
+          out,
+          renderFunction(_, _, renderMode)
+        )
       }
 
       if renderMode == RenderMode.Objects then
         out.appendLine(s"\nobject functions extends ExportedFunctions:")
       nestIf(renderMode == RenderMode.Objects) {
-        if renderMode == RenderMode.Objects then
-          typeImports.render(out, multiFile = false)
+        if renderMode == RenderMode.Objects then typeImports.render(out)
         renderAll(
           modified(
             ExportLocation.Body(summon[Context].packageName.map(_ + ".impl"))
           ),
           out,
-          renderFunction
+          renderFunction(_, _, renderMode)
         )
       }
 

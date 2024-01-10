@@ -11,17 +11,16 @@ case class TypeImports(
     structs: Boolean,
     unions: Boolean
 ):
-  def render(out: LineBuilder, multiFile: Boolean)(using Config, Context) =
-    var any = false
-    val imp = (s: String) =>
-      any = true
-      to(out)(s"import _root_.$packageName.$s.*")
+  def render(out: LineBuilder)(using Config, Context) =
+
+    val addImport = (s: String) => to(out)(s"import _root_.$packageName.$s.*")
+
     if enums then
-      imp("enumerations")
-      if !multiFile then imp("predef")
-    if aliases then imp("aliases")
-    if structs then imp("structs")
-    if unions then imp("unions")
+      addImport("enumerations")
+      addImport("predef")
+    if aliases then addImport("aliases")
+    if structs then addImport("structs")
+    if unions then addImport("unions")
 
   end render
 end TypeImports
