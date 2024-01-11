@@ -44,28 +44,34 @@ object Generate:
                   config.config.outputChannel.stdoutLine(lb.result)
 
                 case (RenderedOutput.Single(lb), OutputMode.SingleFile(f)) =>
-                  Using.resource(new FileWriter(f.value)) { fw =>
-                    fw.write(lb.result)
-                  }
-                  info(s"Generated ${f.value.toPath.toAbsolutePath()}")
+                  val result = lb.result.trim()
+                  if result.nonEmpty then
+                    Using.resource(new FileWriter(f.value)) { fw =>
+                      fw.write(result)
+                    }
+                    info(s"Generated ${f.value.toPath.toAbsolutePath()}")
 
-                  if config.config.printFiles == PrintFiles.Yes then
-                    config.config.outputChannel.stdoutLine(
-                      f.value.toPath.toAbsolutePath().toString()
-                    )
+                    if config.config.printFiles == PrintFiles.Yes then
+                      config.config.outputChannel.stdoutLine(
+                        f.value.toPath.toAbsolutePath().toString()
+                      )
+                  end if
 
                 case (RenderedOutput.Multi(mp), OutputMode.MultiFile(d)) =>
                   val path = d.value.toPath()
                   mp.foreach { (sn, lb) =>
-                    val file = path.resolve(sn.value + ".scala")
-                    Using.resource(new FileWriter(file.toFile)) { fw =>
-                      fw.write(lb.result)
-                    }
-                    info(s"Generated ${file.toAbsolutePath()}")
-                    if config.config.printFiles == PrintFiles.Yes then
-                      config.config.outputChannel.stdoutLine(
-                        file.toAbsolutePath()
-                      )
+                    val result = lb.result.trim()
+                    if result.nonEmpty then
+                      val file = path.resolve(sn.value + ".scala")
+                      Using.resource(new FileWriter(file.toFile)) { fw =>
+                        fw.write(result)
+                      }
+                      info(s"Generated ${file.toAbsolutePath()}")
+                      if config.config.printFiles == PrintFiles.Yes then
+                        config.config.outputChannel.stdoutLine(
+                          file.toAbsolutePath()
+                        )
+                    end if
 
                   }
               end match
