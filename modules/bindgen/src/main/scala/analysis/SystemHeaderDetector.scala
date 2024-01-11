@@ -13,16 +13,25 @@ import scala.scalanative.unsigned.*
 import scalanative.libc.*
 import scala.scalanative.runtime.libc
 import libclang.fluent.string
+import java.nio.file.Path
+import java.nio.file.Paths
 
-class SystemHeaderDetector(clangInfo: ClangInfo):
+class SystemHeaderDetector(
+    clangInfo: ClangInfo,
+    excludeSystemPaths: List[SystemPath]
+):
   private val mut = collection.mutable.Map.empty[String, Boolean]
+  private val includes = clangInfo.includePaths.map(Paths.get(_))
+  private val excludes = excludeSystemPaths.map(_.value).map(Paths.get(_))
 
   def isSystem(filename: String): Boolean =
     val path = java.nio.file.Paths.get(filename)
+
+    def isChild(ip: Path) = path.startsWith(ip)
+
     mut.getOrElseUpdate(
       filename,
-      clangInfo.includePaths.exists { ip =>
-        path.startsWith(ip)
-      }
+      !excludes.exists(isChild) || includes.exists(isChild)
     )
+  end isSystem
 end SystemHeaderDetector

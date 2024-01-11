@@ -34,7 +34,10 @@ object InteractiveDriver:
       Right(
         InteractiveDriver(
           config,
-          ConfiguredEnvironment(clang, SystemHeaderDetector(clang))
+          ConfiguredEnvironment(
+            clang,
+            SystemHeaderDetector(clang, config.excludeSystemPaths)
+          )
         )
       )
 end InteractiveDriver

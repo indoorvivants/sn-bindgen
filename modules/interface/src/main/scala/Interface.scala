@@ -84,6 +84,7 @@ class Binding private (
     val externalPaths: Map[String, String] = Defaults.externalPaths,
     val externalNames: Map[String, String] = Defaults.externalNames,
     val bindgenArguments: List[String] = Defaults.bindgenArguments,
+    val excludeSystemPaths: List[Path] = Defaults.excludeSystemPaths,
     val scalaFile: String,
     val cFile: String
 ) { self =>
@@ -106,6 +107,7 @@ class Binding private (
       externalPaths: Map[String, String] = self.externalPaths,
       externalNames: Map[String, String] = self.externalNames,
       bindgenArguments: List[String] = self.bindgenArguments,
+      excludeSystemPaths: List[Path] = self.excludeSystemPaths,
       scalaFile: String = self.scalaFile,
       cFile: String = self.cFile
   ) =
@@ -185,6 +187,10 @@ class Binding private (
       arg("render.external-name", s"$filter=$pkg")
     }
 
+    excludeSystemPaths.map { case path =>
+      arg("exclude-system-path", path.toString())
+    }
+
     sb ++= bindgenArguments
 
     sb.result()
@@ -260,6 +266,12 @@ object Binding {
     def addExternalNames(externals: Map[String, String]) =
       copy(b => b.copy(externalNames = b.externalNames ++ externals))
 
+    def addExcludedSystemPath(path: Path) =
+      copy(b => b.copy(excludeSystemPaths = b.excludeSystemPaths :+ path))
+
+    def withExcludedSystemPaths(paths: List[Path]) =
+      copy(b => b.copy(excludeSystemPaths = paths))
+
     def withBindgenArguments(arguments: List[String]) =
       copy(_.copy(bindgenArguments = arguments))
     def addBindgenArgument(argument: String) =
@@ -285,6 +297,7 @@ object Binding {
     val externalPaths = Map.empty[String, String]
     val externalNames = Map.empty[String, String]
     val bindgenArguments = List.empty[String]
+    val excludeSystemPaths = List.empty[Path]
     val exportMode = false
   }
 
