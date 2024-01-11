@@ -129,6 +129,7 @@ class Binding private (
       externalPaths = externalPaths,
       externalNames = externalNames,
       bindgenArguments = bindgenArguments,
+      excludeSystemPaths = excludeSystemPaths,
       scalaFile = scalaFile,
       cFile = cFile
     )
