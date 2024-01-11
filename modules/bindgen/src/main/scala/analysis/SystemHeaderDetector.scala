@@ -29,9 +29,12 @@ class SystemHeaderDetector(
 
     def isChild(ip: Path) = path.startsWith(ip)
 
+    val isInExcludedLocation = excludes.exists(isChild)
+    val isInSystemLocation = includes.exists(isChild)
+
     mut.getOrElseUpdate(
       filename,
-      !excludes.exists(isChild) || includes.exists(isChild)
+      if isInExcludedLocation then false else isInSystemLocation
     )
   end isSystem
 end SystemHeaderDetector
