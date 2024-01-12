@@ -22,10 +22,10 @@ by calling <code>bindgenGenerateScalaSources</code> and <code>bindgenGenerateCSo
 code.</p>
 <p>For example, the bindings to libclang which underpin this very project are generated using this mode and checked in on Github.</p>
 <h2><a href="#cli" id="cli">CLI</a></h2>
-<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--scala] [--c] [--link-name &lt;string&gt;] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file] [--export]
+<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--scala] [--c] [--link-name &lt;string&gt;] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file] [--export] [--exclude-system-path &lt;string&gt;]...
 
 Generate Scala 3 native bindings from C header files
-Version: 0.0.23+9-9554921b-SNAPSHOT
+Version: 0.0.23+10-e6717f3d-SNAPSHOT
 Built using Scala 3.3.1 and Scala Native 0.4.16
 
 Options and flags:
@@ -108,6 +108,8 @@ Options and flags:
         Generate functions as @exported, so that the generated Scala code can be used as part of a shared/static library
     --temp-dir &lt;string&gt;
         Path where temporary files will be created during clang interrogation (clang needs to be invoked to get the system headers paths
+    --exclude-system-path &lt;string&gt;
+        List of paths to mark as non-system (helpful if Clang reports some paths you'd rather not ignore)
 </code></pre>
 </div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2024 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
