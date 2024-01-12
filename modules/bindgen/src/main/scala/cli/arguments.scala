@@ -121,6 +121,16 @@ object CLI:
     .withDefault(Nil)
     .map(_.map(ClangFlag.apply(_)))
 
+  private val excludeSystemPaths = Opts
+    .options[String](
+      "exclude-system-path",
+      help =
+        "List of paths to mark as non-system (helpful if Clang reports some paths you'd rather not ignore)"
+    )
+    .map(_.toList)
+    .withDefault(Nil)
+    .map(_.map(SystemPath.apply(_)))
+
   private val clangInclude = Opts
     .options[String](
       "clang-include",
@@ -348,7 +358,8 @@ object CLI:
       printFiles,
       exportMode,
       Opts(OutputChannel.cli),
-      tempDir
+      tempDir,
+      excludeSystemPaths
     ).mapN(Config.apply)
 
   val command = Command(

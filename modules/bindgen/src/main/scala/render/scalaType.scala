@@ -11,7 +11,7 @@ def renderName(name: Name.Model)(using config: Config) =
   (nameMatches orElse pathMatches)
     .map(_._2.value)
     .map { pkgName =>
-      s"_root_.$pkgName.all.${name.value}"
+      s"_root_.$pkgName.${name.value}"
     }
     .getOrElse(name.value)
 end renderName

@@ -25,7 +25,8 @@ case class Config(
     printFiles: PrintFiles,
     exportMode: ExportMode,
     outputChannel: OutputChannel,
-    tempDir: TempPath
+    tempDir: TempPath,
+    excludeSystemPaths: List[SystemPath]
 )
 
 case class Context(
@@ -35,19 +36,11 @@ case class Context(
 )
 
 object Config:
-  def withDefaults(
-      // headerFile: HeaderFile,
-      // packageName: PackageName,
-      // lang: Lang,
-      // outputChannel: OutputChannel
-  ) =
+  def withDefaults() =
     Config(
-      // packageName = packageName,
-      // headerFile = headerFile,
       linkName = None,
       indentSize = defaults.indentSize,
       indents = defaults.indents,
-      // lang = lang,
       cImports = Nil,
       clangFlags = Nil,
       quiet = Quiet.No,
@@ -59,7 +52,8 @@ object Config:
       printFiles = PrintFiles.No,
       exportMode = ExportMode.No,
       outputChannel = OutputChannel.cli,
-      tempDir = TempPath(sys.props("java.io.tmpdir"))
+      tempDir = TempPath(sys.props("java.io.tmpdir")),
+      excludeSystemPaths = Nil
     )
   object defaults:
     val indentSize = IndentationSize(3)
@@ -106,6 +100,9 @@ object CImport extends OpaqueString[CImport]
 
 opaque type ClangFlag = String
 object ClangFlag extends OpaqueString[ClangFlag]
+
+opaque type SystemPath = String
+object SystemPath extends OpaqueString[SystemPath]
 
 opaque type HeaderFile = String
 object HeaderFile extends OpaqueString[HeaderFile]

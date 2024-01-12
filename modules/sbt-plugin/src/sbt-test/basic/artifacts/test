@@ -1,8 +1,8 @@
 > run
-$ exists target/scala-3.1.1/resource_managed/main/scala-native/libtest.c 
+-$ exists target/scala-3.1.1/resource_managed/main/scala-native/libtest.c 
 $ exists target/scala-3.1.1/src_managed/main/libtest.scala
 > test
-$ exists target/scala-3.1.1/resource_managed/test/scala-native/gentests.c
+-$ exists target/scala-3.1.1/resource_managed/test/scala-native/gentests.c
 $ exists target/scala-3.1.1/src_managed/test/gentests.scala
 
 

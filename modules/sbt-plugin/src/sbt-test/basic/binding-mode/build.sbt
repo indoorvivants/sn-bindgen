@@ -3,25 +3,32 @@ enablePlugins(BindgenPlugin, ScalaNativePlugin, ScalaNativeJUnitPlugin)
 import bindgen.interface.Binding
 import java.util.concurrent.atomic.AtomicReference
 
-scalaVersion := "3.2.0"
+scalaVersion := "3.3.1"
 
 bindgenBindings := {
   Seq(
-    Binding(
-      headerFile =
+    Binding
+      .builder(
         baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
-      packageName = "bindings"
-    )
+        "bindings"
+      )
+      .addCImport("header.h")
+      .build
   )
 }
 
 Test / bindgenBindings := {
   Seq(
-    Binding(
-      headerFile =
+    Binding
+      .builder(
         baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
-      packageName = "testbindings"
-    )
+        "testbindings"
+      )
+      .addCImport("header.h")
+      .addClangFlag(
+        "-I" + (baseDirectory.value / "src" / "main" / "resources" / "scala-native").toString
+      )
+      .build
   )
 }
 
@@ -39,4 +46,11 @@ Test / bindgenMode := {
   val cFolder = (Test / resourceDirectory).value / "scala-native"
 
   BindgenMode.Manual(scalaFolder, cFolder)
+}
+
+Test / nativeConfig := {
+  val config = (Test / nativeConfig).value
+  config.withCompileOptions(
+    config.compileOptions :+ ("-I" + (baseDirectory.value / "src" / "main" / "resources" / "scala-native").toString)
+  )
 }

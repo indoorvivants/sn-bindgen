@@ -104,7 +104,7 @@ enum GeneratedFunction:
 end GeneratedFunction
 
 private def externFuncName(s: String)(using c: Context) =
-  s"__sn_wrap_${c.packageName.value}_" + s
+  s"__sn_wrap_${c.packageName.value.replace(".", "_")}_" + s
 
 private def scalaForwarderFunction(
     bad: Def.Function
