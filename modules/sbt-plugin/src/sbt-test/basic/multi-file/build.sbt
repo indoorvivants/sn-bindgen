@@ -3,15 +3,17 @@ enablePlugins(BindgenPlugin, ScalaNativePlugin, ScalaNativeJUnitPlugin)
 import bindgen.interface.Binding
 import java.util.concurrent.atomic.AtomicReference
 
-scalaVersion := "3.2.2"
+scalaVersion := "3.3.1"
 
 bindgenBindings := {
   Seq(
-    Binding(
-      headerFile =
+    Binding
+      .builder(
         baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
-      packageName = "bindings",
-      multiFile = true
-    )
+        "bindings"
+      )
+      .withMultiFile(true)
+      .addCImport("header.h")
+      .build
   )
 }
