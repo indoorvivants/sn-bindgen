@@ -50,14 +50,14 @@ import _root_.scala.scalanative.*
 
 trait ExportedFunctions:
   /**
-   * [bindgen] header: /tmp/8259532831296055095header.h
+   * [bindgen] header: /tmp/15777490624035528794header.h
   */
   def myThing(n : CInt, i : CLongInt): CLongInt
 
 
 object functions extends ExportedFunctions:
   /**
-   * [bindgen] header: /tmp/8259532831296055095header.h
+   * [bindgen] header: /tmp/15777490624035528794header.h
   */
   @exported
   override def myThing(n : CInt, i : CLongInt): CLongInt = libtest.impl.Implementations.myThing(n, i)
@@ -108,7 +108,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/140047249536098120header.h
+   * [bindgen] header: /tmp/16886804302093911829header.h
   */
   opaque type MyStuff = CStruct2[CInt, CString]
   object MyStuff:
@@ -128,7 +128,7 @@ object structs:
 trait ExportedFunctions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/140047249536098120header.h
+   * [bindgen] header: /tmp/16886804302093911829header.h
   */
   def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt
 
@@ -136,7 +136,7 @@ trait ExportedFunctions:
 object functions extends ExportedFunctions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/140047249536098120header.h
+   * [bindgen] header: /tmp/16886804302093911829header.h
   */
   @exported
   override def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt = libtest.impl.Implementations.myThing(n, str)
