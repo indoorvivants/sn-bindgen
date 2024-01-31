@@ -4,6 +4,7 @@ package fluent
 import scala.scalanative.unsafe.*
 import scala.annotation.targetName
 import scala.scalanative.unsigned.*
+
 extension (cxs: CXString)
   def string(using Zone): String =
     val orig = clang_getCString(cxs)
@@ -64,7 +65,6 @@ extension (loc: CXSourceLocation)
   def isFromSystemHeader(using Zone): Boolean =
     clang_Location_isInSystemHeader(loc) == 1
   def getFilename(using Zone) =
-    import libclang.aliases.*
     val file = stackalloc[CXFile](1)
     clang_getFileLocation(loc, file, null, null, null)
     clang_getFileName(!file).string
