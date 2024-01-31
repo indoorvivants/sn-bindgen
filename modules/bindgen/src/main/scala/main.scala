@@ -12,8 +12,6 @@ import scalanative.libc.*
 import scala.util.Using.apply
 import scala.util.Using
 
-import libclang.all.*
-
 inline def zone[A](inline f: Zone ?=> A) = Zone.apply(z => f(using z))
 
 object Generate:
