@@ -251,6 +251,9 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
 
+      - name: Setup Unix-like
+        run: ./build/setup_unix.sh
+
       - name: Build site
         run: sbt buildWebsite
 
