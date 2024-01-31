@@ -33,6 +33,11 @@ jobs:
           java-version: '17'
           cache: 'sbt'
 
+      - name: Install SBT 
+        run: |
+          curl -Lo /usr/local/bin/sbt https://raw.githubusercontent.com/sbt/sbt/1.9.x/sbt && \
+          chmod +x /usr/local/bin/sbt
+
       - name: Install LLVM
         run: brew install llvm@$LLVM_VERSION
 
@@ -55,49 +60,6 @@ jobs:
           name: macos-intel-binaries
           if-no-files-found: error
           
-  # macos_arm_build:
-  #     name: MacOS (Arm64)
-  #     strategy:
-  #       fail-fast: true
-  #     runs-on: macos-aarch64
-  #     if: startsWith(github.ref, 'refs/tags/v')
-  #     continue-on-error: true
-  #     steps:
-  #       - uses: actions/checkout@v3
-  #         with:
-  #           fetch-depth: 0 
-
-  #       - uses: actions/setup-java@v3
-  #         with:
-  #           distribution: 'temurin' 
-  #           java-version: '17'
-  #           cache: 'sbt'
-
-  #       - name: Install LLVM
-  #         run: brew install llvm@$LLVM_VERSION
-
-  #       - name: Install SBT 
-  #         run: brew install sbt
-
-  #       - name: Sets env vars for release
-  #         if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
-  #         run: |
-  #           echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
-
-  #       - name: Sets env vars for LLVM
-  #         run: |
-  #           echo "LLVM_BIN=/opt/homebrew/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
-
-  #       - name: CI and build the binary
-  #         run: sbt ci buildPlatformBinary
-
-  #       - name: Upload artifacts
-  #         uses: actions/upload-artifact@v4
-  #         with:
-  #           path: bin/sn-bindgen-*
-  #           name: macos-arm-binaries
-  #           if-no-files-found: error
-
   linux_build:
       name: Linux
       runs-on: ubuntu-20.04
