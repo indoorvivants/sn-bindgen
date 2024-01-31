@@ -10,7 +10,7 @@ env:
   JAVA_OPTS: "-Xmx4G"
   JVM_OPTS: "-Xmx4G"
   SBT_OPTS: "-Xmx4G"
-  LLVM_VERSION: 14
+  LLVM_VERSION: 17
 
 jobs:
   macos_build:
@@ -20,8 +20,6 @@ jobs:
       matrix:
         OS: ["macos-12", "macos-14"]
     runs-on: ${{ matrix.OS }}
-    env:
-      LLVM_VERSION: 14
     steps:
       - uses: actions/checkout@v3
         with:
@@ -135,7 +133,7 @@ jobs:
     runs-on: windows-2019
     env:
       LLVM_BIN: 'C:\Program Files\LLVM\bin'
-      LLVM_VERSION: "14.0.6"
+      LLVM_VERSION: "17.0.6"
     steps:
       # This step is important to make sure scalafmt 
       # checks don't fail
@@ -207,7 +205,6 @@ jobs:
     env: 
       BINARIES: binaries/
       LLVM_BIN: /usr/lib/llvm-14/bin
-      LLVM_VERSION: 14
     steps:
       - uses: actions/checkout@v3
         with:
