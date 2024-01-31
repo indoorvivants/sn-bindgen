@@ -247,6 +247,7 @@ lazy val libclang = project
       scalaDir = ((Compile / sourceDirectory).value / "scala" / "generated"),
       cDir = (Compile / resourceDirectory).value / "scala-native" / "generated"
     ),
+    bindgenBinary := (LocalProject("bindgen") / Compile / nativeLink).value,
     bindgenBindings := {
       val detected =
         llvmFolder(nativeConfig.value.clang.toAbsolutePath()).llvmInclude
@@ -645,6 +646,8 @@ def collectBindings(headersPath: File) = {
 def llvmFolder(clangPath: java.nio.file.Path): LLVMInfo = {
   import Platform.OS.*
 
+  val LLVM_MAJOR_VERSION = "17"
+
   Platform.os match {
     case MacOS =>
       val detected =
@@ -658,9 +661,9 @@ def llvmFolder(clangPath: java.nio.file.Path): LLVMInfo = {
       val speculative =
         if (detected.isEmpty)
           List(
-            Paths.get("/usr/local/opt/llvm@14"),
+            Paths.get(s"/usr/local/opt/llvm@$LLVM_MAJOR_VERSION"),
             Paths.get("/usr/local/opt/llvm"),
-            Paths.get("/opt/homebrew/opt/llvm@14"),
+            Paths.get(s"/opt/homebrew/opt/llvm@$LLVM_MAJOR_VERSION"),
             Paths.get("/opt/homebrew/opt/llvm")
           )
         else Nil
