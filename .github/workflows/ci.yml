@@ -204,7 +204,7 @@ jobs:
     runs-on: ubuntu-20.04
     env: 
       BINARIES: binaries/
-      LLVM_BIN: /usr/lib/llvm-14/bin
+      LLVM_BIN: /usr/lib/llvm-17/bin
     steps:
       - uses: actions/checkout@v3
         with:
@@ -224,6 +224,9 @@ jobs:
 
       - name: List downloaded binaries
         run: ls -R binaries
+
+      - name: Setup Unix-like
+        run: ./build/setup_unix.sh
 
       - name: Check published artifacts
         run: |
