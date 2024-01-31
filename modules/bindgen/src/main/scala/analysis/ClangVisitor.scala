@@ -1,12 +1,7 @@
 package bindgen
 
-import _root_.libclang.structs.*
-import _root_.libclang.enumerations.*
-import _root_.libclang.aliases.*
-import _root_.libclang.functions.*
-import _root_.libclang.fluent.*
-
 import scalanative.unsafe.*
+import libclang.*, fluent.*
 
 object ClangVisitor:
   val visitor =
@@ -103,7 +98,8 @@ object ClangVisitor:
 
           if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
             val name = clang_getCursorSpelling(cursor).string
-            if name != "" then
+            val isAnonymous = clang_Cursor_isAnonymous(cursor).toInt != 0
+            if name != "" && !isAnonymous then
               val en = visitStruct(cursor, name)
               val union = Def.Union(
                 fields = en.fields.map { case (n, f) =>
@@ -119,7 +115,9 @@ object ClangVisitor:
 
           if cursor.kind == CXCursorKind.CXCursor_StructDecl then
             val name = cursor.spelling
-            if name != "" then
+            val isAnonymous = clang_Cursor_isAnonymous(cursor).toInt != 0
+            trace(s"Cursor: [${cursor.spelling}], ${isAnonymous}")
+            if name != "" && !isAnonymous then
               val en = visitStruct(cursor, name)
               binding.add(en, location)
           end if
