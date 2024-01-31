@@ -48,7 +48,12 @@ jobs:
 
       - name: Sets env vars for LLVM
         run: |
-          echo "LLVM_BIN=/usr/local/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
+          if [ $(arch) == "arm64" ]; then
+            echo "LLVM_BIN=/opt/homebrew/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
+          else
+            echo "LLVM_BIN=/usr/local/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
+          fi
+          
 
       - name: CI and build the binary
         run: ./sbt ci buildPlatformBinary
