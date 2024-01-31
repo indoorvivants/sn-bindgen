@@ -255,12 +255,10 @@ lazy val libclang = project
         case head :: tl =>
           val include = new File(head)
           Seq(
-            Binding
-              .builder(include / "clang-c" / "Index.h", "libclang")
+            Binding(include / "clang-c" / "Index.h", "libclang")
               .withClangFlags(List(s"-I$head"))
               .addCImport("clang-c/Index.h")
               .withMultiFile(true)
-              .build
           )
         case immutable.Nil =>
           sLog.value.error(
@@ -637,12 +635,10 @@ def collectBindings(headersPath: File) = {
     val multiFileFlag = "--multi-file"
     val isMultiFile = contents.contains(multiFileFlag)
 
-    Binding
-      .builder(header, pkg.getOrElse(s"lib_test_$name"))
+    Binding(header, pkg.getOrElse(s"lib_test_$name"))
       .addCImport(s"$name.h")
       .withBindgenArguments(contents.filterNot(_ == multiFileFlag))
       .withMultiFile(isMultiFile)
-      .build
   }
 }
 
