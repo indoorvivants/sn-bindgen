@@ -94,8 +94,17 @@ def struct(struct: Def.Struct, line: Appender)(using
         s"def apply()(using Zone): Ptr[$structName] = scala.scalanative.unsafe.alloc[$structName](1)"
       )
 
+      // Fields with no names aren't accessible via constructors
+      // or getters/setters
+      val namedFieldsWithIndex =
+        struct.fields.zipWithIndex.filter(_._1._1.value.nonEmpty)
+      val namedFieldsWithOffsets =
+        struct.fields.zip(fieldOffsets).filter(_._1._1.value.nonEmpty)
+      val namedFields = namedFieldsWithIndex.map(_._1)
+
       val applyArgList = List.newBuilder[String]
-      struct.fields.zipWithIndex.map { case ((name, typ), idx) =>
+
+      namedFieldsWithIndex.map { case ((name, typ), idx) =>
         val inputType = rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
         applyArgList.addOne(s"${getter(name.value)} : ${scalaType(inputType)}")
       }
@@ -109,7 +118,7 @@ def struct(struct: Def.Struct, line: Appender)(using
           )
           nest {
             line(s"val ____ptr = apply()")
-            struct.fields.foreach { case (fieldName, _) =>
+            namedFields.foreach { case (fieldName, _) =>
               line(
                 s"(!____ptr).${getter(fieldName.value)} = ${getter(fieldName.value)}"
               )
@@ -125,33 +134,32 @@ def struct(struct: Def.Struct, line: Appender)(using
       line(s"extension (struct: $structName)")
       nest {
         if !structIsOpaque then
-          struct.fields.zipWithIndex.foreach {
-            case ((fieldName, fieldType), idx) =>
-              val setterName = setter(fieldName.value)
-              val getterName = getter(fieldName.value)
+          namedFieldsWithIndex.foreach { case ((fieldName, fieldType), idx) =>
+            val setterName = setter(fieldName.value)
+            val getterName = getter(fieldName.value)
 
-              rewriteRules.get(idx) match
-                case Some(rewrite) =>
-                  val typ = scalaType(rewrite.newRichType)
-                  line(
-                    s"def $getterName : $typ = struct._${idx + 1}.asInstanceOf[$typ]"
-                  )
-                  line(
-                    s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(rewrite.newRawType)}]"
-                  )
+            rewriteRules.get(idx) match
+              case Some(rewrite) =>
+                val typ = scalaType(rewrite.newRichType)
+                line(
+                  s"def $getterName : $typ = struct._${idx + 1}.asInstanceOf[$typ]"
+                )
+                line(
+                  s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(rewrite.newRawType)}]"
+                )
 
-                case None =>
-                  val typ = scalaType(fieldType)
-                  line(
-                    s"def $getterName : $typ = struct._${idx + 1}"
-                  )
-                  line(
-                    s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value"
-                  )
-              end match
+              case None =>
+                val typ = scalaType(fieldType)
+                line(
+                  s"def $getterName : $typ = struct._${idx + 1}"
+                )
+                line(
+                  s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value"
+                )
+            end match
           }
         else
-          struct.fields.zip(fieldOffsets).foreach {
+          namedFieldsWithOffsets.foreach {
             case ((fieldName, fieldType), fieldOffset) =>
               val typ = scalaType(fieldType)
               val setterName = setter(fieldName.value)

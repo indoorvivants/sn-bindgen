@@ -41,8 +41,28 @@ unsigned int __sn_wrap_libclang_clang_CXXMethod_isConst(CXCursor *C) {
 };
 
 
+unsigned int __sn_wrap_libclang_clang_CXXMethod_isCopyAssignmentOperator(CXCursor *C) {
+ return clang_CXXMethod_isCopyAssignmentOperator(*C);
+};
+
+
 unsigned int __sn_wrap_libclang_clang_CXXMethod_isDefaulted(CXCursor *C) {
  return clang_CXXMethod_isDefaulted(*C);
+};
+
+
+unsigned int __sn_wrap_libclang_clang_CXXMethod_isDeleted(CXCursor *C) {
+ return clang_CXXMethod_isDeleted(*C);
+};
+
+
+unsigned int __sn_wrap_libclang_clang_CXXMethod_isExplicit(CXCursor *C) {
+ return clang_CXXMethod_isExplicit(*C);
+};
+
+
+unsigned int __sn_wrap_libclang_clang_CXXMethod_isMoveAssignmentOperator(CXCursor *C) {
+ return clang_CXXMethod_isMoveAssignmentOperator(*C);
 };
 
 
@@ -518,6 +538,11 @@ CXResult __sn_wrap_libclang_clang_findReferencesInFile(CXCursor *cursor, CXFile 
 };
 
 
+CXResult __sn_wrap_libclang_clang_findReferencesInFileWithBlock(CXCursor *_0, CXFile _1, CXCursorAndRangeVisitorBlock _2) {
+ return clang_findReferencesInFileWithBlock(*_0, _1, _2);
+};
+
+
 void __sn_wrap_libclang_clang_formatDiagnostic(CXDiagnostic Diagnostic, unsigned int Options, CXString *____return) {
   CXString ____ret = clang_formatDiagnostic(Diagnostic, Options);
   memcpy(____return, &____ret, sizeof(CXString));
@@ -544,6 +569,12 @@ void __sn_wrap_libclang_clang_getArrayElementType(CXType *T, CXType *____return)
 long long __sn_wrap_libclang_clang_getArraySize(CXType *T) {
  return clang_getArraySize(*T);
 };
+
+
+void __sn_wrap_libclang_clang_getBinaryOperatorKindSpelling(enum CXBinaryOperatorKind kind, CXString *____return) {
+  CXString ____ret = clang_getBinaryOperatorKindSpelling(kind);
+  memcpy(____return, &____ret, sizeof(CXString));
+}
 
 
 const char * __sn_wrap_libclang_clang_getCString(CXString *string) {
@@ -618,6 +649,11 @@ void __sn_wrap_libclang_clang_getCursor(CXTranslationUnit _0, CXSourceLocation *
 
 enum CXAvailabilityKind __sn_wrap_libclang_clang_getCursorAvailability(CXCursor *cursor) {
  return clang_getCursorAvailability(*cursor);
+};
+
+
+enum CXBinaryOperatorKind __sn_wrap_libclang_clang_getCursorBinaryOperatorKind(CXCursor *cursor) {
+ return clang_getCursorBinaryOperatorKind(*cursor);
 };
 
 
@@ -743,6 +779,11 @@ void __sn_wrap_libclang_clang_getCursorUSR(CXCursor *_0, CXString *____return) {
   CXString ____ret = clang_getCursorUSR(*_0);
   memcpy(____return, &____ret, sizeof(CXString));
 }
+
+
+enum CXUnaryOperatorKind __sn_wrap_libclang_clang_getCursorUnaryOperatorKind(CXCursor *cursor) {
+ return clang_getCursorUnaryOperatorKind(*cursor);
+};
 
 
 enum CXVisibilityKind __sn_wrap_libclang_clang_getCursorVisibility(CXCursor *cursor) {
@@ -881,6 +922,12 @@ void __sn_wrap_libclang_clang_getLocation(CXTranslationUnit tu, CXFile file, uns
 void __sn_wrap_libclang_clang_getLocationForOffset(CXTranslationUnit tu, CXFile file, unsigned int offset, CXSourceLocation *____return) {
   CXSourceLocation ____ret = clang_getLocationForOffset(tu, file, offset);
   memcpy(____return, &____ret, sizeof(CXSourceLocation));
+}
+
+
+void __sn_wrap_libclang_clang_getNonReferenceType(CXType *CT, CXType *____return) {
+  CXType ____ret = clang_getNonReferenceType(*CT);
+  memcpy(____return, &____ret, sizeof(CXType));
 }
 
 
@@ -1049,6 +1096,18 @@ void __sn_wrap_libclang_clang_getTypedefName(CXType *CT, CXString *____return) {
 }
 
 
+void __sn_wrap_libclang_clang_getUnaryOperatorKindSpelling(enum CXUnaryOperatorKind kind, CXString *____return) {
+  CXString ____ret = clang_getUnaryOperatorKindSpelling(kind);
+  memcpy(____return, &____ret, sizeof(CXString));
+}
+
+
+void __sn_wrap_libclang_clang_getUnqualifiedType(CXType *CT, CXType *____return) {
+  CXType ____ret = clang_getUnqualifiedType(*CT);
+  memcpy(____return, &____ret, sizeof(CXType));
+}
+
+
 unsigned int __sn_wrap_libclang_clang_hashCursor(CXCursor *_0) {
  return clang_hashCursor(*_0);
 };
@@ -1115,3 +1174,6 @@ unsigned int __sn_wrap_libclang_clang_visitChildren(CXCursor *parent, CXCursorVi
 };
 
 
+unsigned int __sn_wrap_libclang_clang_visitChildrenWithBlock(CXCursor *parent, CXCursorVisitorBlock block) {
+ return clang_visitChildrenWithBlock(*parent, block);
+};

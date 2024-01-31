@@ -10,16 +10,16 @@ env:
   JAVA_OPTS: "-Xmx4G"
   JVM_OPTS: "-Xmx4G"
   SBT_OPTS: "-Xmx4G"
-  LLVM_VERSION: 14
+  LLVM_VERSION: 17
 
 jobs:
   macos_build:
-    name: MacOS 
+    name: MacOS (${{ matrix.OS }})
     strategy:
       fail-fast: true
-    runs-on: macos-12
-    env:
-      LLVM_VERSION: 14
+      matrix:
+        OS: ["macos-12", "macos-14"]
+    runs-on: ${{ matrix.OS }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -31,6 +31,11 @@ jobs:
           java-version: '17'
           cache: 'sbt'
 
+      - name: Install SBT 
+        run: |
+          curl -Lo sbt https://raw.githubusercontent.com/sbt/sbt/1.9.x/sbt && \
+          chmod +x sbt
+
       - name: Install LLVM
         run: brew install llvm@$LLVM_VERSION
 
@@ -41,61 +46,23 @@ jobs:
 
       - name: Sets env vars for LLVM
         run: |
-          echo "LLVM_BIN=/usr/local/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
+          if [ $(arch) == "arm64" ]; then
+            echo "LLVM_BIN=/opt/homebrew/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
+          else
+            echo "LLVM_BIN=/usr/local/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
+          fi
+          
 
       - name: CI and build the binary
-        run: sbt ci buildPlatformBinary
+        run: ./sbt ci buildPlatformBinary
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           path: bin/sn-bindgen-*
-          name: macos-intel-binaries
+          name: ${{ matrix.os }}-binaries
           if-no-files-found: error
           
-  macos_arm_build:
-      name: MacOS (Arm64)
-      strategy:
-        fail-fast: true
-      runs-on: macos-aarch64
-      if: startsWith(github.ref, 'refs/tags/v')
-      continue-on-error: true
-      steps:
-        - uses: actions/checkout@v3
-          with:
-            fetch-depth: 0 
-
-        - uses: actions/setup-java@v3
-          with:
-            distribution: 'temurin' 
-            java-version: '17'
-            cache: 'sbt'
-
-        - name: Install LLVM
-          run: brew install llvm@$LLVM_VERSION
-
-        - name: Install SBT 
-          run: brew install sbt
-
-        - name: Sets env vars for release
-          if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
-          run: |
-            echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
-
-        - name: Sets env vars for LLVM
-          run: |
-            echo "LLVM_BIN=/opt/homebrew/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
-
-        - name: CI and build the binary
-          run: sbt ci buildPlatformBinary
-
-        - name: Upload artifacts
-          uses: actions/upload-artifact@v4
-          with:
-            path: bin/sn-bindgen-*
-            name: macos-arm-binaries
-            if-no-files-found: error
-
   linux_build:
       name: Linux
       runs-on: ubuntu-20.04
@@ -166,7 +133,7 @@ jobs:
     runs-on: windows-2019
     env:
       LLVM_BIN: 'C:\Program Files\LLVM\bin'
-      LLVM_VERSION: "14.0.6"
+      LLVM_VERSION: "17.0.6"
     steps:
       # This step is important to make sure scalafmt 
       # checks don't fail
@@ -232,13 +199,12 @@ jobs:
 
   release:
     if: ${{ always() }}
-    needs: [linux_build, linux_arm64_build, windows_build, macos_build, macos_arm_build]
+    needs: [linux_build, linux_arm64_build, windows_build, macos_build]
     name: Release
     runs-on: ubuntu-20.04
     env: 
       BINARIES: binaries/
-      LLVM_BIN: /usr/lib/llvm-14/bin
-      LLVM_VERSION: 14
+      LLVM_BIN: /usr/lib/llvm-17/bin
     steps:
       - uses: actions/checkout@v3
         with:
@@ -270,13 +236,10 @@ jobs:
           ./cs resolve com.indoorvivants:bindgen-interface_3:$(cat version)
           ./cs resolve com.indoorvivants:bindgen-interface_2.12:$(cat version)
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-x86_64 --artifact-type jar
-          # ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-aarch64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-aarch64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-aarch64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier windows-x86_64 --artifact-type jar
-
-      - name: Setup Unix-like
-        run: ./build/setup_unix.sh
 
       - name: Publish
         if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
@@ -287,6 +250,9 @@ jobs:
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+
+      - name: Setup Unix-like
+        run: ./build/setup_unix.sh
 
       - name: Build site
         run: sbt buildWebsite

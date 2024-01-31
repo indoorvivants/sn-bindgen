@@ -1,10 +1,7 @@
 package bindgen
 
-import libclang.structs.CXCursor
+import libclang.*, fluent.*
 import scala.scalanative.unsafe.*
-import libclang.functions.*
-import libclang.fluent.*
-import libclang.aliases.CXFile
 
 def extractMetadata(cursor: CXCursor)(using Zone) =
   val file = stackalloc[CXFile]()

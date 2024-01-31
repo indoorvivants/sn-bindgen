@@ -1,17 +1,11 @@
 package bindgen
 
-import _root_.libclang.structs.*
-import _root_.libclang.enumerations.*
-import _root_.libclang.aliases.*
-import _root_.libclang.functions.*
-import _root_.libclang.fluent.*
-
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 import scalanative.libc.*
 import scala.collection.mutable
 
-import libclang.*
+import libclang.*, fluent.*
 
 def visitEnum(rootCursor: CXCursor, isTypeDef: Boolean)(using
     Zone,

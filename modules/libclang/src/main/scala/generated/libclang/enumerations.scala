@@ -1,5 +1,4 @@
 package libclang
-package enumerations
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -22,7 +21,7 @@ private[libclang] trait CEnumU[T](using eq: T =:= UInt):
   * the use of this entity will result in a warning or error due to it being
   * deprecated or unavailable.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXAvailabilityKind = CUnsignedInt
 object CXAvailabilityKind extends CEnumU[CXAvailabilityKind]:
@@ -45,9 +44,94 @@ object CXAvailabilityKind extends CEnumU[CXAvailabilityKind]:
     inline def is(b: CXAvailabilityKind): Boolean = (a & b) == b
 end CXAvailabilityKind
 
+/** Describes the kind of binary operators.
+  *
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+  */
+opaque type CXBinaryOperatorKind = CUnsignedInt
+object CXBinaryOperatorKind extends CEnumU[CXBinaryOperatorKind]:
+  given _tag: Tag[CXBinaryOperatorKind] = Tag.UInt
+  inline def define(inline a: Long): CXBinaryOperatorKind = a.toUInt
+  val CXBinaryOperator_Invalid = define(0)
+  val CXBinaryOperator_PtrMemD = define(1)
+  val CXBinaryOperator_PtrMemI = define(2)
+  val CXBinaryOperator_Mul = define(3)
+  val CXBinaryOperator_Div = define(4)
+  val CXBinaryOperator_Rem = define(5)
+  val CXBinaryOperator_Add = define(6)
+  val CXBinaryOperator_Sub = define(7)
+  val CXBinaryOperator_Shl = define(8)
+  val CXBinaryOperator_Shr = define(9)
+  val CXBinaryOperator_Cmp = define(10)
+  val CXBinaryOperator_LT = define(11)
+  val CXBinaryOperator_GT = define(12)
+  val CXBinaryOperator_LE = define(13)
+  val CXBinaryOperator_GE = define(14)
+  val CXBinaryOperator_EQ = define(15)
+  val CXBinaryOperator_NE = define(16)
+  val CXBinaryOperator_And = define(17)
+  val CXBinaryOperator_Xor = define(18)
+  val CXBinaryOperator_Or = define(19)
+  val CXBinaryOperator_LAnd = define(20)
+  val CXBinaryOperator_LOr = define(21)
+  val CXBinaryOperator_Assign = define(22)
+  val CXBinaryOperator_MulAssign = define(23)
+  val CXBinaryOperator_DivAssign = define(24)
+  val CXBinaryOperator_RemAssign = define(25)
+  val CXBinaryOperator_AddAssign = define(26)
+  val CXBinaryOperator_SubAssign = define(27)
+  val CXBinaryOperator_ShlAssign = define(28)
+  val CXBinaryOperator_ShrAssign = define(29)
+  val CXBinaryOperator_AndAssign = define(30)
+  val CXBinaryOperator_XorAssign = define(31)
+  val CXBinaryOperator_OrAssign = define(32)
+  val CXBinaryOperator_Comma = define(33)
+  inline def getName(inline value: CXBinaryOperatorKind): Option[String] =
+    inline value match
+      case CXBinaryOperator_Invalid   => Some("CXBinaryOperator_Invalid")
+      case CXBinaryOperator_PtrMemD   => Some("CXBinaryOperator_PtrMemD")
+      case CXBinaryOperator_PtrMemI   => Some("CXBinaryOperator_PtrMemI")
+      case CXBinaryOperator_Mul       => Some("CXBinaryOperator_Mul")
+      case CXBinaryOperator_Div       => Some("CXBinaryOperator_Div")
+      case CXBinaryOperator_Rem       => Some("CXBinaryOperator_Rem")
+      case CXBinaryOperator_Add       => Some("CXBinaryOperator_Add")
+      case CXBinaryOperator_Sub       => Some("CXBinaryOperator_Sub")
+      case CXBinaryOperator_Shl       => Some("CXBinaryOperator_Shl")
+      case CXBinaryOperator_Shr       => Some("CXBinaryOperator_Shr")
+      case CXBinaryOperator_Cmp       => Some("CXBinaryOperator_Cmp")
+      case CXBinaryOperator_LT        => Some("CXBinaryOperator_LT")
+      case CXBinaryOperator_GT        => Some("CXBinaryOperator_GT")
+      case CXBinaryOperator_LE        => Some("CXBinaryOperator_LE")
+      case CXBinaryOperator_GE        => Some("CXBinaryOperator_GE")
+      case CXBinaryOperator_EQ        => Some("CXBinaryOperator_EQ")
+      case CXBinaryOperator_NE        => Some("CXBinaryOperator_NE")
+      case CXBinaryOperator_And       => Some("CXBinaryOperator_And")
+      case CXBinaryOperator_Xor       => Some("CXBinaryOperator_Xor")
+      case CXBinaryOperator_Or        => Some("CXBinaryOperator_Or")
+      case CXBinaryOperator_LAnd      => Some("CXBinaryOperator_LAnd")
+      case CXBinaryOperator_LOr       => Some("CXBinaryOperator_LOr")
+      case CXBinaryOperator_Assign    => Some("CXBinaryOperator_Assign")
+      case CXBinaryOperator_MulAssign => Some("CXBinaryOperator_MulAssign")
+      case CXBinaryOperator_DivAssign => Some("CXBinaryOperator_DivAssign")
+      case CXBinaryOperator_RemAssign => Some("CXBinaryOperator_RemAssign")
+      case CXBinaryOperator_AddAssign => Some("CXBinaryOperator_AddAssign")
+      case CXBinaryOperator_SubAssign => Some("CXBinaryOperator_SubAssign")
+      case CXBinaryOperator_ShlAssign => Some("CXBinaryOperator_ShlAssign")
+      case CXBinaryOperator_ShrAssign => Some("CXBinaryOperator_ShrAssign")
+      case CXBinaryOperator_AndAssign => Some("CXBinaryOperator_AndAssign")
+      case CXBinaryOperator_XorAssign => Some("CXBinaryOperator_XorAssign")
+      case CXBinaryOperator_OrAssign  => Some("CXBinaryOperator_OrAssign")
+      case CXBinaryOperator_Comma     => Some("CXBinaryOperator_Comma")
+      case _                          => None
+  extension (a: CXBinaryOperatorKind)
+    inline def &(b: CXBinaryOperatorKind): CXBinaryOperatorKind = a & b
+    inline def |(b: CXBinaryOperatorKind): CXBinaryOperatorKind = a | b
+    inline def is(b: CXBinaryOperatorKind): Boolean = (a & b) == b
+end CXBinaryOperatorKind
+
 /** Describes the calling convention of a function type
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXCallingConv = CUnsignedInt
 object CXCallingConv extends CEnumU[CXCallingConv]:
@@ -72,6 +156,7 @@ object CXCallingConv extends CEnumU[CXCallingConv]:
   val CXCallingConv_PreserveAll = define(15)
   val CXCallingConv_AArch64VectorCall = define(16)
   val CXCallingConv_SwiftAsync = define(17)
+  val CXCallingConv_AArch64SVEPCS = define(18)
   val CXCallingConv_Invalid = define(100)
   val CXCallingConv_Unexposed = define(200)
   inline def getName(inline value: CXCallingConv): Option[String] =
@@ -95,10 +180,11 @@ object CXCallingConv extends CEnumU[CXCallingConv]:
       case CXCallingConv_PreserveAll   => Some("CXCallingConv_PreserveAll")
       case CXCallingConv_AArch64VectorCall =>
         Some("CXCallingConv_AArch64VectorCall")
-      case CXCallingConv_SwiftAsync => Some("CXCallingConv_SwiftAsync")
-      case CXCallingConv_Invalid    => Some("CXCallingConv_Invalid")
-      case CXCallingConv_Unexposed  => Some("CXCallingConv_Unexposed")
-      case _                        => None
+      case CXCallingConv_SwiftAsync    => Some("CXCallingConv_SwiftAsync")
+      case CXCallingConv_AArch64SVEPCS => Some("CXCallingConv_AArch64SVEPCS")
+      case CXCallingConv_Invalid       => Some("CXCallingConv_Invalid")
+      case CXCallingConv_Unexposed     => Some("CXCallingConv_Unexposed")
+      case _                           => None
   extension (a: CXCallingConv)
     inline def &(b: CXCallingConv): CXCallingConv = a & b
     inline def |(b: CXCallingConv): CXCallingConv = a | b
@@ -108,7 +194,7 @@ end CXCallingConv
 /** Describes how the traversal of the children of a particular cursor should
   * proceed after visiting a particular child cursor.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXChildVisitResult = CUnsignedInt
 object CXChildVisitResult extends CEnumU[CXChildVisitResult]:
@@ -129,9 +215,30 @@ object CXChildVisitResult extends CEnumU[CXChildVisitResult]:
     inline def is(b: CXChildVisitResult): Boolean = (a & b) == b
 end CXChildVisitResult
 
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+  */
+opaque type CXChoice = CUnsignedInt
+object CXChoice extends CEnumU[CXChoice]:
+  given _tag: Tag[CXChoice] = Tag.UInt
+  inline def define(inline a: Long): CXChoice = a.toUInt
+  val CXChoice_Default = define(0)
+  val CXChoice_Enabled = define(1)
+  val CXChoice_Disabled = define(2)
+  inline def getName(inline value: CXChoice): Option[String] =
+    inline value match
+      case CXChoice_Default  => Some("CXChoice_Default")
+      case CXChoice_Enabled  => Some("CXChoice_Enabled")
+      case CXChoice_Disabled => Some("CXChoice_Disabled")
+      case _                 => None
+  extension (a: CXChoice)
+    inline def &(b: CXChoice): CXChoice = a & b
+    inline def |(b: CXChoice): CXChoice = a | b
+    inline def is(b: CXChoice): Boolean = (a & b) == b
+end CXChoice
+
 /** Flags that can be passed to clang_codeCompleteAt() to modify its behavior.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXCodeComplete_Flags = CUnsignedInt
 object CXCodeComplete_Flags extends CEnumU[CXCodeComplete_Flags]:
@@ -161,7 +268,7 @@ end CXCodeComplete_Flags
 
 /** Describes a single piece of text within a code-completion string.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXCompletionChunkKind = CUnsignedInt
 object CXCompletionChunkKind extends CEnumU[CXCompletionChunkKind]:
@@ -227,7 +334,7 @@ end CXCompletionChunkKind
 
 /** Bits that represent the context under which completion is occurring.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXCompletionContext = CUnsignedInt
 object CXCompletionContext extends CEnumU[CXCompletionContext]:
@@ -313,7 +420,7 @@ end CXCompletionContext
 
 /** Describes the kind of entity that a cursor refers to.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXCursorKind = CUnsignedInt
 object CXCursorKind extends CEnumU[CXCursorKind]:
@@ -433,7 +540,10 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
   val CXCursor_OMPArrayShapingExpr = define(150)
   val CXCursor_OMPIteratorExpr = define(151)
   val CXCursor_CXXAddrspaceCastExpr = define(152)
-  val CXCursor_LastExpr = define(152)
+  val CXCursor_ConceptSpecializationExpr = define(153)
+  val CXCursor_RequiresExpr = define(154)
+  val CXCursor_CXXParenListInitExpr = define(155)
+  val CXCursor_LastExpr = define(155)
   val CXCursor_FirstStmt = define(200)
   val CXCursor_UnexposedStmt = define(200)
   val CXCursor_LabelStmt = define(201)
@@ -532,8 +642,18 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
   val CXCursor_OMPUnrollDirective = define(293)
   val CXCursor_OMPMetaDirective = define(294)
   val CXCursor_OMPGenericLoopDirective = define(295)
-  val CXCursor_LastStmt = define(295)
-  val CXCursor_TranslationUnit = define(300)
+  val CXCursor_OMPTeamsGenericLoopDirective = define(296)
+  val CXCursor_OMPTargetTeamsGenericLoopDirective = define(297)
+  val CXCursor_OMPParallelGenericLoopDirective = define(298)
+  val CXCursor_OMPTargetParallelGenericLoopDirective = define(299)
+  val CXCursor_OMPParallelMaskedDirective = define(300)
+  val CXCursor_OMPMaskedTaskLoopDirective = define(301)
+  val CXCursor_OMPMaskedTaskLoopSimdDirective = define(302)
+  val CXCursor_OMPParallelMaskedTaskLoopDirective = define(303)
+  val CXCursor_OMPParallelMaskedTaskLoopSimdDirective = define(304)
+  val CXCursor_OMPErrorDirective = define(305)
+  val CXCursor_LastStmt = define(305)
+  val CXCursor_TranslationUnit = define(350)
   val CXCursor_FirstAttr = define(400)
   val CXCursor_UnexposedAttr = define(400)
   val CXCursor_IBActionAttr = define(401)
@@ -589,8 +709,9 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
   val CXCursor_TypeAliasTemplateDecl = define(601)
   val CXCursor_StaticAssert = define(602)
   val CXCursor_FriendDecl = define(603)
+  val CXCursor_ConceptDecl = define(604)
   val CXCursor_FirstExtraDecl = define(600)
-  val CXCursor_LastExtraDecl = define(603)
+  val CXCursor_LastExtraDecl = define(604)
   val CXCursor_OverloadCandidate = define(700)
   inline def getName(inline value: CXCursorKind): Option[String] =
     inline value match
@@ -722,6 +843,11 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
       case CXCursor_OMPIteratorExpr     => Some("CXCursor_OMPIteratorExpr")
       case CXCursor_CXXAddrspaceCastExpr =>
         Some("CXCursor_CXXAddrspaceCastExpr")
+      case CXCursor_ConceptSpecializationExpr =>
+        Some("CXCursor_ConceptSpecializationExpr")
+      case CXCursor_RequiresExpr => Some("CXCursor_RequiresExpr")
+      case CXCursor_CXXParenListInitExpr =>
+        Some("CXCursor_CXXParenListInitExpr")
       case CXCursor_LastExpr          => Some("CXCursor_LastExpr")
       case CXCursor_FirstStmt         => Some("CXCursor_FirstStmt")
       case CXCursor_UnexposedStmt     => Some("CXCursor_UnexposedStmt")
@@ -864,12 +990,31 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
       case CXCursor_OMPMetaDirective   => Some("CXCursor_OMPMetaDirective")
       case CXCursor_OMPGenericLoopDirective =>
         Some("CXCursor_OMPGenericLoopDirective")
-      case CXCursor_LastStmt        => Some("CXCursor_LastStmt")
-      case CXCursor_TranslationUnit => Some("CXCursor_TranslationUnit")
-      case CXCursor_FirstAttr       => Some("CXCursor_FirstAttr")
-      case CXCursor_UnexposedAttr   => Some("CXCursor_UnexposedAttr")
-      case CXCursor_IBActionAttr    => Some("CXCursor_IBActionAttr")
-      case CXCursor_IBOutletAttr    => Some("CXCursor_IBOutletAttr")
+      case CXCursor_OMPTeamsGenericLoopDirective =>
+        Some("CXCursor_OMPTeamsGenericLoopDirective")
+      case CXCursor_OMPTargetTeamsGenericLoopDirective =>
+        Some("CXCursor_OMPTargetTeamsGenericLoopDirective")
+      case CXCursor_OMPParallelGenericLoopDirective =>
+        Some("CXCursor_OMPParallelGenericLoopDirective")
+      case CXCursor_OMPTargetParallelGenericLoopDirective =>
+        Some("CXCursor_OMPTargetParallelGenericLoopDirective")
+      case CXCursor_OMPParallelMaskedDirective =>
+        Some("CXCursor_OMPParallelMaskedDirective")
+      case CXCursor_OMPMaskedTaskLoopDirective =>
+        Some("CXCursor_OMPMaskedTaskLoopDirective")
+      case CXCursor_OMPMaskedTaskLoopSimdDirective =>
+        Some("CXCursor_OMPMaskedTaskLoopSimdDirective")
+      case CXCursor_OMPParallelMaskedTaskLoopDirective =>
+        Some("CXCursor_OMPParallelMaskedTaskLoopDirective")
+      case CXCursor_OMPParallelMaskedTaskLoopSimdDirective =>
+        Some("CXCursor_OMPParallelMaskedTaskLoopSimdDirective")
+      case CXCursor_OMPErrorDirective => Some("CXCursor_OMPErrorDirective")
+      case CXCursor_LastStmt          => Some("CXCursor_LastStmt")
+      case CXCursor_TranslationUnit   => Some("CXCursor_TranslationUnit")
+      case CXCursor_FirstAttr         => Some("CXCursor_FirstAttr")
+      case CXCursor_UnexposedAttr     => Some("CXCursor_UnexposedAttr")
+      case CXCursor_IBActionAttr      => Some("CXCursor_IBActionAttr")
+      case CXCursor_IBOutletAttr      => Some("CXCursor_IBOutletAttr")
       case CXCursor_IBOutletCollectionAttr =>
         Some("CXCursor_IBOutletCollectionAttr")
       case CXCursor_CXXFinalAttr      => Some("CXCursor_CXXFinalAttr")
@@ -932,6 +1077,7 @@ object CXCursorKind extends CEnumU[CXCursorKind]:
         Some("CXCursor_TypeAliasTemplateDecl")
       case CXCursor_StaticAssert      => Some("CXCursor_StaticAssert")
       case CXCursor_FriendDecl        => Some("CXCursor_FriendDecl")
+      case CXCursor_ConceptDecl       => Some("CXCursor_ConceptDecl")
       case CXCursor_FirstExtraDecl    => Some("CXCursor_FirstExtraDecl")
       case CXCursor_LastExtraDecl     => Some("CXCursor_LastExtraDecl")
       case CXCursor_OverloadCandidate => Some("CXCursor_OverloadCandidate")
@@ -944,7 +1090,7 @@ end CXCursorKind
 
 /** Describes the exception specification of a cursor.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXCursor_ExceptionSpecificationKind = CUnsignedInt
 object CXCursor_ExceptionSpecificationKind
@@ -1000,7 +1146,7 @@ end CXCursor_ExceptionSpecificationKind
 
 /** Options to control the display of diagnostics.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
   */
 opaque type CXDiagnosticDisplayOptions = CUnsignedInt
 object CXDiagnosticDisplayOptions extends CEnumU[CXDiagnosticDisplayOptions]:
@@ -1035,7 +1181,7 @@ end CXDiagnosticDisplayOptions
 
 /** Describes the severity of a particular diagnostic.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
   */
 opaque type CXDiagnosticSeverity = CUnsignedInt
 object CXDiagnosticSeverity extends CEnumU[CXDiagnosticSeverity]:
@@ -1062,7 +1208,7 @@ end CXDiagnosticSeverity
 
 /** Error codes returned by libclang routines.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/CXErrorCode.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXErrorCode.h
   */
 opaque type CXErrorCode = CUnsignedInt
 object CXErrorCode extends CEnumU[CXErrorCode]:
@@ -1087,7 +1233,7 @@ object CXErrorCode extends CEnumU[CXErrorCode]:
     inline def is(b: CXErrorCode): Boolean = (a & b) == b
 end CXErrorCode
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXEvalResultKind = CUnsignedInt
 object CXEvalResultKind extends CEnumU[CXEvalResultKind]:
@@ -1116,7 +1262,7 @@ object CXEvalResultKind extends CEnumU[CXEvalResultKind]:
     inline def is(b: CXEvalResultKind): Boolean = (a & b) == b
 end CXEvalResultKind
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXGlobalOptFlags = CUnsignedInt
 object CXGlobalOptFlags extends CEnumU[CXGlobalOptFlags]:
@@ -1142,7 +1288,7 @@ object CXGlobalOptFlags extends CEnumU[CXGlobalOptFlags]:
     inline def is(b: CXGlobalOptFlags): Boolean = (a & b) == b
 end CXGlobalOptFlags
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXIdxAttrKind = CUnsignedInt
 object CXIdxAttrKind extends CEnumU[CXIdxAttrKind]:
@@ -1165,7 +1311,7 @@ object CXIdxAttrKind extends CEnumU[CXIdxAttrKind]:
     inline def is(b: CXIdxAttrKind): Boolean = (a & b) == b
 end CXIdxAttrKind
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXIdxDeclInfoFlags = CUnsignedInt
 object CXIdxDeclInfoFlags extends CEnumU[CXIdxDeclInfoFlags]:
@@ -1187,7 +1333,7 @@ end CXIdxDeclInfoFlags
   * CXIdxEntity_CXXInstanceMethod CXIdxEntity_CXXConstructor
   * CXIdxEntity_CXXConversionFunction CXIdxEntity_CXXTypeAlias
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXIdxEntityCXXTemplateKind = CUnsignedInt
 object CXIdxEntityCXXTemplateKind extends CEnumU[CXIdxEntityCXXTemplateKind]:
@@ -1214,7 +1360,7 @@ object CXIdxEntityCXXTemplateKind extends CEnumU[CXIdxEntityCXXTemplateKind]:
     inline def is(b: CXIdxEntityCXXTemplateKind): Boolean = (a & b) == b
 end CXIdxEntityCXXTemplateKind
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXIdxEntityKind = CUnsignedInt
 object CXIdxEntityKind extends CEnumU[CXIdxEntityKind]:
@@ -1247,6 +1393,7 @@ object CXIdxEntityKind extends CEnumU[CXIdxEntityKind]:
   val CXIdxEntity_CXXConversionFunction = define(24)
   val CXIdxEntity_CXXTypeAlias = define(25)
   val CXIdxEntity_CXXInterface = define(26)
+  val CXIdxEntity_CXXConcept = define(27)
   inline def getName(inline value: CXIdxEntityKind): Option[String] =
     inline value match
       case CXIdxEntity_Unexposed    => Some("CXIdxEntity_Unexposed")
@@ -1281,6 +1428,7 @@ object CXIdxEntityKind extends CEnumU[CXIdxEntityKind]:
         Some("CXIdxEntity_CXXConversionFunction")
       case CXIdxEntity_CXXTypeAlias => Some("CXIdxEntity_CXXTypeAlias")
       case CXIdxEntity_CXXInterface => Some("CXIdxEntity_CXXInterface")
+      case CXIdxEntity_CXXConcept   => Some("CXIdxEntity_CXXConcept")
       case _                        => None
   extension (a: CXIdxEntityKind)
     inline def &(b: CXIdxEntityKind): CXIdxEntityKind = a & b
@@ -1288,7 +1436,7 @@ object CXIdxEntityKind extends CEnumU[CXIdxEntityKind]:
     inline def is(b: CXIdxEntityKind): Boolean = (a & b) == b
 end CXIdxEntityKind
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXIdxEntityLanguage = CUnsignedInt
 object CXIdxEntityLanguage extends CEnumU[CXIdxEntityLanguage]:
@@ -1315,7 +1463,7 @@ end CXIdxEntityLanguage
 
 /** Data for IndexerCallbacks#indexEntityReference.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXIdxEntityRefKind = CUnsignedInt
 object CXIdxEntityRefKind extends CEnumU[CXIdxEntityRefKind]:
@@ -1334,7 +1482,7 @@ object CXIdxEntityRefKind extends CEnumU[CXIdxEntityRefKind]:
     inline def is(b: CXIdxEntityRefKind): Boolean = (a & b) == b
 end CXIdxEntityRefKind
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXIdxObjCContainerKind = CUnsignedInt
 object CXIdxObjCContainerKind extends CEnumU[CXIdxObjCContainerKind]:
@@ -1357,7 +1505,7 @@ object CXIdxObjCContainerKind extends CEnumU[CXIdxObjCContainerKind]:
     inline def is(b: CXIdxObjCContainerKind): Boolean = (a & b) == b
 end CXIdxObjCContainerKind
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXIndexOptFlags = CUnsignedInt
 object CXIndexOptFlags extends CEnumU[CXIndexOptFlags]:
@@ -1390,7 +1538,7 @@ end CXIndexOptFlags
 
 /** Describe the "language" of the entity referred to by a cursor.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXLanguageKind = CUnsignedInt
 object CXLanguageKind extends CEnumU[CXLanguageKind]:
@@ -1415,7 +1563,7 @@ end CXLanguageKind
 
 /** Describe the linkage of the entity referred to by a cursor.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXLinkageKind = CUnsignedInt
 object CXLinkageKind extends CEnumU[CXLinkageKind]:
@@ -1443,7 +1591,7 @@ end CXLinkageKind
 /** Describes the kind of error that occurred (if any) in a call to
   * clang_loadDiagnostics.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
   */
 opaque type CXLoadDiag_Error = CUnsignedInt
 object CXLoadDiag_Error extends CEnumU[CXLoadDiag_Error]:
@@ -1466,7 +1614,7 @@ object CXLoadDiag_Error extends CEnumU[CXLoadDiag_Error]:
     inline def is(b: CXLoadDiag_Error): Boolean = (a & b) == b
 end CXLoadDiag_Error
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXNameRefFlags = CUnsignedInt
 object CXNameRefFlags extends CEnumU[CXNameRefFlags]:
@@ -1490,7 +1638,7 @@ end CXNameRefFlags
 /** 'Qualifiers' written next to the return and parameter types in Objective-C
   * method declarations.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXObjCDeclQualifierKind = CUnsignedInt
 object CXObjCDeclQualifierKind extends CEnumU[CXObjCDeclQualifierKind]:
@@ -1521,7 +1669,7 @@ end CXObjCDeclQualifierKind
 
 /** Property attributes for a CXCursor_ObjCPropertyDecl.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXObjCPropertyAttrKind = CUnsignedInt
 object CXObjCPropertyAttrKind extends CEnumU[CXObjCPropertyAttrKind]:
@@ -1567,7 +1715,7 @@ end CXObjCPropertyAttrKind
 
 /** Properties for the printing policy.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXPrintingPolicyProperty = CUnsignedInt
 object CXPrintingPolicyProperty extends CEnumU[CXPrintingPolicyProperty]:
@@ -1656,7 +1804,7 @@ object CXPrintingPolicyProperty extends CEnumU[CXPrintingPolicyProperty]:
     inline def is(b: CXPrintingPolicyProperty): Boolean = (a & b) == b
 end CXPrintingPolicyProperty
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXRefQualifierKind = CUnsignedInt
 object CXRefQualifierKind extends CEnumU[CXRefQualifierKind]:
@@ -1679,7 +1827,7 @@ end CXRefQualifierKind
 
 /** Flags that control the reparsing of translation units.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXReparse_Flags = CUnsignedInt
 object CXReparse_Flags extends CEnumU[CXReparse_Flags]:
@@ -1696,7 +1844,7 @@ object CXReparse_Flags extends CEnumU[CXReparse_Flags]:
     inline def is(b: CXReparse_Flags): Boolean = (a & b) == b
 end CXReparse_Flags
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXResult = CUnsignedInt
 object CXResult extends CEnumU[CXResult]:
@@ -1720,7 +1868,7 @@ end CXResult
 /** Describes the kind of error that occurred (if any) in a call to
   * clang_saveTranslationUnit().
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXSaveError = CUnsignedInt
 object CXSaveError extends CEnumU[CXSaveError]:
@@ -1746,7 +1894,7 @@ end CXSaveError
 
 /** Flags that control how translation units are saved.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXSaveTranslationUnit_Flags = CUnsignedInt
 object CXSaveTranslationUnit_Flags extends CEnumU[CXSaveTranslationUnit_Flags]:
@@ -1769,7 +1917,7 @@ end CXSaveTranslationUnit_Flags
 
 /** Roles that are attributed to symbol occurrences.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXSymbolRole = CUnsignedInt
 object CXSymbolRole extends CEnumU[CXSymbolRole]:
@@ -1807,7 +1955,7 @@ end CXSymbolRole
 /** Describe the "thread-local storage (TLS) kind" of the declaration referred
   * to by a cursor.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXTLSKind = CUnsignedInt
 object CXTLSKind extends CEnumU[CXTLSKind]:
@@ -1830,7 +1978,7 @@ end CXTLSKind
 
 /** Categorizes how memory is being used by a translation unit.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXTUResourceUsageKind = CUnsignedInt
 object CXTUResourceUsageKind extends CEnumU[CXTUResourceUsageKind]:
@@ -1897,7 +2045,7 @@ end CXTUResourceUsageKind
 
 /** Describes the kind of a template argument.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXTemplateArgumentKind = CUnsignedInt
 object CXTemplateArgumentKind extends CEnumU[CXTemplateArgumentKind]:
@@ -1941,7 +2089,7 @@ end CXTemplateArgumentKind
 
 /** Describes a kind of token.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXTokenKind = CUnsignedInt
 object CXTokenKind extends CEnumU[CXTokenKind]:
@@ -1968,7 +2116,7 @@ end CXTokenKind
 
 /** Flags that control the creation of translation units.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXTranslationUnit_Flags = CUnsignedInt
 object CXTranslationUnit_Flags extends CEnumU[CXTranslationUnit_Flags]:
@@ -2033,7 +2181,7 @@ end CXTranslationUnit_Flags
 
 /** Describes the kind of type
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXTypeKind = CUnsignedInt
 object CXTypeKind extends CEnumU[CXTypeKind]:
@@ -2154,12 +2302,17 @@ object CXTypeKind extends CEnumU[CXTypeKind]:
   val CXType_OCLIntelSubgroupAVCImeResult = define(169)
   val CXType_OCLIntelSubgroupAVCRefResult = define(170)
   val CXType_OCLIntelSubgroupAVCSicResult = define(171)
+  val CXType_OCLIntelSubgroupAVCImeResultSingleReferenceStreamout = define(172)
+  val CXType_OCLIntelSubgroupAVCImeResultDualReferenceStreamout = define(173)
+  val CXType_OCLIntelSubgroupAVCImeSingleReferenceStreamin = define(174)
+  val CXType_OCLIntelSubgroupAVCImeDualReferenceStreamin = define(175)
   val CXType_OCLIntelSubgroupAVCImeResultSingleRefStreamout = define(172)
   val CXType_OCLIntelSubgroupAVCImeResultDualRefStreamout = define(173)
   val CXType_OCLIntelSubgroupAVCImeSingleRefStreamin = define(174)
   val CXType_OCLIntelSubgroupAVCImeDualRefStreamin = define(175)
   val CXType_ExtVector = define(176)
   val CXType_Atomic = define(177)
+  val CXType_BTFTagAttributed = define(178)
   inline def getName(inline value: CXTypeKind): Option[String] =
     inline value match
       case CXType_Invalid             => Some("CXType_Invalid")
@@ -2291,6 +2444,14 @@ object CXTypeKind extends CEnumU[CXTypeKind]:
         Some("CXType_OCLIntelSubgroupAVCRefResult")
       case CXType_OCLIntelSubgroupAVCSicResult =>
         Some("CXType_OCLIntelSubgroupAVCSicResult")
+      case CXType_OCLIntelSubgroupAVCImeResultSingleReferenceStreamout =>
+        Some("CXType_OCLIntelSubgroupAVCImeResultSingleReferenceStreamout")
+      case CXType_OCLIntelSubgroupAVCImeResultDualReferenceStreamout =>
+        Some("CXType_OCLIntelSubgroupAVCImeResultDualReferenceStreamout")
+      case CXType_OCLIntelSubgroupAVCImeSingleReferenceStreamin =>
+        Some("CXType_OCLIntelSubgroupAVCImeSingleReferenceStreamin")
+      case CXType_OCLIntelSubgroupAVCImeDualReferenceStreamin =>
+        Some("CXType_OCLIntelSubgroupAVCImeDualReferenceStreamin")
       case CXType_OCLIntelSubgroupAVCImeResultSingleRefStreamout =>
         Some("CXType_OCLIntelSubgroupAVCImeResultSingleRefStreamout")
       case CXType_OCLIntelSubgroupAVCImeResultDualRefStreamout =>
@@ -2299,9 +2460,10 @@ object CXTypeKind extends CEnumU[CXTypeKind]:
         Some("CXType_OCLIntelSubgroupAVCImeSingleRefStreamin")
       case CXType_OCLIntelSubgroupAVCImeDualRefStreamin =>
         Some("CXType_OCLIntelSubgroupAVCImeDualRefStreamin")
-      case CXType_ExtVector => Some("CXType_ExtVector")
-      case CXType_Atomic    => Some("CXType_Atomic")
-      case _                => None
+      case CXType_ExtVector        => Some("CXType_ExtVector")
+      case CXType_Atomic           => Some("CXType_Atomic")
+      case CXType_BTFTagAttributed => Some("CXType_BTFTagAttributed")
+      case _                       => None
   extension (a: CXTypeKind)
     inline def &(b: CXTypeKind): CXTypeKind = a & b
     inline def |(b: CXTypeKind): CXTypeKind = a | b
@@ -2311,7 +2473,7 @@ end CXTypeKind
 /** List the possible error codes for clang_Type_getSizeOf,
   * clang_Type_getAlignOf, clang_Type_getOffsetOf and clang_Cursor_getOffsetOf.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXTypeLayoutError = CInt
 object CXTypeLayoutError extends CEnum[CXTypeLayoutError]:
@@ -2340,7 +2502,7 @@ object CXTypeLayoutError extends CEnum[CXTypeLayoutError]:
     inline def is(b: CXTypeLayoutError): Boolean = (a & b) == b
 end CXTypeLayoutError
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXTypeNullabilityKind = CUnsignedInt
 object CXTypeNullabilityKind extends CEnumU[CXTypeNullabilityKind]:
@@ -2367,7 +2529,54 @@ object CXTypeNullabilityKind extends CEnumU[CXTypeNullabilityKind]:
     inline def is(b: CXTypeNullabilityKind): Boolean = (a & b) == b
 end CXTypeNullabilityKind
 
-/** [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+/** Describes the kind of unary operators.
+  *
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+  */
+opaque type CXUnaryOperatorKind = CUnsignedInt
+object CXUnaryOperatorKind extends CEnumU[CXUnaryOperatorKind]:
+  given _tag: Tag[CXUnaryOperatorKind] = Tag.UInt
+  inline def define(inline a: Long): CXUnaryOperatorKind = a.toUInt
+  val CXUnaryOperator_Invalid = define(0)
+  val CXUnaryOperator_PostInc = define(1)
+  val CXUnaryOperator_PostDec = define(2)
+  val CXUnaryOperator_PreInc = define(3)
+  val CXUnaryOperator_PreDec = define(4)
+  val CXUnaryOperator_AddrOf = define(5)
+  val CXUnaryOperator_Deref = define(6)
+  val CXUnaryOperator_Plus = define(7)
+  val CXUnaryOperator_Minus = define(8)
+  val CXUnaryOperator_Not = define(9)
+  val CXUnaryOperator_LNot = define(10)
+  val CXUnaryOperator_Real = define(11)
+  val CXUnaryOperator_Imag = define(12)
+  val CXUnaryOperator_Extension = define(13)
+  val CXUnaryOperator_Coawait = define(14)
+  inline def getName(inline value: CXUnaryOperatorKind): Option[String] =
+    inline value match
+      case CXUnaryOperator_Invalid   => Some("CXUnaryOperator_Invalid")
+      case CXUnaryOperator_PostInc   => Some("CXUnaryOperator_PostInc")
+      case CXUnaryOperator_PostDec   => Some("CXUnaryOperator_PostDec")
+      case CXUnaryOperator_PreInc    => Some("CXUnaryOperator_PreInc")
+      case CXUnaryOperator_PreDec    => Some("CXUnaryOperator_PreDec")
+      case CXUnaryOperator_AddrOf    => Some("CXUnaryOperator_AddrOf")
+      case CXUnaryOperator_Deref     => Some("CXUnaryOperator_Deref")
+      case CXUnaryOperator_Plus      => Some("CXUnaryOperator_Plus")
+      case CXUnaryOperator_Minus     => Some("CXUnaryOperator_Minus")
+      case CXUnaryOperator_Not       => Some("CXUnaryOperator_Not")
+      case CXUnaryOperator_LNot      => Some("CXUnaryOperator_LNot")
+      case CXUnaryOperator_Real      => Some("CXUnaryOperator_Real")
+      case CXUnaryOperator_Imag      => Some("CXUnaryOperator_Imag")
+      case CXUnaryOperator_Extension => Some("CXUnaryOperator_Extension")
+      case CXUnaryOperator_Coawait   => Some("CXUnaryOperator_Coawait")
+      case _                         => None
+  extension (a: CXUnaryOperatorKind)
+    inline def &(b: CXUnaryOperatorKind): CXUnaryOperatorKind = a & b
+    inline def |(b: CXUnaryOperatorKind): CXUnaryOperatorKind = a | b
+    inline def is(b: CXUnaryOperatorKind): Boolean = (a & b) == b
+end CXUnaryOperatorKind
+
+/** [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXVisibilityKind = CUnsignedInt
 object CXVisibilityKind extends CEnumU[CXVisibilityKind]:
@@ -2392,7 +2601,7 @@ end CXVisibilityKind
 
 /** @{
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CXVisitorResult = CUnsignedInt
 object CXVisitorResult extends CEnumU[CXVisitorResult]:
@@ -2414,7 +2623,7 @@ end CXVisitorResult
 /** Represents the C++ access control level to a base class for a cursor with
   * kind CX_CXXBaseSpecifier.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CX_CXXAccessSpecifier = CUnsignedInt
 object CX_CXXAccessSpecifier extends CEnumU[CX_CXXAccessSpecifier]:
@@ -2440,7 +2649,7 @@ end CX_CXXAccessSpecifier
 /** Represents the storage classes as declared in the source. CX_SC_Invalid was
   * added for the case that the passed cursor in not a declaration.
   *
-  * [bindgen] header: /usr/lib/llvm-14/include/clang-c/Index.h
+  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
   */
 opaque type CX_StorageClass = CUnsignedInt
 object CX_StorageClass extends CEnumU[CX_StorageClass]:

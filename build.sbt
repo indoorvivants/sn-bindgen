@@ -247,6 +247,7 @@ lazy val libclang = project
       scalaDir = ((Compile / sourceDirectory).value / "scala" / "generated"),
       cDir = (Compile / resourceDirectory).value / "scala-native" / "generated"
     ),
+    bindgenBinary := (LocalProject("bindgen") / Compile / nativeLink).value,
     bindgenBindings := {
       val detected =
         llvmFolder(nativeConfig.value.clang.toAbsolutePath()).llvmInclude
@@ -255,12 +256,10 @@ lazy val libclang = project
         case head :: tl =>
           val include = new File(head)
           Seq(
-            Binding
-              .builder(include / "clang-c" / "Index.h", "libclang")
+            Binding(include / "clang-c" / "Index.h", "libclang")
               .withClangFlags(List(s"-I$head"))
               .addCImport("clang-c/Index.h")
               .withMultiFile(true)
-              .build
           )
         case immutable.Nil =>
           sLog.value.error(
@@ -637,17 +636,17 @@ def collectBindings(headersPath: File) = {
     val multiFileFlag = "--multi-file"
     val isMultiFile = contents.contains(multiFileFlag)
 
-    Binding
-      .builder(header, pkg.getOrElse(s"lib_test_$name"))
+    Binding(header, pkg.getOrElse(s"lib_test_$name"))
       .addCImport(s"$name.h")
       .withBindgenArguments(contents.filterNot(_ == multiFileFlag))
       .withMultiFile(isMultiFile)
-      .build
   }
 }
 
 def llvmFolder(clangPath: java.nio.file.Path): LLVMInfo = {
   import Platform.OS.*
+
+  val LLVM_MAJOR_VERSION = "17"
 
   Platform.os match {
     case MacOS =>
@@ -662,9 +661,9 @@ def llvmFolder(clangPath: java.nio.file.Path): LLVMInfo = {
       val speculative =
         if (detected.isEmpty)
           List(
-            Paths.get("/usr/local/opt/llvm@14"),
+            Paths.get(s"/usr/local/opt/llvm@$LLVM_MAJOR_VERSION"),
             Paths.get("/usr/local/opt/llvm"),
-            Paths.get("/opt/homebrew/opt/llvm@14"),
+            Paths.get(s"/opt/homebrew/opt/llvm@$LLVM_MAJOR_VERSION"),
             Paths.get("/opt/homebrew/opt/llvm")
           )
         else Nil
