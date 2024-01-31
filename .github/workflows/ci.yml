@@ -35,8 +35,8 @@ jobs:
 
       - name: Install SBT 
         run: |
-          curl -Lo /usr/local/bin/sbt https://raw.githubusercontent.com/sbt/sbt/1.9.x/sbt && \
-          chmod +x /usr/local/bin/sbt
+          curl -Lo sbt https://raw.githubusercontent.com/sbt/sbt/1.9.x/sbt && \
+          chmod +x sbt
 
       - name: Install LLVM
         run: brew install llvm@$LLVM_VERSION
@@ -51,7 +51,7 @@ jobs:
           echo "LLVM_BIN=/usr/local/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
 
       - name: CI and build the binary
-        run: sbt ci buildPlatformBinary
+        run: ./sbt ci buildPlatformBinary
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
