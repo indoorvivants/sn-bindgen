@@ -1,16 +1,12 @@
 package bindgen
 
-import libclang.functions.*
-import libclang.enumerations.*
-import libclang.fluent.*
-
 import scala.collection.mutable
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 import scala.util.control.NoStackTrace
 
 import scalanative.libc.*
-import libclang.structs.CXType
+import libclang.*, fluent.*
 
 def constructType(typ: CXType)(using
     Zone,
@@ -35,9 +31,10 @@ def constructType(typ: CXType)(using
     case CXType_Record =>
       val decl = clang_getTypeDeclaration(typ)
       val name = clang_getCursorSpelling(decl).string
+      val isAnonymous = clang_Cursor_isAnonymous(decl).toInt != 0
 
       CType.Reference(
-        if name.isEmpty then Name.Unnamed
+        if name.isEmpty || isAnonymous then Name.Unnamed
         else Name.Model(name, extractMetadata(decl))
       )
 

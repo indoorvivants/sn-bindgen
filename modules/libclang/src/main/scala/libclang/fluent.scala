@@ -4,12 +4,6 @@ package fluent
 import scala.scalanative.unsafe.*
 import scala.annotation.targetName
 import scala.scalanative.unsigned.*
-import enumerations.*
-import structs.*
-import functions.*
-import libclang.aliases.CXClientData
-import libclang.aliases.CXCursorVisitor
-
 extension (cxs: CXString)
   def string(using Zone): String =
     val orig = clang_getCString(cxs)

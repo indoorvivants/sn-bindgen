@@ -1,7 +1,6 @@
 package bindgen
 
-import libclang.all.*
-import libclang.fluent.*
+import libclang.*, fluent.*
 import scalanative.unsafe.*
 import scalanative.unsigned.*
 import scala.util.boundary, boundary.break, boundary.Label
@@ -43,7 +42,7 @@ object ClangTranslationUnit:
       allClangFlags.size,
       null,
       0.toUInt,
-      CXTranslationUnit_Flags.CXTranslationUnit_None
+      CXTranslationUnit_Flags.CXTranslationUnit_None.uint
     )
 
     boundary:

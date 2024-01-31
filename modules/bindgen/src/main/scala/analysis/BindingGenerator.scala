@@ -1,7 +1,6 @@
 package bindgen
 
-import libclang.all.*
-import libclang.fluent.*
+import libclang.*, fluent.*
 import scalanative.unsafe.*
 import scala.util.boundary, boundary.break, boundary.Label
 

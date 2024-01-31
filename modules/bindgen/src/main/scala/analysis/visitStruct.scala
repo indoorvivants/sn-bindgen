@@ -1,10 +1,6 @@
 package bindgen
 
-import _root_.libclang.structs.*
-import _root_.libclang.enumerations.*
-import _root_.libclang.aliases.*
-import _root_.libclang.functions.*
-import _root_.libclang.fluent.*
+import libclang.*, fluent.*
 
 import scala.collection.mutable.ListBuffer
 import scala.scalanative.unsafe.*
