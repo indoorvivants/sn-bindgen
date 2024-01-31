@@ -225,9 +225,6 @@ jobs:
       - name: List downloaded binaries
         run: ls -R binaries
 
-      - name: Setup Unix-like
-        run: ./build/setup_unix.sh
-
       - name: Check published artifacts
         run: |
           set -e
@@ -243,9 +240,6 @@ jobs:
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-aarch64 --artifact-type jar
           ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier windows-x86_64 --artifact-type jar
-
-      - name: Setup Unix-like
-        run: ./build/setup_unix.sh
 
       - name: Publish
         if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
