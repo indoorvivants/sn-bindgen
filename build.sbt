@@ -746,6 +746,10 @@ usefulTasks := Seq(
     "Build the website"
   ).alias("bw"),
   UsefulTask(
+    "buildWebsiteQuick",
+    "Build the website (quick, no mdoc)"
+  ).alias("bwq"),
+  UsefulTask(
     "devPublish",
     "Build and publish everything sn-bindgen needs to your local cache"
   ).alias("dp"),
@@ -789,9 +793,9 @@ buildWebsite := Def.taskDyn {
   )
 }.value
 
-lazy val buildWebsiteNoMdoc =
-  taskKey[Unit]("Build website in _site folder without running Mdoc")
-buildWebsiteNoMdoc := Def.taskDyn {
+lazy val buildWebsiteQuick =
+  taskKey[Unit]("Build website in _site folder (without Mdoc)")
+buildWebsiteQuick := Def.taskDyn {
   val root = (ThisBuild / baseDirectory).value / "_site"
 
   (docs / Compile / run).toTask(

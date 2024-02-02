@@ -52,7 +52,7 @@ object BindgenPlugin extends AutoPlugin {
   }
 
   override def requires: Plugins = ScalaNativePlugin
-  import ScalaNativePlugin.autoImport.nativeClang
+  import ScalaNativePlugin.autoImport.nativeConfig
 
   import autoImport.*
 
@@ -172,7 +172,7 @@ object BindgenPlugin extends AutoPlugin {
       bindgenVersion := BuildInfo.version,
       bindgenBindings := Seq.empty,
       bindgenMode := BindgenMode.ResourceGenerator,
-      bindgenClangPath := nativeClang.value.toPath,
+      bindgenClangPath := nativeConfig.value.clang,
       bindgenBinary := resolveBinaryTask.value.get
     ) ++
       Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
