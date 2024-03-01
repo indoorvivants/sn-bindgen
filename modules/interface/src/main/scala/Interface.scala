@@ -12,6 +12,12 @@ object BindingLang {
   case object C extends BindingLang
 }
 
+sealed abstract class Flavour(val tag: String) extends Product with Serializable
+object Flavour {
+  case object ScalaNative04 extends Flavour("scala-native04")
+  case object ScalaNative05 extends Flavour("scala-native05")
+}
+
 sealed abstract class LogLevel(val str: String)
     extends Product
     with Serializable

@@ -23,6 +23,9 @@ object BindgenMode {
 }
 
 object BindgenPlugin extends AutoPlugin {
+  import ScalaNativePlugin.autoImport.nativeConfig
+  import ScalaNativePlugin.autoImport.nativeVersion
+
   object autoImport {
     val bindgenVersion = settingKey[String](
       s"Version of bindgen to download. Default: ${BuildInfo.version} (matches the plugin version)"
@@ -49,10 +52,16 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenMode = settingKey[BindgenMode](
       s"Source generation mode. Default: ${BindgenMode.ResourceGenerator}"
     )
+
+    val bindgenFlavour = settingKey[Flavour](
+      s"Bindgen flavour. Default: ${getBindgenFlavour(nativeVersion)}"
+    )
   }
 
+  private def getBindgenFlavour(ver: String) =
+    if (ver.startsWith("0.5")) Flavour.ScalaNative05 else Flavour.ScalaNative04
+
   override def requires: Plugins = ScalaNativePlugin
-  import ScalaNativePlugin.autoImport.nativeConfig
 
   import autoImport.*
 
@@ -173,7 +182,8 @@ object BindgenPlugin extends AutoPlugin {
       bindgenBindings := Seq.empty,
       bindgenMode := BindgenMode.ResourceGenerator,
       bindgenClangPath := nativeConfig.value.clang,
-      bindgenBinary := resolveBinaryTask.value.get
+      bindgenBinary := resolveBinaryTask.value.get,
+      bindgenFlavour := getBindgenFlavour(nativeVersion)
     ) ++
       Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
 
@@ -182,7 +192,12 @@ object BindgenPlugin extends AutoPlugin {
       bindgenGenerateScalaSources.value ++ bindgenGenerateCSources.value
     },
     bindgenGenerateScalaSources := {
-      val selected = (addConf / bindgenBindings).value
+      val selected = (addConf / bindgenBindings).value.map { b =>
+        b.flavour match {
+          case None    => b.withFlavour(bindgenFlavour.value)
+          case Some(_) => b
+        }
+      }
 
       val managedDestination = sourceManaged.value
 
@@ -201,7 +216,12 @@ object BindgenPlugin extends AutoPlugin {
       )
     },
     bindgenGenerateCSources := {
-      val selected = (addConf / bindgenBindings).value
+      val selected = (addConf / bindgenBindings).value.map { b =>
+        b.flavour match {
+          case None    => b.withFlavour(bindgenFlavour.value)
+          case Some(_) => b
+        }
+      }
 
       val managedDestination = (resourceManaged).value / "scala-native"
 

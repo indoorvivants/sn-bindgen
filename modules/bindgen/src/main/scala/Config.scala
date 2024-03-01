@@ -10,6 +10,18 @@ enum OutputMode:
   case SingleFile(out: OutputFile)
   case MultiFile(out: OutputDirectory)
 
+enum Flavour(val tag: String):
+  case ScalaNative04 extends Flavour("scala-native04")
+  case ScalaNative05 extends Flavour("scala-native05")
+
+object Flavour:
+  def fromString(raw: String) =
+    if raw == ScalaNative04.tag then Some(ScalaNative04)
+    else if raw == ScalaNative05.tag then Some(ScalaNative05)
+    else None
+
+  val all = values.toList
+
 case class Config(
     linkName: Option[LinkName],
     indentSize: IndentationSize,
@@ -26,7 +38,8 @@ case class Config(
     exportMode: ExportMode,
     outputChannel: OutputChannel,
     tempDir: TempPath,
-    excludeSystemPaths: List[SystemPath]
+    excludeSystemPaths: List[SystemPath],
+    flavour: Flavour
 )
 
 case class Context(
@@ -53,7 +66,8 @@ object Config:
       exportMode = ExportMode.No,
       outputChannel = OutputChannel.cli,
       tempDir = TempPath(sys.props("java.io.tmpdir")),
-      excludeSystemPaths = Nil
+      excludeSystemPaths = Nil,
+      flavour = Flavour.ScalaNative04
     )
   object defaults:
     val indentSize = IndentationSize(3)
