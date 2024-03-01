@@ -43,6 +43,10 @@ def alias(model: Def.Alias, line: Appender)(using
     end if
 
     if enableConstructor then
+      val voidPtr = summon[Config].flavour match
+        case Flavour.ScalaNative04 => "Ptr[Byte]"
+        case Flavour.ScalaNative05 => "CVoidPtr"
+
       line(
         s"inline def apply(inline o: ${scalaType(underlyingType)}): ${model.name} = o"
       )
@@ -50,7 +54,7 @@ def alias(model: Def.Alias, line: Appender)(using
       nest {
         line(s"inline def value: ${scalaType(underlyingType)} = v")
         if isFunctionPointer then
-          line(s"inline def toPtr: Ptr[Byte] = CFuncPtr.toPtr(v)")
+          line(s"inline def toPtr: $voidPtr = CFuncPtr.toPtr(v)")
         end if
       }
     end if

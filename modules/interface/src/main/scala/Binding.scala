@@ -9,6 +9,8 @@ import scala.util.control.NonFatal
 import BindingLang.*
 import Utils.*
 import Binding.Defaults
+import bindgen.interface.Flavour.ScalaNative04
+import bindgen.interface.Flavour.ScalaNative05
 
 class Binding private (
     impl: Binding.BindingArgs
@@ -34,6 +36,7 @@ class Binding private (
   def excludeSystemPaths: List[Path] = impl.excludeSystemPaths
   def scalaFile: String = impl.scalaFile
   def cFile: String = impl.cFile
+  def flavour: Option[Flavour] = impl.flavour
 
   def withLinkName(name: String) = copy(_.copy(linkName = Some(name)))
 
@@ -95,6 +98,9 @@ class Binding private (
   def withExternalNames(externals: Map[String, String]): Binding = copy(
     _.copy(externalNames = externals)
   )
+
+  def withFlavour(flavour: Flavour): Binding =
+    copy(b => b.copy(flavour = Some(flavour)))
 
   def addExternalName(nameFilter: String, packageName: String): Binding =
     copy(b =>
@@ -175,6 +181,10 @@ class Binding private (
 
     excludeSystemPaths.map { case path =>
       arg("exclude-system-path", path.toString())
+    }
+
+    flavour.foreach { flavour =>
+      arg("flavour", flavour.tag)
     }
 
     sb ++= bindgenArguments
@@ -271,6 +281,7 @@ object Binding {
       externalNames: Map[String, String] = Defaults.externalNames,
       bindgenArguments: List[String] = Defaults.bindgenArguments,
       excludeSystemPaths: List[Path] = Defaults.excludeSystemPaths,
+      flavour: Option[Flavour] = None,
       scalaFile: String,
       cFile: String
   )
@@ -292,6 +303,7 @@ object Binding {
     val bindgenArguments = List.empty[String]
     val excludeSystemPaths = List.empty[Path]
     val exportMode = false
+    val flavour = Flavour.ScalaNative04
   }
 
 }

@@ -4,6 +4,7 @@ import com.monovore.decline.Opts
 import java.io.File
 import bindgen.RenderingConfig.NameFilter
 import bindgen.OutputChannel
+import cats.data.Validated
 
 object CLI:
   import com.monovore.decline.*
@@ -90,6 +91,23 @@ object CLI:
   private val lang: Opts[Lang] = (isScala, isC).mapN { case (scala, c) =>
     if scala then Lang.Scala else Lang.C
   }
+
+  private val flavour =
+    val allFlavours = Flavour.all.map(_.tag)
+    Opts
+      .option[String](
+        "flavour",
+        s"Flavour of bindings to generate, all values: ${allFlavours.mkString(", ")}"
+      )
+      .mapValidated: raw =>
+        Flavour.fromString(raw) match
+          case None =>
+            Validated.invalidNel(
+              s"Flavour not recognised, possible values are: [${allFlavours.mkString(", ")}]"
+            )
+          case Some(v) =>
+            Validated.validNel(v)
+  end flavour
 
   private val printFiles =
     Opts
@@ -359,7 +377,8 @@ object CLI:
       exportMode,
       Opts(OutputChannel.cli),
       tempDir,
-      excludeSystemPaths
+      excludeSystemPaths,
+      flavour
     ).mapN(Config.apply)
 
   val command = Command(
