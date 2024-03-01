@@ -107,6 +107,7 @@ object CLI:
             )
           case Some(v) =>
             Validated.validNel(v)
+      .withDefault(Flavour.ScalaNative04)
   end flavour
 
   private val printFiles =
