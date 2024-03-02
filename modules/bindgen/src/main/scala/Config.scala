@@ -49,6 +49,8 @@ case class Context(
 )
 
 object Config:
+  inline def is[A](inline f: Config => A)(using conf: Config) =
+    f(conf)
   def withDefaults() =
     Config(
       linkName = None,
