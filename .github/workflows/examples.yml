@@ -31,7 +31,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     env:
-      SN_RELEASE: fast
       LLVM_VERSION: 17
     steps:
       - uses: actions/checkout@v3
@@ -77,10 +76,11 @@ jobs:
           path: |
             ~/Library/Caches/sbt-vcpkg/vcpkg
             ~/.cache/sbt-vcpkg/vcpkg
-          key: ${{ runner.os }}-sbt-vcpkg
+          key: ${{ runner.os }}-${{ matrix.segment }}-sbt-vcpkg
 
       - name: Run examples (SN 0.4)
         env: 
+          LLVM_BIN: ${{ matrix.llvm_bin_path }}
           TRIGGER_VERSION: ${{inputs.bindgenVersion}}
         run: | 
           DUMPED_VERSION=$(cat version || echo "")
@@ -94,6 +94,7 @@ jobs:
 
       - name: Run examples (SN 0.5)
         env: 
+          LLVM_BIN: ${{ matrix.llvm_bin_path }}
           TRIGGER_VERSION: ${{inputs.bindgenVersion}}
         run: | 
           DUMPED_VERSION=$(cat version || echo "")
