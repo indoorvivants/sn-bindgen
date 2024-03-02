@@ -22,10 +22,13 @@ def scalaTag(typ: CType)(using AliasResolver, Config): String =
       import IntegralBase.*
       import SignType.*
       val base = n.base match
-        case Char            => "Byte"
-        case Int             => "Int"
-        case Long | LongLong => "Long"
-        case Short           => "Short"
+        case Char => "Byte"
+        case Int  => "Int"
+        case Long =>
+          if Config.is(_.flavour == Flavour.ScalaNative05) then "Size"
+          else "Long"
+        case LongLong => "Long"
+        case Short    => "Short"
 
       val sign = n.sign match
         case Unsigned => "U"

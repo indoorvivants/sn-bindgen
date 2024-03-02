@@ -2,7 +2,10 @@ package bindgen
 package rendering
 
 def renderComment(line: Appender, meta: Meta)(using config: Config) =
-  val shouldRenderComment = config.rendering.comments == RenderComments.Yes
+  val hasDoc = meta.comment.exists(_.value.trim().nonEmpty)
+  val shouldRenderComment =
+    config.rendering.comments == RenderComments.Yes && hasDoc
+
   val shouldRenderLocation = config.rendering.location == RenderLocation.Yes
 
   if shouldRenderComment || shouldRenderLocation then
