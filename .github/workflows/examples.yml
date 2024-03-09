@@ -23,8 +23,8 @@ jobs:
       matrix:
         segment: [1, 2, 3]
         include:
-          - os: macos-11
-            llvm_bin_path: /usr/local/opt/llvm@17/bin
+          - os: macos-14
+            llvm_bin_path: /opt/homebrew/opt/llvm@17/bin
 
           - os: ubuntu-20.04
             llvm_bin_path: /usr/lib/llvm-17/bin
