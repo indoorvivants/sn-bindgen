@@ -119,7 +119,7 @@ object BindgenRender:
     )
 
     val hasC =
-      generatedC.result.trim.nonEmpty //generatedC.result.linesIterator.exists(_.trim != "<br>")
+      generatedC.result.trim.nonEmpty // generatedC.result.linesIterator.exists(_.trim != "<br>")
 
     sideBySide(
       filename.getOrElse("C file"),
