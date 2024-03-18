@@ -78,20 +78,6 @@ jobs:
             ~/.cache/sbt-vcpkg/vcpkg
           key: ${{ runner.os }}-${{ matrix.segment }}-sbt-vcpkg
 
-      - name: Run examples (SN 0.4)
-        env: 
-          LLVM_BIN: ${{ matrix.llvm_bin_path }}
-          TRIGGER_VERSION: ${{inputs.bindgenVersion}}
-        run: | 
-          DUMPED_VERSION=$(cat version || echo "")
-
-          export SN_BINDGEN_VERSION="${TRIGGER_VERSION:-"$DUMPED_VERSION"}"
-          export SCALA_NATIVE_VERSION=0.4.17
-
-          cd examples
-          sbt 'clean; bindgenGenerateAll; runBatchedExamples ${{matrix.segment}} 3'
-
-
       - name: Run examples (SN 0.5)
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
@@ -100,7 +86,7 @@ jobs:
           DUMPED_VERSION=$(cat version || echo "")
 
           export SN_BINDGEN_VERSION="${TRIGGER_VERSION:-"$DUMPED_VERSION"}"
-          export SCALA_NATIVE_VERSION=0.5.0-RC1
+          export SCALA_NATIVE_VERSION=0.5.0-RC2
 
           cd examples
           sbt 'clean; bindgenGenerateAll; runBatchedExamples ${{matrix.segment}} 3'
