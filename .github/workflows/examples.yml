@@ -23,16 +23,15 @@ jobs:
       matrix:
         segment: [1, 2, 3]
         include:
-          - os: macos-11
-            llvm_bin_path: /usr/local/opt/llvm@13/bin
+          - os: macos-14
+            llvm_bin_path: /opt/homebrew/opt/llvm@17/bin
 
           - os: ubuntu-20.04
-            llvm_bin_path: /usr/lib/llvm-13/bin
+            llvm_bin_path: /usr/lib/llvm-17/bin
 
     runs-on: ${{ matrix.os }}
     env:
-      SN_RELEASE: fast
-      LLVM_VERSION: 13
+      LLVM_VERSION: 17
     steps:
       - uses: actions/checkout@v3
         with:
@@ -62,11 +61,14 @@ jobs:
 
           PLATFORM="$(uname)"
           if [ $PLATFORM == "Darwin" ]; then 
-            echo "It's a Mac"
+            python3 -m pip install packaging
           else
             docker run -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+            docker run -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql-password -e MYSQL_DATABASE=mysql_db -p 3306:3306 -d mysql
             docker run -p 6379:6379 -d redis
           fi
+
+          ./manual_setup.sh
 
       - name: Cache sbt-vcpkg
         uses: actions/cache@v3
@@ -74,9 +76,9 @@ jobs:
           path: |
             ~/Library/Caches/sbt-vcpkg/vcpkg
             ~/.cache/sbt-vcpkg/vcpkg
-          key: ${{ runner.os }}-sbt-vcpkg
+          key: ${{ runner.os }}-${{ matrix.segment }}-sbt-vcpkg
 
-      - name: Run examples
+      - name: Run examples (SN 0.5)
         env: 
           LLVM_BIN: ${{ matrix.llvm_bin_path }}
           TRIGGER_VERSION: ${{inputs.bindgenVersion}}
@@ -84,8 +86,9 @@ jobs:
           DUMPED_VERSION=$(cat version || echo "")
 
           export SN_BINDGEN_VERSION="${TRIGGER_VERSION:-"$DUMPED_VERSION"}"
+          export SCALA_NATIVE_VERSION=0.5.0-RC2
 
           cd examples
-          sbt 'runBatchedExamples ${{matrix.segment}} 3'
+          sbt 'clean; bindgenGenerateAll; runBatchedExamples ${{matrix.segment}} 3'
 
 
