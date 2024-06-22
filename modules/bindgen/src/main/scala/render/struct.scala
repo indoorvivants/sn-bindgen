@@ -33,7 +33,6 @@ def struct(struct: Def.Struct, line: Appender)(using
           )
           true
 
-  info(s"Hints: ${structType.hints}")
   val finalStructType =
     if structIsOpaque then structArrayType(rewrittenStructType)
     else rewrittenStructType
@@ -217,4 +216,4 @@ def align(offset: Int, alignment: Int) = {
     else alignment - (offset & alignmentMask)
   offset + padding
 }
-""".trim().linesIterator
+""".trim().linesIterator.toList
