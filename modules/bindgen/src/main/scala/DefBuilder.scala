@@ -43,7 +43,8 @@ object DefBuilder:
       var fields: ListBuffer[(StructParameterName, CType)],
       var name: StructName,
       var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
-      var meta: Meta
+      var meta: Meta,
+      var anonymousFieldStructMapping: ListBuffer[(Int, StructName)]
   ) extends DefBuilder[Def.Struct]
 
   case class Union(

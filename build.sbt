@@ -22,6 +22,7 @@ import java.nio.file.Paths
 
 lazy val Versions = new {
   val decline = "2.4.1"
+  val scribe = "3.13.0"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
@@ -31,9 +32,9 @@ lazy val Versions = new {
   val detective = "0.0.2"
   val opaqueNewtypes = "0.0.2"
 
-  val Scala3 = "3.3.1"
-  val Scala212 = "2.12.18"
-  val Scala213 = "2.13.12"
+  val Scala3 = "3.3.3"
+  val Scala212 = "2.12.19"
+  val Scala213 = "2.13.14"
   val Scala2 = List(Scala212, Scala213)
 
 }
@@ -129,6 +130,7 @@ lazy val bindgen = project
     moduleName := "bindgen",
     libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
     libraryDependencies += "com.monovore" %%% "decline" % Versions.decline,
+    libraryDependencies += "com.outr" %%% "scribe" % Versions.scribe,
     libraryDependencies += "com.indoorvivants" %%% "opaque-newtypes" % Versions.opaqueNewtypes,
     libraryDependencies += compilerPlugin(
       "org.polyvariant" % "better-tostring" % Versions.b2s cross CrossVersion.full

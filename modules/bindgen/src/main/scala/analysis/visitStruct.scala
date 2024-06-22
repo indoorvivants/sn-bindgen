@@ -20,7 +20,8 @@ def visitStruct(cursor: CXCursor, name: String)(using
         fields = ListBuffer.empty,
         name = StructName(name),
         anonymous = ListBuffer.empty,
-        meta = extractMetadata(cursor)
+        meta = extractMetadata(cursor),
+        anonymousFieldStructMapping = ListBuffer.empty
       ),
       numAnonymous = 0
     )
@@ -51,20 +52,28 @@ def visitStruct(cursor: CXCursor, name: String)(using
             s"typ spelling: ${typ.kindSpelling}, ${decl.spelling}, anonymous $isAnonymous"
           )
           if isAnonymous then
-            val last = builder.anonymous.apply(collector.numAnonymous)
+            val last = builder.anonymous.last
             val nestedName = last match
               case un: Def.Union  => un.name.value
               case st: Def.Struct => st.name.value
               case en: Def.Enum   => en.name.get.value
-            builder.fields.addOne(
-              fieldName -> CType.Reference(
-                Name.Model(builder.name.value + "." + nestedName)
-              )
+            info(s"${builder.anonymousFieldStructMapping} -- $nestedName")
+            val fieldSpec = fieldName -> CType.Reference(
+              Name.Model(builder.name.value + "." + nestedName)
             )
+
             collector.numAnonymous += 1
+
+            builder.anonymousFieldStructMapping.find(
+              _._2.value == nestedName
+            ) match
+              case None =>
+                builder.fields.addOne(fieldSpec)
+              case Some(idx) =>
+                builder.fields.update(idx._1, fieldSpec)
           else if typ.kind == CXTypeKind.CXType_ConstantArray && builder.anonymous.size > collector.numAnonymous
           then
-            val last = builder.anonymous.apply(collector.numAnonymous)
+            val last = builder.anonymous.last//.apply(collector.numAnonymous)
             val nestedName = last match
               case un: Def.Union  => un.name.value
               case st: Def.Struct => st.name.value
@@ -116,6 +125,9 @@ def visitStruct(cursor: CXCursor, name: String)(using
               ),
               Some(cursor.spelling)
             )
+          )
+          builder.anonymousFieldStructMapping.addOne(
+            builder.fields.size -> StructName(nestedName)
           )
           builder.fields.addOne(
             StructParameterName("") -> CType.Struct(str.fields.map(_._2))

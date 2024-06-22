@@ -23,7 +23,12 @@ class TestStructs:
       val st1 = !StructSimple(42, 420, c"s1", c"part 1")
       val st2 = !StructSimple(13, 130, c"s2", c"part 2")
 
-      val cx = !StructComplex(st1, st2, 111, my_bool.m_false)
+      val arr = stackalloc[CArray[Int, Nat.Digit2[Nat._2, Nat._5]]]()
+      (!arr).update(7, -1293939)
+      val cs0 = StructComplex.Struct0('h')
+      val cs1 = StructComplex.Struct1(25)
+      val cx =
+        !StructComplex(st1, st2, 111, !cs0, my_bool.m_false, !cs1, c"yes", !arr)
 
       assertEquals(cx.p1.x, 42)
       assertEquals(cx.p1.y, 420)
@@ -32,6 +37,8 @@ class TestStructs:
 
       assertEquals(my_bool.m_false, cx.flag)
       assertEquals(111, cx.x)
+
+      assertEquals(cx.test(7), -1293939)
     }
   @Test def test_anonymous() =
     zone {
