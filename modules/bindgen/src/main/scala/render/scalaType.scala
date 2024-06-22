@@ -84,7 +84,7 @@ def scalaType(typ: CType)(using AliasResolver, Config): String =
 end scalaType
 
 def structArrayType(ct: CType.Struct)(using Config, AliasResolver) =
-  CType.Arr(CType.Byte, Some(staticSize(ct).toInt))
+  CType.Arr(CType.Byte, Some(ct.hints.staticSize.toInt))
 
 def natDigits(i: Long): String =
   if i <= 0 then "Nat._0"

@@ -7,7 +7,6 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import scalanative.libc.*
-import bindgen.rendering.staticSize
 
 class StructCollector(val struct: DefBuilder.Struct, var numAnonymous: Int)
 

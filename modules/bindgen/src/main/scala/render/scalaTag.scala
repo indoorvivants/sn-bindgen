@@ -13,10 +13,10 @@ def scalaTag(typ: CType)(using AliasResolver, Config): String =
       else "Tag.materializeCStruct0Tag"
 
     case struct: Struct =>
-      scalaTag(Arr(CType.Byte, Some(staticSize(struct).toInt)))
+      scalaTag(Arr(CType.Byte, Some(struct.hints.staticSize)))
 
     case union: Union =>
-      scalaTag(Arr(CType.Byte, Some(staticSize(union).toInt)))
+      scalaTag(Arr(CType.Byte, Some(union.hints.staticSize)))
 
     case n: NumericIntegral =>
       import IntegralBase.*
