@@ -118,8 +118,9 @@ def constructType(typ: CXType)(using
     case CXType_Vector =>
       val elementType = constructType(clang_getElementType(typ))
       val numElements = clang_getNumElements(typ)
+      val size = clang_Type_getSizeOf(typ)
 
-      CType.Struct(List.fill(numElements.toInt)(elementType))
+      CType.Struct(List.fill(numElements.toInt)(elementType), Hints(size))
 
     case other =>
       warning(

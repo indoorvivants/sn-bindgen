@@ -5,17 +5,17 @@ import bindgen.*
 def scalaTag(typ: CType)(using AliasResolver, Config): String =
   import CType.*
   typ match
-    case model @ Struct(fields) if fields.size <= 22 =>
+    case model @ Struct(fields, _) if fields.size <= 22 =>
       val paramTypes = model.fields.map(scalaType).mkString(", ")
 
       if model.fields.size > 0 then
         s"Tag.materializeCStruct${model.fields.size}Tag[$paramTypes]"
       else "Tag.materializeCStruct0Tag"
 
-    case struct @ Struct(fields) =>
+    case struct: Struct =>
       scalaTag(Arr(CType.Byte, Some(staticSize(struct).toInt)))
 
-    case union @ Union(fields) =>
+    case union: Union =>
       scalaTag(Arr(CType.Byte, Some(staticSize(union).toInt)))
 
     case n: NumericIntegral =>
@@ -61,7 +61,8 @@ def scalaTag(typ: CType)(using AliasResolver, Config): String =
 end scalaTag
 
 def natDigitsTag(i: Long): String =
-  if i <= 9 then s"Tag.Nat$i"
+  if i <= 0 then s"Tag.Nat0"
+  else if i <= 9 then s"Tag.Nat$i"
   else
     val digits = i.toString.toIterator.toList
     val renderedTypes = digits.map("Nat._" + _).mkString(", ")

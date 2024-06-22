@@ -7,9 +7,10 @@ def struct(struct: Def.Struct, line: Appender)(using
 ): Exported =
   val rewriteRules = hack_recursive_structs(struct)
   val structName = struct.name
-  val structType: CType.Struct = CType.Struct(struct.fields.map(_._2).toList)
-  val rewrittenStructType: CType.Struct = CType.Struct(
-    struct.fields
+  val structType: CType.Struct =
+    CType.Struct(struct.fields.map(_._2).toList, Hints(struct.staticSize))
+  val rewrittenStructType: CType.Struct = structType.copy(
+    fields = struct.fields
       .map(_._2)
       .zipWithIndex
       .map { case (typ, idx) =>
@@ -32,12 +33,9 @@ def struct(struct: Def.Struct, line: Appender)(using
           )
           true
 
-  info(s"Size: ${struct.meta.staticSize}")
+  info(s"Hints: ${structType.hints}")
   val finalStructType =
-    if structIsOpaque then
-      struct.meta.staticSize
-        .map(sz => CType.Arr(CType.Byte, Some(sz)))
-        .getOrElse(structArrayType(rewrittenStructType))
+    if structIsOpaque then structArrayType(rewrittenStructType)
     else rewrittenStructType
 
   def setter(name: String): String =

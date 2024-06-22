@@ -74,7 +74,8 @@ object ClangVisitor:
                     },
                     name = struct.name.into(UnionName),
                     anonymous = struct.anonymous,
-                    meta = extractMetadata(typeDecl)
+                    meta = extractMetadata(typeDecl),
+                    staticSize = struct.staticSize
                   )
                 else struct
 
@@ -107,7 +108,8 @@ object ClangVisitor:
                 },
                 name = en.name.into(UnionName),
                 anonymous = en.anonymous,
-                meta = extractMetadata(cursor)
+                meta = extractMetadata(cursor),
+                staticSize = en.staticSize
               )
               binding.add(union, location)
             end if

@@ -43,7 +43,25 @@ typedef struct StructComplexOpaque {
 
   char* bla;
 
+  union {
+    int u0;
+    long u1;
+  };
+
   int test[25];
+
+  union {
+    int r0;
+    long r1;
+  } flan[2];
+
+  double y;
+
+  union {
+    int u0;
+    long u1;
+  } top;
+
 
 } StructComplexOpaque;
 

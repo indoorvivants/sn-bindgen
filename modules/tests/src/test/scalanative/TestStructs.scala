@@ -52,6 +52,10 @@ class TestStructs:
         (!arr).update(7, -1293939)
         val anonStruct0 = StructComplexOpaque.Struct0('h')
         val anonStruct1 = StructComplexOpaque.Struct1(25)
+        val anonUnion0 = StructComplexOpaque.Union2.apply(25)
+        val arr2 = stackalloc[CArray[StructComplexOpaque.Union3, Nat._2]]()
+        (!arr2).update(0, !StructComplexOpaque.Union3(50))
+        val anonUnion1 = StructComplexOpaque.Union4(100123456789L)
         val struct =
           !StructComplexOpaque(
             p1 = st1,
@@ -61,7 +65,10 @@ class TestStructs:
             flag = my_bool.m_false,
             yass = !anonStruct1,
             bla = c"yes",
-            test = !arr
+            test = !arr,
+            flan = !arr2,
+            y = 480.0,
+            top = !anonUnion1
           )
 
         assertEquals(struct.p1.x, 42)
