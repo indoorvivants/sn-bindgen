@@ -30,7 +30,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/7064569833498667625header.h
+   * [bindgen] header: /tmp/7693478518374686603header.h
   */
   opaque type Big = CStruct3[CInt, CString, Small]
   object Big:
@@ -51,7 +51,7 @@ object structs:
       def sm_=(value: Small): Unit = !struct.at3 = value
 
   /**
-   * [bindgen] header: /tmp/7064569833498667625header.h
+   * [bindgen] header: /tmp/7693478518374686603header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -111,7 +111,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/17422282996815410434header.h
+   * [bindgen] header: /tmp/12783597226048667303header.h
   */
   opaque type Disabled = CStruct2[CInt, CString]
   object Disabled:
@@ -124,7 +124,7 @@ object structs:
       def hello_=(value: CString): Unit = !struct.at2 = value
 
   /**
-   * [bindgen] header: /tmp/17422282996815410434header.h
+   * [bindgen] header: /tmp/12783597226048667303header.h
   */
   opaque type Enabled = CStruct2[CInt, CString]
   object Enabled:
@@ -182,7 +182,7 @@ object structs:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
   /**
-   * [bindgen] header: /tmp/12916207145294050379header.h
+   * [bindgen] header: /tmp/455074576112071614header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -200,7 +200,7 @@ object unions:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
   /**
-   * [bindgen] header: /tmp/12916207145294050379header.h
+   * [bindgen] header: /tmp/455074576112071614header.h
   */
   opaque type Big = CArray[Byte, Nat._8]
   object Big:
@@ -271,7 +271,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/8083289098667504654header.h
+   * [bindgen] header: /tmp/9850666227074287915header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -290,12 +290,12 @@ object structs:
 private[libtest] object extern_functions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/8083289098667504654header.h
+   * [bindgen] header: /tmp/9850666227074287915header.h
   */
   def simple(x : CInt, y : CString): CLongInt = extern
 
   /**
-   * [bindgen] header: /tmp/8083289098667504654header.h
+   * [bindgen] header: /tmp/9850666227074287915header.h
   */
   def with_pointers(x : Ptr[Small], y : CInt): Ptr[Small] = extern
 
@@ -344,7 +344,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/17250491892252785699header.h
+   * [bindgen] header: /tmp/7358862789073262288header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
@@ -373,13 +373,7 @@ object functions:
   export extern_functions.*
 
   /**
-   * [bindgen] header: /tmp/17250491892252785699header.h
-  */
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
-    __sn_wrap_libtest_bad_arguments(n, n2)
-
-  /**
-   * [bindgen] header: /tmp/17250491892252785699header.h
+   * [bindgen] header: /tmp/7358862789073262288header.h
   */
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit = 
     val __ptr_0: Ptr[Small] = alloc[Small](2)
@@ -388,7 +382,13 @@ object functions:
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
   /**
-   * [bindgen] header: /tmp/17250491892252785699header.h
+   * [bindgen] header: /tmp/7358862789073262288header.h
+  */
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
+    __sn_wrap_libtest_bad_arguments(n, n2)
+
+  /**
+   * [bindgen] header: /tmp/7358862789073262288header.h
   */
   def bad_return_type()(using Zone): Small = 
     val __ptr_0: Ptr[Small] = alloc[Small](1)
@@ -396,7 +396,7 @@ object functions:
     !(__ptr_0 + 0)
 
   /**
-   * [bindgen] header: /tmp/17250491892252785699header.h
+   * [bindgen] header: /tmp/7358862789073262288header.h
   */
   def bad_return_type()(__return : Ptr[Small]): Unit = 
     __sn_wrap_libtest_bad_return_type(__return)
@@ -477,7 +477,7 @@ object predef:
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/12791489993172972549header.h
+   * [bindgen] header: /tmp/4485214310004401554header.h
   */
   opaque type MySigned = CInt
   object MySigned extends CEnum[MySigned]:
@@ -498,7 +498,7 @@ object enumerations:
       inline def is(b: MySigned): Boolean = (a &amp; b) == b
 
   /**
-   * [bindgen] header: /tmp/12791489993172972549header.h
+   * [bindgen] header: /tmp/4485214310004401554header.h
   */
   opaque type MyUnsigned = CUnsignedInt
   object MyUnsigned extends CEnumU[MyUnsigned]:
@@ -551,7 +551,7 @@ import _root_.scala.scalanative.*
 object aliases:
   import _root_.libtest.aliases.*
   /**
-   * [bindgen] header: /tmp/13327206928941207521header.h
+   * [bindgen] header: /tmp/2137188750666318338header.h
   */
   opaque type Cursor = Ptr[Byte]
   object Cursor: 
@@ -561,7 +561,7 @@ object aliases:
       inline def value: Ptr[Byte] = v
 
   /**
-   * [bindgen] header: /tmp/13327206928941207521header.h
+   * [bindgen] header: /tmp/2137188750666318338header.h
   */
   opaque type Visitor = CFuncPtr1[Ptr[Cursor], CInt]
   object Visitor: 
@@ -609,7 +609,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/8716913615786741298header.h
+   * [bindgen] header: /tmp/13299931759200500428header.h
   */
   opaque type Arr = CStruct1[Ptr[Byte]]
   object Arr:
