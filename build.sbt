@@ -42,7 +42,7 @@ lazy val Versions = new {
 inThisBuild(
   Seq(
     semanticdbEnabled := true,
-    semanticdbVersion := "4.7.8",
+    semanticdbVersion := scalafixSemanticdb.revision,
     semanticdbIncludeInJar := false,
     organization := "com.indoorvivants",
     organizationName := "Anton Sviridov",

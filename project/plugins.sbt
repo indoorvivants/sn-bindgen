@@ -22,4 +22,6 @@ addSbtPlugin("org.jmotor.sbt" % "sbt-dependency-updates" % "1.2.7")
 
 addSbtPlugin("com.github.reibitto" % "sbt-welcome" % "0.4.0")
 
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.12.1")
+
 libraryDependencies += "com.indoorvivants.detective" %% "platform" % "0.0.2"
