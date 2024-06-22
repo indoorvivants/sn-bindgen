@@ -8,12 +8,14 @@ import scala.scalanative.unsigned.ULong
 import Def.*
 import CType.*
 
+case class Hints(staticSize: Long)
+
 enum CType:
   case Arr(of: CType, size: Option[Long])
   case Pointer(of: CType)
   case Enum(underlying: NumericIntegral)
-  case Struct(fields: List[CType])
-  case Union(fields: List[CType])
+  case Struct(fields: List[CType], hints: Hints)
+  case Union(fields: List[CType], hints: Hints)
   case Function(returnType: CType, parameters: List[CType.Parameter])
   case IncompleteArray(of: CType)
 

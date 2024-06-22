@@ -13,7 +13,7 @@ def alias(model: Def.Alias, line: Appender)(using
   val (underlyingType, enableConstructor) =
     model.underlying match
       case Pointer(Reference(Name.Unnamed)) =>
-        Pointer(CType.Struct(Nil)) -> false
+        Pointer(CType.Struct(Nil, Hints(0L))) -> false
       case other => other -> true
 
   import CType.*

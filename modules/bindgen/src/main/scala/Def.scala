@@ -37,7 +37,10 @@ object CommentText extends OpaqueString[CommentText]
 opaque type DefinitionFile = String
 object DefinitionFile extends OpaqueString[DefinitionFile]
 
-case class Meta(comment: Option[CommentText], file: Option[DefinitionFile])
+case class Meta(
+    comment: Option[CommentText],
+    file: Option[DefinitionFile]
+)
 object Meta:
   def empty: Meta = Meta(None, None)
 
@@ -53,6 +56,7 @@ enum Def(meta: Meta):
       fields: List[(StructParameterName, CType)],
       name: StructName,
       anonymous: List[Def.Union | Def.Struct | Def.Enum],
+      staticSize: Long,
       meta: Meta
   ) extends Def(meta)
 
@@ -60,8 +64,10 @@ enum Def(meta: Meta):
       fields: List[(UnionParameterName, CType)],
       name: UnionName,
       anonymous: List[Def.Union | Def.Struct | Def.Enum],
+      staticSize: Long,
       meta: Meta
   ) extends Def(meta)
+
   case Function(
       name: FunctionName,
       returnType: CType,
@@ -94,9 +100,9 @@ object Def:
       }.toList
     )
   def typeOf(d: Union): CType.Union =
-    CType.Union(d.fields.map(_._2).toList)
+    CType.Union(d.fields.map(_._2).toList, Hints(d.staticSize))
   def typeOf(d: Struct): CType.Struct =
-    CType.Struct(d.fields.map(_._2).toList)
+    CType.Struct(d.fields.map(_._2).toList, Hints(d.staticSize))
   def typeOf(d: Enum): CType.Enum =
     CType.Enum(d.intType.get)
 end Def

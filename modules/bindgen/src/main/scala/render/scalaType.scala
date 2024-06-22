@@ -58,16 +58,16 @@ def scalaType(typ: CType)(using AliasResolver, Config): String =
           .mkString("[", ", ", "]")
       s"CFuncPtr$args$types"
 
-    case at @ Struct(fields) =>
+    case at @ Struct(fields, hints) =>
       if fields.size > 22 then
-        s"CArray[Byte, ${natDigits(staticSize(at).toInt)}]"
+        s"CArray[Byte, ${natDigits(hints.staticSize.toInt)}]"
       else if fields.nonEmpty then
         val parameters = fields.map(scalaType).mkString("[", ", ", "]")
         s"CStruct${fields.size}$parameters"
       else "CStruct0"
 
-    case at @ Union(fields) =>
-      s"CArray[Byte, ${natDigits(staticSize(at).toInt)}]"
+    case at @ Union(fields, hints) =>
+      s"CArray[Byte, ${natDigits(hints.staticSize.toInt)}]"
 
     case Arr(of, size) =>
       size match
@@ -84,10 +84,11 @@ def scalaType(typ: CType)(using AliasResolver, Config): String =
 end scalaType
 
 def structArrayType(ct: CType.Struct)(using Config, AliasResolver) =
-  CType.Arr(CType.Byte, Some(staticSize(ct).toInt))
+  CType.Arr(CType.Byte, Some(ct.hints.staticSize.toInt))
 
 def natDigits(i: Long): String =
-  if i <= 9 then s"Nat._$i"
+  if i <= 0 then "Nat._0"
+  else if i <= 9 then s"Nat._$i"
   else
     val digits = i.toString.toIterator.toList
     val rendered = digits.map("Nat._" + _).mkString(", ")

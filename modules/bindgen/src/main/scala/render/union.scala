@@ -7,7 +7,8 @@ def union(model: Def.Union, line: Appender)(using Config)(using
     ar: AliasResolver
 ): Exported =
   val unionName = model.name
-  val unionType: CType.Union = CType.Union(model.fields.map(_._2).toList)
+  val unionType: CType.Union =
+    CType.Union(model.fields.map(_._2).toList, Hints(model.staticSize))
   val tpe = scalaType(unionType)
 
   def setter(name: String): String =

@@ -15,9 +15,21 @@ sealed trait DefBuilder[Builds]:
     this match
       case e: Enum => Def.Enum(e.values.result(), e.name, e.intType, e.meta)
       case e: Struct =>
-        Def.Struct(e.fields.result(), e.name, e.anonymous.result(), e.meta)
+        Def.Struct(
+          e.fields.result(),
+          e.name,
+          e.anonymous.result(),
+          e.staticSize,
+          e.meta
+        )
       case e: Union =>
-        Def.Union(e.fields.result, e.name, e.anonymous.result(), e.meta)
+        Def.Union(
+          e.fields.result,
+          e.name,
+          e.anonymous.result(),
+          e.staticSize,
+          e.meta
+        )
       case e: Function =>
         import e.*
         Def.Function(
@@ -43,13 +55,16 @@ object DefBuilder:
       var fields: ListBuffer[(StructParameterName, CType)],
       var name: StructName,
       var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
-      var meta: Meta
+      var staticSize: Long,
+      var meta: Meta,
+      var anonymousFieldStructMapping: ListBuffer[(Int, StructName)]
   ) extends DefBuilder[Def.Struct]
 
   case class Union(
       var fields: ListBuffer[(UnionParameterName, CType)],
       var name: UnionName,
       var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
+      var staticSize: Long,
       var meta: Meta
   ) extends DefBuilder[Def.Union]
 
