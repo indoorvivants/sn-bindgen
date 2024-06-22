@@ -44,7 +44,7 @@ def enumeration(model: Def.Enum, line: Appender)(using
         model.values.foreach { case (constName, value) =>
           line(s"""case ${escape(constName)} => Some("${escape(constName)}")""")
         }
-        line("case _ => None")
+        line("case _ => _root_.scala.None")
       }
     }
     line(s"extension (a: $opaqueType)")
