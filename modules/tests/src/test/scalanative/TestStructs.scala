@@ -39,7 +39,52 @@ class TestStructs:
       assertEquals(111, cx.x)
 
       assertEquals(cx.test(7), -1293939)
+      assertEquals(cx.yass.HELLO, 25)
+      assertEquals(cx.kiss.yo, 'h')
     }
+
+    @Test def test_complex_opaque() =
+      zone {
+        val st1 = !StructSimple(42, 420, c"s1", c"part 1")
+        val st2 = !StructSimple(13, 130, c"s2", c"part 2")
+
+        val arr = stackalloc[CArray[Int, Nat.Digit2[Nat._2, Nat._5]]]()
+        (!arr).update(7, -1293939)
+        val anonStruct0 = StructComplexOpaque.Struct0('h')
+        val anonStruct1 = StructComplexOpaque.Struct1(25)
+        val struct =
+          !StructComplexOpaque(
+            p1 = st1,
+            p2 = st2,
+            x = 111,
+            kiss = !anonStruct0,
+            flag = my_bool.m_false,
+            yass = !anonStruct1,
+            bla = c"yes",
+            test = !arr
+          )
+
+        assertEquals(struct.p1.x, 42)
+        assertEquals(struct.p1.y, 420)
+        assertEquals(struct.p2.x, 13)
+        assertEquals(struct.p2.y, 130)
+
+        assertEquals(my_bool.m_false, struct.flag)
+        assertEquals(111, struct.x)
+
+        struct.x = 560
+        assertEquals(560, struct.x)
+
+        assertEquals(struct.test(7), -1293939)
+        assertEquals(struct.yass.HELLO, 25)
+
+        struct.yass = !StructComplexOpaque.Struct1(5117)
+        assertEquals(struct.yass.HELLO, 5117)
+
+        assertEquals(struct.kiss.yo, 'h')
+      }
+  end test_complex
+
   @Test def test_anonymous() =
     zone {
       val context = !StructAnonymous.Union0(25)

@@ -171,10 +171,10 @@ def struct(struct: Def.Struct, line: Appender)(using
               val getterName = getter(fieldName.value)
 
               line(
-                s"def $getterName: $typ = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]]"
+                s"def $getterName: $typ = !struct.at(offsets($fieldOffset)).asInstanceOf[Ptr[$typ]]"
               )
               line(
-                s"def $setterName(value: $typ): Unit = !struct.at($fieldOffset).asInstanceOf[Ptr[$typ]] = value"
+                s"def $setterName(value: $typ): Unit = !struct.at(offsets($fieldOffset)).asInstanceOf[Ptr[$typ]] = value"
               )
           }
         end if
