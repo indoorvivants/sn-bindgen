@@ -20,6 +20,7 @@ def extractMetadata(cursor: CXCursor)(using Zone) =
       .map(CommentText(_)),
     file = Option(clang_getFileName(!file).string)
       .filter(_ != null)
-      .map(DefinitionFile(_))
+      .map(DefinitionFile(_)),
+    staticSize = Option(clang_Type_getSizeOf(clang_getCursorType(cursor)))
   )
 end extractMetadata

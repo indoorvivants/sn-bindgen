@@ -103,6 +103,9 @@ def visitStruct(cursor: CXCursor, name: String)(using
         else if cursor.kind == CXCursorKind.CXCursor_StructDecl then
           val nestedName = "Struct" + builder.anonymous.size
           val str = visitStruct(cursor, builder.name.value + "." + nestedName)
+          trace(
+            s"Size of $nestedName: ${clang_Type_getSizeOf(clang_getCursorType(cursor))}"
+          )
           builder.anonymous.addOne(
             removeFAM(
               Def.Struct(
@@ -114,6 +117,10 @@ def visitStruct(cursor: CXCursor, name: String)(using
               Some(cursor.spelling)
             )
           )
+          builder.fields.addOne(
+            StructParameterName("") -> CType.Struct(str.fields.map(_._2))
+          )
+
           CXChildVisitResult.CXChildVisit_Continue
         else if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
           val nestedName = "Enum" + builder.anonymous.size

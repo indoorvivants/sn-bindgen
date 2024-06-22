@@ -37,9 +37,13 @@ object CommentText extends OpaqueString[CommentText]
 opaque type DefinitionFile = String
 object DefinitionFile extends OpaqueString[DefinitionFile]
 
-case class Meta(comment: Option[CommentText], file: Option[DefinitionFile])
+case class Meta(
+    comment: Option[CommentText],
+    file: Option[DefinitionFile],
+    staticSize: Option[Long]
+)
 object Meta:
-  def empty: Meta = Meta(None, None)
+  def empty: Meta = Meta(None, None, None)
 
 enum Def(meta: Meta):
   case Enum(

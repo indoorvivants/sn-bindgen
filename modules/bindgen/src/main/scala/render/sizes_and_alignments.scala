@@ -6,7 +6,7 @@ import scalanative.unsigned.*
 import bindgen.*
 import scala.scalanative.annotation.alwaysinline
 
-@alwaysinline def align(
+def align(
     offset: CSize,
     alignment: CSize
 ) =
@@ -57,19 +57,19 @@ def staticSize(typ: CType)(using AliasResolver): CSize =
   typ match
     case NumericIntegral(base, _) =>
       base match
-        case IntegralBase.Char     => 1.toULong
-        case IntegralBase.Short    => 2.toULong
-        case IntegralBase.Int      => 4.toULong
-        case IntegralBase.Long     => 8.toULong
-        case IntegralBase.LongLong => 8.toULong
+        case IntegralBase.Char     => sizeof[CChar]
+        case IntegralBase.Short    => sizeof[Short]
+        case IntegralBase.Int      => sizeof[CInt]
+        case IntegralBase.Long     => sizeof[CLong]
+        case IntegralBase.LongLong => sizeof[CLongLong]
     case NumericReal(base) =>
       base match
-        case FloatingBase.Float      => 4.toULong
-        case FloatingBase.Double     => 8.toULong
-        case FloatingBase.LongDouble => 8.toULong
+        case FloatingBase.Float      => sizeof[CFloat]
+        case FloatingBase.Double     => sizeof[CDouble]
+        case FloatingBase.LongDouble => sizeof[CDouble]
     case Arr(of, Some(sz)) =>
       sz.toULong * staticSize(of)
-    case Pointer(_)       => 8.toULong
+    case Pointer(_)       => sizeof[Ptr[_]]
     case _: Function      => 8.toULong
     case Enum(underlying) => staticSize(underlying)
     case Struct(fields) =>

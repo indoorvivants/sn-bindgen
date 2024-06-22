@@ -17,7 +17,6 @@ def struct(struct: Def.Struct, line: Appender)(using
       }
       .toList
   )
-  val fieldOffsets = offsets(structType)
 
   val madeOpaque = c.rendering.matches(_.opaqueStruct)(structName.value)
 
@@ -33,8 +32,12 @@ def struct(struct: Def.Struct, line: Appender)(using
           )
           true
 
+  info(s"Size: ${struct.meta.staticSize}")
   val finalStructType =
-    if structIsOpaque then structArrayType(rewrittenStructType)
+    if structIsOpaque then
+      struct.meta.staticSize
+        .map(sz => CType.Arr(CType.Byte, Some(sz)))
+        .getOrElse(structArrayType(rewrittenStructType))
     else rewrittenStructType
 
   def setter(name: String): String =
@@ -94,19 +97,19 @@ def struct(struct: Def.Struct, line: Appender)(using
         s"def apply()(using Zone): Ptr[$structName] = scala.scalanative.unsafe.alloc[$structName](1)"
       )
 
-      // Fields with no names aren't accessible via constructors
-      // or getters/setters
       val namedFieldsWithIndex =
-        struct.fields.zipWithIndex.filter(_._1._1.value.nonEmpty)
-      val namedFieldsWithOffsets =
-        struct.fields.zip(fieldOffsets).filter(_._1._1.value.nonEmpty)
+        struct.fields.zipWithIndex.toVector
       val namedFields = namedFieldsWithIndex.map(_._1)
 
       val applyArgList = List.newBuilder[String]
 
       namedFieldsWithIndex.map { case ((name, typ), idx) =>
-        val inputType = rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
-        applyArgList.addOne(s"${getter(name.value)} : ${scalaType(inputType)}")
+        if name.value.nonEmpty then
+          val inputType =
+            rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
+          applyArgList.addOne(
+            s"${getter(name.value)} : ${scalaType(inputType)}"
+          )
       }
 
       val ignored = c.rendering.matches(_.noConstructor)(structName.value)
@@ -118,10 +121,11 @@ def struct(struct: Def.Struct, line: Appender)(using
           )
           nest {
             line(s"val ____ptr = apply()")
-            namedFields.foreach { case (fieldName, _) =>
-              line(
-                s"(!____ptr).${getter(fieldName.value)} = ${getter(fieldName.value)}"
-              )
+            namedFields.filter(_._1.value.nonEmpty).foreach {
+              case (fieldName, _) =>
+                line(
+                  s"(!____ptr).${getter(fieldName.value)} = ${getter(fieldName.value)}"
+                )
             }
             line(s"____ptr")
           }
@@ -134,32 +138,33 @@ def struct(struct: Def.Struct, line: Appender)(using
       line(s"extension (struct: $structName)")
       nest {
         if !structIsOpaque then
-          namedFieldsWithIndex.foreach { case ((fieldName, fieldType), idx) =>
-            val setterName = setter(fieldName.value)
-            val getterName = getter(fieldName.value)
+          namedFieldsWithIndex.filter(_._1._1.value.nonEmpty).foreach {
+            case ((fieldName, fieldType), idx) =>
+              val setterName = setter(fieldName.value)
+              val getterName = getter(fieldName.value)
 
-            rewriteRules.get(idx) match
-              case Some(rewrite) =>
-                val typ = scalaType(rewrite.newRichType)
-                line(
-                  s"def $getterName : $typ = struct._${idx + 1}.asInstanceOf[$typ]"
-                )
-                line(
-                  s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(rewrite.newRawType)}]"
-                )
+              rewriteRules.get(idx) match
+                case Some(rewrite) =>
+                  val typ = scalaType(rewrite.newRichType)
+                  line(
+                    s"def $getterName : $typ = struct._${idx + 1}.asInstanceOf[$typ]"
+                  )
+                  line(
+                    s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value.asInstanceOf[${scalaType(rewrite.newRawType)}]"
+                  )
 
-              case None =>
-                val typ = scalaType(fieldType)
-                line(
-                  s"def $getterName : $typ = struct._${idx + 1}"
-                )
-                line(
-                  s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value"
-                )
-            end match
+                case None =>
+                  val typ = scalaType(fieldType)
+                  line(
+                    s"def $getterName : $typ = struct._${idx + 1}"
+                  )
+                  line(
+                    s"def $setterName(value: $typ): Unit = !struct.at${idx + 1} = value"
+                  )
+              end match
           }
         else
-          namedFieldsWithOffsets.foreach {
+          namedFieldsWithIndex.filter(_._1._1.value.nonEmpty).foreach {
             case ((fieldName, fieldType), fieldOffset) =>
               val typ = scalaType(fieldType)
               val setterName = setter(fieldName.value)
@@ -173,10 +178,45 @@ def struct(struct: Def.Struct, line: Appender)(using
               )
           }
         end if
+
       }
+      if structIsOpaque then
+        line("val offsets: Array[Int] = ")
+        nest {
+          line(s"val res = Array.ofDim[Int](${namedFieldsWithIndex.length})")
+
+          alignMethod.foreach(line(_))
+          line("")
+          namedFieldsWithIndex.foreach { case ((_, fieldType), idx) =>
+            val tpe = scalaType(fieldType)
+            if idx == 0 then line(s"res(0) = align(0, alignmentof[$tpe].toInt)")
+            else
+              val prevTpe = scalaType(namedFieldsWithIndex(idx - 1)._1._2)
+              line(
+                s"res($idx) = align(res(${idx - 1}) + sizeof[$prevTpe].toInt, alignmentof[$tpe].toInt)"
+              )
+
+          }
+          line("res")
+        }
+
+        line("end offsets")
+      end if
     else line(s"given _tag: Tag[$structName] = Tag.materializeCStruct0Tag")
     end if
+
   }
 
   Exported.Yes(structName.value)
 end struct
+
+private val alignMethod =
+  """
+def align(offset: Int, alignment: Int) = {
+  val alignmentMask = alignment - 1
+  val padding =
+    if ((offset & alignmentMask) == 0) 0
+    else alignment - (offset & alignmentMask)
+  offset + padding
+}
+""".trim().linesIterator
