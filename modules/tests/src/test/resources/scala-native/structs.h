@@ -21,50 +21,51 @@ typedef struct StructComplex {
     int HELLO;
   } yass;
 
-  char* bla;
+  char *bla;
 
   int test[25];
 
 } StructComplex;
 
 typedef struct StructComplexOpaque {
-  StructSimple p1, p2;
-  int x;
+  StructSimple p1, // 0
+               p2; // 1
+  int x; //2
 
   struct {
-    char yo;
-  } kiss;
+    char yo; 
+  } kiss; //3
 
-  my_bool flag;
+  my_bool flag; // 4
 
   struct {
     int HELLO;
-  } yass;
+  } yass; //5
 
-  char* bla;
+  char *bla; //6 
 
   union {
     int u0;
     long u1;
-  };
+  }; //7
 
-  int test[25];
+  int test[25]; // 8
 
   union {
     int r0;
     long r1;
-  } flan[2];
+  } flan[2]; // 9
 
-  double y;
+  double y; // 10
 
   union {
     int u0;
     long u1;
-  } top;
-
+  } top; // 11
 
 } StructComplexOpaque;
 
+void write_offsets(int *offsets);
 
 typedef struct StructAnonymous {
   int x;

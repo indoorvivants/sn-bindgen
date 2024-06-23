@@ -58,12 +58,12 @@ def visitStruct(cursor: CXCursor, name: String)(using
               case un: Def.Union  => un.name.value
               case st: Def.Struct => st.name.value
               case en: Def.Enum   => en.name.get.value
+
             info(s"${builder.anonymousFieldStructMapping} -- $nestedName")
+
             val fieldSpec = fieldName -> CType.Reference(
               Name.Model(builder.name.value + "." + nestedName)
             )
-
-            // collector.numAnonymous += 1
 
             builder.anonymousFieldStructMapping.find(
               _._2.value == nestedName
@@ -89,15 +89,23 @@ def visitStruct(cursor: CXCursor, name: String)(using
                   case st: Def.Struct => st.name.value
                 val numElements = clang_getArraySize(typ)
 
-                builder.fields.addOne(
+                val fieldSpec =
                   fieldName -> constArrayType(
                     CType.Reference(
                       Name.Model(builder.name.value + "." + nestedName)
                     ),
                     numElements
                   )
-                )
-              // collector.numAnonymous += 1
+
+                builder.anonymousFieldStructMapping.find(
+                  _._2.value == nestedName
+                ) match
+                  case None =>
+                    builder.fields.addOne(fieldSpec)
+                  case Some(idx) =>
+                    builder.fields.update(idx._1, fieldSpec)
+                    builder.anonymousFieldStructMapping.filterInPlace(_ != idx)
+
               case _ =>
                 builder.fields.addOne(
                   fieldName -> constructType(clang_getCursorType(cursor))
