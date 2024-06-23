@@ -102,12 +102,9 @@ class TestStructs:
 
         for i <- 0 until calculatedOffsets.length do
           trueOffsets(i) = true_offsets(i)
-          // println(s"$i: true=${trueOffsets(i)} calculated=${fields(i)}")
 
         assertArrayEquals(trueOffsets, calculatedOffsets)
 
-        // println(StructComplexOpaque.offsets.toList)
-        // println(trueOffsets.toList)
       }
   end test_complex
 

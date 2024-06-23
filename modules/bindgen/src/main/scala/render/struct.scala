@@ -209,10 +209,9 @@ def struct(struct: Def.Struct, line: Appender)(using
 
           namedFieldsWithIndex.foreach { case ((_, fieldType), idx) =>
             val tpe = scalaType(fieldType)
-            if idx == 0 then line(s"res(0) = align(0, alignmentof[$tpe].toInt)")
+            if idx == 0 then line(s"res(0) = align(0, ${renderAlignment(fieldType)})")
             else
               val prevTpe = scalaType(namedFieldsWithIndex(idx - 1)._1._2)
-              line(s"// $fieldType")
               line(
                 s"res($idx) = align(res(${idx - 1}) + sizeof[$prevTpe].toInt, ${renderAlignment(fieldType)})"
               )
