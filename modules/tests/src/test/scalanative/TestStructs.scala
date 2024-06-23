@@ -8,6 +8,7 @@ import scala.scalanative.unsigned.*
 
 class TestStructs:
   import lib_test_structs.types.*
+  import lib_test_structs.functions.*
 
   @Test def test_simple() =
     zone {
@@ -79,6 +80,8 @@ class TestStructs:
         assertEquals(my_bool.m_false, struct.flag)
         assertEquals(111, struct.x)
 
+        assertEquals(struct.y, 480.0, 0.01)
+
         struct.x = 560
         assertEquals(560, struct.x)
 
@@ -89,6 +92,22 @@ class TestStructs:
         assertEquals(struct.yass.HELLO, 5117)
 
         assertEquals(struct.kiss.yo, 'h')
+
+        val calculatedOffsets = StructComplexOpaque.offsets
+        val true_offsets = stackalloc[Int](calculatedOffsets.length)
+
+        write_offsets(true_offsets)
+
+        val trueOffsets = Array.ofDim[Int](calculatedOffsets.length)
+
+        for i <- 0 until calculatedOffsets.length do
+          trueOffsets(i) = true_offsets(i)
+          // println(s"$i: true=${trueOffsets(i)} calculated=${fields(i)}")
+
+        assertArrayEquals(trueOffsets, calculatedOffsets)
+
+        // println(StructComplexOpaque.offsets.toList)
+        // println(trueOffsets.toList)
       }
   end test_complex
 

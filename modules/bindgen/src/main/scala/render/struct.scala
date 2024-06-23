@@ -184,13 +184,37 @@ def struct(struct: Def.Struct, line: Appender)(using
 
           alignMethod.foreach(line(_))
           line("")
+
+          def renderAlignment(tpe: CType): String =
+            lazy val defaultCase =
+              s"alignmentof[${scalaType(tpe)}].toInt"
+            tpe match
+              case CType.Reference(Name.Model(name, _)) =>
+                aliasResolver(name) match
+                  case u: CType.Union =>
+                    renderAlignment(u)
+                  case _ =>
+                    defaultCase
+
+              case CType.Arr(of, _) => renderAlignment(of)
+
+              case CType.Union(fields, _) if fields.nonEmpty =>
+                fields
+                  .map(t => s"alignmentof[${scalaType(t)}].toInt")
+                  .mkString("Array(", ", ", ").max")
+              case _ =>
+                defaultCase
+            end match
+          end renderAlignment
+
           namedFieldsWithIndex.foreach { case ((_, fieldType), idx) =>
             val tpe = scalaType(fieldType)
             if idx == 0 then line(s"res(0) = align(0, alignmentof[$tpe].toInt)")
             else
               val prevTpe = scalaType(namedFieldsWithIndex(idx - 1)._1._2)
+              line(s"// $fieldType")
               line(
-                s"res($idx) = align(res(${idx - 1}) + sizeof[$prevTpe].toInt, alignmentof[$tpe].toInt)"
+                s"res($idx) = align(res(${idx - 1}) + sizeof[$prevTpe].toInt, ${renderAlignment(fieldType)})"
               )
 
           }
