@@ -187,11 +187,11 @@ def renderBinding(
       updateExports(
         "functions",
         renderScalaFunctions(
-          simpleStream("functions"),
-          resolvedFunctions.toSet,
+          out = simpleStream("functions"),
+          functions = resolvedFunctions.toSet,
           renderMode = renderMode,
           hasAnyTypes = hasAnyTypes,
-          typeImports,
+          typeImports = typeImports,
           exportMode = exportMode
         )
       )
@@ -420,6 +420,15 @@ private def renderEnumerations(
   exported.result()
 end renderEnumerations
 
+private val functionSorter = (f: GeneratedFunction.ScalaFunction) =>
+  val body =
+    f.body match
+      case ScalaFunctionBody.Extern                    => 1
+      case ScalaFunctionBody.Delegate(to, allocations) => 2
+      case ScalaFunctionBody.Export(loc)               => 3
+
+  f.name -> body
+
 private def renderScalaFunctions(
     out: LineBuilder,
     functions: Set[GeneratedFunction],
@@ -429,6 +438,7 @@ private def renderScalaFunctions(
     exportMode: ExportMode
 )(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
+
   val scalaExternFunctions = functions.collect {
     case f: GeneratedFunction.ScalaFunction
         if f.body == ScalaFunctionBody.Extern =>
@@ -465,7 +475,7 @@ private def renderScalaFunctions(
           else out.appendLine("\n")
 
           exported ++= renderAll(
-            scalaExternFunctions.toList.sortBy(_.name),
+            scalaExternFunctions.toList.sortBy(functionSorter),
             out,
             renderFunction(_, _, renderMode)
           )
@@ -484,7 +494,7 @@ private def renderScalaFunctions(
             out.emptyLine
 
           exported ++= renderAll(
-            scalaRegularFunctions.toList.sortBy(_.name),
+            scalaRegularFunctions.toList.sortBy(functionSorter),
             out,
             renderFunction(_, _, renderMode)
           )
@@ -493,7 +503,7 @@ private def renderScalaFunctions(
     else
       def modified(loc: ExportLocation) =
         scalaExternFunctions.toList
-          .sortBy(_.name)
+          .sortBy(functionSorter)
           .map { sf =>
             sf.copy(body = ScalaFunctionBody.Export(loc))
           }
