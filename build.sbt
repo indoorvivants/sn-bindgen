@@ -34,7 +34,7 @@ lazy val Versions = new {
 
   val Scala3 = "3.3.3"
   val Scala212 = "2.12.19"
-  val Scala213 = "2.13.14"
+  val Scala213 = "2.13.15"
   val Scala2 = List(Scala212, Scala213)
 
 }
