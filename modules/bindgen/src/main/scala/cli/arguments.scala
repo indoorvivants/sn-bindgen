@@ -299,7 +299,7 @@ object CLI:
         "render.external-name",
         help =
           "Render all definitions with matchign names as if they were imported from some package" +
-            "\nexample: --render.external-name 'cairo_*=libcairo'",
+            "\nexample: --render.external-name 'cairo_*=libcairo'"
       )
       .mapValidated { results =>
         results.traverse { spec =>
