@@ -18,7 +18,7 @@ addSbtPlugin(
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.11.0")
 
-addSbtPlugin("org.jmotor.sbt" % "sbt-dependency-updates" % "1.2.7")
+addSbtPlugin("org.jmotor.sbt" % "sbt-dependency-updates" % "1.2.9")
 
 addSbtPlugin("com.github.reibitto" % "sbt-welcome" % "0.4.0")
 
