@@ -16,7 +16,7 @@ addSbtPlugin(
   "com.indoorvivants" % "bindgen-sbt-plugin" % "0.1.4"
 )
 
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.11.0")
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.13.0")
 
 addSbtPlugin("org.jmotor.sbt" % "sbt-dependency-updates" % "1.2.9")
 
