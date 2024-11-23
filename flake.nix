@@ -48,10 +48,10 @@
               cp bin/bindgen $out/bin/
             '';
             buildInputs = with pkgs; [
-              libclang
+              llvmPackages_17.libclang
             ];
             nativeBuildInputs = with pkgs; [
-              clang
+              clang_17
               libunwind
               stdenv
               which
