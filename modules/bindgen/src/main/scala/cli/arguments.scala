@@ -177,7 +177,7 @@ object CLI:
     .options[String](
       "exclusive-prefix",
       help =
-        "When provided, only definitions that start with this prefix will be" +
+        "When provided, only definitions that start with this prefix will be " +
           "rendered",
       visibility = Visibility.Partial
     )
