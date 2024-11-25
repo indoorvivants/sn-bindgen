@@ -34,7 +34,7 @@
                 ./build.sbt
               ];
             };
-            depsSha256 = "sha256-dF5KMFD7CZPonHB4F0dhsz4KuDQr6d0qLxfTELVM6IA";
+            depsSha256 = "sha256-guxXAKIlTi48ZFQwFyEV6bHPy0islCfQiOMf9slCsYM=";
             buildPhase = ''
               sbt 'show buildBinary'
             '';
