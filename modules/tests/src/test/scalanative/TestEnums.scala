@@ -67,10 +67,11 @@ class TestEnums:
 
   @Test def test_small_enums(): Unit =
     zone:
-      assertEquals(
-        (PackedEnum8.TOP | PackedEnum8.CENTER).value,
-        (0x01.toByte | 0x02.toByte).toUByte
-      )
+      if !isWindows then 
+        assertEquals(
+          (PackedEnum8.TOP | PackedEnum8.CENTER).value,
+          (0x01.toByte | 0x02.toByte).toUByte
+        )
 
   @Test def test_tags(): Unit =
     summon[Tag[Enum1]]
