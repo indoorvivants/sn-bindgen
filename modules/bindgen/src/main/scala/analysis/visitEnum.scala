@@ -16,8 +16,6 @@ def visitEnum(rootCursor: CXCursor, isTypeDef: Boolean)(using
       case n: CType.NumericIntegral => n
     }
 
-  info(constructType(clang_getEnumDeclIntegerType(rootCursor)))
-
   val (ptr, memory) = Captured.unsafe[DefBuilder.Enum](
     DefBuilder.Enum(
       mutable.ListBuffer.empty,

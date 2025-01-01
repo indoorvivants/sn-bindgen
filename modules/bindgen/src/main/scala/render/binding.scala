@@ -417,49 +417,14 @@ private def renderEnumerations(
     AliasResolver,
     Context
 ) =
-
-  val hasAnyEnums = enums.nonEmpty
-  val hasUnsignedEnums =
-    enums.exists(_.intType.exists(_.sign == SignType.Unsigned))
-  val unsignedEnumBases =
-    enums.flatMap(_.intType.filter(_.sign == SignType.Unsigned).map(_.base))
-  val hasSignedEnums =
-    enums.exists(en =>
-      en.intType.exists(_.sign == SignType.Signed) || en.intType.isEmpty
-    )
-
   val enumBases = enums.map(_.intType).distinct.sorted
 
   val exported = List.newBuilder[Exported]
 
-  if hasAnyEnums then
+  if enumBases.nonEmpty then
     if mode == RenderMode.Objects then out.appendLine("object predef:")
     nestIf(mode == RenderMode.Objects) {
-
       val safePackageName = packageName.split('.').last
-      // val predefSigned = s"""
-      //   |private[$safePackageName] trait CEnum[T](using eq: T =:= Int):
-      //   |  given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
-      //   |  extension (inline t: T)
-      //   |    inline def int: CInt = eq.apply(t)
-      //   |    inline def value: CInt = eq.apply(t)
-      //  """.stripMargin.trim.linesIterator
-
-      // val predefUnsigned = s"""
-      //   |private[${safePackageName}] trait CEnumU[T](using eq: T =:= UInt):
-      //   |  given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-      //   |  extension (inline t: T)
-      //   |   inline def int: CInt = eq.apply(t).toInt
-      //   |   inline def uint: CUnsignedInt = eq.apply(t)
-      //   |   inline def value: CUnsignedInt = eq.apply(t)
-      //   """.stripMargin.trim.linesIterator
-
-      // if hasSignedEnums then predefSigned.foreach(to(out))
-      // // if hasUnsignedEnums then predefUnsigned.foreach(to(out))
-      // if unsignedEnumBases.nonEmpty then
-      //   unsignedEnumBases.foreach: base =>
-      // unsignedEnumPredef(safePackageName, base).foreach(to(out))
-
       enumBases.foreach: base =>
         enumPredef(safePackageName, base).foreach(to(out))
     }
