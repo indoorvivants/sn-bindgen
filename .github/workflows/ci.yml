@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        OS: ["macos-12", "macos-14"]
+        OS: ["macos-13", "macos-14"]
     runs-on: ${{ matrix.OS }}
     steps:
       - uses: actions/checkout@v3
@@ -31,10 +31,7 @@ jobs:
           java-version: '17'
           cache: 'sbt'
 
-      - name: Install SBT 
-        run: |
-          curl -Lo sbt https://raw.githubusercontent.com/sbt/sbt/1.9.x/sbt && \
-          chmod +x sbt
+      - uses: sbt/setup-sbt@v1
 
       - name: Install LLVM
         run: brew install llvm@$LLVM_VERSION
@@ -76,6 +73,8 @@ jobs:
           distribution: 'temurin' 
           java-version: '17'
           cache: 'sbt'
+
+      - uses: sbt/setup-sbt@v1
 
       - name: Setup Unix-like
         run: ./build/setup_unix.sh
