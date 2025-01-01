@@ -16,6 +16,24 @@ def renderName(name: Name.Model)(using config: Config) =
     .getOrElse(name.value)
 end renderName
 
+def scalaNumericType(typ: CType.NumericIntegral) =
+  import IntegralBase.*
+  import SignType.*
+  val bs =
+    typ.base match
+      case Char     => "Char"
+      case Short    => "Short"
+      case Int      => "Int"
+      case Long     => "LongInt"
+      case LongLong => "LongLong"
+
+  val prefix = typ.sign match
+    case Signed   => "C"
+    case Unsigned => "CUnsigned"
+
+  prefix + bs
+end scalaNumericType
+
 def scalaType(typ: CType)(using AliasResolver, Config): String =
   import CType.*
   typ match
@@ -34,22 +52,7 @@ def scalaType(typ: CType)(using AliasResolver, Config): String =
         case FloatingBase.Float      => "Float"
         case FloatingBase.Double     => "Double"
         case FloatingBase.LongDouble => "Double"
-    case NumericIntegral(base, signType) =>
-      import IntegralBase.*
-      import SignType.*
-      val bs =
-        base match
-          case Char     => "Char"
-          case Short    => "Short"
-          case Int      => "Int"
-          case Long     => "LongInt"
-          case LongLong => "LongLong"
-
-      val prefix = signType match
-        case Signed   => "C"
-        case Unsigned => "CUnsigned"
-
-      prefix + bs
+    case ni: NumericIntegral => scalaNumericType(ni)
     case Function(ret, params) =>
       val args = params.size
       val types =

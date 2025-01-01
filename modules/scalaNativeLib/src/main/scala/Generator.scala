@@ -181,6 +181,7 @@ object Generator {
       "import",
       "lazy",
       "match",
+      "macro",
       "new",
       "null",
       "object",

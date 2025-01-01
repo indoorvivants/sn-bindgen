@@ -29,6 +29,19 @@ enum CType:
   case Reference(name: Name)
 end CType
 
+given Ordering[SignType] = Ordering.by:
+  case SignType.Signed   => 0
+  case SignType.Unsigned => 1
+
+given Ordering[IntegralBase] = Ordering.by:
+  case IntegralBase.Char     => 0
+  case IntegralBase.Short    => 1
+  case IntegralBase.Int      => 2
+  case IntegralBase.Long     => 3
+  case IntegralBase.LongLong => 3
+
+given Ordering[CType.NumericIntegral] = Ordering.by(s => (s.base, s.sign))
+
 object CType:
   case class Parameter(name: Option[ParameterName], of: CType)
 

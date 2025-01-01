@@ -9,6 +9,7 @@ typedef union test_keywords {
   int new;
   int notify;
   int wait;
+  int macro;
 } UnionKeywords;
 
 typedef struct test_keywords_struct {
@@ -21,4 +22,5 @@ typedef struct test_keywords_struct {
   int new;
   int notify;
   int wait;
+  int macro;
 } StructKeywords;

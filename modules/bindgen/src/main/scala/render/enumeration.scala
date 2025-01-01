@@ -10,10 +10,11 @@ def enumeration(model: Def.Enum, line: Appender)(using
   val numericType = model.intType.getOrElse(CType.Int)
   val enumSuffix = if numericType.sign == SignType.Unsigned then "U" else ""
   val underlyingTypeRender = scalaType(numericType)
+  val traitName = enumBaseTraitName(numericType)
 
   renderComment(line, model.meta)
   line(s"opaque type $opaqueType = $underlyingTypeRender")
-  line(s"object $opaqueType extends CEnum$enumSuffix[$opaqueType]:")
+  line(s"object $opaqueType extends $traitName[$opaqueType]:")
 
   nest {
     line(s"given _tag: Tag[$opaqueType] = ${scalaTag(numericType)}")
@@ -48,9 +49,23 @@ def enumeration(model: Def.Enum, line: Appender)(using
       }
     }
     line(s"extension (a: $opaqueType)")
+    def wrap(exp: String) =
+      numericType match
+        case CType.NumericIntegral(
+              bindgen.IntegralBase.Char,
+              SignType.Signed
+            ) =>
+          s"(($exp) & 0xff).toByte"
+        case CType.NumericIntegral(
+              bindgen.IntegralBase.Char,
+              SignType.Unsigned
+            ) =>
+          s"(($exp) & 0xff.toUInt).toUByte"
+        case _ => exp
+
     nest {
-      line(s"inline def &(b: $opaqueType): $opaqueType = a & b")
-      line(s"inline def |(b: $opaqueType): $opaqueType = a | b")
+      line(s"inline def &(b: $opaqueType): $opaqueType = ${wrap("a & b")}")
+      line(s"inline def |(b: $opaqueType): $opaqueType = ${wrap("a | b")}")
       line(s"inline def is(b: $opaqueType): Boolean = (a & b) == b")
     }
   }
