@@ -53,7 +53,7 @@ val scalaKeyWords =
     "var",
     "while",
     "with",
-    "yield",
+    "yield"
   )
 
 def sanitise(name: String) =

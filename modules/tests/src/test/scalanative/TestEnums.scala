@@ -67,7 +67,7 @@ class TestEnums:
 
   @Test def test_small_enums(): Unit =
     zone:
-      if !isWindows then 
+      if !isWindows then
         assertEquals(
           (PackedEnum8.TOP | PackedEnum8.CENTER).value,
           (0x01.toByte | 0x02.toByte).toUByte
