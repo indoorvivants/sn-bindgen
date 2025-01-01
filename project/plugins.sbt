@@ -4,7 +4,7 @@ addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.17")
 
 addSbtPlugin("com.indoorvivants" % "sbt-commandmatrix" % "0.0.5")
 
-addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.12")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.9.0")
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
 
@@ -13,12 +13,12 @@ addSbtPlugin(
 )
 
 addSbtPlugin(
-  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.1.0"
+  "com.indoorvivants" % "bindgen-sbt-plugin" % "0.1.4"
 )
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.11.0")
 
-addSbtPlugin("org.jmotor.sbt" % "sbt-dependency-updates" % "1.2.7")
+addSbtPlugin("org.jmotor.sbt" % "sbt-dependency-updates" % "1.2.9")
 
 addSbtPlugin("com.github.reibitto" % "sbt-welcome" % "0.4.0")
 

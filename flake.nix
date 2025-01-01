@@ -34,7 +34,7 @@
                 ./build.sbt
               ];
             };
-            depsSha256 = "sha256-3sgPKN1/0lxSxOtetlWS/NobXIpQ6a7Ygk2GOprYIcg=";
+            depsSha256 = "sha256-guxXAKIlTi48ZFQwFyEV6bHPy0islCfQiOMf9slCsYM=";
             buildPhase = ''
               sbt 'show buildBinary'
             '';
@@ -48,10 +48,10 @@
               cp bin/bindgen $out/bin/
             '';
             buildInputs = with pkgs; [
-              libclang
+              llvmPackages_17.libclang
             ];
             nativeBuildInputs = with pkgs; [
-              clang
+              clang_17
               libunwind
               stdenv
               which

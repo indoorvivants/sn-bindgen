@@ -177,7 +177,7 @@ object CLI:
     .options[String](
       "exclusive-prefix",
       help =
-        "When provided, only definitions that start with this prefix will be" +
+        "When provided, only definitions that start with this prefix will be " +
           "rendered",
       visibility = Visibility.Partial
     )
@@ -299,7 +299,7 @@ object CLI:
         "render.external-name",
         help =
           "Render all definitions with matchign names as if they were imported from some package" +
-            "\nexample: --render.external-name 'cairo_*=libcairo'",
+            "\nexample: --render.external-name 'cairo_*=libcairo'"
       )
       .mapValidated { results =>
         results.traverse { spec =>
