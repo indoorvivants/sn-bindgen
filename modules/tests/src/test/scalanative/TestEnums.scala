@@ -65,6 +65,13 @@ class TestEnums:
       assert((!test).howdy == 25)
   end test_anon_enum
 
+  @Test def test_small_enums(): Unit =
+    zone:
+      assertEquals(
+        (PackedEnum8.TOP | PackedEnum8.CENTER).value,
+        (0x01.toByte | 0x02.toByte).toUByte
+      )
+
   @Test def test_tags(): Unit =
     summon[Tag[Enum1]]
     summon[Tag[Enum2]]

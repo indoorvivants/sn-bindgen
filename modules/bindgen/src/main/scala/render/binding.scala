@@ -362,6 +362,52 @@ private def renderAll[A <: (Def | GeneratedFunction)](
   exported.result
 end renderAll
 
+private[bindgen] def enumBaseTraitName(
+    intType: CType.NumericIntegral
+)(using AliasResolver, Config) =
+  val tpe = scalaNumericType(intType)
+  s"_BindgenEnum$tpe"
+
+private def enumPredef(
+    safePackageName: String,
+    base: Option[CType.NumericIntegral]
+)(using AliasResolver, Config) =
+  val intType: CType.NumericIntegral =
+    base.getOrElse(CType.NumericIntegral(IntegralBase.Int, SignType.Signed))
+  val renderedScalaType = scalaType(intType)
+  val renderedTagName =
+    val prefix = intType.sign match
+      case SignType.Signed   => ""
+      case SignType.Unsigned => "U"
+
+    val bs = intType.base match
+      case IntegralBase.Char     => "Byte"
+      case IntegralBase.Short    => "Short"
+      case IntegralBase.Int      => "Int"
+      case IntegralBase.Long     => "Long"
+      case IntegralBase.LongLong => "Long"
+
+    prefix + bs
+  end renderedTagName
+
+  val lb = LineBuilder()
+
+  val traitName = enumBaseTraitName(intType)
+
+  lb.appendLine(
+    s"private[${safePackageName}] trait $traitName[T](using eq: T =:= $renderedScalaType):"
+  )
+  lb.appendLine(s"  given Tag[T] = Tag.$renderedTagName.asInstanceOf[Tag[T]]")
+  lb.appendLine(s"  extension (inline t: T)")
+  lb.appendLine(s"   inline def value: $renderedScalaType = eq.apply(t)")
+  if intType.base == IntegralBase.Int then
+    lb.appendLine(s"   inline def int: CInt = eq.apply(t).toInt")
+    if intType.sign == SignType.Unsigned then
+      lb.appendLine(s"   inline def uint: CUnsignedInt = eq.apply(t)")
+
+  lb.result.linesIterator.toList
+end enumPredef
+
 private def renderEnumerations(
     out: LineBuilder,
     enums: List[Def.Enum],
@@ -371,13 +417,18 @@ private def renderEnumerations(
     AliasResolver,
     Context
 ) =
+
   val hasAnyEnums = enums.nonEmpty
   val hasUnsignedEnums =
     enums.exists(_.intType.exists(_.sign == SignType.Unsigned))
+  val unsignedEnumBases =
+    enums.flatMap(_.intType.filter(_.sign == SignType.Unsigned).map(_.base))
   val hasSignedEnums =
     enums.exists(en =>
       en.intType.exists(_.sign == SignType.Signed) || en.intType.isEmpty
     )
+
+  val enumBases = enums.map(_.intType).distinct.sorted
 
   val exported = List.newBuilder[Exported]
 
@@ -386,25 +437,31 @@ private def renderEnumerations(
     nestIf(mode == RenderMode.Objects) {
 
       val safePackageName = packageName.split('.').last
-      val predefSigned = s"""
-        |private[$safePackageName] trait CEnum[T](using eq: T =:= Int):
-        |  given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
-        |  extension (inline t: T) 
-        |    inline def int: CInt = eq.apply(t)
-        |    inline def value: CInt = eq.apply(t)
-       """.stripMargin.trim.linesIterator
+      // val predefSigned = s"""
+      //   |private[$safePackageName] trait CEnum[T](using eq: T =:= Int):
+      //   |  given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
+      //   |  extension (inline t: T)
+      //   |    inline def int: CInt = eq.apply(t)
+      //   |    inline def value: CInt = eq.apply(t)
+      //  """.stripMargin.trim.linesIterator
 
-      val predefUnsigned = s"""
-        |private[${safePackageName}] trait CEnumU[T](using eq: T =:= UInt):
-        |  given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-        |  extension (inline t: T)
-        |   inline def int: CInt = eq.apply(t).toInt
-        |   inline def uint: CUnsignedInt = eq.apply(t)
-        |   inline def value: CUnsignedInt = eq.apply(t)
-        """.stripMargin.trim.linesIterator
+      // val predefUnsigned = s"""
+      //   |private[${safePackageName}] trait CEnumU[T](using eq: T =:= UInt):
+      //   |  given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+      //   |  extension (inline t: T)
+      //   |   inline def int: CInt = eq.apply(t).toInt
+      //   |   inline def uint: CUnsignedInt = eq.apply(t)
+      //   |   inline def value: CUnsignedInt = eq.apply(t)
+      //   """.stripMargin.trim.linesIterator
 
-      if hasSignedEnums then predefSigned.foreach(to(out))
-      if hasUnsignedEnums then predefUnsigned.foreach(to(out))
+      // if hasSignedEnums then predefSigned.foreach(to(out))
+      // // if hasUnsignedEnums then predefUnsigned.foreach(to(out))
+      // if unsignedEnumBases.nonEmpty then
+      //   unsignedEnumBases.foreach: base =>
+      // unsignedEnumPredef(safePackageName, base).foreach(to(out))
+
+      enumBases.foreach: base =>
+        enumPredef(safePackageName, base).foreach(to(out))
     }
     if mode == RenderMode.Objects then
       out.appendLine("\n\nobject enumerations:")

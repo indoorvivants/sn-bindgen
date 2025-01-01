@@ -1,3 +1,4 @@
+#include <stdint.h>
 typedef enum Enum1 { ONE = 1, TWO = 2, THREE = 3 } Enum1;
 
 typedef enum Enum2 { MINUS_ONE = -1, MINUS_TWO = -2, FOUR = 4 } Enum2;
@@ -25,3 +26,8 @@ typedef struct {
   enum { WHAT, THE, HELL } protocol;
   int howdy;
 } EnumAnon;
+
+typedef enum __attribute__((__packed__)) {
+  TOP = 1,
+  CENTER = 2,
+} PackedEnum8;

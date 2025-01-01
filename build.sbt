@@ -32,9 +32,9 @@ lazy val Versions = new {
   val detective = "0.0.2"
   val opaqueNewtypes = "0.0.2"
 
-  val Scala3 = "3.3.3"
-  val Scala212 = "2.12.19"
-  val Scala213 = "2.13.14"
+  val Scala3 = "3.3.4"
+  val Scala212 = "2.12.20"
+  val Scala213 = "2.13.15"
   val Scala2 = List(Scala212, Scala213)
 
 }
