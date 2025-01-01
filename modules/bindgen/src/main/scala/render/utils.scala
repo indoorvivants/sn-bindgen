@@ -31,6 +31,7 @@ val scalaKeyWords =
     "implicit",
     "import",
     "lazy",
+    "macro",
     "match",
     "new",
     "null",
@@ -45,14 +46,14 @@ val scalaKeyWords =
     "this",
     "throw",
     "trait",
-    "try",
     "true",
+    "try",
     "type",
     "val",
     "var",
     "while",
     "with",
-    "yield"
+    "yield",
   )
 
 def sanitise(name: String) =
