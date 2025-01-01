@@ -51,7 +51,7 @@ jobs:
           
 
       - name: CI and build the binary
-        run: ./sbt ci buildPlatformBinary
+        run: sbt ci buildPlatformBinary
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
