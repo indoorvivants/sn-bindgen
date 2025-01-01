@@ -50,14 +50,14 @@ import _root_.scala.scalanative.*
 
 trait ExportedFunctions:
   /**
-   * [bindgen] header: /tmp/1844071101488525804header.h
+   * [bindgen] header: /tmp/17413745840586903033header.h
   */
   def myThing(n : CInt, i : CLongInt): CLongInt
 
 
 object functions extends ExportedFunctions:
   /**
-   * [bindgen] header: /tmp/1844071101488525804header.h
+   * [bindgen] header: /tmp/17413745840586903033header.h
   */
   @exported
   override def myThing(n : CInt, i : CLongInt): CLongInt = libtest.impl.Implementations.myThing(n, i)
@@ -104,7 +104,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/15061531050369736124header.h
+   * [bindgen] header: /tmp/2409820210280534525header.h
   */
   opaque type MyStuff = CStruct2[CInt, CString]
   object MyStuff:
@@ -124,7 +124,7 @@ object structs:
 trait ExportedFunctions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/15061531050369736124header.h
+   * [bindgen] header: /tmp/2409820210280534525header.h
   */
   def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt
 
@@ -132,7 +132,7 @@ trait ExportedFunctions:
 object functions extends ExportedFunctions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/15061531050369736124header.h
+   * [bindgen] header: /tmp/2409820210280534525header.h
   */
   @exported
   override def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt = libtest.impl.Implementations.myThing(n, str)
@@ -154,7 +154,7 @@ initialise the Scala Native GC runtime.</p>
 it's convenient to put <code>ScalaNativeInit</code> into the header file that defines your binary interface.</p>
 <p>Bindgen recognises that and doesn't render this function as part of the bindings.
 The function has to exactly match the <code>int ScalaNativeInit(void)</code> type to be filtered out.</p>
-</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2024 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
+</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2025 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               gtag('js', new Date());
 
