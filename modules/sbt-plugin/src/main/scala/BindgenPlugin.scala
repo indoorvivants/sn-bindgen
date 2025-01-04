@@ -130,7 +130,7 @@ object BindgenPlugin extends AutoPlugin {
         getJars(
           ModuleID(
             "com.indoorvivants",
-            "bindgen_native0.4_3",
+            "bindgen_native0.5_3",
             bindgenVersion.value
           ).intransitive().classifier(jarString(platform))
         ).headOption.getOrElse(
