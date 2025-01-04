@@ -2,14 +2,8 @@ package bindgen
 
 import bindgen.rendering.*
 
-import java.io.File
-import java.io.FileWriter
-import scala.collection.mutable
+import java.io.{File, FileWriter}
 import scala.scalanative.unsafe.*
-import scala.scalanative.unsigned.*
-
-import scalanative.libc.*
-import scala.util.Using.apply
 import scala.util.Using
 
 object Generate:

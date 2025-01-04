@@ -1,9 +1,6 @@
 package bindgen.rendering
 
 import bindgen.*
-import scala.collection.mutable.ListBuffer
-import opaque_newtypes.given
-import scala.collection.mutable
 
 case class TypeImports(
     enums: Boolean,

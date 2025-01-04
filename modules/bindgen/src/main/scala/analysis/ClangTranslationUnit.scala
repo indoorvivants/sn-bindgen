@@ -1,9 +1,13 @@
 package bindgen
 
-import libclang.*, fluent.*
+import libclang.*
+
+import scala.util.boundary
+
 import scalanative.unsafe.*
 import scalanative.unsigned.*
-import scala.util.boundary, boundary.break, boundary.Label
+import boundary.break
+import boundary.Label
 
 object ClangTranslationUnit:
   def create(

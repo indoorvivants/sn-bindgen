@@ -4,12 +4,11 @@ enum LogLevel:
   case trace, info, warning, error
 
 object LogLevel:
-  import LogLevel as lev
   def priority(m: LogLevel): Int = m match
-    case lev.trace   => 0
-    case lev.info    => 1
-    case lev.warning => 2
-    case lev.error   => 3
+    case LogLevel.trace   => 0
+    case LogLevel.info    => 1
+    case LogLevel.warning => 2
+    case LogLevel.error   => 3
 
   def color(m: LogLevel): String = m match
     case LogLevel.info    => Console.GREEN

@@ -1,9 +1,8 @@
 package bindgen
 
+import scala.scalanative.*
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
-
-import scala.scalanative.*
 
 private def _unsafe(typ: String) = s"scala.scalanative.unsafe.$typ"
 private def _scala(typ: String) = s"scala.$typ"

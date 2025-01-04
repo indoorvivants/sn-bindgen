@@ -1,10 +1,6 @@
 package bindgen.interface
 
 import java.io.*
-import java.lang.ProcessBuilder.Redirect
-import java.nio.file.*
-import scala.sys.process.ProcessLogger
-import scala.util.control.NonFatal
 
 sealed trait BindingLang extends Product with Serializable
 object BindingLang {
@@ -41,7 +37,6 @@ object LogLevel {
     } catch { case _: MatchError => None }
 }
 
-import BindingLang.*
 sealed trait Includes extends Product with Serializable
 object Includes {
   case object ClangSearchPath extends Includes

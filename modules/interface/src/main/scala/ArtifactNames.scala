@@ -1,6 +1,7 @@
 package bindgen.interface
 
 import com.indoorvivants.detective.Platform
+
 import Platform.*
 
 object ArtifactNames {

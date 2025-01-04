@@ -40,8 +40,6 @@ lazy val Versions = new {
 
 inThisBuild(
   Seq(
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
     semanticdbIncludeInJar := false,
     organization := "com.indoorvivants",
     organizationName := "Anton Sviridov",
@@ -96,7 +94,11 @@ lazy val iface = projectMatrix
   .settings(
     moduleName := "bindgen-interface",
     libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
-    scalacOptions += "-deprecation"
+    scalacOptions += "-deprecation",
+    scalacOptions += {
+      if (scalaBinaryVersion.value.startsWith("2.12")) "-Ywarn-unused-import"
+      else "-Wunused:imports"
+    }
   )
   .enablePlugins(BuildInfoPlugin)
   .settings(
@@ -131,7 +133,8 @@ lazy val bindgen = project
     libraryDependencies += "com.monovore" %%% "decline" % Versions.decline,
     libraryDependencies += "com.outr" %%% "scribe" % Versions.scribe,
     libraryDependencies += "com.indoorvivants" %%% "opaque-newtypes" % Versions.opaqueNewtypes,
-    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v")
+    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
+    scalacOptions += "-Wunused:all"
   )
   .settings {
     detectBinaryArtifacts
@@ -224,6 +227,7 @@ lazy val plugin = projectMatrix
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
     },
+    scalacOptions += "-Ywarn-unused-import",
     scriptedBufferLog := false,
     publishLocal := publishLocal
       .dependsOn(
@@ -236,6 +240,7 @@ lazy val plugin = projectMatrix
 lazy val libclang = project
   .in(file("modules/libclang"))
   .enablePlugins(ScalaNativePlugin, BindgenPlugin)
+  .disablePlugins(ScalafixPlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= usesLibClang)
   .settings(remoteCacheSettings)
@@ -776,14 +781,28 @@ addCommandAlias(
 addCommandAlias("interfaceTests", "tests/test; tests3/test; tests2_12/test")
 addCommandAlias(
   "ci",
-  "scalafmtCheckAll; scalafmtSbtCheck; cliTests; interfaceTests; pluginTests; generatorTests; exportTests"
+  "clean; scalafixEnable; scalafmtCheckAll; scalafmtSbtCheck; cliTests;" +
+    "interfaceTests; pluginTests; generatorTests; exportTests"
 )
 
 addCommandAlias(
   "devPublish",
   "publishLocal; localBindgenArtifact/publishLocal; show bindgen/version"
 )
-addCommandAlias("preCI", "scalafmtAll; scalafmtSbt")
+
+val scalafixRules = Seq(
+  "OrganizeImports",
+  "DisableSyntax",
+  "LeakingImplicitClassVal",
+  "NoValInForComprehension"
+).mkString(" ")
+
+val PrepareCICommands = Seq(
+  s"scalafix --rules $scalafixRules",
+  "scalafmtAll",
+  "scalafmtSbt"
+)
+addCommandAlias("preCI", PrepareCICommands.mkString(";"))
 
 logoColor := scala.Console.MAGENTA
 

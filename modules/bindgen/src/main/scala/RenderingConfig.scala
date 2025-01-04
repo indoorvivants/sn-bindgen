@@ -1,10 +1,10 @@
 package bindgen
 
-import opaque_newtypes.*
-import java.io.File
-import scala.util.matching.Regex
-import scala.util.chaining.*
 import bindgen.RenderingConfig.FilterSpec
+import opaque_newtypes.*
+
+import scala.util.chaining.*
+import scala.util.matching.Regex
 
 object RenderingConfig:
   def withDefaults: RenderingConfig =

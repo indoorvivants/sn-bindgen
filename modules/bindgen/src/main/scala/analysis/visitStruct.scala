@@ -1,12 +1,12 @@
 package bindgen
 
-import libclang.*, fluent.*
+import libclang.*
 
 import scala.collection.mutable.ListBuffer
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
-import scalanative.libc.*
+import fluent.*
 
 class StructCollector(val struct: DefBuilder.Struct, var numAnonymous: Int)
 

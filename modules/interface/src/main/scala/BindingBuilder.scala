@@ -1,13 +1,11 @@
 package bindgen.interface
 
 import java.io.*
-import java.lang.ProcessBuilder.Redirect
 import java.nio.file.*
 import scala.sys.process.ProcessLogger
-import scala.util.control.NonFatal
+
 import BindingLang.*
 import Utils.*
-import Binding.Defaults
 
 class BindingBuilder(
     binary: File,
@@ -32,8 +30,6 @@ class BindingBuilder(
     val files = Seq.newBuilder[File]
 
     bindings.foreach { binding =>
-      import scala.sys.process.Process
-
       val destinationFilename = lang match {
         case Scala => binding.scalaFile
         case C     => binding.cFile

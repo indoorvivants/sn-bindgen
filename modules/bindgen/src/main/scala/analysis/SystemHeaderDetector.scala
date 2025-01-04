@@ -1,14 +1,6 @@
 package bindgen
 
-import java.io.FileWriter
-import java.nio.file.Files
-import scala.collection.mutable
-import scala.scalanative.unsafe.*
-import scala.scalanative.unsigned.*
-import scalanative.libc.*
-import libclang.fluent.string
-import java.nio.file.Path
-import java.nio.file.Paths
+import java.nio.file.{Path, Paths}
 
 class SystemHeaderDetector(
     clangInfo: ClangInfo,

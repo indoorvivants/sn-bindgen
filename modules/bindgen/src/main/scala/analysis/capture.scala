@@ -3,7 +3,6 @@ package bindgen
 import scalanative.unsafe.*
 import scalanative.runtime.ffi.{malloc, free}
 
-
 opaque type Memory = (String, () => Unit)
 object Memory:
   extension (f: Memory)
@@ -26,8 +25,6 @@ object Captured:
       )
 
     val tuple = (value, c)
-
-    val originalAddress = Intrinsics.castObjectToRawPtr(tuple)
 
     Intrinsics.storeObject(rawptr, tuple)
 

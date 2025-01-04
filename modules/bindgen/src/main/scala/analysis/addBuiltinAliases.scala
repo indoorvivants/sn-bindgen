@@ -1,14 +1,5 @@
 package bindgen
 
-import java.io.FileWriter
-import java.nio.file.Files
-import scala.collection.mutable
-import scala.scalanative.unsafe.*
-import scala.scalanative.unsigned.*
-
-import scalanative.libc.*
-import libclang.fluent.string
-
 def addBuiltInAliases(binding: BindingBuilder)(using
     LoggingConfig
 ): BindingBuilder =

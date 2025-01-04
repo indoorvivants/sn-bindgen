@@ -1,16 +1,7 @@
 package bindgen.interface
 
 import java.io.*
-import java.lang.ProcessBuilder.Redirect
 import java.nio.file.*
-import scala.sys.process.ProcessLogger
-import scala.util.control.NonFatal
-
-import BindingLang.*
-import Utils.*
-import Binding.Defaults
-import bindgen.interface.Flavour.ScalaNative04
-import bindgen.interface.Flavour.ScalaNative05
 
 class Binding private (
     impl: Binding.BindingArgs

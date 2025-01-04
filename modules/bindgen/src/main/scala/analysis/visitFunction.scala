@@ -1,11 +1,11 @@
 package bindgen
 
-import libclang.*, fluent.*
+import libclang.*
+
 import scala.collection.mutable.ListBuffer
 import scala.scalanative.unsafe.*
-import scala.scalanative.unsigned.*
 
-import scalanative.libc.*
+import fluent.*
 
 def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
   val typ = clang_getCursorType(functionCursor)

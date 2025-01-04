@@ -1,13 +1,12 @@
 package bindgen
 
-import java.util.Properties
-import java.nio.file.*
 import com.indoorvivants.detective.Platform
 
-import Platform.OS.*
-import java.lang.ProcessBuilder.Redirect
+import java.nio.file.*
 import scala.sys.process.ProcessLogger
 import scala.util.Try
+
+import Platform.OS.*
 
 case class ClangInfo(
     includePaths: List[String]

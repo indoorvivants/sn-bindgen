@@ -1,11 +1,12 @@
 package bindgen
 
+import libclang.*
+
+import scala.collection.mutable
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
-import scalanative.libc.*
-import scala.collection.mutable
 
-import libclang.*, fluent.*
+import fluent.*
 
 def visitEnum(rootCursor: CXCursor, isTypeDef: Boolean)(using
     Zone,
@@ -37,8 +38,6 @@ def visitEnum(rootCursor: CXCursor, isTypeDef: Boolean)(using
       (cursorPtr: Ptr[CXCursor], parent: Ptr[CXCursor], d: CXClientData) =>
         val (ref, config) = !d.unwrap[Captured[DefBuilder.Enum]]
         val cursor = !cursorPtr
-
-        given Config = config
 
         Zone {
           if cursor.kind == CXCursorKind.CXCursor_EnumConstantDecl then
