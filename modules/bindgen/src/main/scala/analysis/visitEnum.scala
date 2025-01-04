@@ -40,7 +40,7 @@ def visitEnum(rootCursor: CXCursor, isTypeDef: Boolean)(using
 
         given Config = config
 
-        zone {
+        Zone {
           if cursor.kind == CXCursorKind.CXCursor_EnumConstantDecl then
             val enumConstant = clang_getCursorSpelling(cursorPtr).string
             ref.values.addOne(

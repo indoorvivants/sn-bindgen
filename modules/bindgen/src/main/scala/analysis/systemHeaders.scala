@@ -54,7 +54,7 @@ def clangInfo(det: SystemPathDetection)(using
         )
       end if
 
-private def handleDetect(path: Path)(using Config) =
+private def handleDetect(path: Path)(using Config): Either[BindingError, ClangInfo] =
   ClangDetector.detect(path, summon[Config].tempDir.value.toPath) match
     case Left(pr) =>
       val msg =

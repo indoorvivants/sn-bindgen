@@ -97,6 +97,17 @@ void __sn_wrap_libclang_clang_Cursor_getArgument(CXCursor *C, unsigned int i, CX
 }
 
 
+enum CX_BinaryOperatorKind __sn_wrap_libclang_clang_Cursor_getBinaryOpcode(CXCursor *C) {
+ return clang_Cursor_getBinaryOpcode(*C);
+};
+
+
+void __sn_wrap_libclang_clang_Cursor_getBinaryOpcodeStr(enum CX_BinaryOperatorKind Op, CXString *____return) {
+  CXString ____ret = clang_Cursor_getBinaryOpcodeStr(Op);
+  memcpy(____return, &____ret, sizeof(CXString));
+}
+
+
 void __sn_wrap_libclang_clang_Cursor_getBriefCommentText(CXCursor *C, CXString *____return) {
   CXString ____ret = clang_Cursor_getBriefCommentText(*C);
   memcpy(____return, &____ret, sizeof(CXString));

@@ -36,7 +36,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
       given Config = config
       val cursor = !cursorPtr
 
-      zone {
+      Zone {
 
         val builder = collector.struct
         trace(s"Cursor kind: ${cursor.kind.spelling}")
@@ -194,7 +194,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
       }
   }
 
-  zone {
+  Zone {
     try
       libclang.fluent.clang_visitChildren(
         cursor,

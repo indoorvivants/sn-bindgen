@@ -11,7 +11,7 @@ class TestAliases:
   import lib_test_aliases.functions.*
 
   @Test def test_basics() =
-    zone:
+    Zone:
       assertEquals(42069, hello_alias(42069).value)
 
       val x: Int = hello_alias(42069).value
@@ -28,7 +28,7 @@ class TestAliases:
       assertEquals(t.value, 25)
 
   @Test def test_function_pointers() =
-    zone:
+    Zone:
       val test = TestStruct(10)
 
       val square = TestFunctionPointer: (struct: Ptr[TestStruct]) =>
@@ -37,7 +37,7 @@ class TestAliases:
       // sanity check first
       assertEquals(500, higher_order_function(5, square, test))
 
-      val ptr: Ptr[Byte] = CFuncPtr.toPtr(square.value)
+      val ptr = CFuncPtr.toPtr(square.value)
       val squareReconstructed =
         TestFunctionPointer.fromPtr(ptr)
 

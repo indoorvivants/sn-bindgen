@@ -19,7 +19,7 @@ object ClangVisitor:
 
         given Config = conf
 
-        zone {
+        Zone {
 
           val loc = cursor.location
 

@@ -10,7 +10,7 @@ import lib_test_recursive_structs.structs.Ptr_Recursive_Array
 class TestRecursiveStructs:
   import lib_test_recursive_structs.types.*
   @Test def test_simple_recursive(): Unit =
-    zone {
+    Zone {
       val nested3 = Recrusive_Simple(null, 333.33)
       val nested2 = Recrusive_Simple(nested3, 222.22)
       val nested1 = Recrusive_Simple(nested2, 111.11)
@@ -30,7 +30,7 @@ class TestRecursiveStructs:
     }
 
   @Test def test_array_recursive(): Unit =
-    zone {
+    Zone {
       val arr = stackalloc[CArray[Ptr[Ptr_Recursive_Array], Nat._3]]()
 
       val st1 = Ptr_Recursive_Array(null, _ne = 25)
@@ -50,7 +50,7 @@ class TestRecursiveStructs:
     }
 
   @Test def test_mutually_recursive(): Unit =
-    zone {
+    Zone {
       val struct1 = Recrusive_Struct1(null, 1.0)
       val struct2 = Recursive_Struct2(struct1, c"hello")
       val struct3 = Recursive_Struct3(hello_func(null), 25)
@@ -62,7 +62,7 @@ class TestRecursiveStructs:
     }
 
   @Test def test_ptr_recursive: Unit =
-    zone {
+    Zone {
 
       val structPtr = Ptr_Recursive(25.0, null)
       val struct = !structPtr
@@ -74,7 +74,7 @@ class TestRecursiveStructs:
     }
 
   @Test def test_recursive_function_pointer(): Unit =
-    zone {
+    Zone {
       val struct1 = Recursive_Func(0.5, (_: Ptr[Recursive_Func]) => (), 0)
 
       assertEquals(0.5, (!struct1).d, 0.0001)
