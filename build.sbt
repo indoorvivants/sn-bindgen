@@ -21,7 +21,7 @@ import ArtifactNames.*
 import java.nio.file.Paths
 
 lazy val Versions = new {
-  val decline = "2.4.2-SNAPSHOT"
+  val decline = "2.5.0"
   val scribe = "3.15.3"
   val scalaNative = nativeVersion
   val junit = "0.13.3"

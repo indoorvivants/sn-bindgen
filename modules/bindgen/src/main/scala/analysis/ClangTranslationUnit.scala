@@ -52,6 +52,7 @@ object ClangTranslationUnit:
     boundary:
       if unit == null.asInstanceOf[CXTranslationUnit] then
         break(Left(BindingError.FailedToCreateTranslationUnit))
+
       trace("Successfully created a translation unit")
 
       var errors = 0
@@ -76,9 +77,6 @@ object ClangTranslationUnit:
 
       Right(unit)
   end create
-
-  private def clangDiagnostic(diag: CXDiagnostic) =
-    val rawSeverity = clang_getDiagnosticSeverity(diag)
 
   def getCursor(cursor: CXTranslationUnit)(using Zone) =
     val curs = clang_getTranslationUnitCursor(cursor)
