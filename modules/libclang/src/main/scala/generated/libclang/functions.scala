@@ -1357,26 +1357,18 @@ import _root_.scala.scalanative.*
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXCursorSet_contains(cset : CXCursorSet, cursor : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXCursorSet_contains(cset, cursor)
-
-/**
- * Queries a CXCursorSet to see if it contains a specific CXCursor.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_CXCursorSet_contains(cset : CXCursorSet, cursor : CXCursor)(using Zone): CUnsignedInt = 
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = cursor
   __sn_wrap_libclang_clang_CXCursorSet_contains(cset, (__ptr_0 + 0))
 
 /**
- * Inserts a CXCursor into a CXCursorSet.
+ * Queries a CXCursorSet to see if it contains a specific CXCursor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXCursorSet_insert(cset : CXCursorSet, cursor : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXCursorSet_insert(cset, cursor)
+def clang_CXCursorSet_contains(cset : CXCursorSet, cursor : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXCursorSet_contains(cset, cursor)
 
 /**
  * Inserts a CXCursor into a CXCursorSet.
@@ -1389,12 +1381,12 @@ def clang_CXCursorSet_insert(cset : CXCursorSet, cursor : CXCursor)(using Zone):
   __sn_wrap_libclang_clang_CXCursorSet_insert(cset, (__ptr_0 + 0))
 
 /**
- * Determine if a C++ constructor is a converting constructor.
+ * Inserts a CXCursor into a CXCursorSet.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXConstructor_isConvertingConstructor(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXXConstructor_isConvertingConstructor(C)
+def clang_CXCursorSet_insert(cset : CXCursorSet, cursor : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXCursorSet_insert(cset, cursor)
 
 /**
  * Determine if a C++ constructor is a converting constructor.
@@ -1407,14 +1399,12 @@ def clang_CXXConstructor_isConvertingConstructor(C : CXCursor)(using Zone): CUns
   __sn_wrap_libclang_clang_CXXConstructor_isConvertingConstructor((__ptr_0 + 0))
 
 /**
- * Determine if a C++ constructor is a copy constructor.
+ * Determine if a C++ constructor is a converting constructor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXConstructor_isCopyConstructor(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_CXXConstructor_isCopyConstructor((__ptr_0 + 0))
+def clang_CXXConstructor_isConvertingConstructor(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXXConstructor_isConvertingConstructor(C)
 
 /**
  * Determine if a C++ constructor is a copy constructor.
@@ -1425,12 +1415,14 @@ def clang_CXXConstructor_isCopyConstructor(C : Ptr[CXCursor]): CUnsignedInt =
   __sn_wrap_libclang_clang_CXXConstructor_isCopyConstructor(C)
 
 /**
- * Determine if a C++ constructor is the default constructor.
+ * Determine if a C++ constructor is a copy constructor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXConstructor_isDefaultConstructor(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXXConstructor_isDefaultConstructor(C)
+def clang_CXXConstructor_isCopyConstructor(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_CXXConstructor_isCopyConstructor((__ptr_0 + 0))
 
 /**
  * Determine if a C++ constructor is the default constructor.
@@ -1441,6 +1433,14 @@ def clang_CXXConstructor_isDefaultConstructor(C : CXCursor)(using Zone): CUnsign
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_CXXConstructor_isDefaultConstructor((__ptr_0 + 0))
+
+/**
+ * Determine if a C++ constructor is the default constructor.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_CXXConstructor_isDefaultConstructor(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXXConstructor_isDefaultConstructor(C)
 
 /**
  * Determine if a C++ constructor is a move constructor.
@@ -1465,18 +1465,18 @@ def clang_CXXConstructor_isMoveConstructor(C : CXCursor)(using Zone): CUnsignedI
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXField_isMutable(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXXField_isMutable(C)
+def clang_CXXField_isMutable(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_CXXField_isMutable((__ptr_0 + 0))
 
 /**
  * Determine if a C++ field is declared 'mutable'.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXField_isMutable(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_CXXField_isMutable((__ptr_0 + 0))
+def clang_CXXField_isMutable(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXXField_isMutable(C)
 
 /**
  * Determine if a C++ member function or member function template is declared 'const'.
@@ -1501,18 +1501,18 @@ def clang_CXXMethod_isConst(C : CXCursor)(using Zone): CUnsignedInt =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXMethod_isCopyAssignmentOperator(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXXMethod_isCopyAssignmentOperator(C)
+def clang_CXXMethod_isCopyAssignmentOperator(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_CXXMethod_isCopyAssignmentOperator((__ptr_0 + 0))
 
 /**
  * Determine if a C++ member function is a copy-assignment operator, returning 1 if such is the case and 0 otherwise.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXMethod_isCopyAssignmentOperator(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_CXXMethod_isCopyAssignmentOperator((__ptr_0 + 0))
+def clang_CXXMethod_isCopyAssignmentOperator(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXXMethod_isCopyAssignmentOperator(C)
 
 /**
  * Determine if a C++ method is declared '= default'.
@@ -1555,18 +1555,18 @@ def clang_CXXMethod_isDeleted(C : Ptr[CXCursor]): CUnsignedInt =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXMethod_isExplicit(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXXMethod_isExplicit(C)
+def clang_CXXMethod_isExplicit(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_CXXMethod_isExplicit((__ptr_0 + 0))
 
 /**
  * Determines if a C++ constructor or conversion function was declared explicit, returning 1 if such is the case and 0 otherwise.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXMethod_isExplicit(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_CXXMethod_isExplicit((__ptr_0 + 0))
+def clang_CXXMethod_isExplicit(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXXMethod_isExplicit(C)
 
 /**
  * Determine if a C++ member function is a move-assignment operator, returning 1 if such is the case and 0 otherwise.
@@ -1591,18 +1591,26 @@ def clang_CXXMethod_isMoveAssignmentOperator(C : CXCursor)(using Zone): CUnsigne
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXMethod_isPureVirtual(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_CXXMethod_isPureVirtual((__ptr_0 + 0))
+def clang_CXXMethod_isPureVirtual(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXXMethod_isPureVirtual(C)
 
 /**
  * Determine if a C++ member function or member function template is pure virtual.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXMethod_isPureVirtual(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXXMethod_isPureVirtual(C)
+def clang_CXXMethod_isPureVirtual(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_CXXMethod_isPureVirtual((__ptr_0 + 0))
+
+/**
+ * Determine if a C++ member function or member function template is declared 'static'.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_CXXMethod_isStatic(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXXMethod_isStatic(C)
 
 /**
  * Determine if a C++ member function or member function template is declared 'static'.
@@ -1613,14 +1621,6 @@ def clang_CXXMethod_isStatic(C : CXCursor)(using Zone): CUnsignedInt =
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_CXXMethod_isStatic((__ptr_0 + 0))
-
-/**
- * Determine if a C++ member function or member function template is declared 'static'.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_CXXMethod_isStatic(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXXMethod_isStatic(C)
 
 /**
  * Determine if a C++ member function or member function template is explicitly declared 'virtual' or if it overrides a virtual method from one of the base classes.
@@ -1645,18 +1645,18 @@ def clang_CXXMethod_isVirtual(C : CXCursor)(using Zone): CUnsignedInt =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXRecord_isAbstract(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_CXXRecord_isAbstract(C)
+def clang_CXXRecord_isAbstract(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_CXXRecord_isAbstract((__ptr_0 + 0))
 
 /**
  * Determine if a C++ record is abstract, i.e. whether a class or struct has a pure virtual member function.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_CXXRecord_isAbstract(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_CXXRecord_isAbstract((__ptr_0 + 0))
+def clang_CXXRecord_isAbstract(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_CXXRecord_isAbstract(C)
 
 /**
  * If cursor is a statement declaration tries to evaluate the statement and if its variable, tries to evaluate its initializer, into its corresponding type. If it's an expression, tries to evaluate the expression.
@@ -1834,20 +1834,20 @@ def clang_Cursor_getMangling(_0 : Ptr[CXCursor])(using Zone): CXString =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getMangling(_0 : CXCursor)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  val __ptr_1: Ptr[CXString] = alloc[CXString](1)
-  !(__ptr_0 + 0) = _0
-  __sn_wrap_libclang_clang_Cursor_getMangling((__ptr_0 + 0), (__ptr_1 + 0))
-  !(__ptr_1 + 0)
+def clang_Cursor_getMangling(_0 : Ptr[CXCursor])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_Cursor_getMangling(_0, __return)
 
 /**
  * Retrieve the CXString representing the mangled name of the cursor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getMangling(_0 : Ptr[CXCursor])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_Cursor_getMangling(_0, __return)
+def clang_Cursor_getMangling(_0 : CXCursor)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  val __ptr_1: Ptr[CXString] = alloc[CXString](1)
+  !(__ptr_0 + 0) = _0
+  __sn_wrap_libclang_clang_Cursor_getMangling((__ptr_0 + 0), (__ptr_1 + 0))
+  !(__ptr_1 + 0)
 
 /**
  * Given a CXCursor_ModuleImportDecl cursor, return the associated module.
@@ -1872,18 +1872,26 @@ def clang_Cursor_getModule(C : Ptr[CXCursor]): CXModule =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getNumArguments(C : CXCursor)(using Zone): CInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_Cursor_getNumArguments((__ptr_0 + 0))
+def clang_Cursor_getNumArguments(C : Ptr[CXCursor]): CInt = 
+  __sn_wrap_libclang_clang_Cursor_getNumArguments(C)
 
 /**
  * Retrieve the number of non-variadic arguments associated with a given cursor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getNumArguments(C : Ptr[CXCursor]): CInt = 
-  __sn_wrap_libclang_clang_Cursor_getNumArguments(C)
+def clang_Cursor_getNumArguments(C : CXCursor)(using Zone): CInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_Cursor_getNumArguments((__ptr_0 + 0))
+
+/**
+ * Returns the number of template args of a function, struct, or class decl representing a template specialization.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Cursor_getNumTemplateArguments(C : Ptr[CXCursor]): CInt = 
+  __sn_wrap_libclang_clang_Cursor_getNumTemplateArguments(C)
 
 /**
  * Returns the number of template args of a function, struct, or class decl representing a template specialization.
@@ -1896,12 +1904,12 @@ def clang_Cursor_getNumTemplateArguments(C : CXCursor)(using Zone): CInt =
   __sn_wrap_libclang_clang_Cursor_getNumTemplateArguments((__ptr_0 + 0))
 
 /**
- * Returns the number of template args of a function, struct, or class decl representing a template specialization.
+ * Given a cursor that represents an Objective-C method or parameter declaration, return the associated Objective-C qualifiers for the return type or the parameter respectively. The bits are formed from CXObjCDeclQualifierKind.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getNumTemplateArguments(C : Ptr[CXCursor]): CInt = 
-  __sn_wrap_libclang_clang_Cursor_getNumTemplateArguments(C)
+def clang_Cursor_getObjCDeclQualifiers(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_Cursor_getObjCDeclQualifiers(C)
 
 /**
  * Given a cursor that represents an Objective-C method or parameter declaration, return the associated Objective-C qualifiers for the return type or the parameter respectively. The bits are formed from CXObjCDeclQualifierKind.
@@ -1912,14 +1920,6 @@ def clang_Cursor_getObjCDeclQualifiers(C : CXCursor)(using Zone): CUnsignedInt =
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_Cursor_getObjCDeclQualifiers((__ptr_0 + 0))
-
-/**
- * Given a cursor that represents an Objective-C method or parameter declaration, return the associated Objective-C qualifiers for the return type or the parameter respectively. The bits are formed from CXObjCDeclQualifierKind.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_Cursor_getObjCDeclQualifiers(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_Cursor_getObjCDeclQualifiers(C)
 
 /**
  * Retrieve the CXStrings representing the mangled symbols of the ObjC class interface or implementation at the cursor.
@@ -1992,18 +1992,18 @@ def clang_Cursor_getObjCPropertyGetterName(C : CXCursor)(using Zone): CXString =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getObjCPropertySetterName(C : Ptr[CXCursor])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_Cursor_getObjCPropertySetterName(C, __return)
+def clang_Cursor_getObjCPropertySetterName(C : Ptr[CXCursor])(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_Cursor_getObjCPropertySetterName(C, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Given a cursor that represents a property declaration, return the name of the method that implements the setter, if any.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getObjCPropertySetterName(C : Ptr[CXCursor])(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_Cursor_getObjCPropertySetterName(C, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_Cursor_getObjCPropertySetterName(C : Ptr[CXCursor])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_Cursor_getObjCPropertySetterName(C, __return)
 
 /**
  * Given a cursor that represents a property declaration, return the name of the method that implements the setter, if any.
@@ -2068,20 +2068,20 @@ def clang_Cursor_getRawCommentText(C : Ptr[CXCursor])(using Zone): CXString =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getRawCommentText(C : CXCursor)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  val __ptr_1: Ptr[CXString] = alloc[CXString](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_Cursor_getRawCommentText((__ptr_0 + 0), (__ptr_1 + 0))
-  !(__ptr_1 + 0)
+def clang_Cursor_getRawCommentText(C : Ptr[CXCursor])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_Cursor_getRawCommentText(C, __return)
 
 /**
  * Given a cursor that represents a declaration, return the associated comment text, including comment markers.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getRawCommentText(C : Ptr[CXCursor])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_Cursor_getRawCommentText(C, __return)
+def clang_Cursor_getRawCommentText(C : CXCursor)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  val __ptr_1: Ptr[CXString] = alloc[CXString](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_Cursor_getRawCommentText((__ptr_0 + 0), (__ptr_1 + 0))
+  !(__ptr_1 + 0)
 
 /**
  * Given a cursor pointing to an Objective-C message or property reference, or C++ method call, returns the CXType of the receiver.
@@ -2118,11 +2118,9 @@ def clang_Cursor_getReceiverType(C : Ptr[CXCursor])(__return : Ptr[CXType]): Uni
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getSpellingNameRange(_0 : CXCursor, pieceIndex : CUnsignedInt, options : CUnsignedInt)(using Zone): CXSourceRange = 
+def clang_Cursor_getSpellingNameRange(_0 : Ptr[CXCursor], pieceIndex : CUnsignedInt, options : CUnsignedInt)(using Zone): CXSourceRange = 
   val __ptr_0: Ptr[CXSourceRange] = alloc[CXSourceRange](1)
-  val __ptr_1: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_1 + 0) = _0
-  __sn_wrap_libclang_clang_Cursor_getSpellingNameRange((__ptr_1 + 0), pieceIndex, options, (__ptr_0 + 0))
+  __sn_wrap_libclang_clang_Cursor_getSpellingNameRange(_0, pieceIndex, options, (__ptr_0 + 0))
   !(__ptr_0 + 0)
 
 /**
@@ -2138,9 +2136,11 @@ def clang_Cursor_getSpellingNameRange(_0 : Ptr[CXCursor], pieceIndex : CUnsigned
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getSpellingNameRange(_0 : Ptr[CXCursor], pieceIndex : CUnsignedInt, options : CUnsignedInt)(using Zone): CXSourceRange = 
+def clang_Cursor_getSpellingNameRange(_0 : CXCursor, pieceIndex : CUnsignedInt, options : CUnsignedInt)(using Zone): CXSourceRange = 
   val __ptr_0: Ptr[CXSourceRange] = alloc[CXSourceRange](1)
-  __sn_wrap_libclang_clang_Cursor_getSpellingNameRange(_0, pieceIndex, options, (__ptr_0 + 0))
+  val __ptr_1: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_1 + 0) = _0
+  __sn_wrap_libclang_clang_Cursor_getSpellingNameRange((__ptr_1 + 0), pieceIndex, options, (__ptr_0 + 0))
   !(__ptr_0 + 0)
 
 /**
@@ -2184,10 +2184,8 @@ def clang_Cursor_getTemplateArgumentKind(C : CXCursor, I : CUnsignedInt)(using Z
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getTemplateArgumentType(C : Ptr[CXCursor], I : CUnsignedInt)(using Zone): CXType = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
-  __sn_wrap_libclang_clang_Cursor_getTemplateArgumentType(C, I, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_Cursor_getTemplateArgumentType(C : Ptr[CXCursor], I : CUnsignedInt)(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_Cursor_getTemplateArgumentType(C, I, __return)
 
 /**
  * Retrieve a CXType representing the type of a TemplateArgument of a function decl representing a template specialization.
@@ -2206,8 +2204,18 @@ def clang_Cursor_getTemplateArgumentType(C : CXCursor, I : CUnsignedInt)(using Z
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_getTemplateArgumentType(C : Ptr[CXCursor], I : CUnsignedInt)(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_Cursor_getTemplateArgumentType(C, I, __return)
+def clang_Cursor_getTemplateArgumentType(C : Ptr[CXCursor], I : CUnsignedInt)(using Zone): CXType = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
+  __sn_wrap_libclang_clang_Cursor_getTemplateArgumentType(C, I, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
+
+/**
+ * Retrieve the value of an Integral TemplateArgument (of a function decl representing a template specialization) as an unsigned long long.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Cursor_getTemplateArgumentUnsignedValue(C : Ptr[CXCursor], I : CUnsignedInt): CUnsignedLongLong = 
+  __sn_wrap_libclang_clang_Cursor_getTemplateArgumentUnsignedValue(C, I)
 
 /**
  * Retrieve the value of an Integral TemplateArgument (of a function decl representing a template specialization) as an unsigned long long.
@@ -2218,14 +2226,6 @@ def clang_Cursor_getTemplateArgumentUnsignedValue(C : CXCursor, I : CUnsignedInt
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_Cursor_getTemplateArgumentUnsignedValue((__ptr_0 + 0), I)
-
-/**
- * Retrieve the value of an Integral TemplateArgument (of a function decl representing a template specialization) as an unsigned long long.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_Cursor_getTemplateArgumentUnsignedValue(C : Ptr[CXCursor], I : CUnsignedInt): CUnsignedLongLong = 
-  __sn_wrap_libclang_clang_Cursor_getTemplateArgumentUnsignedValue(C, I)
 
 /**
  * Retrieve the value of an Integral TemplateArgument (of a function decl representing a template specialization) as a signed long long.
@@ -2351,18 +2351,18 @@ def clang_Cursor_hasVarDeclGlobalStorage(cursor : Ptr[CXCursor]): CInt =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_isAnonymous(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_Cursor_isAnonymous(C)
+def clang_Cursor_isAnonymous(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_Cursor_isAnonymous((__ptr_0 + 0))
 
 /**
  * Determine whether the given cursor represents an anonymous tag or namespace
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_isAnonymous(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_Cursor_isAnonymous((__ptr_0 + 0))
+def clang_Cursor_isAnonymous(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_Cursor_isAnonymous(C)
 
 /**
  * Determine whether the given cursor represents an anonymous record declaration.
@@ -2441,18 +2441,18 @@ def clang_Cursor_isExternalSymbol(C : Ptr[CXCursor], language : Ptr[CXString], d
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_isFunctionInlined(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_Cursor_isFunctionInlined((__ptr_0 + 0))
+def clang_Cursor_isFunctionInlined(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_Cursor_isFunctionInlined(C)
 
 /**
  * Determine whether a CXCursor that is a function declaration, is an inline declaration.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_isFunctionInlined(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_Cursor_isFunctionInlined(C)
+def clang_Cursor_isFunctionInlined(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_Cursor_isFunctionInlined((__ptr_0 + 0))
 
 /**
  * Determine whether the given cursor represents an inline namespace declaration.
@@ -2531,18 +2531,26 @@ def clang_Cursor_isNull(cursor : Ptr[CXCursor]): CInt =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_isObjCOptional(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_Cursor_isObjCOptional(C)
+def clang_Cursor_isObjCOptional(C : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_Cursor_isObjCOptional((__ptr_0 + 0))
 
 /**
  * Given a cursor that represents an Objective-C method or property declaration, return non-zero if the declaration was affected by "\@optional". Returns zero if the cursor is not such a declaration or it is "\@required".
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Cursor_isObjCOptional(C : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_Cursor_isObjCOptional((__ptr_0 + 0))
+def clang_Cursor_isObjCOptional(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_Cursor_isObjCOptional(C)
+
+/**
+ * Returns non-zero if the given cursor is a variadic function or method.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Cursor_isVariadic(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_Cursor_isVariadic(C)
 
 /**
  * Returns non-zero if the given cursor is a variadic function or method.
@@ -2555,22 +2563,6 @@ def clang_Cursor_isVariadic(C : CXCursor)(using Zone): CUnsignedInt =
   __sn_wrap_libclang_clang_Cursor_isVariadic((__ptr_0 + 0))
 
 /**
- * Returns non-zero if the given cursor is a variadic function or method.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_Cursor_isVariadic(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_Cursor_isVariadic(C)
-
-/**
- * Determine if an enum declaration refers to a scoped enum.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_EnumDecl_isScoped(C : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_EnumDecl_isScoped(C)
-
-/**
  * Determine if an enum declaration refers to a scoped enum.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
@@ -2579,6 +2571,14 @@ def clang_EnumDecl_isScoped(C : CXCursor)(using Zone): CUnsignedInt =
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_EnumDecl_isScoped((__ptr_0 + 0))
+
+/**
+ * Determine if an enum declaration refers to a scoped enum.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_EnumDecl_isScoped(C : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_EnumDecl_isScoped(C)
 
 /**
  * Returns the real path name of file.
@@ -2603,26 +2603,18 @@ def clang_File_tryGetRealPathName(file : CXFile)(using Zone): CXString =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_Location_isFromMainFile(location : Ptr[CXSourceLocation]): CInt = 
-  __sn_wrap_libclang_clang_Location_isFromMainFile(location)
-
-/**
- * Returns non-zero if the given source location is in the main file of the corresponding translation unit.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
-*/
 def clang_Location_isFromMainFile(location : CXSourceLocation)(using Zone): CInt = 
   val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
   !(__ptr_0 + 0) = location
   __sn_wrap_libclang_clang_Location_isFromMainFile((__ptr_0 + 0))
 
 /**
- * Returns non-zero if the given source location is in a system header.
+ * Returns non-zero if the given source location is in the main file of the corresponding translation unit.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_Location_isInSystemHeader(location : Ptr[CXSourceLocation]): CInt = 
-  __sn_wrap_libclang_clang_Location_isInSystemHeader(location)
+def clang_Location_isFromMainFile(location : Ptr[CXSourceLocation]): CInt = 
+  __sn_wrap_libclang_clang_Location_isFromMainFile(location)
 
 /**
  * Returns non-zero if the given source location is in a system header.
@@ -2633,6 +2625,14 @@ def clang_Location_isInSystemHeader(location : CXSourceLocation)(using Zone): CI
   val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
   !(__ptr_0 + 0) = location
   __sn_wrap_libclang_clang_Location_isInSystemHeader((__ptr_0 + 0))
+
+/**
+ * Returns non-zero if the given source location is in a system header.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+*/
+def clang_Location_isInSystemHeader(location : Ptr[CXSourceLocation]): CInt = 
+  __sn_wrap_libclang_clang_Location_isInSystemHeader(location)
 
 /**
  * Returns the full name of the module, e.g. "std.vector".
@@ -2675,18 +2675,18 @@ def clang_Module_getName(Module : CXModule)(__return : Ptr[CXString]): Unit =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_Range_isNull(range : Ptr[CXSourceRange]): CInt = 
-  __sn_wrap_libclang_clang_Range_isNull(range)
+def clang_Range_isNull(range : CXSourceRange)(using Zone): CInt = 
+  val __ptr_0: Ptr[CXSourceRange] = alloc[CXSourceRange](1)
+  !(__ptr_0 + 0) = range
+  __sn_wrap_libclang_clang_Range_isNull((__ptr_0 + 0))
 
 /**
  * Returns non-zero if range is null.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_Range_isNull(range : CXSourceRange)(using Zone): CInt = 
-  val __ptr_0: Ptr[CXSourceRange] = alloc[CXSourceRange](1)
-  !(__ptr_0 + 0) = range
-  __sn_wrap_libclang_clang_Range_isNull((__ptr_0 + 0))
+def clang_Range_isNull(range : Ptr[CXSourceRange]): CInt = 
+  __sn_wrap_libclang_clang_Range_isNull(range)
 
 /**
  * Get the normalized target triple as a string.
@@ -2757,6 +2757,14 @@ def clang_Type_getClassType(T : Ptr[CXType])(using Zone): CXType =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
+def clang_Type_getClassType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_Type_getClassType(T, __return)
+
+/**
+ * Return the class type of an member pointer type.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
 def clang_Type_getClassType(T : CXType)(using Zone): CXType = 
   val __ptr_0: Ptr[CXType] = alloc[CXType](2)
   !(__ptr_0 + 0) = T
@@ -2764,12 +2772,12 @@ def clang_Type_getClassType(T : CXType)(using Zone): CXType =
   !(__ptr_0 + 1)
 
 /**
- * Return the class type of an member pointer type.
+ * Return the type that was modified by this attributed type.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Type_getClassType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_Type_getClassType(T, __return)
+def clang_Type_getModifiedType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_Type_getModifiedType(T, __return)
 
 /**
  * Return the type that was modified by this attributed type.
@@ -2780,14 +2788,6 @@ def clang_Type_getModifiedType(T : Ptr[CXType])(using Zone): CXType =
   val __ptr_0: Ptr[CXType] = alloc[CXType](1)
   __sn_wrap_libclang_clang_Type_getModifiedType(T, (__ptr_0 + 0))
   !(__ptr_0 + 0)
-
-/**
- * Return the type that was modified by this attributed type.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_Type_getModifiedType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_Type_getModifiedType(T, __return)
 
 /**
  * Return the type that was modified by this attributed type.
@@ -2852,18 +2852,26 @@ def clang_Type_getNullability(T : CXType)(using Zone): CXTypeNullabilityKind =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Type_getNumObjCProtocolRefs(T : CXType)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
-  !(__ptr_0 + 0) = T
-  __sn_wrap_libclang_clang_Type_getNumObjCProtocolRefs((__ptr_0 + 0))
+def clang_Type_getNumObjCProtocolRefs(T : Ptr[CXType]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_Type_getNumObjCProtocolRefs(T)
 
 /**
  * Retrieve the number of protocol references associated with an ObjC object/id.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Type_getNumObjCProtocolRefs(T : Ptr[CXType]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_Type_getNumObjCProtocolRefs(T)
+def clang_Type_getNumObjCProtocolRefs(T : CXType)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
+  !(__ptr_0 + 0) = T
+  __sn_wrap_libclang_clang_Type_getNumObjCProtocolRefs((__ptr_0 + 0))
+
+/**
+ * Retrieve the number of type arguments associated with an ObjC object.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Type_getNumObjCTypeArgs(T : Ptr[CXType]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_Type_getNumObjCTypeArgs(T)
 
 /**
  * Retrieve the number of type arguments associated with an ObjC object.
@@ -2874,14 +2882,6 @@ def clang_Type_getNumObjCTypeArgs(T : CXType)(using Zone): CUnsignedInt =
   val __ptr_0: Ptr[CXType] = alloc[CXType](1)
   !(__ptr_0 + 0) = T
   __sn_wrap_libclang_clang_Type_getNumObjCTypeArgs((__ptr_0 + 0))
-
-/**
- * Retrieve the number of type arguments associated with an ObjC object.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_Type_getNumObjCTypeArgs(T : Ptr[CXType]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_Type_getNumObjCTypeArgs(T)
 
 /**
  * Returns the number of template arguments for given template specialization, or -1 if type T is not a template specialization.
@@ -2916,20 +2916,28 @@ def clang_Type_getObjCEncoding(`type` : Ptr[CXType])(using Zone): CXString =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Type_getObjCEncoding(`type` : Ptr[CXType])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_Type_getObjCEncoding(`type`, __return)
-
-/**
- * Returns the Objective-C type encoding for the specified CXType.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_Type_getObjCEncoding(`type` : CXType)(using Zone): CXString = 
   val __ptr_0: Ptr[CXType] = alloc[CXType](1)
   val __ptr_1: Ptr[CXString] = alloc[CXString](1)
   !(__ptr_0 + 0) = `type`
   __sn_wrap_libclang_clang_Type_getObjCEncoding((__ptr_0 + 0), (__ptr_1 + 0))
   !(__ptr_1 + 0)
+
+/**
+ * Returns the Objective-C type encoding for the specified CXType.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Type_getObjCEncoding(`type` : Ptr[CXType])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_Type_getObjCEncoding(`type`, __return)
+
+/**
+ * Retrieves the base type of the ObjCObjectType.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Type_getObjCObjectBaseType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_Type_getObjCObjectBaseType(T, __return)
 
 /**
  * Retrieves the base type of the ObjCObjectType.
@@ -2953,24 +2961,6 @@ def clang_Type_getObjCObjectBaseType(T : Ptr[CXType])(using Zone): CXType =
   !(__ptr_0 + 0)
 
 /**
- * Retrieves the base type of the ObjCObjectType.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_Type_getObjCObjectBaseType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_Type_getObjCObjectBaseType(T, __return)
-
-/**
- * Retrieve the decl for a protocol reference for an ObjC object/id.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_Type_getObjCProtocolDecl(T : Ptr[CXType], i : CUnsignedInt)(using Zone): CXCursor = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  __sn_wrap_libclang_clang_Type_getObjCProtocolDecl(T, i, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
-
-/**
  * Retrieve the decl for a protocol reference for an ObjC object/id.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
@@ -2991,12 +2981,24 @@ def clang_Type_getObjCProtocolDecl(T : Ptr[CXType], i : CUnsignedInt)(__return :
   __sn_wrap_libclang_clang_Type_getObjCProtocolDecl(T, i, __return)
 
 /**
+ * Retrieve the decl for a protocol reference for an ObjC object/id.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Type_getObjCProtocolDecl(T : Ptr[CXType], i : CUnsignedInt)(using Zone): CXCursor = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  __sn_wrap_libclang_clang_Type_getObjCProtocolDecl(T, i, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
+
+/**
  * Retrieve a type argument associated with an ObjC object.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Type_getObjCTypeArg(T : Ptr[CXType], i : CUnsignedInt)(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_Type_getObjCTypeArg(T, i, __return)
+def clang_Type_getObjCTypeArg(T : Ptr[CXType], i : CUnsignedInt)(using Zone): CXType = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
+  __sn_wrap_libclang_clang_Type_getObjCTypeArg(T, i, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Retrieve a type argument associated with an ObjC object.
@@ -3014,10 +3016,8 @@ def clang_Type_getObjCTypeArg(T : CXType, i : CUnsignedInt)(using Zone): CXType 
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Type_getObjCTypeArg(T : Ptr[CXType], i : CUnsignedInt)(using Zone): CXType = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
-  __sn_wrap_libclang_clang_Type_getObjCTypeArg(T, i, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_Type_getObjCTypeArg(T : Ptr[CXType], i : CUnsignedInt)(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_Type_getObjCTypeArg(T, i, __return)
 
 /**
  * Return the offset of a field named S in a record of type T in bits as it would be returned by __offsetof__ as per C++11[18.2p4]
@@ -3060,14 +3060,6 @@ def clang_Type_getSizeOf(T : Ptr[CXType]): CLongLong =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_Type_getTemplateArgumentAsType(T : Ptr[CXType], i : CUnsignedInt)(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_Type_getTemplateArgumentAsType(T, i, __return)
-
-/**
- * Returns the type template argument of a template class specialization at given index.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_Type_getTemplateArgumentAsType(T : CXType, i : CUnsignedInt)(using Zone): CXType = 
   val __ptr_0: Ptr[CXType] = alloc[CXType](2)
   !(__ptr_0 + 0) = T
@@ -3085,6 +3077,22 @@ def clang_Type_getTemplateArgumentAsType(T : Ptr[CXType], i : CUnsignedInt)(usin
   !(__ptr_0 + 0)
 
 /**
+ * Returns the type template argument of a template class specialization at given index.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Type_getTemplateArgumentAsType(T : Ptr[CXType], i : CUnsignedInt)(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_Type_getTemplateArgumentAsType(T, i, __return)
+
+/**
+ * Gets the type contained by this atomic type.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_Type_getValueType(CT : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_Type_getValueType(CT, __return)
+
+/**
  * Gets the type contained by this atomic type.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
@@ -3094,14 +3102,6 @@ def clang_Type_getValueType(CT : CXType)(using Zone): CXType =
   !(__ptr_0 + 0) = CT
   __sn_wrap_libclang_clang_Type_getValueType((__ptr_0 + 0), (__ptr_0 + 1))
   !(__ptr_0 + 1)
-
-/**
- * Gets the type contained by this atomic type.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_Type_getValueType(CT : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_Type_getValueType(CT, __return)
 
 /**
  * Gets the type contained by this atomic type.
@@ -3172,18 +3172,18 @@ def clang_codeCompleteGetContainerUSR(Results : Ptr[CXCodeCompleteResults])(__re
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_codeCompleteGetObjCSelector(Results : Ptr[CXCodeCompleteResults])(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_codeCompleteGetObjCSelector(Results, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_codeCompleteGetObjCSelector(Results : Ptr[CXCodeCompleteResults])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_codeCompleteGetObjCSelector(Results, __return)
 
 /**
  * Returns the currently-entered selector for an Objective-C message send, formatted like "initWithFoo:bar:". Only guaranteed to return a non-empty string for CXCompletionContext_ObjCInstanceMessage and CXCompletionContext_ObjCClassMessage.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_codeCompleteGetObjCSelector(Results : Ptr[CXCodeCompleteResults])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_codeCompleteGetObjCSelector(Results, __return)
+def clang_codeCompleteGetObjCSelector(Results : Ptr[CXCodeCompleteResults])(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_codeCompleteGetObjCSelector(Results, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Construct a USR for a specified Objective-C category.
@@ -3208,17 +3208,27 @@ def clang_constructUSR_ObjCCategory(class_name : CString, category_name : CStrin
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_constructUSR_ObjCClass(class_name : CString)(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_constructUSR_ObjCClass(class_name, __return)
+def clang_constructUSR_ObjCClass(class_name : CString)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_constructUSR_ObjCClass(class_name, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Construct a USR for a specified Objective-C class.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_constructUSR_ObjCClass(class_name : CString)(using Zone): CXString = 
+def clang_constructUSR_ObjCClass(class_name : CString)(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_constructUSR_ObjCClass(class_name, __return)
+
+/**
+ * Construct a USR for a specified Objective-C instance variable and the USR for its containing class.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_constructUSR_ObjCIvar(name : CString, classUSR : Ptr[CXString])(using Zone): CXString = 
   val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_constructUSR_ObjCClass(class_name, (__ptr_0 + 0))
+  __sn_wrap_libclang_clang_constructUSR_ObjCIvar(name, classUSR, (__ptr_0 + 0))
   !(__ptr_0 + 0)
 
 /**
@@ -3241,13 +3251,13 @@ def clang_constructUSR_ObjCIvar(name : CString, classUSR : CXString)(using Zone)
   !(__ptr_0 + 1)
 
 /**
- * Construct a USR for a specified Objective-C instance variable and the USR for its containing class.
+ * Construct a USR for a specified Objective-C method and the USR for its containing class.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_constructUSR_ObjCIvar(name : CString, classUSR : Ptr[CXString])(using Zone): CXString = 
+def clang_constructUSR_ObjCMethod(name : CString, isInstanceMethod : CUnsignedInt, classUSR : Ptr[CXString])(using Zone): CXString = 
   val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_constructUSR_ObjCIvar(name, classUSR, (__ptr_0 + 0))
+  __sn_wrap_libclang_clang_constructUSR_ObjCMethod(name, isInstanceMethod, classUSR, (__ptr_0 + 0))
   !(__ptr_0 + 0)
 
 /**
@@ -3270,14 +3280,12 @@ def clang_constructUSR_ObjCMethod(name : CString, isInstanceMethod : CUnsignedIn
   __sn_wrap_libclang_clang_constructUSR_ObjCMethod(name, isInstanceMethod, classUSR, __return)
 
 /**
- * Construct a USR for a specified Objective-C method and the USR for its containing class.
+ * Construct a USR for a specified Objective-C property and the USR for its containing class.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_constructUSR_ObjCMethod(name : CString, isInstanceMethod : CUnsignedInt, classUSR : Ptr[CXString])(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_constructUSR_ObjCMethod(name, isInstanceMethod, classUSR, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_constructUSR_ObjCProperty(property : CString, classUSR : Ptr[CXString])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_constructUSR_ObjCProperty(property, classUSR, __return)
 
 /**
  * Construct a USR for a specified Objective-C property and the USR for its containing class.
@@ -3301,12 +3309,12 @@ def clang_constructUSR_ObjCProperty(property : CString, classUSR : Ptr[CXString]
   !(__ptr_0 + 0)
 
 /**
- * Construct a USR for a specified Objective-C property and the USR for its containing class.
+ * Construct a USR for a specified Objective-C protocol.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_constructUSR_ObjCProperty(property : CString, classUSR : Ptr[CXString])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_constructUSR_ObjCProperty(property, classUSR, __return)
+def clang_constructUSR_ObjCProtocol(protocol_name : CString)(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_constructUSR_ObjCProtocol(protocol_name, __return)
 
 /**
  * Construct a USR for a specified Objective-C protocol.
@@ -3319,12 +3327,10 @@ def clang_constructUSR_ObjCProtocol(protocol_name : CString)(using Zone): CXStri
   !(__ptr_0 + 0)
 
 /**
- * Construct a USR for a specified Objective-C protocol.
-
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_constructUSR_ObjCProtocol(protocol_name : CString)(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_constructUSR_ObjCProtocol(protocol_name, __return)
+def clang_disposeCXTUResourceUsage(usage : Ptr[CXTUResourceUsage]): Unit = 
+  __sn_wrap_libclang_clang_disposeCXTUResourceUsage(usage)
 
 /**
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
@@ -3335,10 +3341,12 @@ def clang_disposeCXTUResourceUsage(usage : CXTUResourceUsage)(using Zone): Unit 
   __sn_wrap_libclang_clang_disposeCXTUResourceUsage((__ptr_0 + 0))
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * Free the given string.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXString.h
 */
-def clang_disposeCXTUResourceUsage(usage : Ptr[CXTUResourceUsage]): Unit = 
-  __sn_wrap_libclang_clang_disposeCXTUResourceUsage(usage)
+def clang_disposeString(string : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_disposeString(string)
 
 /**
  * Free the given string.
@@ -3349,14 +3357,6 @@ def clang_disposeString(string : CXString)(using Zone): Unit =
   val __ptr_0: Ptr[CXString] = alloc[CXString](1)
   !(__ptr_0 + 0) = string
   __sn_wrap_libclang_clang_disposeString((__ptr_0 + 0))
-
-/**
- * Free the given string.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXString.h
-*/
-def clang_disposeString(string : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_disposeString(string)
 
 /**
  * Determine whether two cursors are equivalent.
@@ -3420,19 +3420,19 @@ def clang_equalRanges(range1 : CXSourceRange, range2 : CXSourceRange)(using Zone
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_equalTypes(A : CXType, B : CXType)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](2)
-  !(__ptr_0 + 0) = A
-  !(__ptr_0 + 1) = B
-  __sn_wrap_libclang_clang_equalTypes((__ptr_0 + 0), (__ptr_0 + 1))
+def clang_equalTypes(A : Ptr[CXType], B : Ptr[CXType]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_equalTypes(A, B)
 
 /**
  * Determine whether two CXTypes represent the same type.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_equalTypes(A : Ptr[CXType], B : Ptr[CXType]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_equalTypes(A, B)
+def clang_equalTypes(A : CXType, B : CXType)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](2)
+  !(__ptr_0 + 0) = A
+  !(__ptr_0 + 1) = B
+  __sn_wrap_libclang_clang_equalTypes((__ptr_0 + 0), (__ptr_0 + 1))
 
 /**
  * Find #import/#include directives in a specific file.
@@ -3491,18 +3491,26 @@ def clang_findReferencesInFileWithBlock(_0 : Ptr[CXCursor], _1 : CXFile, _2 : CX
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
 */
-def clang_formatDiagnostic(Diagnostic : CXDiagnostic, Options : CUnsignedInt)(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_formatDiagnostic(Diagnostic, Options, __return)
+def clang_formatDiagnostic(Diagnostic : CXDiagnostic, Options : CUnsignedInt)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_formatDiagnostic(Diagnostic, Options, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Format the given diagnostic in a manner that is suitable for display.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
 */
-def clang_formatDiagnostic(Diagnostic : CXDiagnostic, Options : CUnsignedInt)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_formatDiagnostic(Diagnostic, Options, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_formatDiagnostic(Diagnostic : CXDiagnostic, Options : CUnsignedInt)(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_formatDiagnostic(Diagnostic, Options, __return)
+
+/**
+ * Returns the address space of the given type.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getAddressSpace(T : Ptr[CXType]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_getAddressSpace(T)
 
 /**
  * Returns the address space of the given type.
@@ -3513,14 +3521,6 @@ def clang_getAddressSpace(T : CXType)(using Zone): CUnsignedInt =
   val __ptr_0: Ptr[CXType] = alloc[CXType](1)
   !(__ptr_0 + 0) = T
   __sn_wrap_libclang_clang_getAddressSpace((__ptr_0 + 0))
-
-/**
- * Returns the address space of the given type.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_getAddressSpace(T : Ptr[CXType]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_getAddressSpace(T)
 
 /**
  * Retrieve the type of a parameter of a function type.
@@ -3538,26 +3538,18 @@ def clang_getArgType(T : CXType, i : CUnsignedInt)(using Zone): CXType =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getArgType(T : Ptr[CXType], i : CUnsignedInt)(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_getArgType(T, i, __return)
-
-/**
- * Retrieve the type of a parameter of a function type.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_getArgType(T : Ptr[CXType], i : CUnsignedInt)(using Zone): CXType = 
   val __ptr_0: Ptr[CXType] = alloc[CXType](1)
   __sn_wrap_libclang_clang_getArgType(T, i, (__ptr_0 + 0))
   !(__ptr_0 + 0)
 
 /**
- * Return the element type of an array type.
+ * Retrieve the type of a parameter of a function type.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getArrayElementType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_getArrayElementType(T, __return)
+def clang_getArgType(T : Ptr[CXType], i : CUnsignedInt)(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_getArgType(T, i, __return)
 
 /**
  * Return the element type of an array type.
@@ -3569,6 +3561,14 @@ def clang_getArrayElementType(T : CXType)(using Zone): CXType =
   !(__ptr_0 + 0) = T
   __sn_wrap_libclang_clang_getArrayElementType((__ptr_0 + 0), (__ptr_0 + 1))
   !(__ptr_0 + 1)
+
+/**
+ * Return the element type of an array type.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getArrayElementType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_getArrayElementType(T, __return)
 
 /**
  * Return the element type of an array type.
@@ -3603,18 +3603,26 @@ def clang_getArraySize(T : Ptr[CXType]): CLongLong =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getBinaryOperatorKindSpelling(kind : CXBinaryOperatorKind)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_getBinaryOperatorKindSpelling(kind, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getBinaryOperatorKindSpelling(kind : CXBinaryOperatorKind)(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getBinaryOperatorKindSpelling(kind, __return)
 
 /**
  * Retrieve the spelling of a given CXBinaryOperatorKind.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getBinaryOperatorKindSpelling(kind : CXBinaryOperatorKind)(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getBinaryOperatorKindSpelling(kind, __return)
+def clang_getBinaryOperatorKindSpelling(kind : CXBinaryOperatorKind)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_getBinaryOperatorKindSpelling(kind, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
+
+/**
+ * Retrieve the character data associated with the given string.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXString.h
+*/
+def clang_getCString(string : Ptr[CXString]): CString = 
+  __sn_wrap_libclang_clang_getCString(string)
 
 /**
  * Retrieve the character data associated with the given string.
@@ -3625,14 +3633,6 @@ def clang_getCString(string : CXString)(using Zone): CString =
   val __ptr_0: Ptr[CXString] = alloc[CXString](1)
   !(__ptr_0 + 0) = string
   __sn_wrap_libclang_clang_getCString((__ptr_0 + 0))
-
-/**
- * Retrieve the character data associated with the given string.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXString.h
-*/
-def clang_getCString(string : Ptr[CXString]): CString = 
-  __sn_wrap_libclang_clang_getCString(string)
 
 /**
  * Return the memory usage of a translation unit. This object should be released with clang_disposeCXTUResourceUsage().
@@ -3675,14 +3675,6 @@ def clang_getCXXAccessSpecifier(_0 : CXCursor)(using Zone): CX_CXXAccessSpecifie
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCanonicalCursor(_0 : Ptr[CXCursor])(__return : Ptr[CXCursor]): Unit = 
-  __sn_wrap_libclang_clang_getCanonicalCursor(_0, __return)
-
-/**
- * Retrieve the canonical cursor corresponding to the given cursor.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_getCanonicalCursor(_0 : Ptr[CXCursor])(using Zone): CXCursor = 
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   __sn_wrap_libclang_clang_getCanonicalCursor(_0, (__ptr_0 + 0))
@@ -3698,6 +3690,14 @@ def clang_getCanonicalCursor(_0 : CXCursor)(using Zone): CXCursor =
   !(__ptr_0 + 0) = _0
   __sn_wrap_libclang_clang_getCanonicalCursor((__ptr_0 + 0), (__ptr_0 + 1))
   !(__ptr_0 + 1)
+
+/**
+ * Retrieve the canonical cursor corresponding to the given cursor.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getCanonicalCursor(_0 : Ptr[CXCursor])(__return : Ptr[CXCursor]): Unit = 
+  __sn_wrap_libclang_clang_getCanonicalCursor(_0, __return)
 
 /**
  * Return the canonical type for a CXType.
@@ -3751,18 +3751,18 @@ def clang_getClangVersion()(__return : Ptr[CXString]): Unit =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCompletionAnnotation(completion_string : CXCompletionString, annotation_number : CUnsignedInt)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_getCompletionAnnotation(completion_string, annotation_number, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getCompletionAnnotation(completion_string : CXCompletionString, annotation_number : CUnsignedInt)(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getCompletionAnnotation(completion_string, annotation_number, __return)
 
 /**
  * Retrieve the annotation associated with the given completion string.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCompletionAnnotation(completion_string : CXCompletionString, annotation_number : CUnsignedInt)(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getCompletionAnnotation(completion_string, annotation_number, __return)
+def clang_getCompletionAnnotation(completion_string : CXCompletionString, annotation_number : CUnsignedInt)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_getCompletionAnnotation(completion_string, annotation_number, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Retrieve the brief documentation comment attached to the declaration that corresponds to the given completion string.
@@ -3787,18 +3787,18 @@ def clang_getCompletionBriefComment(completion_string : CXCompletionString)(__re
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCompletionChunkText(completion_string : CXCompletionString, chunk_number : CUnsignedInt)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_getCompletionChunkText(completion_string, chunk_number, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getCompletionChunkText(completion_string : CXCompletionString, chunk_number : CUnsignedInt)(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getCompletionChunkText(completion_string, chunk_number, __return)
 
 /**
  * Retrieve the text associated with a particular chunk within a completion string.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCompletionChunkText(completion_string : CXCompletionString, chunk_number : CUnsignedInt)(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getCompletionChunkText(completion_string, chunk_number, __return)
+def clang_getCompletionChunkText(completion_string : CXCompletionString, chunk_number : CUnsignedInt)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_getCompletionChunkText(completion_string, chunk_number, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Fix-its that *must* be applied before inserting the text for the corresponding completion.
@@ -3954,14 +3954,6 @@ def clang_getCursorDefinition(_0 : Ptr[CXCursor])(__return : Ptr[CXCursor]): Uni
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorDisplayName(_0 : Ptr[CXCursor])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getCursorDisplayName(_0, __return)
-
-/**
- * Retrieve the display name for the entity referenced by this cursor.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_getCursorDisplayName(_0 : Ptr[CXCursor])(using Zone): CXString = 
   val __ptr_0: Ptr[CXString] = alloc[CXString](1)
   __sn_wrap_libclang_clang_getCursorDisplayName(_0, (__ptr_0 + 0))
@@ -3980,12 +3972,12 @@ def clang_getCursorDisplayName(_0 : CXCursor)(using Zone): CXString =
   !(__ptr_1 + 0)
 
 /**
- * Retrieve the exception specification type associated with a given cursor. This is a value of type CXCursor_ExceptionSpecificationKind.
+ * Retrieve the display name for the entity referenced by this cursor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorExceptionSpecificationType(C : Ptr[CXCursor]): CInt = 
-  __sn_wrap_libclang_clang_getCursorExceptionSpecificationType(C)
+def clang_getCursorDisplayName(_0 : Ptr[CXCursor])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getCursorDisplayName(_0, __return)
 
 /**
  * Retrieve the exception specification type associated with a given cursor. This is a value of type CXCursor_ExceptionSpecificationKind.
@@ -3998,12 +3990,12 @@ def clang_getCursorExceptionSpecificationType(C : CXCursor)(using Zone): CInt =
   __sn_wrap_libclang_clang_getCursorExceptionSpecificationType((__ptr_0 + 0))
 
 /**
- * Retrieve the physical extent of the source construct referenced by the given cursor.
+ * Retrieve the exception specification type associated with a given cursor. This is a value of type CXCursor_ExceptionSpecificationKind.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorExtent(_0 : Ptr[CXCursor])(__return : Ptr[CXSourceRange]): Unit = 
-  __sn_wrap_libclang_clang_getCursorExtent(_0, __return)
+def clang_getCursorExceptionSpecificationType(C : Ptr[CXCursor]): CInt = 
+  __sn_wrap_libclang_clang_getCursorExceptionSpecificationType(C)
 
 /**
  * Retrieve the physical extent of the source construct referenced by the given cursor.
@@ -4028,6 +4020,14 @@ def clang_getCursorExtent(_0 : Ptr[CXCursor])(using Zone): CXSourceRange =
   !(__ptr_0 + 0)
 
 /**
+ * Retrieve the physical extent of the source construct referenced by the given cursor.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getCursorExtent(_0 : Ptr[CXCursor])(__return : Ptr[CXSourceRange]): Unit = 
+  __sn_wrap_libclang_clang_getCursorExtent(_0, __return)
+
+/**
  * Retrieve the kind of the given cursor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
@@ -4050,18 +4050,18 @@ def clang_getCursorKind(_0 : Ptr[CXCursor]): CXCursorKind =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorKindSpelling(Kind : CXCursorKind)(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getCursorKindSpelling(Kind, __return)
+def clang_getCursorKindSpelling(Kind : CXCursorKind)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_getCursorKindSpelling(Kind, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * These routines are used for testing and debugging, only, and should not be relied upon.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorKindSpelling(Kind : CXCursorKind)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_getCursorKindSpelling(Kind, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getCursorKindSpelling(Kind : CXCursorKind)(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getCursorKindSpelling(Kind, __return)
 
 /**
  * Determine the "language" of the entity referred to by a given cursor.
@@ -4133,20 +4133,20 @@ def clang_getCursorLinkage(cursor : Ptr[CXCursor]): CXLinkageKind =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorLocation(_0 : Ptr[CXCursor])(__return : Ptr[CXSourceLocation]): Unit = 
-  __sn_wrap_libclang_clang_getCursorLocation(_0, __return)
-
-/**
- * Retrieve the physical location of the source constructor referenced by the given cursor.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_getCursorLocation(_0 : CXCursor)(using Zone): CXSourceLocation = 
   val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
   val __ptr_1: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_1 + 0) = _0
   __sn_wrap_libclang_clang_getCursorLocation((__ptr_1 + 0), (__ptr_0 + 0))
   !(__ptr_0 + 0)
+
+/**
+ * Retrieve the physical location of the source constructor referenced by the given cursor.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getCursorLocation(_0 : Ptr[CXCursor])(__return : Ptr[CXSourceLocation]): Unit = 
+  __sn_wrap_libclang_clang_getCursorLocation(_0, __return)
 
 /**
  * Retrieve the physical location of the source constructor referenced by the given cursor.
@@ -4163,18 +4163,18 @@ def clang_getCursorLocation(_0 : Ptr[CXCursor])(using Zone): CXSourceLocation =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorPlatformAvailability(cursor : Ptr[CXCursor], always_deprecated : Ptr[CInt], deprecated_message : Ptr[CXString], always_unavailable : Ptr[CInt], unavailable_message : Ptr[CXString], availability : Ptr[CXPlatformAvailability], availability_size : CInt): CInt = 
-  __sn_wrap_libclang_clang_getCursorPlatformAvailability(cursor, always_deprecated, deprecated_message, always_unavailable, unavailable_message, availability, availability_size)
+def clang_getCursorPlatformAvailability(cursor : CXCursor, always_deprecated : Ptr[CInt], deprecated_message : Ptr[CXString], always_unavailable : Ptr[CInt], unavailable_message : Ptr[CXString], availability : Ptr[CXPlatformAvailability], availability_size : CInt)(using Zone): CInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = cursor
+  __sn_wrap_libclang_clang_getCursorPlatformAvailability((__ptr_0 + 0), always_deprecated, deprecated_message, always_unavailable, unavailable_message, availability, availability_size)
 
 /**
  * Determine the availability of the entity that this cursor refers to on any platforms for which availability information is known.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorPlatformAvailability(cursor : CXCursor, always_deprecated : Ptr[CInt], deprecated_message : Ptr[CXString], always_unavailable : Ptr[CInt], unavailable_message : Ptr[CXString], availability : Ptr[CXPlatformAvailability], availability_size : CInt)(using Zone): CInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = cursor
-  __sn_wrap_libclang_clang_getCursorPlatformAvailability((__ptr_0 + 0), always_deprecated, deprecated_message, always_unavailable, unavailable_message, availability, availability_size)
+def clang_getCursorPlatformAvailability(cursor : Ptr[CXCursor], always_deprecated : Ptr[CInt], deprecated_message : Ptr[CXString], always_unavailable : Ptr[CInt], unavailable_message : Ptr[CXString], availability : Ptr[CXPlatformAvailability], availability_size : CInt): CInt = 
+  __sn_wrap_libclang_clang_getCursorPlatformAvailability(cursor, always_deprecated, deprecated_message, always_unavailable, unavailable_message, availability, availability_size)
 
 /**
  * Pretty print declarations.
@@ -4229,12 +4229,8 @@ def clang_getCursorPrintingPolicy(_0 : CXCursor)(using Zone): CXPrintingPolicy =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorReferenceNameRange(C : CXCursor, NameFlags : CUnsignedInt, PieceIndex : CUnsignedInt)(using Zone): CXSourceRange = 
-  val __ptr_0: Ptr[CXSourceRange] = alloc[CXSourceRange](1)
-  val __ptr_1: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_1 + 0) = C
-  __sn_wrap_libclang_clang_getCursorReferenceNameRange((__ptr_1 + 0), NameFlags, PieceIndex, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getCursorReferenceNameRange(C : Ptr[CXCursor], NameFlags : CUnsignedInt, PieceIndex : CUnsignedInt)(__return : Ptr[CXSourceRange]): Unit = 
+  __sn_wrap_libclang_clang_getCursorReferenceNameRange(C, NameFlags, PieceIndex, __return)
 
 /**
  * Given a cursor that references something else, return the source range covering that reference.
@@ -4251,16 +4247,12 @@ def clang_getCursorReferenceNameRange(C : Ptr[CXCursor], NameFlags : CUnsignedIn
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getCursorReferenceNameRange(C : Ptr[CXCursor], NameFlags : CUnsignedInt, PieceIndex : CUnsignedInt)(__return : Ptr[CXSourceRange]): Unit = 
-  __sn_wrap_libclang_clang_getCursorReferenceNameRange(C, NameFlags, PieceIndex, __return)
-
-/**
- * For a cursor that is a reference, retrieve a cursor representing the entity that it references.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_getCursorReferenced(_0 : Ptr[CXCursor])(__return : Ptr[CXCursor]): Unit = 
-  __sn_wrap_libclang_clang_getCursorReferenced(_0, __return)
+def clang_getCursorReferenceNameRange(C : CXCursor, NameFlags : CUnsignedInt, PieceIndex : CUnsignedInt)(using Zone): CXSourceRange = 
+  val __ptr_0: Ptr[CXSourceRange] = alloc[CXSourceRange](1)
+  val __ptr_1: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_1 + 0) = C
+  __sn_wrap_libclang_clang_getCursorReferenceNameRange((__ptr_1 + 0), NameFlags, PieceIndex, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * For a cursor that is a reference, retrieve a cursor representing the entity that it references.
@@ -4282,6 +4274,14 @@ def clang_getCursorReferenced(_0 : Ptr[CXCursor])(using Zone): CXCursor =
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   __sn_wrap_libclang_clang_getCursorReferenced(_0, (__ptr_0 + 0))
   !(__ptr_0 + 0)
+
+/**
+ * For a cursor that is a reference, retrieve a cursor representing the entity that it references.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getCursorReferenced(_0 : Ptr[CXCursor])(__return : Ptr[CXCursor]): Unit = 
+  __sn_wrap_libclang_clang_getCursorReferenced(_0, __return)
 
 /**
  * Retrieve the return type associated with a given cursor.
@@ -4535,18 +4535,18 @@ def clang_getDefinitionSpellingAndExtent(_0 : CXCursor, startBuf : Ptr[CString],
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
 */
-def clang_getDiagnosticCategoryName(Category : CUnsignedInt)(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getDiagnosticCategoryName(Category, __return)
+def clang_getDiagnosticCategoryName(Category : CUnsignedInt)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_getDiagnosticCategoryName(Category, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Retrieve the name of a particular diagnostic category. This is now deprecated. Use clang_getDiagnosticCategoryText() instead.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
 */
-def clang_getDiagnosticCategoryName(Category : CUnsignedInt)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_getDiagnosticCategoryName(Category, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getDiagnosticCategoryName(Category : CUnsignedInt)(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getDiagnosticCategoryName(Category, __return)
 
 /**
  * Retrieve the diagnostic category text for a given diagnostic.
@@ -4571,18 +4571,18 @@ def clang_getDiagnosticCategoryText(_0 : CXDiagnostic)(__return : Ptr[CXString])
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
 */
-def clang_getDiagnosticFixIt(Diagnostic : CXDiagnostic, FixIt : CUnsignedInt, ReplacementRange : Ptr[CXSourceRange])(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_getDiagnosticFixIt(Diagnostic, FixIt, ReplacementRange, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getDiagnosticFixIt(Diagnostic : CXDiagnostic, FixIt : CUnsignedInt, ReplacementRange : Ptr[CXSourceRange])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getDiagnosticFixIt(Diagnostic, FixIt, ReplacementRange, __return)
 
 /**
  * Retrieve the replacement information for a given fix-it.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
 */
-def clang_getDiagnosticFixIt(Diagnostic : CXDiagnostic, FixIt : CUnsignedInt, ReplacementRange : Ptr[CXSourceRange])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getDiagnosticFixIt(Diagnostic, FixIt, ReplacementRange, __return)
+def clang_getDiagnosticFixIt(Diagnostic : CXDiagnostic, FixIt : CUnsignedInt, ReplacementRange : Ptr[CXSourceRange])(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_getDiagnosticFixIt(Diagnostic, FixIt, ReplacementRange, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Retrieve the source location of the given diagnostic.
@@ -4607,18 +4607,18 @@ def clang_getDiagnosticLocation(_0 : CXDiagnostic)(using Zone): CXSourceLocation
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
 */
-def clang_getDiagnosticOption(Diag : CXDiagnostic, Disable : Ptr[CXString])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getDiagnosticOption(Diag, Disable, __return)
+def clang_getDiagnosticOption(Diag : CXDiagnostic, Disable : Ptr[CXString])(using Zone): CXString = 
+  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
+  __sn_wrap_libclang_clang_getDiagnosticOption(Diag, Disable, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Retrieve the name of the command-line option that enabled this diagnostic.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
 */
-def clang_getDiagnosticOption(Diag : CXDiagnostic, Disable : Ptr[CXString])(using Zone): CXString = 
-  val __ptr_0: Ptr[CXString] = alloc[CXString](1)
-  __sn_wrap_libclang_clang_getDiagnosticOption(Diag, Disable, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getDiagnosticOption(Diag : CXDiagnostic, Disable : Ptr[CXString])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getDiagnosticOption(Diag, Disable, __return)
 
 /**
  * Retrieve a source range associated with the diagnostic.
@@ -4708,18 +4708,18 @@ def clang_getEnumConstantDeclUnsignedValue(C : CXCursor)(using Zone): CUnsignedL
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getEnumConstantDeclValue(C : CXCursor)(using Zone): CLongLong = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = C
-  __sn_wrap_libclang_clang_getEnumConstantDeclValue((__ptr_0 + 0))
+def clang_getEnumConstantDeclValue(C : Ptr[CXCursor]): CLongLong = 
+  __sn_wrap_libclang_clang_getEnumConstantDeclValue(C)
 
 /**
  * Retrieve the integer value of an enum constant declaration as a signed long long.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getEnumConstantDeclValue(C : Ptr[CXCursor]): CLongLong = 
-  __sn_wrap_libclang_clang_getEnumConstantDeclValue(C)
+def clang_getEnumConstantDeclValue(C : CXCursor)(using Zone): CLongLong = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = C
+  __sn_wrap_libclang_clang_getEnumConstantDeclValue((__ptr_0 + 0))
 
 /**
  * Retrieve the integer type of an enum declaration.
@@ -4756,18 +4756,26 @@ def clang_getEnumDeclIntegerType(C : Ptr[CXCursor])(__return : Ptr[CXType]): Uni
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getExceptionSpecificationType(T : CXType)(using Zone): CInt = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
-  !(__ptr_0 + 0) = T
-  __sn_wrap_libclang_clang_getExceptionSpecificationType((__ptr_0 + 0))
+def clang_getExceptionSpecificationType(T : Ptr[CXType]): CInt = 
+  __sn_wrap_libclang_clang_getExceptionSpecificationType(T)
 
 /**
  * Retrieve the exception specification type associated with a function type. This is a value of type CXCursor_ExceptionSpecificationKind.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getExceptionSpecificationType(T : Ptr[CXType]): CInt = 
-  __sn_wrap_libclang_clang_getExceptionSpecificationType(T)
+def clang_getExceptionSpecificationType(T : CXType)(using Zone): CInt = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
+  !(__ptr_0 + 0) = T
+  __sn_wrap_libclang_clang_getExceptionSpecificationType((__ptr_0 + 0))
+
+/**
+ * Retrieve the file, line, column, and offset represented by the given source location.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+*/
+def clang_getExpansionLocation(location : Ptr[CXSourceLocation], file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt]): Unit = 
+  __sn_wrap_libclang_clang_getExpansionLocation(location, file, line, column, offset)
 
 /**
  * Retrieve the file, line, column, and offset represented by the given source location.
@@ -4780,12 +4788,12 @@ def clang_getExpansionLocation(location : CXSourceLocation, file : Ptr[CXFile], 
   __sn_wrap_libclang_clang_getExpansionLocation((__ptr_0 + 0), file, line, column, offset)
 
 /**
- * Retrieve the file, line, column, and offset represented by the given source location.
+ * Retrieve the bit width of a bit-field declaration as an integer.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getExpansionLocation(location : Ptr[CXSourceLocation], file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt]): Unit = 
-  __sn_wrap_libclang_clang_getExpansionLocation(location, file, line, column, offset)
+def clang_getFieldDeclBitWidth(C : Ptr[CXCursor]): CInt = 
+  __sn_wrap_libclang_clang_getFieldDeclBitWidth(C)
 
 /**
  * Retrieve the bit width of a bit-field declaration as an integer.
@@ -4796,14 +4804,6 @@ def clang_getFieldDeclBitWidth(C : CXCursor)(using Zone): CInt =
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_getFieldDeclBitWidth((__ptr_0 + 0))
-
-/**
- * Retrieve the bit width of a bit-field declaration as an integer.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_getFieldDeclBitWidth(C : Ptr[CXCursor]): CInt = 
-  __sn_wrap_libclang_clang_getFieldDeclBitWidth(C)
 
 /**
  * Retrieve the file, line, column, and offset represented by the given source location.
@@ -4864,14 +4864,6 @@ def clang_getFunctionTypeCallingConv(T : Ptr[CXType]): CXCallingConv =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getIBOutletCollectionType(_0 : Ptr[CXCursor])(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_getIBOutletCollectionType(_0, __return)
-
-/**
- * For cursors representing an iboutletcollection attribute, this function returns the collection element type.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_getIBOutletCollectionType(_0 : CXCursor)(using Zone): CXType = 
   val __ptr_0: Ptr[CXType] = alloc[CXType](1)
   val __ptr_1: Ptr[CXCursor] = alloc[CXCursor](1)
@@ -4888,6 +4880,14 @@ def clang_getIBOutletCollectionType(_0 : Ptr[CXCursor])(using Zone): CXType =
   val __ptr_0: Ptr[CXType] = alloc[CXType](1)
   __sn_wrap_libclang_clang_getIBOutletCollectionType(_0, (__ptr_0 + 0))
   !(__ptr_0 + 0)
+
+/**
+ * For cursors representing an iboutletcollection attribute, this function returns the collection element type.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getIBOutletCollectionType(_0 : Ptr[CXCursor])(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_getIBOutletCollectionType(_0, __return)
 
 /**
  * Retrieve the file that is included by the given inclusion directive cursor.
@@ -4912,18 +4912,18 @@ def clang_getIncludedFile(cursor : Ptr[CXCursor]): CXFile =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_getInstantiationLocation(location : Ptr[CXSourceLocation], file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt]): Unit = 
-  __sn_wrap_libclang_clang_getInstantiationLocation(location, file, line, column, offset)
+def clang_getInstantiationLocation(location : CXSourceLocation, file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt])(using Zone): Unit = 
+  val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
+  !(__ptr_0 + 0) = location
+  __sn_wrap_libclang_clang_getInstantiationLocation((__ptr_0 + 0), file, line, column, offset)
 
 /**
  * Legacy API to retrieve the file, line, column, and offset represented by the given source location.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_getInstantiationLocation(location : CXSourceLocation, file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt])(using Zone): Unit = 
-  val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
-  !(__ptr_0 + 0) = location
-  __sn_wrap_libclang_clang_getInstantiationLocation((__ptr_0 + 0), file, line, column, offset)
+def clang_getInstantiationLocation(location : Ptr[CXSourceLocation], file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt]): Unit = 
+  __sn_wrap_libclang_clang_getInstantiationLocation(location, file, line, column, offset)
 
 /**
  * Retrieves the source location associated with a given file/line/column in a particular translation unit.
@@ -5049,26 +5049,18 @@ def clang_getNullRange()(__return : Ptr[CXSourceRange]): Unit =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getNumArgTypes(T : CXType)(using Zone): CInt = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
-  !(__ptr_0 + 0) = T
-  __sn_wrap_libclang_clang_getNumArgTypes((__ptr_0 + 0))
+def clang_getNumArgTypes(T : Ptr[CXType]): CInt = 
+  __sn_wrap_libclang_clang_getNumArgTypes(T)
 
 /**
  * Retrieve the number of non-variadic parameters associated with a function type.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getNumArgTypes(T : Ptr[CXType]): CInt = 
-  __sn_wrap_libclang_clang_getNumArgTypes(T)
-
-/**
- * Return the number of elements of an array or vector type.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_getNumElements(T : Ptr[CXType]): CLongLong = 
-  __sn_wrap_libclang_clang_getNumElements(T)
+def clang_getNumArgTypes(T : CXType)(using Zone): CInt = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
+  !(__ptr_0 + 0) = T
+  __sn_wrap_libclang_clang_getNumArgTypes((__ptr_0 + 0))
 
 /**
  * Return the number of elements of an array or vector type.
@@ -5081,14 +5073,12 @@ def clang_getNumElements(T : CXType)(using Zone): CLongLong =
   __sn_wrap_libclang_clang_getNumElements((__ptr_0 + 0))
 
 /**
- * Determine the number of overloaded declarations referenced by a CXCursor_OverloadedDeclRef cursor.
+ * Return the number of elements of an array or vector type.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getNumOverloadedDecls(cursor : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = cursor
-  __sn_wrap_libclang_clang_getNumOverloadedDecls((__ptr_0 + 0))
+def clang_getNumElements(T : Ptr[CXType]): CLongLong = 
+  __sn_wrap_libclang_clang_getNumElements(T)
 
 /**
  * Determine the number of overloaded declarations referenced by a CXCursor_OverloadedDeclRef cursor.
@@ -5099,12 +5089,24 @@ def clang_getNumOverloadedDecls(cursor : Ptr[CXCursor]): CUnsignedInt =
   __sn_wrap_libclang_clang_getNumOverloadedDecls(cursor)
 
 /**
+ * Determine the number of overloaded declarations referenced by a CXCursor_OverloadedDeclRef cursor.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getNumOverloadedDecls(cursor : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = cursor
+  __sn_wrap_libclang_clang_getNumOverloadedDecls((__ptr_0 + 0))
+
+/**
  * Retrieve a cursor for one of the overloaded declarations referenced by a CXCursor_OverloadedDeclRef cursor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getOverloadedDecl(cursor : Ptr[CXCursor], index : CUnsignedInt)(__return : Ptr[CXCursor]): Unit = 
-  __sn_wrap_libclang_clang_getOverloadedDecl(cursor, index, __return)
+def clang_getOverloadedDecl(cursor : Ptr[CXCursor], index : CUnsignedInt)(using Zone): CXCursor = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  __sn_wrap_libclang_clang_getOverloadedDecl(cursor, index, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Retrieve a cursor for one of the overloaded declarations referenced by a CXCursor_OverloadedDeclRef cursor.
@@ -5122,20 +5124,8 @@ def clang_getOverloadedDecl(cursor : CXCursor, index : CUnsignedInt)(using Zone)
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getOverloadedDecl(cursor : Ptr[CXCursor], index : CUnsignedInt)(using Zone): CXCursor = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  __sn_wrap_libclang_clang_getOverloadedDecl(cursor, index, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
-
-/**
- * Determine the set of methods that are overridden by the given method.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_getOverriddenCursors(cursor : CXCursor, overridden : Ptr[Ptr[CXCursor]], num_overridden : Ptr[CUnsignedInt])(using Zone): Unit = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = cursor
-  __sn_wrap_libclang_clang_getOverriddenCursors((__ptr_0 + 0), overridden, num_overridden)
+def clang_getOverloadedDecl(cursor : Ptr[CXCursor], index : CUnsignedInt)(__return : Ptr[CXCursor]): Unit = 
+  __sn_wrap_libclang_clang_getOverloadedDecl(cursor, index, __return)
 
 /**
  * Determine the set of methods that are overridden by the given method.
@@ -5146,12 +5136,14 @@ def clang_getOverriddenCursors(cursor : Ptr[CXCursor], overridden : Ptr[Ptr[CXCu
   __sn_wrap_libclang_clang_getOverriddenCursors(cursor, overridden, num_overridden)
 
 /**
- * For pointer types, returns the type of the pointee.
+ * Determine the set of methods that are overridden by the given method.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getPointeeType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_getPointeeType(T, __return)
+def clang_getOverriddenCursors(cursor : CXCursor, overridden : Ptr[Ptr[CXCursor]], num_overridden : Ptr[CUnsignedInt])(using Zone): Unit = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = cursor
+  __sn_wrap_libclang_clang_getOverriddenCursors((__ptr_0 + 0), overridden, num_overridden)
 
 /**
  * For pointer types, returns the type of the pointee.
@@ -5175,12 +5167,12 @@ def clang_getPointeeType(T : Ptr[CXType])(using Zone): CXType =
   !(__ptr_0 + 0)
 
 /**
- * Retrieve the file, line and column represented by the given source location, as specified in a # line directive.
+ * For pointer types, returns the type of the pointee.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getPresumedLocation(location : Ptr[CXSourceLocation], filename : Ptr[CXString], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt]): Unit = 
-  __sn_wrap_libclang_clang_getPresumedLocation(location, filename, line, column)
+def clang_getPointeeType(T : Ptr[CXType])(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_getPointeeType(T, __return)
 
 /**
  * Retrieve the file, line and column represented by the given source location, as specified in a # line directive.
@@ -5191,6 +5183,14 @@ def clang_getPresumedLocation(location : CXSourceLocation, filename : Ptr[CXStri
   val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
   !(__ptr_0 + 0) = location
   __sn_wrap_libclang_clang_getPresumedLocation((__ptr_0 + 0), filename, line, column)
+
+/**
+ * Retrieve the file, line and column represented by the given source location, as specified in a # line directive.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+*/
+def clang_getPresumedLocation(location : Ptr[CXSourceLocation], filename : Ptr[CXString], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt]): Unit = 
+  __sn_wrap_libclang_clang_getPresumedLocation(location, filename, line, column)
 
 /**
  * Retrieve a source range given the beginning and ending source locations.
@@ -5228,18 +5228,18 @@ def clang_getRange(begin : Ptr[CXSourceLocation], end : Ptr[CXSourceLocation])(u
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_getRangeEnd(range : Ptr[CXSourceRange])(using Zone): CXSourceLocation = 
-  val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
-  __sn_wrap_libclang_clang_getRangeEnd(range, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getRangeEnd(range : Ptr[CXSourceRange])(__return : Ptr[CXSourceLocation]): Unit = 
+  __sn_wrap_libclang_clang_getRangeEnd(range, __return)
 
 /**
  * Retrieve a source location representing the last character within a source range.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_getRangeEnd(range : Ptr[CXSourceRange])(__return : Ptr[CXSourceLocation]): Unit = 
-  __sn_wrap_libclang_clang_getRangeEnd(range, __return)
+def clang_getRangeEnd(range : Ptr[CXSourceRange])(using Zone): CXSourceLocation = 
+  val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
+  __sn_wrap_libclang_clang_getRangeEnd(range, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Retrieve a source location representing the last character within a source range.
@@ -5252,6 +5252,14 @@ def clang_getRangeEnd(range : CXSourceRange)(using Zone): CXSourceLocation =
   !(__ptr_1 + 0) = range
   __sn_wrap_libclang_clang_getRangeEnd((__ptr_1 + 0), (__ptr_0 + 0))
   !(__ptr_0 + 0)
+
+/**
+ * Retrieve a source location representing the first character within a source range.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+*/
+def clang_getRangeStart(range : Ptr[CXSourceRange])(__return : Ptr[CXSourceLocation]): Unit = 
+  __sn_wrap_libclang_clang_getRangeStart(range, __return)
 
 /**
  * Retrieve a source location representing the first character within a source range.
@@ -5274,14 +5282,6 @@ def clang_getRangeStart(range : CXSourceRange)(using Zone): CXSourceLocation =
   !(__ptr_1 + 0) = range
   __sn_wrap_libclang_clang_getRangeStart((__ptr_1 + 0), (__ptr_0 + 0))
   !(__ptr_0 + 0)
-
-/**
- * Retrieve a source location representing the first character within a source range.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
-*/
-def clang_getRangeStart(range : Ptr[CXSourceRange])(__return : Ptr[CXSourceLocation]): Unit = 
-  __sn_wrap_libclang_clang_getRangeStart(range, __return)
 
 /**
  * Retrieve the return type associated with a function type.
@@ -5346,26 +5346,18 @@ def clang_getSpecializedCursorTemplate(C : Ptr[CXCursor])(__return : Ptr[CXCurso
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_getSpellingLocation(location : CXSourceLocation, file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt])(using Zone): Unit = 
-  val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
-  !(__ptr_0 + 0) = location
-  __sn_wrap_libclang_clang_getSpellingLocation((__ptr_0 + 0), file, line, column, offset)
+def clang_getSpellingLocation(location : Ptr[CXSourceLocation], file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt]): Unit = 
+  __sn_wrap_libclang_clang_getSpellingLocation(location, file, line, column, offset)
 
 /**
  * Retrieve the file, line, column, and offset represented by the given source location.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
 */
-def clang_getSpellingLocation(location : Ptr[CXSourceLocation], file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt]): Unit = 
-  __sn_wrap_libclang_clang_getSpellingLocation(location, file, line, column, offset)
-
-/**
- * Given a cursor that represents a template, determine the cursor kind of the specializations would be generated by instantiating the template.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
-def clang_getTemplateCursorKind(C : Ptr[CXCursor]): CXCursorKind = 
-  __sn_wrap_libclang_clang_getTemplateCursorKind(C)
+def clang_getSpellingLocation(location : CXSourceLocation, file : Ptr[CXFile], line : Ptr[CUnsignedInt], column : Ptr[CUnsignedInt], offset : Ptr[CUnsignedInt])(using Zone): Unit = 
+  val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
+  !(__ptr_0 + 0) = location
+  __sn_wrap_libclang_clang_getSpellingLocation((__ptr_0 + 0), file, line, column, offset)
 
 /**
  * Given a cursor that represents a template, determine the cursor kind of the specializations would be generated by instantiating the template.
@@ -5376,6 +5368,14 @@ def clang_getTemplateCursorKind(C : CXCursor)(using Zone): CXCursorKind =
   val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
   !(__ptr_0 + 0) = C
   __sn_wrap_libclang_clang_getTemplateCursorKind((__ptr_0 + 0))
+
+/**
+ * Given a cursor that represents a template, determine the cursor kind of the specializations would be generated by instantiating the template.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_getTemplateCursorKind(C : Ptr[CXCursor]): CXCursorKind = 
+  __sn_wrap_libclang_clang_getTemplateCursorKind(C)
 
 /**
  * Get the raw lexical token starting with the given location.
@@ -5508,18 +5508,18 @@ def clang_getTokenSpelling(_0 : CXTranslationUnit, _1 : Ptr[CXToken])(__return :
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getTranslationUnitCursor(_0 : CXTranslationUnit)(__return : Ptr[CXCursor]): Unit = 
-  __sn_wrap_libclang_clang_getTranslationUnitCursor(_0, __return)
+def clang_getTranslationUnitCursor(_0 : CXTranslationUnit)(using Zone): CXCursor = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  __sn_wrap_libclang_clang_getTranslationUnitCursor(_0, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Retrieve the cursor that represents the given translation unit.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getTranslationUnitCursor(_0 : CXTranslationUnit)(using Zone): CXCursor = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  __sn_wrap_libclang_clang_getTranslationUnitCursor(_0, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getTranslationUnitCursor(_0 : CXTranslationUnit)(__return : Ptr[CXCursor]): Unit = 
+  __sn_wrap_libclang_clang_getTranslationUnitCursor(_0, __return)
 
 /**
  * Get the original translation unit source file name.
@@ -5602,20 +5602,20 @@ def clang_getTypeSpelling(CT : Ptr[CXType])(using Zone): CXString =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getTypeSpelling(CT : CXType)(using Zone): CXString = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
-  val __ptr_1: Ptr[CXString] = alloc[CXString](1)
-  !(__ptr_0 + 0) = CT
-  __sn_wrap_libclang_clang_getTypeSpelling((__ptr_0 + 0), (__ptr_1 + 0))
-  !(__ptr_1 + 0)
+def clang_getTypeSpelling(CT : Ptr[CXType])(__return : Ptr[CXString]): Unit = 
+  __sn_wrap_libclang_clang_getTypeSpelling(CT, __return)
 
 /**
  * Pretty-print the underlying type using the rules of the language of the translation unit from which it came.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getTypeSpelling(CT : Ptr[CXType])(__return : Ptr[CXString]): Unit = 
-  __sn_wrap_libclang_clang_getTypeSpelling(CT, __return)
+def clang_getTypeSpelling(CT : CXType)(using Zone): CXString = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
+  val __ptr_1: Ptr[CXString] = alloc[CXString](1)
+  !(__ptr_0 + 0) = CT
+  __sn_wrap_libclang_clang_getTypeSpelling((__ptr_0 + 0), (__ptr_1 + 0))
+  !(__ptr_1 + 0)
 
 /**
  * Retrieve the underlying type of a typedef declaration.
@@ -5634,18 +5634,18 @@ def clang_getTypedefDeclUnderlyingType(C : CXCursor)(using Zone): CXType =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getTypedefDeclUnderlyingType(C : Ptr[CXCursor])(using Zone): CXType = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
-  __sn_wrap_libclang_clang_getTypedefDeclUnderlyingType(C, (__ptr_0 + 0))
-  !(__ptr_0 + 0)
+def clang_getTypedefDeclUnderlyingType(C : Ptr[CXCursor])(__return : Ptr[CXType]): Unit = 
+  __sn_wrap_libclang_clang_getTypedefDeclUnderlyingType(C, __return)
 
 /**
  * Retrieve the underlying type of a typedef declaration.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_getTypedefDeclUnderlyingType(C : Ptr[CXCursor])(__return : Ptr[CXType]): Unit = 
-  __sn_wrap_libclang_clang_getTypedefDeclUnderlyingType(C, __return)
+def clang_getTypedefDeclUnderlyingType(C : Ptr[CXCursor])(using Zone): CXType = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
+  __sn_wrap_libclang_clang_getTypedefDeclUnderlyingType(C, (__ptr_0 + 0))
+  !(__ptr_0 + 0)
 
 /**
  * Returns the typedef name of the given type.
@@ -5729,18 +5729,18 @@ def clang_getUnqualifiedType(CT : CXType)(using Zone): CXType =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_hashCursor(_0 : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = _0
-  __sn_wrap_libclang_clang_hashCursor((__ptr_0 + 0))
+def clang_hashCursor(_0 : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_hashCursor(_0)
 
 /**
  * Compute a hash value for the given cursor.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_hashCursor(_0 : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_hashCursor(_0)
+def clang_hashCursor(_0 : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = _0
+  __sn_wrap_libclang_clang_hashCursor((__ptr_0 + 0))
 
 /**
  * Retrieve the CXSourceLocation represented by the given CXIdxLoc.
@@ -5757,20 +5757,20 @@ def clang_indexLoc_getCXSourceLocation(loc : Ptr[CXIdxLoc])(using Zone): CXSourc
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_indexLoc_getCXSourceLocation(loc : Ptr[CXIdxLoc])(__return : Ptr[CXSourceLocation]): Unit = 
-  __sn_wrap_libclang_clang_indexLoc_getCXSourceLocation(loc, __return)
-
-/**
- * Retrieve the CXSourceLocation represented by the given CXIdxLoc.
-
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
-*/
 def clang_indexLoc_getCXSourceLocation(loc : CXIdxLoc)(using Zone): CXSourceLocation = 
   val __ptr_0: Ptr[CXSourceLocation] = alloc[CXSourceLocation](1)
   val __ptr_1: Ptr[CXIdxLoc] = alloc[CXIdxLoc](1)
   !(__ptr_1 + 0) = loc
   __sn_wrap_libclang_clang_indexLoc_getCXSourceLocation((__ptr_1 + 0), (__ptr_0 + 0))
   !(__ptr_0 + 0)
+
+/**
+ * Retrieve the CXSourceLocation represented by the given CXIdxLoc.
+
+ * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+*/
+def clang_indexLoc_getCXSourceLocation(loc : Ptr[CXIdxLoc])(__return : Ptr[CXSourceLocation]): Unit = 
+  __sn_wrap_libclang_clang_indexLoc_getCXSourceLocation(loc, __return)
 
 /**
  * Retrieve the CXIdxFile, file, line, column, and offset represented by the given CXIdxLoc.
@@ -5849,18 +5849,18 @@ def clang_isFunctionTypeVariadic(T : CXType)(using Zone): CUnsignedInt =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_isInvalidDeclaration(_0 : CXCursor)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
-  !(__ptr_0 + 0) = _0
-  __sn_wrap_libclang_clang_isInvalidDeclaration((__ptr_0 + 0))
+def clang_isInvalidDeclaration(_0 : Ptr[CXCursor]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_isInvalidDeclaration(_0)
 
 /**
  * Determine whether the given declaration is invalid.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_isInvalidDeclaration(_0 : Ptr[CXCursor]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_isInvalidDeclaration(_0)
+def clang_isInvalidDeclaration(_0 : CXCursor)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXCursor] = alloc[CXCursor](1)
+  !(__ptr_0 + 0) = _0
+  __sn_wrap_libclang_clang_isInvalidDeclaration((__ptr_0 + 0))
 
 /**
  * Return 1 if the CXType is a POD (plain old data) type, and 0 otherwise.
@@ -5885,18 +5885,18 @@ def clang_isPODType(T : Ptr[CXType]): CUnsignedInt =
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_isRestrictQualifiedType(T : CXType)(using Zone): CUnsignedInt = 
-  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
-  !(__ptr_0 + 0) = T
-  __sn_wrap_libclang_clang_isRestrictQualifiedType((__ptr_0 + 0))
+def clang_isRestrictQualifiedType(T : Ptr[CXType]): CUnsignedInt = 
+  __sn_wrap_libclang_clang_isRestrictQualifiedType(T)
 
 /**
  * Determine whether a CXType has the "restrict" qualifier set, without looking through typedefs that may have added "restrict" at a different level.
 
  * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
 */
-def clang_isRestrictQualifiedType(T : Ptr[CXType]): CUnsignedInt = 
-  __sn_wrap_libclang_clang_isRestrictQualifiedType(T)
+def clang_isRestrictQualifiedType(T : CXType)(using Zone): CUnsignedInt = 
+  val __ptr_0: Ptr[CXType] = alloc[CXType](1)
+  !(__ptr_0 + 0) = T
+  __sn_wrap_libclang_clang_isRestrictQualifiedType((__ptr_0 + 0))
 
 /**
  * Returns 1 if the base class specified by the cursor with kind CX_CXXBaseSpecifier is virtual.
