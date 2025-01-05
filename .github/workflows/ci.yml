@@ -234,11 +234,11 @@ jobs:
           ./cs resolve com.indoorvivants:bindgen-interface_2.13:$(cat version)
           ./cs resolve com.indoorvivants:bindgen-interface_3:$(cat version)
           ./cs resolve com.indoorvivants:bindgen-interface_2.12:$(cat version)
-          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-x86_64 --artifact-type jar
-          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier osx-aarch64 --artifact-type jar
-          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
-          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier linux-aarch64 --artifact-type jar
-          ./cs fetch com.indoorvivants:bindgen_native0.4_3:$(cat version) --classifier windows-x86_64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.5_3:$(cat version) --classifier osx-x86_64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.5_3:$(cat version) --classifier osx-aarch64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.5_3:$(cat version) --classifier linux-x86_64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.5_3:$(cat version) --classifier linux-aarch64 --artifact-type jar
+          ./cs fetch com.indoorvivants:bindgen_native0.5_3:$(cat version) --classifier windows-x86_64 --artifact-type jar
 
       - name: Publish
         if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
