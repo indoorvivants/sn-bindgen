@@ -5,8 +5,6 @@ import bindgen.rendering.{RenderedOutput, renderBinding}
 import scala.scalanative.unsafe.Zone
 import scala.util.boundary
 
-import boundary.Label
-
 case class ConfiguredEnvironment(
     clang: ClangInfo,
     systemHeaderDetector: SystemHeaderDetector
@@ -21,25 +19,21 @@ class InteractiveDriver(config: Config, environment: ConfiguredEnvironment):
   def createBinding(context: Context, outputMode: OutputMode)(using
       Zone
   ): Either[BindingError, RenderedOutput] =
-    boundary:
-      val binding = analyse(context).?
+    analyse(context).map: binding =>
       given Context = context
-      Right(renderBinding(binding, outputMode))
+      renderBinding(binding, outputMode)
 end InteractiveDriver
 
 object InteractiveDriver:
   def init(using Config, Zone): Either[BindingError, InteractiveDriver] =
-    boundary:
-      val config = summon[Config]
-      val clang = clangInfo(config.systemPathDetection).?
-
-      Right(
-        InteractiveDriver(
-          config,
-          ConfiguredEnvironment(
-            clang,
-            SystemHeaderDetector(clang, config.excludeSystemPaths)
-          )
-        )
+    val config = summon[Config]
+    for clang <- clangInfo(config.systemPathDetection)
+    yield InteractiveDriver(
+      config,
+      ConfiguredEnvironment(
+        clang,
+        SystemHeaderDetector(clang, config.excludeSystemPaths)
       )
+    )
+  end init
 end InteractiveDriver

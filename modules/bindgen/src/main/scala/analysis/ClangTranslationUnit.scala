@@ -6,8 +6,6 @@ import scala.util.boundary
 
 import scalanative.unsafe.*
 import scalanative.unsigned.*
-import boundary.break
-import boundary.Label
 
 object ClangTranslationUnit:
   def create(
@@ -49,9 +47,9 @@ object ClangTranslationUnit:
       CXTranslationUnit_Flags.CXTranslationUnit_None.uint
     )
 
-    boundary:
-      if unit == null.asInstanceOf[CXTranslationUnit] then
-        break(Left(BindingError.FailedToCreateTranslationUnit))
+    if unit == null.asInstanceOf[CXTranslationUnit] then
+      Left(BindingError.FailedToCreateTranslationUnit)
+    else
 
       trace("Successfully created a translation unit")
 
@@ -69,13 +67,11 @@ object ClangTranslationUnit:
 
         if diag.severity == ClangSeverity.Error || diag.severity == ClangSeverity.Fatal
         then errors += 1
-
       }
 
-      if errors != 0 then
-        break(Left(BindingError.ClangErrors(diagnostics.toList)))
-
-      Right(unit)
+      if errors != 0 then Left(BindingError.ClangErrors(diagnostics.toList))
+      else Right(unit)
+    end if
   end create
 
   def getCursor(cursor: CXTranslationUnit)(using Zone) =
