@@ -8,7 +8,7 @@ import _root_.scala.scalanative.*
 /**
  * Opaque pointer representing client data that will be passed through to various callbacks and visitors.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXClientData = Ptr[Byte]
 object CXClientData: 
@@ -20,7 +20,7 @@ object CXClientData:
 /**
  * A semantic string that describes a code-completion result.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXCompletionString = Ptr[Byte]
 object CXCompletionString: 
@@ -30,19 +30,19 @@ object CXCompletionString:
     inline def value: Ptr[Byte] = v
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-type CXCursorAndRangeVisitorBlock = Unit
+opaque type CXCursorAndRangeVisitorBlock = Ptr[_CXCursorAndRangeVisitorBlock]
 object CXCursorAndRangeVisitorBlock: 
-  given _tag: Tag[CXCursorAndRangeVisitorBlock] = Tag.Unit
-  inline def apply(inline o: Unit): CXCursorAndRangeVisitorBlock = o
+  given _tag: Tag[CXCursorAndRangeVisitorBlock] = Tag.Ptr[_CXCursorAndRangeVisitorBlock](_CXCursorAndRangeVisitorBlock._tag)
+  inline def apply(inline o: Ptr[_CXCursorAndRangeVisitorBlock]): CXCursorAndRangeVisitorBlock = o
   extension (v: CXCursorAndRangeVisitorBlock)
-    inline def value: Unit = v
+    inline def value: Ptr[_CXCursorAndRangeVisitorBlock] = v
 
 /**
  * A fast container representing a set of CXCursors.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXCursorSet = Ptr[CXCursorSetImpl]
 object CXCursorSet: 
@@ -54,7 +54,7 @@ object CXCursorSet:
 /**
  * Visitor invoked for each cursor found by a traversal.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXCursorVisitor = CFuncPtr3[CXCursor, CXCursor, CXClientData, CXChildVisitResult]
 object CXCursorVisitor: 
@@ -66,19 +66,19 @@ object CXCursorVisitor:
     inline def toPtr: CVoidPtr = CFuncPtr.toPtr(v)
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-type CXCursorVisitorBlock = Unit
+opaque type CXCursorVisitorBlock = Ptr[_CXChildVisitResult]
 object CXCursorVisitorBlock: 
-  given _tag: Tag[CXCursorVisitorBlock] = Tag.Unit
-  inline def apply(inline o: Unit): CXCursorVisitorBlock = o
+  given _tag: Tag[CXCursorVisitorBlock] = Tag.Ptr[_CXChildVisitResult](_CXChildVisitResult._tag)
+  inline def apply(inline o: Ptr[_CXChildVisitResult]): CXCursorVisitorBlock = o
   extension (v: CXCursorVisitorBlock)
-    inline def value: Unit = v
+    inline def value: Ptr[_CXChildVisitResult] = v
 
 /**
  * A single diagnostic, containing the diagnostic's severity, location, text, source ranges, and fix-it hints.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXDiagnostic.h
 */
 opaque type CXDiagnostic = Ptr[Byte]
 object CXDiagnostic: 
@@ -90,7 +90,7 @@ object CXDiagnostic:
 /**
  * A group of CXDiagnostics.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXDiagnostic.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXDiagnostic.h
 */
 opaque type CXDiagnosticSet = Ptr[Byte]
 object CXDiagnosticSet: 
@@ -102,7 +102,7 @@ object CXDiagnosticSet:
 /**
  * Evaluation result of a cursor
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXEvalResult = Ptr[Byte]
 object CXEvalResult: 
@@ -114,7 +114,7 @@ object CXEvalResult:
 /**
  * Visitor invoked for each field found by a traversal.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXFieldVisitor = CFuncPtr2[CXCursor, CXClientData, CXVisitorResult]
 object CXFieldVisitor: 
@@ -128,7 +128,7 @@ object CXFieldVisitor:
 /**
  * A particular source file that is part of a translation unit.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXFile.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXFile.h
 */
 opaque type CXFile = Ptr[Byte]
 object CXFile: 
@@ -140,7 +140,7 @@ object CXFile:
 /**
  * The client's data object that is associated with an AST file (PCH or module).
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxClientASTFile = Ptr[Byte]
 object CXIdxClientASTFile: 
@@ -152,7 +152,7 @@ object CXIdxClientASTFile:
 /**
  * The client's data object that is associated with a semantic container of entities.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxClientContainer = Ptr[Byte]
 object CXIdxClientContainer: 
@@ -164,7 +164,7 @@ object CXIdxClientContainer:
 /**
  * The client's data object that is associated with a semantic entity.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxClientEntity = Ptr[Byte]
 object CXIdxClientEntity: 
@@ -176,7 +176,7 @@ object CXIdxClientEntity:
 /**
  * The client's data object that is associated with a CXFile.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxClientFile = Ptr[Byte]
 object CXIdxClientFile: 
@@ -188,7 +188,7 @@ object CXIdxClientFile:
 /**
  * Visitor invoked for each file in a translation unit (used with clang_getInclusions()).
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXInclusionVisitor = CFuncPtr4[CXFile, Ptr[CXSourceLocation], CUnsignedInt, CXClientData, Unit]
 object CXInclusionVisitor: 
@@ -202,7 +202,7 @@ object CXInclusionVisitor:
 /**
  * An "index" that consists of a set of translation units that would typically be linked together into an executable or library.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIndex = Ptr[Byte]
 object CXIndex: 
@@ -214,7 +214,7 @@ object CXIndex:
 /**
  * An indexing action/session, to be applied to one or multiple translation units.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIndexAction = Ptr[Byte]
 object CXIndexAction: 
@@ -226,7 +226,7 @@ object CXIndexAction:
 /**
  * The functions in this group provide access to information about modules.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXModule = Ptr[Byte]
 object CXModule: 
@@ -236,9 +236,9 @@ object CXModule:
     inline def value: Ptr[Byte] = v
 
 /**
- * Object encapsulating information about a module.modulemap file.
+ * Object encapsulating information about a module.map file.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/BuildSystem.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/BuildSystem.h
 */
 opaque type CXModuleMapDescriptor = Ptr[CXModuleMapDescriptorImpl]
 object CXModuleMapDescriptor: 
@@ -250,7 +250,7 @@ object CXModuleMapDescriptor:
 /**
  * Opaque pointer representing a policy that controls pretty printing for clang_getCursorPrettyPrinted.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXPrintingPolicy = Ptr[Byte]
 object CXPrintingPolicy: 
@@ -262,7 +262,7 @@ object CXPrintingPolicy:
 /**
  * A remapping of original source files and their translated files.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXRemapping = Ptr[Byte]
 object CXRemapping: 
@@ -274,7 +274,7 @@ object CXRemapping:
 /**
  * An opaque type representing target information for a given translation unit.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXTargetInfo = Ptr[CXTargetInfoImpl]
 object CXTargetInfo: 
@@ -286,7 +286,7 @@ object CXTargetInfo:
 /**
  * A single translation unit, which resides in an index.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXTranslationUnit = Ptr[CXTranslationUnitImpl]
 object CXTranslationUnit: 
@@ -298,7 +298,7 @@ object CXTranslationUnit:
 /**
  * Object encapsulating information about overlaying virtual file/directories over the real file system.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/BuildSystem.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/BuildSystem.h
 */
 opaque type CXVirtualFileOverlay = Ptr[CXVirtualFileOverlayImpl]
 object CXVirtualFileOverlay: 

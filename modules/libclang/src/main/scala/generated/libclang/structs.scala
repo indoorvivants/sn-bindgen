@@ -8,7 +8,7 @@ import _root_.scala.scalanative.*
 /**
  * Contains the results of code-completion.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXCodeCompleteResults = CStruct2[Ptr[CXCompletionResult], CUnsignedInt]
 object CXCodeCompleteResults:
@@ -28,7 +28,7 @@ object CXCodeCompleteResults:
 /**
  * A single result of code completion.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXCompletionResult = CStruct2[CXCursorKind, CXCompletionString]
 object CXCompletionResult:
@@ -48,7 +48,7 @@ object CXCompletionResult:
 /**
  * A cursor representing some element in the abstract syntax tree for a translation unit.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXCursor = CStruct3[CXCursorKind, CInt, CArray[Ptr[Byte], Nat._3]]
 object CXCursor:
@@ -69,7 +69,7 @@ object CXCursor:
     def data_=(value: CArray[Ptr[Byte], Nat._3]): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXCursorAndRangeVisitor = CStruct2[Ptr[Byte], CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]]
 object CXCursorAndRangeVisitor:
@@ -87,7 +87,7 @@ object CXCursorAndRangeVisitor:
     def visit_=(value: CFuncPtr3[Ptr[Byte], CXCursor, CXSourceRange, CXVisitorResult]): Unit = !struct.at2 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXCursorSetImpl = CStruct0
 object CXCursorSetImpl:
@@ -96,7 +96,7 @@ object CXCursorSetImpl:
 /**
  * Uniquely identifies a CXFile, that refers to the same underlying file, across an indexing session.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXFile.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXFile.h
 */
 opaque type CXFileUniqueID = CStruct1[CArray[CUnsignedLongLong, Nat._3]]
 object CXFileUniqueID:
@@ -111,7 +111,7 @@ object CXFileUniqueID:
     def data_=(value: CArray[CUnsignedLongLong, Nat._3]): Unit = !struct.at1 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxAttrInfo = CStruct3[CXIdxAttrKind, CXCursor, CXIdxLoc]
 object CXIdxAttrInfo:
@@ -132,7 +132,7 @@ object CXIdxAttrInfo:
     def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxBaseClassInfo = CStruct3[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
 object CXIdxBaseClassInfo:
@@ -153,7 +153,7 @@ object CXIdxBaseClassInfo:
     def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxCXXClassDeclInfo = CStruct3[Ptr[CXIdxDeclInfo], Ptr[Ptr[CXIdxBaseClassInfo]], CUnsignedInt]
 object CXIdxCXXClassDeclInfo:
@@ -174,7 +174,7 @@ object CXIdxCXXClassDeclInfo:
     def numBases_=(value: CUnsignedInt): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxContainerInfo = CStruct1[CXCursor]
 object CXIdxContainerInfo:
@@ -189,7 +189,7 @@ object CXIdxContainerInfo:
     def cursor_=(value: CXCursor): Unit = !struct.at1 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxDeclInfo = CStruct13[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxContainerInfo], Ptr[CXIdxContainerInfo], CInt, CInt, CInt, Ptr[CXIdxContainerInfo], CInt, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt, CUnsignedInt]
 object CXIdxDeclInfo:
@@ -240,13 +240,13 @@ object CXIdxDeclInfo:
     def flags_=(value: CUnsignedInt): Unit = !struct.at13 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-opaque type CXIdxEntityInfo = CStruct8[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, CString, CString, CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
+opaque type CXIdxEntityInfo = CStruct8[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, Ptr[CUnsignedChar], Ptr[CUnsignedChar], CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
 object CXIdxEntityInfo:
-  given _tag: Tag[CXIdxEntityInfo] = Tag.materializeCStruct8Tag[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, CString, CString, CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
+  given _tag: Tag[CXIdxEntityInfo] = Tag.materializeCStruct8Tag[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, Ptr[CUnsignedChar], Ptr[CUnsignedChar], CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
   def apply()(using Zone): Ptr[CXIdxEntityInfo] = scala.scalanative.unsafe.alloc[CXIdxEntityInfo](1)
-  def apply(kind : CXIdxEntityKind, templateKind : CXIdxEntityCXXTemplateKind, lang : CXIdxEntityLanguage, name : CString, USR : CString, cursor : CXCursor, attributes : Ptr[Ptr[CXIdxAttrInfo]], numAttributes : CUnsignedInt)(using Zone): Ptr[CXIdxEntityInfo] = 
+  def apply(kind : CXIdxEntityKind, templateKind : CXIdxEntityCXXTemplateKind, lang : CXIdxEntityLanguage, name : Ptr[CUnsignedChar], USR : Ptr[CUnsignedChar], cursor : CXCursor, attributes : Ptr[Ptr[CXIdxAttrInfo]], numAttributes : CUnsignedInt)(using Zone): Ptr[CXIdxEntityInfo] = 
     val ____ptr = apply()
     (!____ptr).kind = kind
     (!____ptr).templateKind = templateKind
@@ -264,10 +264,10 @@ object CXIdxEntityInfo:
     def templateKind_=(value: CXIdxEntityCXXTemplateKind): Unit = !struct.at2 = value
     def lang : CXIdxEntityLanguage = struct._3
     def lang_=(value: CXIdxEntityLanguage): Unit = !struct.at3 = value
-    def name : CString = struct._4
-    def name_=(value: CString): Unit = !struct.at4 = value
-    def USR : CString = struct._5
-    def USR_=(value: CString): Unit = !struct.at5 = value
+    def name : Ptr[CUnsignedChar] = struct._4
+    def name_=(value: Ptr[CUnsignedChar]): Unit = !struct.at4 = value
+    def USR : Ptr[CUnsignedChar] = struct._5
+    def USR_=(value: Ptr[CUnsignedChar]): Unit = !struct.at5 = value
     def cursor : CXCursor = struct._6
     def cursor_=(value: CXCursor): Unit = !struct.at6 = value
     def attributes : Ptr[Ptr[CXIdxAttrInfo]] = struct._7
@@ -278,7 +278,7 @@ object CXIdxEntityInfo:
 /**
  * Data for IndexerCallbacks#indexEntityReference.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxEntityRefInfo = CStruct7[CXIdxEntityRefKind, CXCursor, CXIdxLoc, Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxContainerInfo], CXSymbolRole]
 object CXIdxEntityRefInfo:
@@ -311,7 +311,7 @@ object CXIdxEntityRefInfo:
     def role_=(value: CXSymbolRole): Unit = !struct.at7 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxIBOutletCollectionAttrInfo = CStruct4[Ptr[CXIdxAttrInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
 object CXIdxIBOutletCollectionAttrInfo:
@@ -337,7 +337,7 @@ object CXIdxIBOutletCollectionAttrInfo:
 /**
  * Data for IndexerCallbacks#importedASTFile.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxImportedASTFileInfo = CStruct4[CXFile, CXModule, CXIdxLoc, CInt]
 object CXIdxImportedASTFileInfo:
@@ -363,13 +363,13 @@ object CXIdxImportedASTFileInfo:
 /**
  * Data for ppIncludedFile callback.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-opaque type CXIdxIncludedFileInfo = CStruct6[CXIdxLoc, CString, CXFile, CInt, CInt, CInt]
+opaque type CXIdxIncludedFileInfo = CStruct6[CXIdxLoc, Ptr[CUnsignedChar], CXFile, CInt, CInt, CInt]
 object CXIdxIncludedFileInfo:
-  given _tag: Tag[CXIdxIncludedFileInfo] = Tag.materializeCStruct6Tag[CXIdxLoc, CString, CXFile, CInt, CInt, CInt]
+  given _tag: Tag[CXIdxIncludedFileInfo] = Tag.materializeCStruct6Tag[CXIdxLoc, Ptr[CUnsignedChar], CXFile, CInt, CInt, CInt]
   def apply()(using Zone): Ptr[CXIdxIncludedFileInfo] = scala.scalanative.unsafe.alloc[CXIdxIncludedFileInfo](1)
-  def apply(hashLoc : CXIdxLoc, filename : CString, file : CXFile, isImport : CInt, isAngled : CInt, isModuleImport : CInt)(using Zone): Ptr[CXIdxIncludedFileInfo] = 
+  def apply(hashLoc : CXIdxLoc, filename : Ptr[CUnsignedChar], file : CXFile, isImport : CInt, isAngled : CInt, isModuleImport : CInt)(using Zone): Ptr[CXIdxIncludedFileInfo] = 
     val ____ptr = apply()
     (!____ptr).hashLoc = hashLoc
     (!____ptr).filename = filename
@@ -381,8 +381,8 @@ object CXIdxIncludedFileInfo:
   extension (struct: CXIdxIncludedFileInfo)
     def hashLoc : CXIdxLoc = struct._1
     def hashLoc_=(value: CXIdxLoc): Unit = !struct.at1 = value
-    def filename : CString = struct._2
-    def filename_=(value: CString): Unit = !struct.at2 = value
+    def filename : Ptr[CUnsignedChar] = struct._2
+    def filename_=(value: Ptr[CUnsignedChar]): Unit = !struct.at2 = value
     def file : CXFile = struct._3
     def file_=(value: CXFile): Unit = !struct.at3 = value
     def isImport : CInt = struct._4
@@ -395,7 +395,7 @@ object CXIdxIncludedFileInfo:
 /**
  * Source location passed to index callbacks.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxLoc = CStruct2[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
 object CXIdxLoc:
@@ -413,7 +413,7 @@ object CXIdxLoc:
     def int_data_=(value: CUnsignedInt): Unit = !struct.at2 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxObjCCategoryDeclInfo = CStruct5[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc, Ptr[CXIdxObjCProtocolRefListInfo]]
 object CXIdxObjCCategoryDeclInfo:
@@ -440,7 +440,7 @@ object CXIdxObjCCategoryDeclInfo:
     def protocols_=(value: Ptr[CXIdxObjCProtocolRefListInfo]): Unit = !struct.at5 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxObjCContainerDeclInfo = CStruct2[Ptr[CXIdxDeclInfo], CXIdxObjCContainerKind]
 object CXIdxObjCContainerDeclInfo:
@@ -458,7 +458,7 @@ object CXIdxObjCContainerDeclInfo:
     def kind_=(value: CXIdxObjCContainerKind): Unit = !struct.at2 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxObjCInterfaceDeclInfo = CStruct3[Ptr[CXIdxObjCContainerDeclInfo], Ptr[CXIdxBaseClassInfo], Ptr[CXIdxObjCProtocolRefListInfo]]
 object CXIdxObjCInterfaceDeclInfo:
@@ -479,7 +479,7 @@ object CXIdxObjCInterfaceDeclInfo:
     def protocols_=(value: Ptr[CXIdxObjCProtocolRefListInfo]): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxObjCPropertyDeclInfo = CStruct3[Ptr[CXIdxDeclInfo], Ptr[CXIdxEntityInfo], Ptr[CXIdxEntityInfo]]
 object CXIdxObjCPropertyDeclInfo:
@@ -500,7 +500,7 @@ object CXIdxObjCPropertyDeclInfo:
     def setter_=(value: Ptr[CXIdxEntityInfo]): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxObjCProtocolRefInfo = CStruct3[Ptr[CXIdxEntityInfo], CXCursor, CXIdxLoc]
 object CXIdxObjCProtocolRefInfo:
@@ -521,7 +521,7 @@ object CXIdxObjCProtocolRefInfo:
     def loc_=(value: CXIdxLoc): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXIdxObjCProtocolRefListInfo = CStruct2[Ptr[Ptr[CXIdxObjCProtocolRefInfo]], CUnsignedInt]
 object CXIdxObjCProtocolRefListInfo:
@@ -541,13 +541,13 @@ object CXIdxObjCProtocolRefListInfo:
 /**
  * Index initialization options.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-opaque type CXIndexOptions = CStruct9[CUnsignedInt, CUnsignedChar, CUnsignedChar, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, CString, CString]
+opaque type CXIndexOptions = CStruct9[CUnsignedInt, CUnsignedChar, CUnsignedChar, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, Ptr[CUnsignedChar], Ptr[CUnsignedChar]]
 object CXIndexOptions:
-  given _tag: Tag[CXIndexOptions] = Tag.materializeCStruct9Tag[CUnsignedInt, CUnsignedChar, CUnsignedChar, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, CString, CString]
+  given _tag: Tag[CXIndexOptions] = Tag.materializeCStruct9Tag[CUnsignedInt, CUnsignedChar, CUnsignedChar, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, Ptr[CUnsignedChar], Ptr[CUnsignedChar]]
   def apply()(using Zone): Ptr[CXIndexOptions] = scala.scalanative.unsafe.alloc[CXIndexOptions](1)
-  def apply(Size : CUnsignedInt, ThreadBackgroundPriorityForIndexing : CUnsignedChar, ThreadBackgroundPriorityForEditing : CUnsignedChar, ExcludeDeclarationsFromPCH : CUnsignedInt, DisplayDiagnostics : CUnsignedInt, StorePreamblesInMemory : CUnsignedInt, PreambleStoragePath : CString, InvocationEmissionPath : CString)(using Zone): Ptr[CXIndexOptions] = 
+  def apply(Size : CUnsignedInt, ThreadBackgroundPriorityForIndexing : CUnsignedChar, ThreadBackgroundPriorityForEditing : CUnsignedChar, ExcludeDeclarationsFromPCH : CUnsignedInt, DisplayDiagnostics : CUnsignedInt, StorePreamblesInMemory : CUnsignedInt, PreambleStoragePath : Ptr[CUnsignedChar], InvocationEmissionPath : Ptr[CUnsignedChar])(using Zone): Ptr[CXIndexOptions] = 
     val ____ptr = apply()
     (!____ptr).Size = Size
     (!____ptr).ThreadBackgroundPriorityForIndexing = ThreadBackgroundPriorityForIndexing
@@ -571,13 +571,13 @@ object CXIndexOptions:
     def DisplayDiagnostics_=(value: CUnsignedInt): Unit = !struct.at5 = value
     def StorePreamblesInMemory : CUnsignedInt = struct._6
     def StorePreamblesInMemory_=(value: CUnsignedInt): Unit = !struct.at6 = value
-    def PreambleStoragePath : CString = struct._8
-    def PreambleStoragePath_=(value: CString): Unit = !struct.at8 = value
-    def InvocationEmissionPath : CString = struct._9
-    def InvocationEmissionPath_=(value: CString): Unit = !struct.at9 = value
+    def PreambleStoragePath : Ptr[CUnsignedChar] = struct._8
+    def PreambleStoragePath_=(value: Ptr[CUnsignedChar]): Unit = !struct.at8 = value
+    def InvocationEmissionPath : Ptr[CUnsignedChar] = struct._9
+    def InvocationEmissionPath_=(value: Ptr[CUnsignedChar]): Unit = !struct.at9 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/BuildSystem.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/BuildSystem.h
 */
 opaque type CXModuleMapDescriptorImpl = CStruct0
 object CXModuleMapDescriptorImpl:
@@ -586,7 +586,7 @@ object CXModuleMapDescriptorImpl:
 /**
  * Describes the availability of a given entity on a particular platform, e.g., a particular class might only be available on Mac OS 10.7 or newer.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXPlatformAvailability = CStruct6[CXString, CXVersion, CXVersion, CXVersion, CInt, CXString]
 object CXPlatformAvailability:
@@ -618,7 +618,7 @@ object CXPlatformAvailability:
 /**
  * Identifies a specific source location within a translation unit.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXSourceLocation.h
 */
 opaque type CXSourceLocation = CStruct2[CArray[Ptr[Byte], Nat._2], CUnsignedInt]
 object CXSourceLocation:
@@ -638,7 +638,7 @@ object CXSourceLocation:
 /**
  * Identifies a half-open character range in the source code.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXSourceLocation.h
 */
 opaque type CXSourceRange = CStruct3[CArray[Ptr[Byte], Nat._2], CUnsignedInt, CUnsignedInt]
 object CXSourceRange:
@@ -661,7 +661,7 @@ object CXSourceRange:
 /**
  * Identifies an array of ranges.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXSourceLocation.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXSourceLocation.h
 */
 opaque type CXSourceRangeList = CStruct2[CUnsignedInt, Ptr[CXSourceRange]]
 object CXSourceRangeList:
@@ -681,7 +681,7 @@ object CXSourceRangeList:
 /**
  * A character string.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXString.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXString.h
 */
 opaque type CXString = CStruct2[Ptr[Byte], CUnsignedInt]
 object CXString:
@@ -699,7 +699,7 @@ object CXString:
     def private_flags_=(value: CUnsignedInt): Unit = !struct.at2 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/CXString.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/CXString.h
 */
 opaque type CXStringSet = CStruct2[Ptr[CXString], CUnsignedInt]
 object CXStringSet:
@@ -719,7 +719,7 @@ object CXStringSet:
 /**
  * The memory usage of a CXTranslationUnit, broken into categories.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXTUResourceUsage = CStruct3[Ptr[Byte], CUnsignedInt, Ptr[CXTUResourceUsageEntry]]
 object CXTUResourceUsage:
@@ -740,7 +740,7 @@ object CXTUResourceUsage:
     def entries_=(value: Ptr[CXTUResourceUsageEntry]): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXTUResourceUsageEntry = CStruct2[CXTUResourceUsageKind, CUnsignedLongInt]
 object CXTUResourceUsageEntry:
@@ -758,7 +758,7 @@ object CXTUResourceUsageEntry:
     def amount_=(value: CUnsignedLongInt): Unit = !struct.at2 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXTargetInfoImpl = CStruct0
 object CXTargetInfoImpl:
@@ -767,7 +767,7 @@ object CXTargetInfoImpl:
 /**
  * Describes a single preprocessing token.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXToken = CStruct2[CArray[CUnsignedInt, Nat._4], Ptr[Byte]]
 object CXToken:
@@ -785,7 +785,7 @@ object CXToken:
     def ptr_data_=(value: Ptr[Byte]): Unit = !struct.at2 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXTranslationUnitImpl = CStruct0
 object CXTranslationUnitImpl:
@@ -794,7 +794,7 @@ object CXTranslationUnitImpl:
 /**
  * The type of an element in the abstract syntax tree.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXType = CStruct2[CXTypeKind, CArray[Ptr[Byte], Nat._2]]
 object CXType:
@@ -814,30 +814,30 @@ object CXType:
 /**
  * Provides the contents of a file that has not yet been saved to disk.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-opaque type CXUnsavedFile = CStruct3[CString, CString, CUnsignedLongInt]
+opaque type CXUnsavedFile = CStruct3[Ptr[CUnsignedChar], Ptr[CUnsignedChar], CUnsignedLongInt]
 object CXUnsavedFile:
-  given _tag: Tag[CXUnsavedFile] = Tag.materializeCStruct3Tag[CString, CString, CUnsignedLongInt]
+  given _tag: Tag[CXUnsavedFile] = Tag.materializeCStruct3Tag[Ptr[CUnsignedChar], Ptr[CUnsignedChar], CUnsignedLongInt]
   def apply()(using Zone): Ptr[CXUnsavedFile] = scala.scalanative.unsafe.alloc[CXUnsavedFile](1)
-  def apply(Filename : CString, Contents : CString, Length : CUnsignedLongInt)(using Zone): Ptr[CXUnsavedFile] = 
+  def apply(Filename : Ptr[CUnsignedChar], Contents : Ptr[CUnsignedChar], Length : CUnsignedLongInt)(using Zone): Ptr[CXUnsavedFile] = 
     val ____ptr = apply()
     (!____ptr).Filename = Filename
     (!____ptr).Contents = Contents
     (!____ptr).Length = Length
     ____ptr
   extension (struct: CXUnsavedFile)
-    def Filename : CString = struct._1
-    def Filename_=(value: CString): Unit = !struct.at1 = value
-    def Contents : CString = struct._2
-    def Contents_=(value: CString): Unit = !struct.at2 = value
+    def Filename : Ptr[CUnsignedChar] = struct._1
+    def Filename_=(value: Ptr[CUnsignedChar]): Unit = !struct.at1 = value
+    def Contents : Ptr[CUnsignedChar] = struct._2
+    def Contents_=(value: Ptr[CUnsignedChar]): Unit = !struct.at2 = value
     def Length : CUnsignedLongInt = struct._3
     def Length_=(value: CUnsignedLongInt): Unit = !struct.at3 = value
 
 /**
  * Describes a version number of the form major.minor.subminor.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type CXVersion = CStruct3[CInt, CInt, CInt]
 object CXVersion:
@@ -858,7 +858,7 @@ object CXVersion:
     def Subminor_=(value: CInt): Unit = !struct.at3 = value
 
 /**
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/BuildSystem.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/BuildSystem.h
 */
 opaque type CXVirtualFileOverlayImpl = CStruct0
 object CXVirtualFileOverlayImpl:
@@ -867,7 +867,7 @@ object CXVirtualFileOverlayImpl:
 /**
  * A group of callbacks used by #clang_indexSourceFile and #clang_indexTranslationUnit.
 
- * [bindgen] header: /opt/homebrew/opt/llvm@17/include/clang-c/Index.h
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
 opaque type IndexerCallbacks = CStruct8[CFuncPtr2[CXClientData, Ptr[Byte], CInt], CFuncPtr3[CXClientData, CXDiagnosticSet, Ptr[Byte], Unit], CFuncPtr3[CXClientData, CXFile, Ptr[Byte], CXIdxClientFile], CFuncPtr2[CXClientData, Ptr[CXIdxIncludedFileInfo], CXIdxClientFile], CFuncPtr2[CXClientData, Ptr[CXIdxImportedASTFileInfo], CXIdxClientASTFile], CFuncPtr2[CXClientData, Ptr[Byte], CXIdxClientContainer], CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit], CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]]
 object IndexerCallbacks:
@@ -901,3 +901,17 @@ object IndexerCallbacks:
     def indexDeclaration_=(value: CFuncPtr2[CXClientData, Ptr[CXIdxDeclInfo], Unit]): Unit = !struct.at7 = value
     def indexEntityReference : CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit] = struct._8
     def indexEntityReference_=(value: CFuncPtr2[CXClientData, Ptr[CXIdxEntityRefInfo], Unit]): Unit = !struct.at8 = value
+
+/**
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
+*/
+opaque type _CXChildVisitResult = CStruct0
+object _CXChildVisitResult:
+  given _tag: Tag[_CXChildVisitResult] = Tag.materializeCStruct0Tag
+
+/**
+ * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
+*/
+opaque type _CXCursorAndRangeVisitorBlock = CStruct0
+object _CXCursorAndRangeVisitorBlock:
+  given _tag: Tag[_CXCursorAndRangeVisitorBlock] = Tag.materializeCStruct0Tag
