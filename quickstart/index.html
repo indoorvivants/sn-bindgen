@@ -88,12 +88,12 @@
 </ul>
 <h3><a href="#sbt-plugin-stable" id="sbt-plugin-stable">SBT plugin (stable)</a></h3>
 <p><strong>project/plugins.sbt</strong></p>
-<pre><code class="language-scala">addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.1.5&quot;)
+<pre><code class="language-scala">addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.2.0&quot;)
 </code></pre>
 <h3><a href="#sbt-plugin-latest" id="sbt-plugin-latest">SBT plugin (latest)</a></h3>
 <p><strong>project/plugins.sbt</strong></p>
 <pre><code class="language-scala">resolvers += Resolver.sonatypeRepo(&quot;snapshots&quot;)
-addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.2.0&quot;)
+addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.2.0+1-60688265-SNAPSHOT&quot;)
 </code></pre>
 <h2><a href="#usage" id="usage">Usage</a></h2>
 <p>This covers usage as part of an SBT project</p>
@@ -157,7 +157,7 @@ object predef:
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/5071028699430800086header.h
+   * [bindgen] header: /tmp/13746214975132965780header.h
   */
   opaque type bla = CUnsignedInt
   object bla extends _BindgenEnumCUnsignedInt[bla]:
@@ -181,7 +181,7 @@ private[libtest] object extern_functions:
   import _root_.libtest.enumerations.*
   import _root_.libtest.predef.*
   /**
-   * [bindgen] header: /tmp/5071028699430800086header.h
+   * [bindgen] header: /tmp/13746214975132965780header.h
   */
   def sum(one : bla, two : bla): Unit = extern
 
