@@ -264,7 +264,7 @@ lazy val libclang = project
           val include = new File(head)
           Seq(
             Binding(include / "clang-c" / "Index.h", "libclang")
-              .withClangFlags(List(s"-I$head"))
+              .withClangFlags(List(s"-I$head", "-fsigned-char"))
               .addCImport("clang-c/Index.h")
               .withMultiFile(true)
               .withFlavour(Flavour.ScalaNative05)

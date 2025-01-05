@@ -242,11 +242,11 @@ object CXIdxDeclInfo:
 /**
  * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-opaque type CXIdxEntityInfo = CStruct8[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, Ptr[CUnsignedChar], Ptr[CUnsignedChar], CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
+opaque type CXIdxEntityInfo = CStruct8[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, CString, CString, CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
 object CXIdxEntityInfo:
-  given _tag: Tag[CXIdxEntityInfo] = Tag.materializeCStruct8Tag[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, Ptr[CUnsignedChar], Ptr[CUnsignedChar], CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
+  given _tag: Tag[CXIdxEntityInfo] = Tag.materializeCStruct8Tag[CXIdxEntityKind, CXIdxEntityCXXTemplateKind, CXIdxEntityLanguage, CString, CString, CXCursor, Ptr[Ptr[CXIdxAttrInfo]], CUnsignedInt]
   def apply()(using Zone): Ptr[CXIdxEntityInfo] = scala.scalanative.unsafe.alloc[CXIdxEntityInfo](1)
-  def apply(kind : CXIdxEntityKind, templateKind : CXIdxEntityCXXTemplateKind, lang : CXIdxEntityLanguage, name : Ptr[CUnsignedChar], USR : Ptr[CUnsignedChar], cursor : CXCursor, attributes : Ptr[Ptr[CXIdxAttrInfo]], numAttributes : CUnsignedInt)(using Zone): Ptr[CXIdxEntityInfo] = 
+  def apply(kind : CXIdxEntityKind, templateKind : CXIdxEntityCXXTemplateKind, lang : CXIdxEntityLanguage, name : CString, USR : CString, cursor : CXCursor, attributes : Ptr[Ptr[CXIdxAttrInfo]], numAttributes : CUnsignedInt)(using Zone): Ptr[CXIdxEntityInfo] = 
     val ____ptr = apply()
     (!____ptr).kind = kind
     (!____ptr).templateKind = templateKind
@@ -264,10 +264,10 @@ object CXIdxEntityInfo:
     def templateKind_=(value: CXIdxEntityCXXTemplateKind): Unit = !struct.at2 = value
     def lang : CXIdxEntityLanguage = struct._3
     def lang_=(value: CXIdxEntityLanguage): Unit = !struct.at3 = value
-    def name : Ptr[CUnsignedChar] = struct._4
-    def name_=(value: Ptr[CUnsignedChar]): Unit = !struct.at4 = value
-    def USR : Ptr[CUnsignedChar] = struct._5
-    def USR_=(value: Ptr[CUnsignedChar]): Unit = !struct.at5 = value
+    def name : CString = struct._4
+    def name_=(value: CString): Unit = !struct.at4 = value
+    def USR : CString = struct._5
+    def USR_=(value: CString): Unit = !struct.at5 = value
     def cursor : CXCursor = struct._6
     def cursor_=(value: CXCursor): Unit = !struct.at6 = value
     def attributes : Ptr[Ptr[CXIdxAttrInfo]] = struct._7
@@ -365,11 +365,11 @@ object CXIdxImportedASTFileInfo:
 
  * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-opaque type CXIdxIncludedFileInfo = CStruct6[CXIdxLoc, Ptr[CUnsignedChar], CXFile, CInt, CInt, CInt]
+opaque type CXIdxIncludedFileInfo = CStruct6[CXIdxLoc, CString, CXFile, CInt, CInt, CInt]
 object CXIdxIncludedFileInfo:
-  given _tag: Tag[CXIdxIncludedFileInfo] = Tag.materializeCStruct6Tag[CXIdxLoc, Ptr[CUnsignedChar], CXFile, CInt, CInt, CInt]
+  given _tag: Tag[CXIdxIncludedFileInfo] = Tag.materializeCStruct6Tag[CXIdxLoc, CString, CXFile, CInt, CInt, CInt]
   def apply()(using Zone): Ptr[CXIdxIncludedFileInfo] = scala.scalanative.unsafe.alloc[CXIdxIncludedFileInfo](1)
-  def apply(hashLoc : CXIdxLoc, filename : Ptr[CUnsignedChar], file : CXFile, isImport : CInt, isAngled : CInt, isModuleImport : CInt)(using Zone): Ptr[CXIdxIncludedFileInfo] = 
+  def apply(hashLoc : CXIdxLoc, filename : CString, file : CXFile, isImport : CInt, isAngled : CInt, isModuleImport : CInt)(using Zone): Ptr[CXIdxIncludedFileInfo] = 
     val ____ptr = apply()
     (!____ptr).hashLoc = hashLoc
     (!____ptr).filename = filename
@@ -381,8 +381,8 @@ object CXIdxIncludedFileInfo:
   extension (struct: CXIdxIncludedFileInfo)
     def hashLoc : CXIdxLoc = struct._1
     def hashLoc_=(value: CXIdxLoc): Unit = !struct.at1 = value
-    def filename : Ptr[CUnsignedChar] = struct._2
-    def filename_=(value: Ptr[CUnsignedChar]): Unit = !struct.at2 = value
+    def filename : CString = struct._2
+    def filename_=(value: CString): Unit = !struct.at2 = value
     def file : CXFile = struct._3
     def file_=(value: CXFile): Unit = !struct.at3 = value
     def isImport : CInt = struct._4
@@ -543,11 +543,11 @@ object CXIdxObjCProtocolRefListInfo:
 
  * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-opaque type CXIndexOptions = CStruct9[CUnsignedInt, CUnsignedChar, CUnsignedChar, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, Ptr[CUnsignedChar], Ptr[CUnsignedChar]]
+opaque type CXIndexOptions = CStruct9[CUnsignedInt, CUnsignedChar, CUnsignedChar, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, CString, CString]
 object CXIndexOptions:
-  given _tag: Tag[CXIndexOptions] = Tag.materializeCStruct9Tag[CUnsignedInt, CUnsignedChar, CUnsignedChar, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, Ptr[CUnsignedChar], Ptr[CUnsignedChar]]
+  given _tag: Tag[CXIndexOptions] = Tag.materializeCStruct9Tag[CUnsignedInt, CUnsignedChar, CUnsignedChar, CUnsignedInt, CUnsignedInt, CUnsignedInt, CUnsignedInt, CString, CString]
   def apply()(using Zone): Ptr[CXIndexOptions] = scala.scalanative.unsafe.alloc[CXIndexOptions](1)
-  def apply(Size : CUnsignedInt, ThreadBackgroundPriorityForIndexing : CUnsignedChar, ThreadBackgroundPriorityForEditing : CUnsignedChar, ExcludeDeclarationsFromPCH : CUnsignedInt, DisplayDiagnostics : CUnsignedInt, StorePreamblesInMemory : CUnsignedInt, PreambleStoragePath : Ptr[CUnsignedChar], InvocationEmissionPath : Ptr[CUnsignedChar])(using Zone): Ptr[CXIndexOptions] = 
+  def apply(Size : CUnsignedInt, ThreadBackgroundPriorityForIndexing : CUnsignedChar, ThreadBackgroundPriorityForEditing : CUnsignedChar, ExcludeDeclarationsFromPCH : CUnsignedInt, DisplayDiagnostics : CUnsignedInt, StorePreamblesInMemory : CUnsignedInt, PreambleStoragePath : CString, InvocationEmissionPath : CString)(using Zone): Ptr[CXIndexOptions] = 
     val ____ptr = apply()
     (!____ptr).Size = Size
     (!____ptr).ThreadBackgroundPriorityForIndexing = ThreadBackgroundPriorityForIndexing
@@ -571,10 +571,10 @@ object CXIndexOptions:
     def DisplayDiagnostics_=(value: CUnsignedInt): Unit = !struct.at5 = value
     def StorePreamblesInMemory : CUnsignedInt = struct._6
     def StorePreamblesInMemory_=(value: CUnsignedInt): Unit = !struct.at6 = value
-    def PreambleStoragePath : Ptr[CUnsignedChar] = struct._8
-    def PreambleStoragePath_=(value: Ptr[CUnsignedChar]): Unit = !struct.at8 = value
-    def InvocationEmissionPath : Ptr[CUnsignedChar] = struct._9
-    def InvocationEmissionPath_=(value: Ptr[CUnsignedChar]): Unit = !struct.at9 = value
+    def PreambleStoragePath : CString = struct._8
+    def PreambleStoragePath_=(value: CString): Unit = !struct.at8 = value
+    def InvocationEmissionPath : CString = struct._9
+    def InvocationEmissionPath_=(value: CString): Unit = !struct.at9 = value
 
 /**
  * [bindgen] header: /usr/lib/llvm-17/include/clang-c/BuildSystem.h
@@ -816,21 +816,21 @@ object CXType:
 
  * [bindgen] header: /usr/lib/llvm-17/include/clang-c/Index.h
 */
-opaque type CXUnsavedFile = CStruct3[Ptr[CUnsignedChar], Ptr[CUnsignedChar], CUnsignedLongInt]
+opaque type CXUnsavedFile = CStruct3[CString, CString, CUnsignedLongInt]
 object CXUnsavedFile:
-  given _tag: Tag[CXUnsavedFile] = Tag.materializeCStruct3Tag[Ptr[CUnsignedChar], Ptr[CUnsignedChar], CUnsignedLongInt]
+  given _tag: Tag[CXUnsavedFile] = Tag.materializeCStruct3Tag[CString, CString, CUnsignedLongInt]
   def apply()(using Zone): Ptr[CXUnsavedFile] = scala.scalanative.unsafe.alloc[CXUnsavedFile](1)
-  def apply(Filename : Ptr[CUnsignedChar], Contents : Ptr[CUnsignedChar], Length : CUnsignedLongInt)(using Zone): Ptr[CXUnsavedFile] = 
+  def apply(Filename : CString, Contents : CString, Length : CUnsignedLongInt)(using Zone): Ptr[CXUnsavedFile] = 
     val ____ptr = apply()
     (!____ptr).Filename = Filename
     (!____ptr).Contents = Contents
     (!____ptr).Length = Length
     ____ptr
   extension (struct: CXUnsavedFile)
-    def Filename : Ptr[CUnsignedChar] = struct._1
-    def Filename_=(value: Ptr[CUnsignedChar]): Unit = !struct.at1 = value
-    def Contents : Ptr[CUnsignedChar] = struct._2
-    def Contents_=(value: Ptr[CUnsignedChar]): Unit = !struct.at2 = value
+    def Filename : CString = struct._1
+    def Filename_=(value: CString): Unit = !struct.at1 = value
+    def Contents : CString = struct._2
+    def Contents_=(value: CString): Unit = !struct.at2 = value
     def Length : CUnsignedLongInt = struct._3
     def Length_=(value: CUnsignedLongInt): Unit = !struct.at3 = value
 
