@@ -86,9 +86,9 @@ jobs:
           DUMPED_VERSION=$(cat version || echo "")
 
           export SN_BINDGEN_VERSION="${TRIGGER_VERSION:-"$DUMPED_VERSION"}"
-          export SCALA_NATIVE_VERSION=0.5.0-RC2
 
           cd examples
+
           sbt 'clean; bindgenGenerateAll; runBatchedExamples ${{matrix.segment}} 3'
 
 
