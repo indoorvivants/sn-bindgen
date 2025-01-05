@@ -76,7 +76,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
           else if typ.kind == CXTypeKind.CXType_ConstantArray
           then
             val speculateType = constructType(clang_getArrayElementType(typ))
-            info(
+            trace(
               s"when array: $speculateType, ${typ.spelling}"
             )
             speculateType match
