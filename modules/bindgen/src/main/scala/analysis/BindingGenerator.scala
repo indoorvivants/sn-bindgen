@@ -6,78 +6,75 @@ import scala.util.boundary
 
 import fluent.*
 import scalanative.unsafe.*
-import boundary.Label
 
 object BindingGenerator:
   def run(context: Context, environment: ConfiguredEnvironment)(using Zone)(
       using config: Config
   ): Either[BindingError, Binding] =
-    boundary:
+    val index = clang_createIndex(0, 0)
 
-      val index = clang_createIndex(0, 0)
+    ClangTranslationUnit
+      .create(index, context.headerFile.value, environment.clang)
+      .flatMap: translationUnit =>
 
-      val unit =
+        val (cxClientData, memory) =
+          Captured.unsafe(environment.systemHeaderDetector -> BindingBuilder())
+
         ClangTranslationUnit
-          .create(index, context.headerFile.value, environment.clang)
-          .?
+          .getCursor(translationUnit)
+          .flatMap: translationUnitCursor =>
+            val visitor = ClangVisitor.visitor
 
-      val (cxClientData, memory) =
-        Captured.unsafe(environment.systemHeaderDetector -> BindingBuilder())
+            try
+              libclang.fluent.clang_visitChildren(
+                translationUnitCursor,
+                visitor,
+                CXClientData.wrap(cxClientData)
+              )
 
-      val translationUnitCursor = ClangTranslationUnit.getCursor(unit).?
+              val binding: BindingBuilder = (!cxClientData)._1._2
 
-      val visitor = ClangVisitor.visitor
+              trace(
+                "Binding information before adding system aliases:",
+                binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
+                  k.toString -> v
+                }
+              )
 
-      try
-        libclang.fluent.clang_visitChildren(
-          translationUnitCursor,
-          visitor,
-          CXClientData.wrap(cxClientData)
-        )
+              addBuiltInAliases(binding)
 
-        val binding: BindingBuilder = (!cxClientData)._1._2
+              trace(
+                "Binding information after adding system alises:",
+                binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
+                  k.toString -> v
+                }
+              )
+              val closure = computeClosure(binding.named.filter { n =>
+                val name = n._1.n
 
-        trace(
-          "Binding information before adding system aliases:",
-          binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
-            k.toString -> v
-          }
-        )
+                if config.exclusivePrefix.isEmpty then true
+                else
+                  config.exclusivePrefix.exists(ep => name.startsWith(ep.value))
+              }.toMap)
 
-        addBuiltInAliases(binding)
+              trace(s"Defined or used in main file: ${closure}")
 
-        trace(
-          "Binding information after adding system alises:",
-          binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
-            k.toString -> v
-          }
-        )
-        val closure = computeClosure(binding.named.filter { n =>
-          val name = n._1.n
+              binding.named.filterInPlace((k, _) => closure.contains(k.n))
+              binding.unnamed.filterInPlace(_.location.shouldBeIncluded)
 
-          if config.exclusivePrefix.isEmpty then true
-          else config.exclusivePrefix.exists(ep => name.startsWith(ep.value))
-        }.toMap)
+              trace(
+                "Binding information after computing closure:",
+                binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
+                  k.toString -> v
+                }
+              )
 
-        trace(s"Defined or used in main file: ${closure}")
-
-        binding.named.filterInPlace((k, _) => closure.contains(k.n))
-        binding.unnamed.filterInPlace(_.location.shouldBeIncluded)
-
-        trace(
-          "Binding information after computing closure:",
-          binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
-            k.toString -> v
-          }
-        )
-
-        Right(binding.build)
-      finally
-        memory.deallocate()
-        clang_disposeTranslationUnit(unit)
-        clang_disposeIndex(index)
-
-      end try
+              Right(binding.build)
+            finally
+              memory.deallocate()
+              clang_disposeTranslationUnit(translationUnit)
+              clang_disposeIndex(index)
+            end try
 
   end run
 end BindingGenerator

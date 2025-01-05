@@ -14,6 +14,7 @@ import scala.scalanative.build.LTO
 import commandmatrix.extra.*
 import com.indoorvivants.detective.Platform
 import Platform.*
+import scala.scalanative.build.*
 
 import _root_.bindgen.interface.*
 import ArtifactNames.*
@@ -118,7 +119,10 @@ lazy val bindgen = project
   .settings(nativeCommon)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
-  .settings(nativeConfig ~= (_.withIncrementalCompilation(true)))
+  .settings(
+    nativeConfig ~= (_.withIncrementalCompilation(true)
+      .withSourceLevelDebuggingConfig(SourceLevelDebuggingConfig.enabled))
+  )
   .settings(remoteCacheSettings)
   .settings(
     buildInfoPackage := "bindgen",
@@ -798,6 +802,7 @@ val scalafixRules = Seq(
 ).mkString(" ")
 
 val PrepareCICommands = Seq(
+  "scalafixEnable",
   s"scalafix --rules $scalafixRules",
   "scalafmtAll",
   "scalafmtSbt"
