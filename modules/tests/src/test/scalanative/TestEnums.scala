@@ -56,7 +56,7 @@ class TestEnums:
   end test_getname
 
   @Test def test_anon_enum(): Unit =
-    zone:
+    Zone:
       val test = EnumAnon()
       (!test).protocol = EnumAnon.Enum0.WHAT
       (!test).howdy = 25
@@ -66,7 +66,7 @@ class TestEnums:
   end test_anon_enum
 
   @Test def test_small_enums(): Unit =
-    zone:
+    Zone:
       if !isWindows then
         assertEquals(
           (PackedEnum8.TOP | PackedEnum8.CENTER).value,

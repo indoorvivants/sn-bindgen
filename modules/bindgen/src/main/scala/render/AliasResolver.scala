@@ -1,12 +1,6 @@
 package bindgen.rendering
 
 import bindgen.*
-import bindgen.Binding
-import scala.scalanative.unsafe.Tag
-import scala.scalanative.annotation.alwaysinline
-import scala.collection.mutable.ListBuffer
-import scala.scalanative.unsafe.*
-import scalanative.unsigned.*
 
 opaque type AliasResolver = String => CType
 object AliasResolver:

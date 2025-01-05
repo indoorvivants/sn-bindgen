@@ -1,7 +1,6 @@
 package bindgen
 package rendering
 
-import scala.collection.mutable.ListBuffer
 import opaque_newtypes.*
 
 def functionRewriter(badFunction: Def.Function)(using

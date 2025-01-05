@@ -11,7 +11,7 @@ class TestStructs:
   import lib_test_structs.functions.*
 
   @Test def test_simple() =
-    zone {
+    Zone {
       val st = !StructSimple(25, 150, c"howdy", c"yo")
 
       assertEquals(25, st.x)
@@ -20,7 +20,7 @@ class TestStructs:
       assertEquals("yo", fromCString(st.s2))
     }
   @Test def test_complex() =
-    zone {
+    Zone {
       val st1 = !StructSimple(42, 420, c"s1", c"part 1")
       val st2 = !StructSimple(13, 130, c"s2", c"part 2")
 
@@ -45,7 +45,7 @@ class TestStructs:
     }
 
     @Test def test_complex_opaque() =
-      zone {
+      Zone {
         val st1 = !StructSimple(42, 420, c"s1", c"part 1")
         val st2 = !StructSimple(13, 130, c"s2", c"part 2")
 
@@ -56,7 +56,7 @@ class TestStructs:
         val anonUnion0 = StructComplexOpaque.Union2.apply(25)
         val arr2 = stackalloc[CArray[StructComplexOpaque.Union3, Nat._2]]()
         (!arr2).update(0, !StructComplexOpaque.Union3(50))
-        val anonUnion1 = StructComplexOpaque.Union4(100123456789L)
+        val anonUnion1 = StructComplexOpaque.Union4(100123456789L.toSize)
         val struct =
           !StructComplexOpaque(
             p1 = st1,
@@ -109,7 +109,7 @@ class TestStructs:
   end test_complex
 
   @Test def test_anonymous() =
-    zone {
+    Zone {
       val context = !StructAnonymous.Union0(25)
       val header = !StructAnonymous.Struct1(c"k1", c"v1")
       val struct = !StructAnonymous(25, context, header)

@@ -10,7 +10,7 @@ class TestUnions:
   import lib_test_unions.types.*
 
   @Test def test_basics() =
-    zone {
+    Zone {
       val empty = UnionSimple()
       val int_like = UnionSimple(31.toUInt)
       val float_like = UnionSimple(25.0f)
@@ -22,7 +22,7 @@ class TestUnions:
     }
 
   @Test def test_setters() =
-    zone {
+    Zone {
       val un = !UnionSimple(31.toUInt)
 
       un.i = 150.toUInt

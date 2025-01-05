@@ -1,7 +1,9 @@
 package bindgen
 
+import libclang.*
+
 import scalanative.unsafe.*
-import libclang.*, fluent.*
+import fluent.*
 
 object ClangVisitor:
   val visitor =
@@ -19,11 +21,9 @@ object ClangVisitor:
 
         given Config = conf
 
-        zone {
+        Zone {
 
           val loc = cursor.location
-
-          val spell = cursor.spelling
 
           val location = Location(
             loc.isFromMainFile,

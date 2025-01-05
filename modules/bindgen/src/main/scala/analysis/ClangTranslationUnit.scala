@@ -1,9 +1,13 @@
 package bindgen
 
-import libclang.*, fluent.*
+import libclang.*
+
+import scala.util.boundary
+
 import scalanative.unsafe.*
 import scalanative.unsigned.*
-import scala.util.boundary, boundary.break, boundary.Label
+import boundary.break
+import boundary.Label
 
 object ClangTranslationUnit:
   def create(
@@ -48,6 +52,7 @@ object ClangTranslationUnit:
     boundary:
       if unit == null.asInstanceOf[CXTranslationUnit] then
         break(Left(BindingError.FailedToCreateTranslationUnit))
+
       trace("Successfully created a translation unit")
 
       var errors = 0
@@ -72,9 +77,6 @@ object ClangTranslationUnit:
 
       Right(unit)
   end create
-
-  private def clangDiagnostic(diag: CXDiagnostic) =
-    val rawSeverity = clang_getDiagnosticSeverity(diag)
 
   def getCursor(cursor: CXTranslationUnit)(using Zone) =
     val curs = clang_getTranslationUnitCursor(cursor)

@@ -2,6 +2,7 @@ package bindgen
 package rendering
 
 import bindgen.*
+
 import scala.collection.mutable.ListBuffer
 
 def renderFunction(

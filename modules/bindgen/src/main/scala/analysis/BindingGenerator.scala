@@ -1,8 +1,12 @@
 package bindgen
 
-import libclang.*, fluent.*
+import libclang.*
+
+import scala.util.boundary
+
+import fluent.*
 import scalanative.unsafe.*
-import scala.util.boundary, boundary.break, boundary.Label
+import boundary.Label
 
 object BindingGenerator:
   def run(context: Context, environment: ConfiguredEnvironment)(using Zone)(

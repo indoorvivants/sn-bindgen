@@ -1,12 +1,5 @@
 package bindgen
 
-import bindgen.CType.Parameter
-
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
-import scala.scalanative.unsafe.Tag
-import scala.scalanative.unsigned.ULong
-
 import opaque_newtypes.*
 
 import Def.*
@@ -96,7 +89,7 @@ object Def:
     CType.Function(
       d.returnType,
       d.parameters.map { case fp =>
-        Parameter(Some(ParameterName(fp.name)), fp.typ)
+        CType.Parameter(Some(ParameterName(fp.name)), fp.typ)
       }.toList
     )
   def typeOf(d: Union): CType.Union =

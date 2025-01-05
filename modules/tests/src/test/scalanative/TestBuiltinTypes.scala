@@ -25,7 +25,7 @@ class TestBuiltInTypes:
 
   @Test def consistent_uint_types(): Unit =
     // this should compile
-    zone {
+    Zone {
       val st = !SpecialIntTypes(
         i8 = -8.toByte,
         i16 = -16.toShort,

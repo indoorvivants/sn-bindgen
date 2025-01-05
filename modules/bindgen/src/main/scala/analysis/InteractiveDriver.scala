@@ -1,9 +1,11 @@
 package bindgen
 
-import scala.util.boundary, boundary.break, boundary.Label
+import bindgen.rendering.{RenderedOutput, renderBinding}
+
 import scala.scalanative.unsafe.Zone
-import bindgen.rendering.RenderedOutput
-import bindgen.rendering.renderBinding
+import scala.util.boundary
+
+import boundary.Label
 
 case class ConfiguredEnvironment(
     clang: ClangInfo,

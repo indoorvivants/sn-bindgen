@@ -1,14 +1,12 @@
 package bindgen
 
-import com.monovore.decline.Opts
-import java.io.File
 import bindgen.RenderingConfig.NameFilter
-import bindgen.OutputChannel
 import cats.data.Validated
+
+import java.io.File
 
 object CLI:
   import com.monovore.decline.*
-  import cats.implicits.*
   import cats.syntax.all.*
 
   private val headerfile = Opts

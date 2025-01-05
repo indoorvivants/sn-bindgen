@@ -10,7 +10,7 @@ class TestStructPassing:
   import lib_test_struct_passing.functions.*
   import lib_test_struct_passing.types.*
   @Test def test_arguments(): Unit =
-    zone {
+    Zone {
       val struct1 = FunctionArg(42, c"universe")
       val struct2 = FunctionArg(128, c"yo")
 
@@ -19,7 +19,7 @@ class TestStructPassing:
 
     }
   @Test def test_return(): Unit =
-    zone {
+    Zone {
 
       val struct = function_returning_struct(115)
 

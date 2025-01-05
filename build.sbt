@@ -21,16 +21,15 @@ import ArtifactNames.*
 import java.nio.file.Paths
 
 lazy val Versions = new {
-  val decline = "2.4.1"
-  val scribe = "3.13.2"
+  val decline = "2.5.0"
+  val scribe = "3.15.3"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
-  val b2s = "0.3.17"
-  val pluginTargetSN = "0.4.17"
-  val pluginTargetSBT = "1.6.1"
-  val detective = "0.0.2"
-  val opaqueNewtypes = "0.0.2"
+  val pluginTargetSN = "0.5.6"
+  val pluginTargetSBT = "1.10.7"
+  val detective = "0.1.0"
+  val opaqueNewtypes = "0.1.0"
 
   val Scala3 = "3.3.4"
   val Scala212 = "2.12.20"
@@ -41,8 +40,6 @@ lazy val Versions = new {
 
 inThisBuild(
   Seq(
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
     semanticdbIncludeInJar := false,
     organization := "com.indoorvivants",
     organizationName := "Anton Sviridov",
@@ -97,7 +94,11 @@ lazy val iface = projectMatrix
   .settings(
     moduleName := "bindgen-interface",
     libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
-    scalacOptions += "-deprecation"
+    scalacOptions += "-deprecation",
+    scalacOptions += {
+      if (scalaBinaryVersion.value.startsWith("2.12")) "-Ywarn-unused-import"
+      else "-Wunused:imports"
+    }
   )
   .enablePlugins(BuildInfoPlugin)
   .settings(
@@ -132,10 +133,8 @@ lazy val bindgen = project
     libraryDependencies += "com.monovore" %%% "decline" % Versions.decline,
     libraryDependencies += "com.outr" %%% "scribe" % Versions.scribe,
     libraryDependencies += "com.indoorvivants" %%% "opaque-newtypes" % Versions.opaqueNewtypes,
-    libraryDependencies += compilerPlugin(
-      "org.polyvariant" % "better-tostring" % Versions.b2s cross CrossVersion.full
-    ),
-    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v")
+    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
+    scalacOptions += "-Wunused:all"
   )
   .settings {
     detectBinaryArtifacts
@@ -228,6 +227,7 @@ lazy val plugin = projectMatrix
       scriptedLaunchOpts.value ++
         Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
     },
+    scalacOptions += "-Ywarn-unused-import",
     scriptedBufferLog := false,
     publishLocal := publishLocal
       .dependsOn(
@@ -240,6 +240,7 @@ lazy val plugin = projectMatrix
 lazy val libclang = project
   .in(file("modules/libclang"))
   .enablePlugins(ScalaNativePlugin, BindgenPlugin)
+  .disablePlugins(ScalafixPlugin)
   .settings(nativeCommon)
   .settings(nativeConfig ~= usesLibClang)
   .settings(remoteCacheSettings)
@@ -249,7 +250,11 @@ lazy val libclang = project
       scalaDir = ((Compile / sourceDirectory).value / "scala" / "generated"),
       cDir = (Compile / resourceDirectory).value / "scala-native" / "generated"
     ),
-    bindgenBinary := (LocalProject("bindgen") / Compile / nativeLink).value,
+    bindgenBinary := sys.env
+      .get("SN_BINDGEN_BINARY_OVERRIDE")
+      .map(new File(_))
+      .get,
+    // .getOrElse((LocalProject("bindgen") / Compile / nativeLink).value),
     bindgenBindings := {
       val detected =
         llvmFolder(nativeConfig.value.clang.toAbsolutePath()).llvmInclude
@@ -259,9 +264,10 @@ lazy val libclang = project
           val include = new File(head)
           Seq(
             Binding(include / "clang-c" / "Index.h", "libclang")
-              .withClangFlags(List(s"-I$head"))
+              .withClangFlags(List(s"-I$head", "-fsigned-char"))
               .addCImport("clang-c/Index.h")
               .withMultiFile(true)
+              .withFlavour(Flavour.ScalaNative05)
           )
         case immutable.Nil =>
           sLog.value.error(
@@ -292,7 +298,7 @@ lazy val exportTestsLibrary: Project = project
 
       if (Platform.os != Platform.OS.Windows) {
         val library = (Compile / nativeLink).value
-        val clang = (Compile / nativeClang).value
+        val clang = (Compile / nativeConfig).value.clang
         val sourcesDir = (Compile / sourceDirectory).value / "c"
         val workDir = library.getParentFile()
         import scala.sys.process.*
@@ -303,7 +309,7 @@ lazy val exportTestsLibrary: Project = project
           sourcesDir / "run_tests.c",
           "-o",
           destination,
-          "-lexporttestslibrary-out",
+          "-lexporttestslibrary",
           s"-L${workDir}"
         ).map(_.toString())
 
@@ -390,7 +396,7 @@ lazy val tests = projectMatrix
         Seq(
           Test / fork := true,
           Test / envVars += "BINARY" -> (bindgen / Compile / nativeLink).value.toString,
-          Test / envVars += "BINDGEN_CLANG_PATH" -> (bindgen / Compile / nativeClang).value.toString,
+          Test / envVars += "BINDGEN_CLANG_PATH" -> (bindgen / Compile / nativeConfig).value.clang.toString,
           libraryDependencies += "com.github.sbt" % "junit-interface" % Versions.junit % Test
         )
       )
@@ -775,14 +781,28 @@ addCommandAlias(
 addCommandAlias("interfaceTests", "tests/test; tests3/test; tests2_12/test")
 addCommandAlias(
   "ci",
-  "scalafmtCheckAll; scalafmtSbtCheck; cliTests; interfaceTests; pluginTests; generatorTests; exportTests"
+  "clean; scalafixEnable; scalafmtCheckAll; scalafmtSbtCheck; cliTests;" +
+    "interfaceTests; pluginTests; generatorTests; exportTests"
 )
 
 addCommandAlias(
   "devPublish",
   "publishLocal; localBindgenArtifact/publishLocal; show bindgen/version"
 )
-addCommandAlias("preCI", "scalafmtAll; scalafmtSbt")
+
+val scalafixRules = Seq(
+  "OrganizeImports",
+  "DisableSyntax",
+  "LeakingImplicitClassVal",
+  "NoValInForComprehension"
+).mkString(" ")
+
+val PrepareCICommands = Seq(
+  s"scalafix --rules $scalafixRules",
+  "scalafmtAll",
+  "scalafmtSbt"
+)
+addCommandAlias("preCI", PrepareCICommands.mkString(";"))
 
 logoColor := scala.Console.MAGENTA
 

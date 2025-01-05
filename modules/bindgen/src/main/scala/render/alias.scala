@@ -2,7 +2,6 @@ package bindgen
 package rendering
 
 import bindgen.*
-import scala.scalanative.unsafe.CFuncPtr
 
 import CType.*
 
@@ -16,7 +15,6 @@ def alias(model: Def.Alias, line: Appender)(using
         Pointer(CType.Struct(Nil, Hints(0L))) -> false
       case other => other -> true
 
-  import CType.*
   val isOpaque = underlyingType match
     case _: Reference | _: Function | Void => false
     case _                                 => true

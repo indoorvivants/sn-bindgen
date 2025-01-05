@@ -1,7 +1,6 @@
 package bindgen.rendering
 
 import bindgen.*
-import scala.annotation.tailrec
 
 def isCyclical(typ: CType, structName: StructName)(using
     AliasResolver,
@@ -54,8 +53,6 @@ case class ParameterRewrite(
 def hack_recursive_structs(
     struct: Def.Struct
 )(using Config, AliasResolver): Map[Int, ParameterRewrite] =
-  val structType: CType.Struct =
-    CType.Struct(struct.fields.map(_._2).toList, Hints(struct.staticSize))
   val structName = struct.name
 
   val cyclicalParameters =

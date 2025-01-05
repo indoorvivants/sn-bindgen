@@ -1,6 +1,5 @@
 package bindgen
 
-import scala.scalanative.libc.stdio.FILE
 import scala.annotation.tailrec
 
 def referencedNames(typ: CType): Set[String] =

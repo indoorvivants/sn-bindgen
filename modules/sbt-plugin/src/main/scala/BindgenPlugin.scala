@@ -1,20 +1,15 @@
 package bindgen.plugin
-import java.util.Properties
-
-import sbt.Keys.*
-import sbt.nio.Keys.*
-import sbt.*
-import bindgen.interface.*
-import scala.util.Try
-import scala.scalanative.sbtplugin.ScalaNativePlugin
-import sbt.internal.util.ManagedLogger
-import sjsonnew.JsonFormat
-import bindgen.interface.LogLevel
-import bindgen.interface.Includes
+import bindgen.interface.{LogLevel, *}
 import com.indoorvivants.detective.Platform
+import sbt.*
+import sbt.Keys.*
+import sjsonnew.JsonFormat
+
+import java.io.{FileOutputStream, InputStream}
+import scala.scalanative.sbtplugin.ScalaNativePlugin
+import scala.util.Try
+
 import ArtifactNames.*
-import java.io.InputStream
-import java.io.FileOutputStream
 
 sealed trait BindgenMode extends Product with Serializable
 object BindgenMode {
@@ -73,7 +68,7 @@ object BindgenPlugin extends AutoPlugin {
 
       def download(link: String, to: java.nio.file.Path, report: Int => Unit) =
         Try {
-          val url = new URL(link)
+          val url = new URI(link).toURL
           val conn = url.openConnection()
           val contentLength = conn.getContentLength()
           var is = Option.empty[InputStream]
@@ -130,7 +125,7 @@ object BindgenPlugin extends AutoPlugin {
         getJars(
           ModuleID(
             "com.indoorvivants",
-            "bindgen_native0.4_3",
+            "bindgen_native0.5_3",
             bindgenVersion.value
           ).intransitive().classifier(jarString(platform))
         ).headOption.getOrElse(
@@ -305,7 +300,6 @@ object BindgenPlugin extends AutoPlugin {
       streams.cacheDirectory / s"sn-bindgen"
 
     import sjsonnew.*
-    import LList.:*:
     import BasicJsonProtocol.*
 
     implicit val configFormat: JsonFormat[Config] =

@@ -17,11 +17,12 @@ class CountingZone(using underlying: Zone) extends Zone:
   override def close() = underlying.close()
   override def isClosed = underlying.isClosed
 end CountingZone
+
 class TestFunctionRewrites:
   import lib_test_function_rewrites.functions.*
   import lib_test_function_rewrites.types.*
   @Test def test_with_pointers(): Unit =
-    zone {
+    Zone {
       val t1 = FunctionRewriteStruct(25, 35.0)
       val t2 = FunctionRewriteStruct(15, 40.0)
       val i = 100
@@ -33,7 +34,7 @@ class TestFunctionRewrites:
 
     }
   @Test def test_with_allocators(): Unit =
-    zone {
+    Zone {
       val t1 = FunctionRewriteStruct(25, 35.0)
       val t2 = FunctionRewriteStruct(15, 40.0)
 
@@ -44,7 +45,7 @@ class TestFunctionRewrites:
 
     }
   @Test def test_with_no_return_value(): Unit =
-    zone {
+    Zone {
       val t1 = FunctionRewriteStruct(25, 35.0)
       val t2 = FunctionRewriteStruct(15, 40.0)
       val i = 100
@@ -54,7 +55,7 @@ class TestFunctionRewrites:
     }
 
   @Test def test_pointer_versions(): Unit =
-    zone {
+    Zone {
       val t1 = FunctionRewriteStruct(25, 35.0)
       val t2 = FunctionRewriteStruct(15, 40.0)
       val resultPtr = FunctionRewriteStruct()
@@ -72,7 +73,7 @@ class TestFunctionRewrites:
     }
 
   @Test def test_allocations(): Unit =
-    zone {
+    Zone {
       val cz = CountingZone()
       val t1 = FunctionRewriteStruct(25, 35.0)
       val t2 = FunctionRewriteStruct(15, 40.0)

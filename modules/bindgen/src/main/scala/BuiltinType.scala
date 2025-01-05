@@ -1,30 +1,27 @@
 package bindgen
 
+import scala.scalanative.*
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
-
-import scala.scalanative.*
 
 private def _unsafe(typ: String) = s"scala.scalanative.unsafe.$typ"
 private def _scala(typ: String) = s"scala.$typ"
 private def _unsigned(typ: String) = s"scala.scalanative.unsigned.$typ"
-private def size[T](using t: Tag[T]) = t.size
-private def alignment[T](using t: Tag[T]) = t.alignment
 
 case class BuiltinType(
     short: String,
     full: String,
-    size: ULong,
-    alignment: ULong,
+    size: Int,
+    alignment: Int,
     header: Option[String]
 )
 
 object BuiltinType:
   def apply[T: Tag](short: String, full: String, header: String) =
-    new BuiltinType(short, full, size[T], alignment[T], Some(header))
+    new BuiltinType(short, full, sizeOf[T], alignmentOf[T], Some(header))
 
   def apply[T: Tag](short: String, full: String) =
-    new BuiltinType(short, full, size[T], alignment[T], None)
+    new BuiltinType(short, full, sizeOf[T], alignmentOf[T], None)
 
   val all = List(
     // format: off

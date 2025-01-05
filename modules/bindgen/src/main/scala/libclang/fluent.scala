@@ -1,8 +1,8 @@
 package libclang
 package fluent
 
-import scala.scalanative.unsafe.*
 import scala.annotation.targetName
+import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 extension (cxs: CXString)

@@ -1,6 +1,6 @@
 resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
-addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.17")
+addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.5.6")
 
 addSbtPlugin("com.indoorvivants" % "sbt-commandmatrix" % "0.0.5")
 
@@ -24,4 +24,4 @@ addSbtPlugin("com.github.reibitto" % "sbt-welcome" % "0.4.0")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.13.0")
 
-libraryDependencies += "com.indoorvivants.detective" %% "platform" % "0.0.2"
+libraryDependencies += "com.indoorvivants.detective" %% "platform" % "0.1.0"

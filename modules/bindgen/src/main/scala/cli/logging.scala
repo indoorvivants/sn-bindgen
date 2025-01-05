@@ -39,7 +39,6 @@ inline def consoleLogger[A](
     lc: LoggingConfig,
     stderr: String => Unit
 ): Unit =
-  import scala.compiletime.erasedValue
   if LogLevel.priority(level) >= lc.minLogPriority.value then
     stderr(
       Console.BOLD + "[bindgen] " + Console.RESET +

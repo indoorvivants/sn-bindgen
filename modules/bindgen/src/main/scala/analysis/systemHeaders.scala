@@ -1,12 +1,8 @@
 package bindgen
 
+import java.nio.file.{Path, Paths}
+
 import SystemPathDetection.*
-import java.nio.file.Paths
-
-import scala.util.Try
-
-import com.monovore.decline.*
-import java.nio.file.Path
 
 def clangInfo(det: SystemPathDetection)(using
     Config
@@ -54,7 +50,9 @@ def clangInfo(det: SystemPathDetection)(using
         )
       end if
 
-private def handleDetect(path: Path)(using Config) =
+private def handleDetect(path: Path)(using
+    Config
+): Either[BindingError, ClangInfo] =
   ClangDetector.detect(path, summon[Config].tempDir.value.toPath) match
     case Left(pr) =>
       val msg =

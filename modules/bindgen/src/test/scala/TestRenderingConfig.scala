@@ -3,10 +3,6 @@ package bindgen
 import org.junit.Assert.*
 import org.junit.Test
 
-import scala.scalanative.unsafe.*
-import scala.scalanative.unsigned.*
-import java.nio.file.Files
-
 class TestRenderingConfig:
   @Test def test_NameFilter() =
     import RenderingConfig.NameFilter.apply as nc

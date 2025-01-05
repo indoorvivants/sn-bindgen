@@ -10,7 +10,7 @@ class TestAnonymousNested:
   import lib_test_anonymous.types.*
 
   @Test def test_struct() =
-    zone {
+    Zone {
 
       val struct =
         AnonymousNestedStruct.Union0.Struct0(hat = 25, hat_mask = -50)
@@ -36,7 +36,7 @@ class TestAnonymousNested:
     }
 
   @Test def test_union() =
-    zone {
+    Zone {
 
       val struct = AnonymousNestedUnion.Union0.Struct0(hat = 25, hat_mask = -50)
       val union1 = AnonymousNestedUnion.Union0(!struct)

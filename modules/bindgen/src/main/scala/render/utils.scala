@@ -2,11 +2,6 @@ package bindgen.rendering
 
 import bindgen.*
 
-import bindgen.Binding
-import scala.scalanative.unsafe.Tag
-import scala.scalanative.annotation.alwaysinline
-import scala.collection.mutable.ListBuffer
-
 enum Sanitation:
   case Renamed(value: String)
   case Escaped
@@ -78,9 +73,6 @@ def sanitiseBeforeColon(name: String) =
 case class Error(msg: String) extends Exception(msg)
 
 def raiseError(msg: String) = throw new Error(msg)
-
-import scala.scalanative.unsafe.*
-import scalanative.unsigned.*
 
 def indent(using c: Config): String =
   (" " * (c.indentSize.value * c.indents.value))
