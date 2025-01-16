@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PLATFORM="$(uname)"
-LLVM_VERSION="${LLVM_VERSION:-14}"
+LLVM_VERSION="${LLVM_VERSION:-17}"
 
 echo "Installing LLVM $LLVM_VERSION"
 
