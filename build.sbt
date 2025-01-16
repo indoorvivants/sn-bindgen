@@ -652,6 +652,7 @@ def collectBindings(headersPath: File) = {
       .addCImport(s"$name.h")
       .withBindgenArguments(contents.filterNot(_ == multiFileFlag))
       .withMultiFile(isMultiFile)
+      .addClangFlag("-fsigned-char")
   }
 }
 
