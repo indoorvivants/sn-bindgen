@@ -179,7 +179,7 @@ jobs:
 
   release:
     if: ${{ always() }}
-    needs: [linux_build, linux_arm64_build, windows_build, macos_build]
+    needs: [linux_build, windows_build, macos_build]
     name: Release
     runs-on: ubuntu-20.04
     env: 
