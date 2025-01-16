@@ -97,7 +97,7 @@ jobs:
 
     - name: Build site
       run: sbt buildWebsite
-      if: matrix.os == "ubuntu-22.04"
+      if: matrix.os == 'ubuntu-22.04'
 
     - name: Upload Intel artifacts
       uses: actions/upload-artifact@v4
