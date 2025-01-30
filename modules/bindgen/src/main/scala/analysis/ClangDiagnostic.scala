@@ -12,10 +12,13 @@ case class ClangDiagnostic private (
 ):
   private var _message: String = null
 
+  private val formatOptions =
+    (CXDiagnosticDisplayOptions.CXDiagnostic_DisplaySourceLocation | CXDiagnosticDisplayOptions.CXDiagnostic_DisplayColumn).uint
+
   def message()(using Zone): String =
     if _message != null then _message
     else
-      _message = clang_formatDiagnostic(raw, 0.toUInt).string
+      _message = clang_formatDiagnostic(raw, formatOptions).string
       _message
 end ClangDiagnostic
 
