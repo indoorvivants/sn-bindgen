@@ -199,6 +199,7 @@ object CLI:
         "If provided, the clang binary from that folder will be used to\n" +
         "figure out system headers folders"
     )
+    .orElse(Opts.env[String]("LLVM_BIN", "Path to LLVM installation's bin/ folder"))
     .map(LLVMBin.apply(_))
     .map(SystemPathDetection.FromLLVM.apply)
 
