@@ -4,7 +4,6 @@ import libclang.*
 
 import fluent.*
 import scalanative.unsafe.*
-import scalanative.unsigned.*
 
 case class ClangDiagnostic private (
     severity: ClangSeverity,

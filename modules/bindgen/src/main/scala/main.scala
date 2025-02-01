@@ -8,15 +8,18 @@ import scala.util.Using
 
 object Generate:
   def main(args: Array[String]): Unit =
+    val arguments = args.takeWhile(_ != "--")
+    val rest = args.drop(arguments.length + 1)
     Zone:
-      CLI.command.parse(args) match
+      CLI.command.parse(arguments, sys.env) match
         case Left(help) =>
           val (modified, code) =
             if help.errors.nonEmpty then help.copy(body = Nil) -> -1
             else help -> 0
           System.err.println(modified)
           sys.exit(code)
-        case Right(config) =>
+        case Right(suspendedConfig) =>
+          val config = suspendedConfig.build(rest)
           validateConfig(config) match
             case None =>
               given Config = config.config
@@ -69,6 +72,8 @@ object Generate:
             case Some(msg) =>
               config.config.outputChannel.stderr(msg + "\n")
               sys.exit(1)
+          end match
+  end main
 
   private def outputDiagnostic(diag: ClangDiagnostic)(using Config, Zone) =
     import ClangSeverity.*

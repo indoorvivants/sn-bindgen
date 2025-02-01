@@ -2,8 +2,6 @@ package bindgen
 
 import libclang.*
 
-import scala.util.boundary
-
 import scalanative.unsafe.*
 import scalanative.unsigned.*
 

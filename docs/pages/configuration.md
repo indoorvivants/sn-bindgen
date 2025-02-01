@@ -52,6 +52,27 @@ For example, the bindings to libclang which underpin this very project are gener
 
 ## CLI
 
+### Passing clang flags
+
+*Version 0.2.3 and above*
+
+You can pass any clang flags by adding a `--` to CLI arguments and passing clang flags 
+after it. Example:
+
+
+```
+bindgen --package pack --header head.h -- -x c++ -Lfolder -lcurl
+```
+
+In this example, flags `-x c++ -Lfolder -lcurl` will be passed to clang when analysing 
+the code.
+
+*Before version 0.2.3*:
+
+`--clang bla` or `--clang-include <folder>` to specifically create `-I<folder>` flag
+
+### Full help
+
 ```scala mdoc:passthrough
 println(bindgen.BindgenRender.help())
 ```
