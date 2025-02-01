@@ -2,6 +2,7 @@
 title: Semantics 
 mdoc: true
 mdoc-version: 2.3.7
+order: 3
 ---
 
 ## Structs are converted to opaque types

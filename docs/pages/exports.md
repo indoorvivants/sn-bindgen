@@ -2,6 +2,7 @@
 title: Exports 
 mdoc: true
 mdoc-version: 2.3.7
+order: 4
 ---
 
 ## Exporting binary interface to Scala Native code

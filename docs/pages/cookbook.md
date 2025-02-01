@@ -1,5 +1,6 @@
 ---
 title: Cookbook
+order: 3
 ---
 
 ## Generating bindings from multiple header files
