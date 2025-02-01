@@ -1,5 +1,6 @@
 ---
 title: Motivation
+order: 7
 ---
 
 As an offering, Scala Native is in an interesting place.

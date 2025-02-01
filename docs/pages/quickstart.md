@@ -1,6 +1,7 @@
 ---
 title: Quick start
 mdoc: true
+order: 1
 ---
 
 Quickest way to start would be to use the [template](https://github.com/keynmol/sn-bindgen-template/).

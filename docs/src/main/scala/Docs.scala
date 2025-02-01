@@ -11,7 +11,7 @@ def currentYear = LocalDate.now().getYear()
 object Docs extends LibrarySite.App:
   def config =
     LibrarySite(
-      name = "SN bindgen",
+      name = "sn-bindgen",
       contentRoot = os.pwd / "pages",
       tagline = Some("Scala 3 Native binding generator to C libraries"),
       assetsRoot = Some(os.pwd / "assets"),
@@ -19,7 +19,7 @@ object Docs extends LibrarySite.App:
       githubUrl = Some("https://github.com/indoorvivants/sn-bindgen"),
       trackers = Seq(GoogleAnalytics("G-2V7BY56Z37")),
       highlighting = SyntaxHighlighting.HighlightJS.default
-        .copy(languages = List("scala", "c"), theme = "tomorrow-night-blue")
+        .copy(languages = List("scala", "c", "dockerfile"), theme = "tomorrow-night-blue")
     )
   override def extra(site: Site[LibrarySite.Doc]) =
     site

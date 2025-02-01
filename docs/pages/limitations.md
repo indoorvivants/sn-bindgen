@@ -1,5 +1,6 @@
 ---
 title: Limitations
+order: 5
 ---
 
 ## Definitions like `#define SOME_VALUE 25` are not exported
