@@ -3,7 +3,6 @@ package bindgen
 import bindgen.rendering.{RenderedOutput, renderBinding}
 
 import scala.scalanative.unsafe.Zone
-import scala.util.boundary
 
 case class ConfiguredEnvironment(
     clang: ClangInfo,

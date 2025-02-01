@@ -11,9 +11,15 @@ import bindgen.RenderingConfig.NameFilter
 class TestCLI:
 
   def parse(cmd: String*) = bindgen.CLI.command.parse(cmd)
-  def parseRight(cmd: Seq[String]) = bindgen.CLI.command
-    .parse(cmd)
-    .fold(h => throw new RuntimeException(h.errors.mkString(", ")), identity)
+  def parseRight(args: Seq[String]) =
+    val arguments = args.takeWhile(_ != "--")
+    val rest = args.drop(arguments.length + 1)
+    bindgen.CLI.command
+      .parse(arguments)
+      .fold(
+        h => throw new RuntimeException(h.errors.mkString(", ")),
+        sp => sp.build(rest)
+      )
 
   def parseExtra(cmd: String*) = parseRight(MINIMUM ++ cmd)
 
@@ -135,6 +141,20 @@ class TestCLI:
         "--render.external-name",
         "G*=glib"
       ).config.rendering.externalNames
+    )
+
+  @Test def test_clang_flags() =
+    assertEquals(
+      Seq("-Ibla", "-Ihello", "-x", "c++"),
+      parseExtra(
+        "--clang",
+        "-Ihello",
+        "--clang-include",
+        "bla",
+        "--",
+        "-x",
+        "c++"
+      ).config.clangFlags.map(_.value)
     )
 
 end TestCLI

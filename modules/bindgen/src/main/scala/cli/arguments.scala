@@ -192,6 +192,17 @@ object CLI:
     .withDefault(0)
     .map(Indentation.apply(_))
 
+  private val llvmBinEnv =
+    Opts
+      .env[String](
+        "LLVM_BIN",
+        "Path to LLVM installation's bin/ folder" +
+          "If provided, the clang binary from that folder will be used to\n" +
+          "figure out system headers folders"
+      )
+      .map(LLVMBin.apply(_))
+      .map(SystemPathDetection.FromLLVM.apply)
+
   private val llvmBin = Opts
     .option[String](
       "llvm-bin",
@@ -199,7 +210,6 @@ object CLI:
         "If provided, the clang binary from that folder will be used to\n" +
         "figure out system headers folders"
     )
-    .orElse(Opts.env[String]("LLVM_BIN", "Path to LLVM installation's bin/ folder"))
     .map(LLVMBin.apply(_))
     .map(SystemPathDetection.FromLLVM.apply)
 
@@ -224,7 +234,8 @@ object CLI:
     .as(SystemPathDetection.No)
 
   private val systemPathsDetection =
-    llvmBin
+    llvmBinEnv
+      .orElse(llvmBin)
       .orElse(clangPath)
       .orElse(noSystemHeaders)
       .withDefault(SystemPathDetection.Auto)
@@ -360,6 +371,8 @@ object CLI:
   val context =
     (packageName, headerfile, lang).mapN(Context.apply)
 
+  case class SuspendedConfig(build: Seq[String] => CLIConfig)
+
   val config =
     (
       linkName,
@@ -390,5 +403,14 @@ object CLI:
       context,
       config
     ).mapN(CLIConfig.apply)
+      .map(cli =>
+        SuspendedConfig(clangFlags =>
+          cli.copy(config =
+            cli.config.copy(clangFlags =
+              cli.config.clangFlags ++ clangFlags.map(ClangFlag.apply)
+            )
+          )
+        )
+      )
   }
 end CLI
