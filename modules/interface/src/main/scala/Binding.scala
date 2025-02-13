@@ -275,7 +275,18 @@ object Binding {
       flavour: Option[Flavour] = None,
       scalaFile: String,
       cFile: String
-  )
+  ) {
+    override def toString(): String =
+      classOf[BindingArgs]
+        .getDeclaredFields()
+        .map(field => field.getName())
+        .toList
+        .zip(productIterator.toList)
+        .map { case (name, value) =>
+          s"$name = $value"
+        }
+        .mkString(productPrefix + "(", ", ", ")")
+  }
 
   private[interface] object Defaults {
     val linkName = None
