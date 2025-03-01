@@ -27,9 +27,8 @@ def shouldRender(definition: Def)(using config: Config) =
       val filename = definition.metadata.file.map(_.value)
 
       val fileMatches =
-        filename.flatMap(f =>
-          config.rendering.matchesPackage(_.externalPaths)(f)
-        )
+        filename
+          .flatMap(f => config.rendering.matchesPackage(_.externalPaths)(f))
       val nameMatches =
         config.rendering.matchesPackage(_.externalNames)(n)
 

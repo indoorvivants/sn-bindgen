@@ -57,8 +57,7 @@ object AliasResolver:
         (s match
           case u: Def.Union  => u.name.value
           case u: Def.Struct => u.name.value
-          case e: Def.Enum   => e.name.get.value
-        )
+          case e: Def.Enum   => e.name.get.value)
 
       s match
         case u: Def.Union =>
