@@ -37,6 +37,16 @@ def struct(struct: Def.Struct, line: Appender)(using
     if structIsOpaque then structArrayType(rewrittenStructType)
     else rewrittenStructType
 
+  val openDelimiter =
+    if summon[Config].bracesNotIndents.value then " {" else ":"
+  val openDefDelimiter =
+    if summon[Config].bracesNotIndents.value then "{" else ""
+  def appendCloseDelimiter(): Unit =
+    if summon[Config].bracesNotIndents.value then line("}") else ()
+  def appendDefCloseDelimiter(name: String): Unit =
+    if summon[Config].bracesNotIndents.value then line("}")
+    else line(s"end $name")
+
   def setter(name: String): String =
     import Sanitation.*
     sanitise(name) match
@@ -71,7 +81,7 @@ def struct(struct: Def.Struct, line: Appender)(using
 
   renderComment(line, struct.meta)
   line(s"opaque type $structName = ${scalaType(finalStructType)}")
-  line(s"object ${sanitiseBeforeColon(structName.value)}:")
+  line(s"object ${sanitiseBeforeColon(structName.value)}$openDelimiter")
   nest {
     struct.anonymous.foreach {
       case s: Def.Struct =>
@@ -114,7 +124,7 @@ def struct(struct: Def.Struct, line: Appender)(using
       ignored match
         case None =>
           line(
-            s"def apply(${applyArgList.result.mkString(", ")})(using Zone): Ptr[$structName] = "
+            s"def apply(${applyArgList.result.mkString(", ")})(using Zone): Ptr[$structName] = $openDefDelimiter"
           )
           nest {
             line(s"val ____ptr = apply()")
@@ -126,13 +136,14 @@ def struct(struct: Def.Struct, line: Appender)(using
             }
             line(s"____ptr")
           }
+          appendCloseDelimiter()
         case Some(v) =>
           warning(
             s"Not rendering the constructor for ${structName.value}, as requested by '$v' filter"
           )
       end match
 
-      line(s"extension (struct: $structName)")
+      line(s"extension (struct: $structName) $openDefDelimiter")
       nest {
         if !structIsOpaque then
           namedFieldsWithIndex.filter(_._1._1.value.nonEmpty).foreach {
@@ -177,8 +188,9 @@ def struct(struct: Def.Struct, line: Appender)(using
         end if
 
       }
+      appendCloseDelimiter()
       if structIsOpaque then
-        line("val offsets: Array[Int] = ")
+        line(s"val offsets: Array[Int] = $openDefDelimiter")
         nest {
           line(s"val res = Array.ofDim[Int](${namedFieldsWithIndex.length})")
 
@@ -220,13 +232,13 @@ def struct(struct: Def.Struct, line: Appender)(using
           }
           line("res")
         }
-
-        line("end offsets")
+        appendDefCloseDelimiter("offsets")
       end if
     else line(s"given _tag: Tag[$structName] = Tag.materializeCStruct0Tag")
     end if
 
   }
+  appendCloseDelimiter()
 
   Exported.Yes(structName.value)
 end struct
