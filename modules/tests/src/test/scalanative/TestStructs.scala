@@ -126,4 +126,20 @@ class TestStructs:
       assertEquals("what", fromCString(struct.context.str))
     }
 
+  @Test def test_anoymousPointer() =
+    Zone {
+      val position = !StructAnonymousPointer.Struct0(1, 2)
+      val offset = !StructAnonymousPointer.Struct1(3)
+      val c = !StructAnonymousPointer.Struct2(
+        !StructAnonymousPointer.Struct2.Struct0(4)
+      )
+
+      assertEquals(1, position.x)
+      assertEquals(2, position.y)
+
+      assertEquals(3, offset.oneField)
+
+      assertEquals(4, c.nested.inner)
+    }
+
 end TestStructs

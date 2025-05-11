@@ -78,3 +78,21 @@ typedef struct StructAnonymous {
     char *value;
   } header;
 } StructAnonymous;
+
+typedef struct StructAnonymousPointer {
+  struct {
+      int x;
+      int y;
+  } *pos;
+  struct {
+      int oneField;
+  } *offsets;
+
+  struct {
+      struct {
+          int inner;
+      } nested;
+  } *c;
+
+  int count;
+} StructAnonymousPointer;
