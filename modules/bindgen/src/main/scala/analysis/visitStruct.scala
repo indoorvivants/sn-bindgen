@@ -115,14 +115,14 @@ def visitStruct(cursor: CXCursor, name: String)(using
             val ct = constructType(clang_getCursorType(cursor))
             val fixedCt = ct match
               case CType.Pointer(CType.Reference(Name.Unnamed)) =>
-                val maybeLastAnonymStruct = builder.anonymous
-                  .collect { case s: Def.Struct => s }
-                  .result()
-                  .lastOption
+                val maybeLastAnonymStruct = builder.anonymous.lastOption.flatMap{ 
+                    case s: Def.Struct => Some(s.name.value)
+                    case u: Def.Union => Some(u.name.value)
+                    case e: Def.Enum => e.name.map(_.value)
+                  }                  
                 maybeLastAnonymStruct match
                   case Some(lastAnonymStruct) =>
-                    val referenceName =
-                      s"${collector.struct.name.value}.${lastAnonymStruct.name.value}"
+                    val referenceName = s"${collector.struct.name.value}.${lastAnonymStruct}"
                     CType.Pointer(CType.Reference(Name.Model(referenceName)))
                   case None => ct
 
