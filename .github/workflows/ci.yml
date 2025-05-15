@@ -181,7 +181,7 @@ jobs:
     if: ${{ always() }}
     needs: [linux_build, windows_build, macos_build]
     name: Release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env: 
       BINARIES: binaries/
       LLVM_BIN: /usr/lib/llvm-17/bin
