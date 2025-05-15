@@ -35,4 +35,12 @@ class TestUnions:
       assertEquals("hello world!", fromCString(un.s))
     }
 
+    @Test def test_anonymousPointer() =
+      Zone {
+        val structAnonymous =
+          !(StructAnonymousUnionPointer(StructAnonymousUnionPointer.Union0(1)))
+        assertEquals(1, (!structAnonymous.offsets).vertical)
+      }
+  end test_setters
+
 end TestUnions

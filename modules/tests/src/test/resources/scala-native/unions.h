@@ -23,3 +23,10 @@ typedef struct struct_with_union_array {
     char* help;
   } data[2];
 } StructWithUnionArray;
+
+typedef struct StructAnonymousUnionPointer {
+  union {
+      int vertical;
+  } *offsets;
+
+} StructAnonymousUnionPointer;

@@ -111,6 +111,24 @@ def visitStruct(cursor: CXCursor, name: String)(using
                   fieldName -> constructType(clang_getCursorType(cursor))
                 )
             end match
+          else if typ.kind == CXTypeKind.CXType_Pointer then
+            val ct = constructType(clang_getCursorType(cursor))
+            val fixedCt = ct match
+              case CType.Pointer(CType.Reference(Name.Unnamed)) =>
+                val maybeLastAnonymStruct = builder.anonymous.lastOption.flatMap{ 
+                    case s: Def.Struct => Some(s.name.value)
+                    case u: Def.Union => Some(u.name.value)
+                    case e: Def.Enum => e.name.map(_.value)
+                  }                  
+                maybeLastAnonymStruct match
+                  case Some(lastAnonymStruct) =>
+                    val referenceName = s"${collector.struct.name.value}.${lastAnonymStruct}"
+                    CType.Pointer(CType.Reference(Name.Model(referenceName)))
+                  case None => ct
+
+              case other => other
+
+            builder.fields.addOne(fieldName -> fixedCt)
           else
             builder.fields.addOne(
               fieldName -> constructType(clang_getCursorType(cursor))
