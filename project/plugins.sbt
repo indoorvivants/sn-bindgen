@@ -20,7 +20,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.13.1")
 
 addSbtPlugin("org.jmotor.sbt" % "sbt-dependency-updates" % "1.2.9")
 
-addSbtPlugin("com.github.reibitto" % "sbt-welcome" % "0.4.0")
+addSbtPlugin("com.github.reibitto" % "sbt-welcome" % "0.5.0")
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.13.0")
 
