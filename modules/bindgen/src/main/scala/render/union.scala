@@ -42,7 +42,9 @@ def union(model: Def.Union, line: Appender)(using Config)(using
     if model.fields.nonEmpty then
       line(s"def apply()(using Zone): Ptr[$unionName] = ")
       nest {
-        line(s"val ___ptr = alloc[$unionName](1)")
+        line(
+          s"val ___ptr = _root_.scala.scalanative.unsafe.alloc[$unionName](1)"
+        )
         line("___ptr")
       }
       model.fields.foreach { case (fieldName, fieldType) =>
@@ -55,7 +57,9 @@ def union(model: Def.Union, line: Appender)(using Config)(using
           s"def apply($getterName: $typ)(using Zone): Ptr[$unionName] ="
         )
         nest {
-          line(s"val ___ptr = alloc[$unionName](1)")
+          line(
+            s"val ___ptr = _root_.scala.scalanative.unsafe.alloc[$unionName](1)"
+          )
           line(s"val un = !___ptr")
           line(
             s"un.at(0).asInstanceOf[Ptr[$typ]].update(0, $getterName)"
