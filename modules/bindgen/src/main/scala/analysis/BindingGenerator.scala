@@ -6,8 +6,10 @@ import fluent.*
 import scalanative.unsafe.*
 
 object BindingGenerator:
-  def run(context: Context, environment: ConfiguredEnvironment)(using Zone)(
-      using config: Config
+  def run(context: Context, environment: ConfiguredEnvironment)(using
+      Zone
+  )(using
+      config: Config
   ): Either[BindingError, Binding] =
     val index = clang_createIndex(0, 0)
 
