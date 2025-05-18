@@ -187,13 +187,8 @@ jobs:
     if: ${{ always() }}
     needs: [linux_build, windows_build, macos_build]
     name: Release
-<<<<<<< Updated upstream
     runs-on: ubuntu-22.04
-    env: 
-=======
-    runs-on: ubuntu-20.04
     env:
->>>>>>> Stashed changes
       BINARIES: binaries/
       LLVM_BIN: /usr/lib/llvm-17/bin
     steps:
