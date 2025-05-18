@@ -5,7 +5,10 @@ import os.ProcessOutput
 import scalatags.Text.all.*
 
 object BindgenRender:
-  lazy val binary = sys.env("BINDGEN_BINARY")
+  lazy val binary =
+    val resource = getClass.getResource("/bindgen.binary.path")
+    val path = scala.io.Source.fromURL(resource).mkString.trim
+    path
 
   def escapeHtml(s: String): String =
     val pattern = """([&<>"])""".r
