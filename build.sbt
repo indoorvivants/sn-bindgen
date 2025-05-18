@@ -433,9 +433,13 @@ lazy val docs =
       scalaVersion := Versions.Scala3,
       fork := true,
       publish / skip := true,
-      Compile / run / envVars := Map(
-        "BINDGEN_BINARY" -> (bindgen / Compile / nativeLink).value.toString()
-      ),
+      Compile / resourceGenerators += Def.task {
+        val out = (Compile / resourceManaged).value / "bindgen.binary.path"
+
+        IO.write(out, (bindgen / Compile / nativeLink).value.toString())
+
+        Seq(out)
+      },
       subatomicMdocVariables ++= previousStableVersion.value
         .map("STABLE_VERSION" -> _)
         .toMap,
