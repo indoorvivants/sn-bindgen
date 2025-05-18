@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: ["*"]
 
-env: 
+env:
   JAVA_OPTS: "-Xmx4G"
   JVM_OPTS: "-Xmx4G"
   SBT_OPTS: "-Xmx4G"
@@ -23,13 +23,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' 
-          java-version: '17'
-          cache: 'sbt'
+          distribution: "temurin"
+          java-version: "17"
+          cache: "sbt"
 
       - uses: sbt/setup-sbt@v1
 
@@ -48,7 +48,6 @@ jobs:
           else
             echo "LLVM_BIN=/usr/local/opt/llvm@$LLVM_VERSION/bin" >> $GITHUB_ENV
           fi
-          
 
       - name: CI and build the binary
         run: sbt ci buildPlatformBinary
@@ -59,7 +58,7 @@ jobs:
           path: bin/sn-bindgen-*
           name: ${{ matrix.os }}-binaries
           if-no-files-found: error
-          
+
   linux_build:
     name: Linux (${{ matrix.OS }})
     strategy:
@@ -68,43 +67,43 @@ jobs:
         OS: ["ubuntu-22.04", "ubuntu-22.04-arm"]
     runs-on: ${{ matrix.OS }}
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin' 
-        java-version: '17'
-        cache: 'sbt'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "sbt"
 
-    - uses: sbt/setup-sbt@v1
+      - uses: sbt/setup-sbt@v1
 
-    - name: Setup Unix-like
-      run: ./build/setup_unix.sh
+      - name: Setup Unix-like
+        run: ./build/setup_unix.sh
 
-    - name: Sets env vars for release
-      if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
-      run: |
-        echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
+      - name: Sets env vars for release
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main')
+        run: |
+          echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
 
-    - name: Sets env vars for LLVM
-      run: |
-        echo "LLVM_BIN=/usr/lib/llvm-$LLVM_VERSION/bin" >> $GITHUB_ENV
+      - name: Sets env vars for LLVM
+        run: |
+          echo "LLVM_BIN=/usr/lib/llvm-$LLVM_VERSION/bin" >> $GITHUB_ENV
 
-    - name: CI and build the binary
-      run: sbt ci buildPlatformBinary
+      - name: CI and build the binary
+        run: sbt ci buildPlatformBinary
 
-    - name: Build site
-      run: sbt buildWebsite
-      if: matrix.os == 'ubuntu-22.04'
+      - name: Build site
+        run: sbt buildWebsite
+        if: matrix.os == 'ubuntu-22.04'
 
-    - name: Upload Intel artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        path: bin/sn-bindgen-*
-        name: ${{ matrix.os }}-binaries
-        if-no-files-found: error
+      - name: Upload Intel artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: bin/sn-bindgen-*
+          name: ${{ matrix.os }}-binaries
+          if-no-files-found: error
 
   windows_build:
     name: Windows (Intel)
@@ -115,20 +114,20 @@ jobs:
       LLVM_BIN: 'C:\Program Files\LLVM\bin'
       LLVM_VERSION: "17.0.6"
     steps:
-      # This step is important to make sure scalafmt 
+      # This step is important to make sure scalafmt
       # checks don't fail
       - name: Setup git config
         run: git config --global core.autocrlf false
 
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' 
-          java-version: '17'
-          cache: 'sbt'
+          distribution: "temurin"
+          java-version: "17"
+          cache: "sbt"
 
       # See https://github.com/scala-native/scala-native/blob/master/.github/actions/windows-setup-env/action.yml#L14 SN_RELE
       # for details
@@ -161,10 +160,10 @@ jobs:
           path: ./target/remote-cache
           key: ${{ runner.os }}-remote-cache
 
-      - name: Pull cache 
+      - name: Pull cache
         run: sbt pullRemoteCache || echo 'remote cache not found'
 
-      # Can't make shell type come from a matrix parameter: 
+      # Can't make shell type come from a matrix parameter:
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
       - name: CI (windows)
         run: sbt ci buildPlatformBinary
@@ -177,24 +176,36 @@ jobs:
           name: windows-binaries
           if-no-files-found: error
 
+  mergify-build-checkpoint:
+    runs-on: ubuntu-latest
+    needs: [windows_build, linux_build, macos_build]
+    steps:
+      - name: I only exist to please Mergify :(
+        run: echo "It's a sad existence but necessary"
+
   release:
     if: ${{ always() }}
     needs: [linux_build, windows_build, macos_build]
     name: Release
+<<<<<<< Updated upstream
     runs-on: ubuntu-22.04
     env: 
+=======
+    runs-on: ubuntu-20.04
+    env:
+>>>>>>> Stashed changes
       BINARIES: binaries/
       LLVM_BIN: /usr/lib/llvm-17/bin
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin' 
-          java-version: '17'
-          cache: 'sbt'
+          distribution: "temurin"
+          java-version: "17"
+          cache: "sbt"
 
       - name: Download binaries
         uses: actions/download-artifact@v4
