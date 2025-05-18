@@ -118,10 +118,16 @@ object ClangVisitor:
           if cursor.kind == CXCursorKind.CXCursor_StructDecl then
             val name = cursor.spelling
             val isAnonymous = clang_Cursor_isAnonymous(cursor).toInt != 0
+            val isForward = isForwardDeclaration(cursor)
             trace(s"Cursor: [${cursor.spelling}], ${isAnonymous}")
             if name != "" && !isAnonymous then
               val en = visitStruct(cursor, name)
-              binding.add(en, location)
+              val alreadyBound = en.defName.exists(binding.named.contains)
+
+              if isForward && alreadyBound then
+                warning(s"Skipping forward-declared struct '${en.name.value}' — already bound")
+              else binding.add(en, location)
+            end if
           end if
 
           if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
