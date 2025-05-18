@@ -211,13 +211,13 @@ jobs:
       - name: List downloaded binaries
         run: ls -R binaries
 
+      - uses: coursier/setup-action@v1
+
       - name: Check published artifacts
         run: |
           set -e
           ls -R binaries/
           sbt checkDetectedArtifacts versionDump binaryArtifacts/publishLocal iface3/publishLocal iface/publishLocal iface2_12/publishLocal
-          curl -fLo cs https://git.io/coursier-cli-"$(uname | tr LD ld)"
-          chmod +x cs
           ./cs resolve com.indoorvivants:bindgen-interface_2.13:$(cat version)
           ./cs resolve com.indoorvivants:bindgen-interface_3:$(cat version)
           ./cs resolve com.indoorvivants:bindgen-interface_2.12:$(cat version)
