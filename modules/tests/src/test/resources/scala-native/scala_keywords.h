@@ -24,3 +24,5 @@ typedef struct test_keywords_struct {
   int wait;
   int macro;
 } StructKeywords;
+
+void test_alloc_collision(int alloc, StructKeywords the_struct);

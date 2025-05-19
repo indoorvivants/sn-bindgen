@@ -123,7 +123,7 @@ def renderFunction(
         typeIndices.foreach { (ct, i) =>
           val typ = scalaType(ct)
           line(
-            s"val __ptr_$i: Ptr[$typ] = alloc[$typ](${allocationSizes(ct)})"
+            s"val __ptr_$i: Ptr[$typ] = _root_.scala.scalanative.unsafe.alloc[$typ](${allocationSizes(ct)})"
           )
         }
         indices.toList.sorted.foreach { idx =>

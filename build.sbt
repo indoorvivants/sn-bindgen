@@ -27,14 +27,14 @@ lazy val Versions = new {
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
-  val pluginTargetSN = "0.5.6"
+  val pluginTargetSN = "0.5.7"
   val pluginTargetSBT = "1.10.7"
   val detective = "0.1.0"
   val opaqueNewtypes = "0.1.0"
 
-  val Scala3 = "3.3.4"
+  val Scala3 = "3.3.6"
   val Scala212 = "2.12.20"
-  val Scala213 = "2.13.15"
+  val Scala213 = "2.13.16"
   val Scala2 = List(Scala212, Scala213)
 
 }
@@ -127,7 +127,7 @@ lazy val bindgen = project
   .settings(
     buildInfoPackage := "bindgen",
     buildInfoKeys := Seq[BuildInfoKey](
-      version,
+      BuildInfoKey("version" -> previousStableVersion.value.getOrElse("dev")),
       scalaVersion,
       scalaBinaryVersion,
       BuildInfoKey("nativeVersion" -> nativeVersion)
@@ -433,9 +433,13 @@ lazy val docs =
       scalaVersion := Versions.Scala3,
       fork := true,
       publish / skip := true,
-      Compile / run / envVars := Map(
-        "BINDGEN_BINARY" -> (bindgen / Compile / nativeLink).value.toString()
-      ),
+      Compile / resourceGenerators += Def.task {
+        val out = (Compile / resourceManaged).value / "bindgen.binary.path"
+
+        IO.write(out, (bindgen / Compile / nativeLink).value.toString())
+
+        Seq(out)
+      },
       subatomicMdocVariables ++= previousStableVersion.value
         .map("STABLE_VERSION" -> _)
         .toMap,
@@ -717,13 +721,13 @@ logo :=
   s"""
      | C Binding generator for Scala 3 Native
      |
-     | ######                                       
-     | #     # # #    # #####   ####  ###### #    # 
-     | #     # # ##   # #    # #    # #      ##   # 
-     | ######  # # #  # #    # #      #####  # #  # 
-     | #     # # #  # # #    # #  ### #      #  # # 
-     | #     # # #   ## #    # #    # #      #   ## 
-     | ######  # #    # #####   ####  ###### #    # 
+     | ######
+     | #     # # #    # #####   ####  ###### #    #
+     | #     # # ##   # #    # #    # #      ##   #
+     | ######  # # #  # #    # #      #####  # #  #
+     | #     # # #  # # #    # #  ### #      #  # #
+     | #     # # #   ## #    # #    # #      #   ##
+     | ######  # #    # #####   ####  ###### #    #
      |
      |Version: ${version.value}
      |Scala Native: ${nativeVersion}
