@@ -83,7 +83,7 @@ object CLI:
   private val bracesNotIndents =
     Opts
       .flag(
-        "no-indents",
+        "no-indent",
         help =
           "Generate Scala part of the binding with braces or significant whitespace"
       )
