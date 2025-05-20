@@ -41,10 +41,10 @@ def struct(struct: Def.Struct, line: Appender)(using
     if summon[Config].bracesNotIndents.value then " {" else ":"
   val openDefDelimiter =
     if summon[Config].bracesNotIndents.value then "{" else ""
-  def appendCloseDelimiter(): Unit =
-    if summon[Config].bracesNotIndents.value then line("}") else ()
-  def appendDefCloseDelimiter(name: String): Unit =
-    if summon[Config].bracesNotIndents.value then line("}")
+  def appendCloseDelimiter()(using c: Config): Unit =
+    if c.bracesNotIndents.value then line("}") else ()
+  def appendDefCloseDelimiter(name: String)(using c: Config): Unit =
+    if c.bracesNotIndents.value then line("}")
     else line(s"end $name")
 
   def setter(name: String): String =
