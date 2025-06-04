@@ -34,6 +34,10 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenGenerateScalaSources =
       taskKey[Seq[File]]("Generate Scala bindings")
 
+    val bindgenScalafmt = settingKey[Boolean](
+      "When true, bindgen will attempt to run scalafmt on the generated bindings"
+    )
+
     val bindgenGenerateCSources =
       taskKey[Seq[File]]("Generate C glue code for the bindings")
 
@@ -103,7 +107,6 @@ object BindgenPlugin extends AutoPlugin {
         }
 
       def getJars(mid: ModuleID) = {
-
         val depRes = (update / dependencyResolution).value
         val updc = (update / updateConfiguration).value
         val uwconfig = (update / unresolvedWarningConfiguration).value
@@ -178,7 +181,8 @@ object BindgenPlugin extends AutoPlugin {
       bindgenMode := BindgenMode.ResourceGenerator,
       bindgenClangPath := nativeConfig.value.clang,
       bindgenBinary := resolveBinaryTask.value.get,
-      bindgenFlavour := getBindgenFlavour(nativeVersion)
+      bindgenFlavour := getBindgenFlavour(nativeVersion),
+      bindgenScalafmt := false
     ) ++
       Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
 
@@ -201,7 +205,7 @@ object BindgenPlugin extends AutoPlugin {
         case BindgenMode.Manual(scalaDir, _) => scalaDir
       }
 
-      incremental(
+      val files = incremental(
         Config(bindgenVersion.value, bindgenBinary.value),
         (selected).distinct,
         dest,
