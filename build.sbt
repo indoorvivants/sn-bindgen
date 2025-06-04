@@ -257,8 +257,7 @@ lazy val libclang = project
     bindgenBinary := sys.env
       .get("SN_BINDGEN_BINARY_OVERRIDE")
       .map(new File(_))
-      .get,
-    // .getOrElse((LocalProject("bindgen") / Compile / nativeLink).value),
+      .getOrElse((LocalProject("bindgen") / Compile / nativeLink).value),
     bindgenBindings := {
       val detected =
         llvmFolder(nativeConfig.value.clang.toAbsolutePath()).llvmInclude
@@ -391,7 +390,13 @@ lazy val tests = projectMatrix
             bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBindings := {
               collectBindings((Test / resourceDirectory).value / "scala-native")
-            }
+            },
+            Test / bindgenMode := BindgenMode.Manual(
+              scalaDir =
+                ((Test / sourceDirectory).value / "scalanative" / "generated"),
+              cDir =
+                (Test / resourceDirectory).value / "scala-native" / "generated"
+            )
           )
       ),
     MatrixAction
@@ -620,7 +625,9 @@ versionDump := {
   IO.write(file, (Compile / version).value)
 }
 
-def collectBindings(headersPath: File) = {
+def collectBindings(
+    headersPath: File
+) = {
   val files = headersPath.toGlob / "**" / "*.h"
   import scala.collection.JavaConverters.*
   val headerSpec = Files
@@ -653,10 +660,11 @@ def collectBindings(headersPath: File) = {
     val isMultiFile = contents.contains(multiFileFlag)
 
     Binding(header, pkg.getOrElse(s"lib_test_$name"))
-      .addCImport(s"$name.h")
+      .addCImport(s"../$name.h")
       .withBindgenArguments(contents.filterNot(_ == multiFileFlag))
       .withMultiFile(isMultiFile)
       .addClangFlag("-fsigned-char")
+      .withNoLocation(true)
   }
 }
 
