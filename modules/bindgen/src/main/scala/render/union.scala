@@ -24,17 +24,9 @@ def union(model: Def.Union, line: Appender)(using Config)(using
       case Renamed(value) => value
       case Escaped        => s"`$name`"
 
-  val openDelimiter =
-    if summon[Config].bracesNotIndents.value then " {" else ":"
-  val openDefDelimiter =
-    if summon[Config].bracesNotIndents.value then "{" else ""
-  def appendCloseDelimiter(): Unit =
-    if summon[Config].bracesNotIndents.value then line("}") else ()
-
   renderComment(line, model.meta)
   line(s"opaque type $unionName = $tpe")
-  line(s"object ${sanitiseBeforeColon(unionName.value)}$openDelimiter")
-  nest {
+  objectBlock(line)(s"object ${sanitiseBeforeColon(unionName.value)}") {
     model.anonymous.foreach {
       case s: Def.Struct =>
         rendering.struct(s, line)
@@ -47,24 +39,21 @@ def union(model: Def.Union, line: Appender)(using Config)(using
     line(tag)
 
     if model.fields.nonEmpty then
-      line(s"def apply()(using Zone): Ptr[$unionName] = $openDefDelimiter")
-      nest {
+      defBlock(line)(s"def apply()(using Zone): Ptr[$unionName] =") {
         line(
           s"val ___ptr = _root_.scala.scalanative.unsafe.alloc[$unionName](1)"
         )
         line("___ptr")
       }
-      appendCloseDelimiter()
       model.fields.foreach { case (fieldName, fieldType) =>
         val typ = scalaType(fieldType)
         val getterName = getter(fieldName.value)
         val setterName = setter(fieldName.value)
         // It's important we don't use the escape(...) function here
         line(s"@scala.annotation.targetName(\"apply_${fieldName.value}\")")
-        line(
-          s"def apply($getterName: $typ)(using Zone): Ptr[$unionName] = $openDefDelimiter"
-        )
-        nest {
+        defBlock(line)(
+          s"def apply($getterName: $typ)(using Zone): Ptr[$unionName] ="
+        ) {
           line(
             s"val ___ptr = _root_.scala.scalanative.unsafe.alloc[$unionName](1)"
           )
@@ -74,10 +63,8 @@ def union(model: Def.Union, line: Appender)(using Config)(using
           )
           line("___ptr")
         }
-        appendCloseDelimiter()
       }
-      line(s"extension (struct: $unionName) $openDefDelimiter")
-      nest {
+      defBlock(line)(s"extension (struct: $unionName)") {
         model.fields.foreach { case (fieldName, fieldType) =>
           val getterName = getter(fieldName.value)
           val setterName = setter(fieldName.value)
@@ -91,9 +78,7 @@ def union(model: Def.Union, line: Appender)(using Config)(using
           )
         }
       }
-      appendCloseDelimiter()
     end if
   }
-  appendCloseDelimiter()
   Exported.Yes(unionName.value)
 end union

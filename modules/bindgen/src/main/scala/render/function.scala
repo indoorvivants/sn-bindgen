@@ -29,11 +29,6 @@ def renderFunction(
     if f.public then ""
     else s"private[${summon[Context].packageName.value.split('.').last}] "
 
-  val openDefDelimiter =
-    if summon[Config].bracesNotIndents.value then "{" else ""
-  def appendCloseDelimiter(): Unit =
-    if summon[Config].bracesNotIndents.value then line("}") else ()
-
   if f.public then f.meta.foreach(renderComment(line, _))
   f.body match
     case ScalaFunctionBody.Export(loc) =>
@@ -78,10 +73,9 @@ def renderFunction(
           a @ Allocations(indices, returnAsWell)
         ) =>
       val hasZone = if a.hasAny then "(using Zone)" else ""
-      line(
-        s"def ${f.name}$arglist$hasZone: ${scalaType(f.returnType)} = $openDefDelimiter"
-      )
-      nest {
+      defBlock(line)(
+        s"def ${f.name}$arglist$hasZone: ${scalaType(f.returnType)} ="
+      ) {
         import scala.collection.mutable.Map as MutableMap
 
         val allocationSizes: CType MutableMap Int =
@@ -144,7 +138,6 @@ def renderFunction(
         line(s"$to(${delegateCallArgList.map(escape).mkString(", ")})")
         if returnAsWell then line(s"!${return_ptr}")
       }
-      appendCloseDelimiter()
 
       Exported.Yes(f.name.value)
   end match
