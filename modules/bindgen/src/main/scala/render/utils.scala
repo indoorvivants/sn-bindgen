@@ -95,12 +95,12 @@ def aliasResolver(name: String)(using ar: AliasResolver): CType =
 def objectBlock(line: Appender)(start: String)(
     f: Config ?=> Unit
 )(using config: Config): Unit =
-  val startDelimiter = if config.bracesNotIndents.value then " {" else ":"
+  val startDelimiter = if config.useBraces.value then " {" else ":"
   line(start + startDelimiter)
   nest {
     f
   }
-  if config.bracesNotIndents.value then line("}")
+  if config.useBraces.value then line("}")
 
 //defs, vals, extensions
 def defBlock(
@@ -108,12 +108,12 @@ def defBlock(
 )(start: String, defNameForEnd: Option[String] = None)(
     f: Config ?=> Unit
 )(using config: Config): Unit =
-  val startDelimiter = if config.bracesNotIndents.value then " {" else ""
+  val startDelimiter = if config.useBraces.value then " {" else ""
   line(start + startDelimiter)
   nest {
     f
   }
-  if config.bracesNotIndents.value then line("}")
+  if config.useBraces.value then line("}")
   else defNameForEnd.foreach(n => line(s"end $n"))
 end defBlock
 

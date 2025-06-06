@@ -2,7 +2,6 @@ package bindgen
 package rendering
 
 import bindgen.*
-import bindgen.rendering.RenderMode.Objects
 import opaque_newtypes.given
 
 case class Constants(enums: Seq[Def.Enum])
@@ -254,9 +253,9 @@ private def maybeObjectBlock(out: LineBuilder, mode: RenderMode)(
     f: Config ?=> Unit
 )(using Config) =
   lazy val openDelimiter: String =
-    if summon[Config].bracesNotIndents.value then "{" else ":"
+    if summon[Config].useBraces.value then " {" else ":"
   lazy val closeDelimiter: Option[String] =
-    if summon[Config].bracesNotIndents.value then Some("}") else None
+    if summon[Config].useBraces.value then Some("}") else None
 
   if mode == RenderMode.Objects then to(out)(s"$objectHeader$openDelimiter")
   nestIf(mode == RenderMode.Objects) {

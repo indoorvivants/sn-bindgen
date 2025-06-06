@@ -191,9 +191,9 @@ object BindgenPlugin extends AutoPlugin {
         b.flavour match {
           case None =>
             b.withFlavour(bindgenFlavour.value)
-              .withBracesNotIndents(scalacOptions.value.contains("-no-indent"))
+              .withBraces(scalacOptions.value.contains("-no-indent"))
           case Some(_) =>
-            b.withBracesNotIndents(scalacOptions.value.contains("-no-indent"))
+            b.withBraces(scalacOptions.value.contains("-no-indent"))
         }
       }
 
