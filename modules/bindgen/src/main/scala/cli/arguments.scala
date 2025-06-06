@@ -80,6 +80,16 @@ object CLI:
     .withDefault(2)
     .map(IndentationSize.apply(_))
 
+  private val bracesNotIndents =
+    Opts
+      .flag(
+        "use-braces",
+        help =
+          "Generate Scala part of the binding with braces or significant whitespace"
+      )
+      .orFalse
+      .map(UseBraces.apply(_))
+
   private val isScala =
     Opts.flag("scala", help = "Generate Scala part of the binding").orFalse
 
@@ -378,6 +388,7 @@ object CLI:
       linkName,
       indentationSize,
       indentation,
+      bracesNotIndents,
       cImport,
       (clangInclude, clangFlag).mapN(_ ++ _),
       quiet,

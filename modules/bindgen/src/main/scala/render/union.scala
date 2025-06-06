@@ -26,8 +26,7 @@ def union(model: Def.Union, line: Appender)(using Config)(using
 
   renderComment(line, model.meta)
   line(s"opaque type $unionName = $tpe")
-  line(s"object ${sanitiseBeforeColon(unionName.value)}:")
-  nest {
+  objectBlock(line)(s"object ${sanitiseBeforeColon(unionName.value)}") {
     model.anonymous.foreach {
       case s: Def.Struct =>
         rendering.struct(s, line)
@@ -40,8 +39,7 @@ def union(model: Def.Union, line: Appender)(using Config)(using
     line(tag)
 
     if model.fields.nonEmpty then
-      line(s"def apply()(using Zone): Ptr[$unionName] = ")
-      nest {
+      defBlock(line)(s"def apply()(using Zone): Ptr[$unionName] =") {
         line(
           s"val ___ptr = _root_.scala.scalanative.unsafe.alloc[$unionName](1)"
         )
@@ -53,10 +51,9 @@ def union(model: Def.Union, line: Appender)(using Config)(using
         val setterName = setter(fieldName.value)
         // It's important we don't use the escape(...) function here
         line(s"@scala.annotation.targetName(\"apply_${fieldName.value}\")")
-        line(
+        defBlock(line)(
           s"def apply($getterName: $typ)(using Zone): Ptr[$unionName] ="
-        )
-        nest {
+        ) {
           line(
             s"val ___ptr = _root_.scala.scalanative.unsafe.alloc[$unionName](1)"
           )
@@ -67,8 +64,7 @@ def union(model: Def.Union, line: Appender)(using Config)(using
           line("___ptr")
         }
       }
-      line(s"extension (struct: $unionName)")
-      nest {
+      defBlock(line)(s"extension (struct: $unionName)") {
         model.fields.foreach { case (fieldName, fieldType) =>
           val getterName = getter(fieldName.value)
           val setterName = setter(fieldName.value)

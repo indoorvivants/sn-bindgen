@@ -9,6 +9,7 @@ def alias(model: Def.Alias, line: Appender)(using
     AliasResolver,
     Config
 ): Exported =
+
   val (underlyingType, enableConstructor) =
     model.underlying match
       case Pointer(Reference(Name.Unnamed)) =>
@@ -31,8 +32,7 @@ def alias(model: Def.Alias, line: Appender)(using
 
   renderComment(line, model.meta)
   line(s"${modifier}type ${model.name} = ${scalaType(underlyingType)}")
-  line(s"object ${sanitiseBeforeColon(model.name)}: ")
-  nest {
+  objectBlock(line)(s"object ${sanitiseBeforeColon(model.name)}") {
     model.underlying match
       case Reference(Name.BuiltIn(name)) =>
         line(s"val _tag: Tag[${model.name}] = summon[Tag[${name.full}]]")
@@ -50,8 +50,7 @@ def alias(model: Def.Alias, line: Appender)(using
       line(
         s"inline def apply(inline o: ${scalaType(underlyingType)}): ${model.name} = o"
       )
-      line(s"extension (v: ${model.name})")
-      nest {
+      defBlock(line)(s"extension (v: ${model.name})") {
         line(s"inline def value: ${scalaType(underlyingType)} = v")
         if isFunctionPointer then
           line(s"inline def toPtr: $voidPtr = CFuncPtr.toPtr(v)")
