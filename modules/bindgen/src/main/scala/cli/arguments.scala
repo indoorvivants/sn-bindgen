@@ -83,12 +83,12 @@ object CLI:
   private val bracesNotIndents =
     Opts
       .flag(
-        "no-indent",
+        "use-braces",
         help =
           "Generate Scala part of the binding with braces or significant whitespace"
       )
       .orFalse
-      .map(Braces.apply(_))
+      .map(UseBraces.apply(_))
 
   private val isScala =
     Opts.flag("scala", help = "Generate Scala part of the binding").orFalse
