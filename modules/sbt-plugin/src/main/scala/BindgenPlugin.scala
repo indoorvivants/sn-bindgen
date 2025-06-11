@@ -193,8 +193,11 @@ object BindgenPlugin extends AutoPlugin {
     bindgenGenerateScalaSources := {
       val selected = (addConf / bindgenBindings).value.map { b =>
         b.flavour match {
-          case None    => b.withFlavour(bindgenFlavour.value)
-          case Some(_) => b
+          case None =>
+            b.withFlavour(bindgenFlavour.value)
+              .withBraces(scalacOptions.value.contains("-no-indent"))
+          case Some(_) =>
+            b.withBraces(scalacOptions.value.contains("-no-indent"))
         }
       }
 

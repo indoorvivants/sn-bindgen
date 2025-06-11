@@ -91,6 +91,32 @@ def to(sb: LineBuilder)(using config: Config): Appender =
 def aliasResolver(name: String)(using ar: AliasResolver): CType =
   ar(name)
 
+//objects, traits, classes
+def objectBlock(line: Appender)(start: String)(
+    f: Config ?=> Unit
+)(using config: Config): Unit =
+  val startDelimiter = if config.useBraces.value then " {" else ":"
+  line(start + startDelimiter)
+  nest {
+    f
+  }
+  if config.useBraces.value then line("}")
+
+//defs, vals, extensions
+def defBlock(
+    line: Appender
+)(start: String, defNameForEnd: Option[String] = None)(
+    f: Config ?=> Unit
+)(using config: Config): Unit =
+  val startDelimiter = if config.useBraces.value then " {" else ""
+  line(start + startDelimiter)
+  nest {
+    f
+  }
+  if config.useBraces.value then line("}")
+  else defNameForEnd.foreach(n => line(s"end $n"))
+end defBlock
+
 def packageName(using conf: Context): String = conf.packageName.value
 
 type Appender = Config ?=> String => Unit

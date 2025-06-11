@@ -28,6 +28,7 @@ class Binding private (
   def scalaFile: String = impl.scalaFile
   def cFile: String = impl.cFile
   def flavour: Option[Flavour] = impl.flavour
+  def useBraces: Boolean = impl.useBraces
 
   def withLinkName(name: String) = copy(_.copy(linkName = Some(name)))
 
@@ -116,6 +117,9 @@ class Binding private (
   def addBindgenArguments(arguments: List[String]): Binding =
     copy(b => b.copy(bindgenArguments = b.bindgenArguments ++ arguments))
 
+  def withBraces(b: Boolean): Binding =
+    copy(_.copy(useBraces = b))
+
   def toCommand(lang: BindingLang): List[String] = {
     val sb = List.newBuilder[String]
 
@@ -157,6 +161,7 @@ class Binding private (
     else
       flag("c")
 
+    if (useBraces && lang == BindingLang.Scala) flag("use-braces")
     if (multiFile && lang == BindingLang.Scala) flag("multi-file")
     if (noComments && lang == BindingLang.Scala) flag("render.no-comments")
     if (noLocation && lang == BindingLang.Scala) flag("render.no-location")
@@ -234,7 +239,8 @@ object Binding {
       opaqueStructs: Set[String] = Defaults.opaqueStructs,
       multiFile: Boolean = Defaults.multiFile,
       noComments: Boolean = Defaults.noComments,
-      noLocation: Boolean = Defaults.noLocation
+      noLocation: Boolean = Defaults.noLocation,
+      bracesNotIndents: Boolean = Defaults.useBraces
   ): Binding = {
     apply(headerFile, packageName).copy(
       _.copy(
@@ -248,7 +254,8 @@ object Binding {
         opaqueStructs = opaqueStructs,
         multiFile = multiFile,
         noComments = noComments,
-        noLocation = noLocation
+        noLocation = noLocation,
+        useBraces = bracesNotIndents
       )
     )
   }
@@ -274,7 +281,8 @@ object Binding {
       excludeSystemPaths: List[Path] = Defaults.excludeSystemPaths,
       flavour: Option[Flavour] = None,
       scalaFile: String,
-      cFile: String
+      cFile: String,
+      useBraces: Boolean = Defaults.useBraces
   )
 
   private[interface] object Defaults {
@@ -295,6 +303,7 @@ object Binding {
     val excludeSystemPaths = List.empty[Path]
     val exportMode = false
     val flavour = Flavour.ScalaNative04
+    val useBraces = false
   }
 
 }

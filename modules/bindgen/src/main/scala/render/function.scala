@@ -73,10 +73,9 @@ def renderFunction(
           a @ Allocations(indices, returnAsWell)
         ) =>
       val hasZone = if a.hasAny then "(using Zone)" else ""
-      line(
-        s"def ${f.name}$arglist$hasZone: ${scalaType(f.returnType)} = "
-      )
-      nest {
+      defBlock(line)(
+        s"def ${f.name}$arglist$hasZone: ${scalaType(f.returnType)} ="
+      ) {
         import scala.collection.mutable.Map as MutableMap
 
         val allocationSizes: CType MutableMap Int =

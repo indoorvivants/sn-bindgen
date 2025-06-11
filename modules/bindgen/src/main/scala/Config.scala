@@ -26,6 +26,7 @@ case class Config(
     linkName: Option[LinkName],
     indentSize: IndentationSize,
     indents: Indentation,
+    useBraces: UseBraces,
     cImports: List[CImport],
     clangFlags: List[ClangFlag],
     quiet: Quiet,
@@ -56,6 +57,7 @@ object Config:
       linkName = None,
       indentSize = defaults.indentSize,
       indents = defaults.indents,
+      useBraces = UseBraces.No,
       cImports = Nil,
       clangFlags = Nil,
       quiet = Quiet.No,
@@ -98,6 +100,9 @@ object Quiet extends YesNo[Quiet]
 
 opaque type MultiFile = Boolean
 object MultiFile extends YesNo[MultiFile]
+
+opaque type UseBraces = Boolean
+object UseBraces extends YesNo[UseBraces]
 
 enum Lang:
   case Scala, C
