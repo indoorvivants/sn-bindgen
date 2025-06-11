@@ -34,6 +34,10 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenGenerateScalaSources =
       taskKey[Seq[File]]("Generate Scala bindings")
 
+    val bindgenScalafmt = settingKey[Boolean](
+      "When true, bindgen will attempt to run scalafmt on the generated bindings"
+    )
+
     val bindgenGenerateCSources =
       taskKey[Seq[File]]("Generate C glue code for the bindings")
 
@@ -103,7 +107,6 @@ object BindgenPlugin extends AutoPlugin {
         }
 
       def getJars(mid: ModuleID) = {
-
         val depRes = (update / dependencyResolution).value
         val updc = (update / updateConfiguration).value
         val uwconfig = (update / unresolvedWarningConfiguration).value
@@ -178,7 +181,8 @@ object BindgenPlugin extends AutoPlugin {
       bindgenMode := BindgenMode.ResourceGenerator,
       bindgenClangPath := nativeConfig.value.clang,
       bindgenBinary := resolveBinaryTask.value.get,
-      bindgenFlavour := getBindgenFlavour(nativeVersion)
+      bindgenFlavour := getBindgenFlavour(nativeVersion),
+      bindgenScalafmt := false
     ) ++
       Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
 
@@ -324,6 +328,9 @@ object BindgenPlugin extends AutoPlugin {
       (changed: Boolean, in: Input) =>
         Tracked.diffOutputs(cacheFile / "output", FileInfo.exists) {
           (outDiff: ChangeReport[File]) =>
+            logger.debug(
+              s"[sn-bindgen] input changed: $changed, outDiff: $outDiff"
+            )
             if (changed || outDiff.modified.nonEmpty) {
               builder
                 .generate(defined, destination, lang, Some(clangPath))
@@ -332,10 +339,14 @@ object BindgenPlugin extends AutoPlugin {
         }
     }
 
-    val s: FilesInfo[HashFileInfo] =
-      FileInfo.hash(defined.map(_.headerFile).toSet)
-
-    tracker(Input(config, s, defined.map(InternalBinding.convert).toList)).toSeq
+    tracker(
+      Input(
+        config = config,
+        hash =
+          FileInfo.hash(defined.map(_.headerFile).toSet ++ Set(config.binary)),
+        configs = defined.map(InternalBinding.convert).toList
+      )
+    ).toSeq
   }
 
   def inputs(bindings: Seq[Binding]): Seq[java.nio.file.Path] =

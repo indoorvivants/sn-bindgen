@@ -80,7 +80,7 @@ enum Def(meta: Meta):
       case u: Union          => Some(DefName(u.name.value, DefTag.Union))
       case f: Function       => Some(DefName(f.name.value, DefTag.Function))
       case s: Struct         => Some(DefName(s.name.value, DefTag.Struct))
-      case e: Enum =>
+      case e: Enum           =>
         e.name.map(enumName => DefName(enumName.value, DefTag.Enum))
 end Def
 

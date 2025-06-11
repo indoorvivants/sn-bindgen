@@ -43,7 +43,9 @@ inline def consoleLogger[A](
     stderr(
       Console.BOLD + "[bindgen] " + Console.RESET +
         LogLevel
-          .color(level) + s"${LogLevel.name(level)} " + Console.RESET + msg.toString + "\n"
+          .color(
+            level
+          ) + s"${LogLevel.name(level)} " + Console.RESET + msg.toString + "\n"
     )
     if context.nonEmpty then
       val fMaxLength = context.map(_._1).maxBy(_.length).length

@@ -1,7 +1,6 @@
 package bindgen
 
 import Def.*
-import CType.*
 
 case class Binding(
     aliases: Set[Def.Alias],

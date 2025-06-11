@@ -33,6 +33,7 @@ lazy val Versions = new {
   val opaqueNewtypes = "0.1.0"
 
   val Scala3 = "3.3.6"
+  val Scala3Next = "3.7.1"
   val Scala212 = "2.12.20"
   val Scala213 = "2.13.16"
   val Scala2 = List(Scala212, Scala213)
@@ -229,7 +230,12 @@ lazy val plugin = projectMatrix
     moduleName := "bindgen-sbt-plugin",
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
-        Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+        Seq(
+          "-Xmx1024M",
+          "-Dplugin.version=" + version.value,
+          "-Dstable.bindgen.version=" + previousStableVersion.value
+            .getOrElse("")
+        )
     },
     scalacOptions += "-Ywarn-unused-import",
     scriptedBufferLog := false,
@@ -257,8 +263,7 @@ lazy val libclang = project
     bindgenBinary := sys.env
       .get("SN_BINDGEN_BINARY_OVERRIDE")
       .map(new File(_))
-      .get,
-    // .getOrElse((LocalProject("bindgen") / Compile / nativeLink).value),
+      .getOrElse((LocalProject("bindgen") / Compile / nativeLink).value),
     bindgenBindings := {
       val detected =
         llvmFolder(nativeConfig.value.clang.toAbsolutePath()).llvmInclude
@@ -356,10 +361,12 @@ lazy val exportTestsLibrary: Project = project
 
         assert(
           testsProcess.waitFor() == 0,
-          "Running export tests failed"
+          "❌ Running export tests failed"
         )
+
+        sLog.value.info("✅ Export tests passed")
       } else
-        System.err.println("Skipping export tests on windows")
+        System.err.println("⚠️ Skipping export tests on windows")
     }
   )
 
@@ -367,8 +374,9 @@ lazy val tests = projectMatrix
   .in(file("modules/tests"))
   .dependsOn(iface)
   .settings(remoteCacheMatrixSettings)
+  .disablePlugins(ScalafixPlugin)
   .someVariations(
-    Versions.Scala2 :+ Versions.Scala3,
+    Versions.Scala2 ++ List(Versions.Scala3),
     List(
       VirtualAxis.jvm,
       VirtualAxis.native
@@ -388,10 +396,17 @@ lazy val tests = projectMatrix
             Compile / bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBinary := (bindgen / Compile / nativeLink).value,
             bindgenBindings := Seq.empty,
+            crossVersion := CrossVersion.full,
             bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBindings := {
               collectBindings((Test / resourceDirectory).value / "scala-native")
-            }
+            },
+            Test / bindgenMode := BindgenMode.Manual(
+              scalaDir =
+                ((Test / sourceDirectory).value / "scalanative" / "generated"),
+              cDir =
+                (Test / resourceDirectory).value / "scala-native" / "generated"
+            )
           )
       ),
     MatrixAction
@@ -576,7 +591,14 @@ buildBinary := {
     }
   val dest = (ThisBuild / baseDirectory).value / "bin" / name
 
-  IO.copyFile(built, dest)
+  import java.nio.file.*
+
+  Files.copy(
+    built.toPath(),
+    dest.toPath(),
+    StandardCopyOption.COPY_ATTRIBUTES,
+    StandardCopyOption.REPLACE_EXISTING
+  )
 
   dest
 }
@@ -620,7 +642,9 @@ versionDump := {
   IO.write(file, (Compile / version).value)
 }
 
-def collectBindings(headersPath: File) = {
+def collectBindings(
+    headersPath: File
+) = {
   val files = headersPath.toGlob / "**" / "*.h"
   import scala.collection.JavaConverters.*
   val headerSpec = Files
@@ -653,10 +677,11 @@ def collectBindings(headersPath: File) = {
     val isMultiFile = contents.contains(multiFileFlag)
 
     Binding(header, pkg.getOrElse(s"lib_test_$name"))
-      .addCImport(s"$name.h")
+      .addCImport(s"../$name.h")
       .withBindgenArguments(contents.filterNot(_ == multiFileFlag))
       .withMultiFile(isMultiFile)
       .addClangFlag("-fsigned-char")
+      .withNoLocation(true)
   }
 }
 
@@ -780,7 +805,14 @@ usefulTasks := Seq(
   )
 )
 
-addCommandAlias("generatorTests", "testsNative3/clean; testsNative3/test")
+addCommandAlias(
+  "generatorTests",
+  "generateTestBindings; testsNative3/test"
+)
+addCommandAlias(
+  "generateTestBindings",
+  "testsNative3/clean; testsNative3/Test/bindgenGenerateAll"
+)
 addCommandAlias("cliTests", "bindgen/test")
 addCommandAlias("pluginTests", "plugin/scripted")
 addCommandAlias(

@@ -36,7 +36,7 @@ def renderFunction(
         val signature = s"def ${f.name}$arglist: ${scalaType(f.returnType)}"
 
         loc match
-          case ExportLocation.Trait => line(signature)
+          case ExportLocation.Trait             => line(signature)
           case ExportLocation.Body(implPackage) =>
             val argumentsPassing =
               flatArguments.map(_.name).mkString(", ")

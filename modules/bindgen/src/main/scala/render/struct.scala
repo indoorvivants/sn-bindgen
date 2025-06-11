@@ -26,7 +26,7 @@ def struct(struct: Def.Struct, line: Appender)(using
     else if struct.fields.size == 0 then false
     else
       madeOpaque match
-        case None => false
+        case None        => false
         case Some(value) =>
           warning(
             s"${structName.value} will be rendered as a static array, as requested by '$value' filter"

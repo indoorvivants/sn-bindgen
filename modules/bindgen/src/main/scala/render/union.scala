@@ -3,7 +3,9 @@ package rendering
 
 import bindgen.*
 
-def union(model: Def.Union, line: Appender)(using Config)(using
+def union(model: Def.Union, line: Appender)(using
+    Config
+)(using
     ar: AliasResolver
 ): Exported =
   val unionName = model.name
