@@ -30,13 +30,13 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/16997816267617281073header.h
+   * [bindgen] header: /tmp/5205533992534191244header.h
   */
   opaque type Big = CStruct3[CInt, CString, Small]
   object Big:
     given _tag: Tag[Big] = Tag.materializeCStruct3Tag[CInt, CString, Small]
     def apply()(using Zone): Ptr[Big] = scala.scalanative.unsafe.alloc[Big](1)
-    def apply(x : CInt, hello : CString, sm : Small)(using Zone): Ptr[Big] = 
+    def apply(x : CInt, hello : CString, sm : Small)(using Zone): Ptr[Big] =
       val ____ptr = apply()
       (!____ptr).x = x
       (!____ptr).hello = hello
@@ -51,13 +51,13 @@ object structs:
       def sm_=(value: Small): Unit = !struct.at3 = value
 
   /**
-   * [bindgen] header: /tmp/16997816267617281073header.h
+   * [bindgen] header: /tmp/5205533992534191244header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
-    def apply(number : CLongLong)(using Zone): Ptr[Small] = 
+    def apply(number : CLongLong)(using Zone): Ptr[Small] =
       val ____ptr = apply()
       (!____ptr).number = number
       ____ptr
@@ -66,7 +66,7 @@ object structs:
       def number_=(value: CLongLong): Unit = !struct.at1 = value
 
 object types:
-  export _root_.libtest.structs.*
+    export _root_.libtest.structs.*
 
 object all:
   export _root_.libtest.structs.Big
@@ -111,7 +111,7 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/8015351457188634202header.h
+   * [bindgen] header: /tmp/15339239180354424646header.h
   */
   opaque type Disabled = CStruct2[CInt, CString]
   object Disabled:
@@ -124,13 +124,13 @@ object structs:
       def hello_=(value: CString): Unit = !struct.at2 = value
 
   /**
-   * [bindgen] header: /tmp/8015351457188634202header.h
+   * [bindgen] header: /tmp/15339239180354424646header.h
   */
   opaque type Enabled = CStruct2[CInt, CString]
   object Enabled:
     given _tag: Tag[Enabled] = Tag.materializeCStruct2Tag[CInt, CString]
     def apply()(using Zone): Ptr[Enabled] = scala.scalanative.unsafe.alloc[Enabled](1)
-    def apply(x : CInt, hello : CString)(using Zone): Ptr[Enabled] = 
+    def apply(x : CInt, hello : CString)(using Zone): Ptr[Enabled] =
       val ____ptr = apply()
       (!____ptr).x = x
       (!____ptr).hello = hello
@@ -142,7 +142,7 @@ object structs:
       def hello_=(value: CString): Unit = !struct.at2 = value
 
 object types:
-  export _root_.libtest.structs.*
+    export _root_.libtest.structs.*
 
 object all:
   export _root_.libtest.structs.Disabled
@@ -182,13 +182,13 @@ object structs:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
   /**
-   * [bindgen] header: /tmp/15072755417101833662header.h
+   * [bindgen] header: /tmp/7963652760639129408header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
-    def apply(number : CLongLong)(using Zone): Ptr[Small] = 
+    def apply(number : CLongLong)(using Zone): Ptr[Small] =
       val ____ptr = apply()
       (!____ptr).number = number
       ____ptr
@@ -200,12 +200,12 @@ object unions:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
   /**
-   * [bindgen] header: /tmp/15072755417101833662header.h
+   * [bindgen] header: /tmp/7963652760639129408header.h
   */
   opaque type Big = CArray[Byte, Nat._8]
   object Big:
     given _tag: Tag[Big] = Tag.CArray[CChar, Nat._8](Tag.Byte, Tag.Nat8)
-    def apply()(using Zone): Ptr[Big] = 
+    def apply()(using Zone): Ptr[Big] =
       val ___ptr = _root_.scala.scalanative.unsafe.alloc[Big](1)
       ___ptr
     @scala.annotation.targetName(&quot;apply_x&quot;)
@@ -235,8 +235,8 @@ object unions:
       def sm_=(value: Small): Unit = !struct.at(0).asInstanceOf[Ptr[Small]] = value
 
 object types:
-  export _root_.libtest.structs.*
-  export _root_.libtest.unions.*
+    export _root_.libtest.structs.*
+    export _root_.libtest.unions.*
 
 object all:
   export _root_.libtest.structs.Small
@@ -271,13 +271,13 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/12212964517807588534header.h
+   * [bindgen] header: /tmp/15581641854133172903header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
-    def apply(number : CLongLong)(using Zone): Ptr[Small] = 
+    def apply(number : CLongLong)(using Zone): Ptr[Small] =
       val ____ptr = apply()
       (!____ptr).number = number
       ____ptr
@@ -290,12 +290,12 @@ object structs:
 private[libtest] object extern_functions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/12212964517807588534header.h
+   * [bindgen] header: /tmp/15581641854133172903header.h
   */
   def simple(x : CInt, y : CString): CLongInt = extern
 
   /**
-   * [bindgen] header: /tmp/12212964517807588534header.h
+   * [bindgen] header: /tmp/15581641854133172903header.h
   */
   def with_pointers(x : Ptr[Small], y : CInt): Ptr[Small] = extern
 
@@ -306,7 +306,7 @@ object functions:
   export extern_functions.*
 
 object types:
-  export _root_.libtest.structs.*
+    export _root_.libtest.structs.*
 
 object all:
   export _root_.libtest.structs.Small
@@ -344,13 +344,13 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/11322002922585037517header.h
+   * [bindgen] header: /tmp/11938406975149884982header.h
   */
   opaque type Small = CStruct1[CLongLong]
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
-    def apply(number : CLongLong)(using Zone): Ptr[Small] = 
+    def apply(number : CLongLong)(using Zone): Ptr[Small] =
       val ____ptr = apply()
       (!____ptr).number = number
       ____ptr
@@ -373,36 +373,36 @@ object functions:
   export extern_functions.*
 
   /**
-   * [bindgen] header: /tmp/11322002922585037517header.h
+   * [bindgen] header: /tmp/11938406975149884982header.h
   */
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit = 
-    __sn_wrap_libtest_bad_arguments(n, n2)
-
-  /**
-   * [bindgen] header: /tmp/11322002922585037517header.h
-  */
-  def bad_arguments(n : Small, n2 : Small)(using Zone): Unit = 
+  def bad_arguments(n : Small, n2 : Small)(using Zone): Unit =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](2)
     !(__ptr_0 + 0) = n
     !(__ptr_0 + 1) = n2
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
   /**
-   * [bindgen] header: /tmp/11322002922585037517header.h
+   * [bindgen] header: /tmp/11938406975149884982header.h
   */
-  def bad_return_type()(using Zone): Small = 
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_arguments(n, n2)
+
+  /**
+   * [bindgen] header: /tmp/11938406975149884982header.h
+  */
+  def bad_return_type()(using Zone): Small =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](1)
     __sn_wrap_libtest_bad_return_type((__ptr_0 + 0))
     !(__ptr_0 + 0)
 
   /**
-   * [bindgen] header: /tmp/11322002922585037517header.h
+   * [bindgen] header: /tmp/11938406975149884982header.h
   */
-  def bad_return_type()(__return : Ptr[Small]): Unit = 
+  def bad_return_type()(__return : Ptr[Small]): Unit =
     __sn_wrap_libtest_bad_return_type(__return)
 
 object types:
-  export _root_.libtest.structs.*
+    export _root_.libtest.structs.*
 
 object all:
   export _root_.libtest.structs.Small
@@ -461,23 +461,22 @@ import _root_.scala.scalanative.libc.*
 import _root_.scala.scalanative.*
 
 object predef:
-  private[libtest] trait _BindgenEnumCInt[T](using eq: T =:= CInt):
-    given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
-    extension (inline t: T)
-     inline def value: CInt = eq.apply(t)
-     inline def int: CInt = eq.apply(t).toInt
-  private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
-    given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-    extension (inline t: T)
-     inline def value: CUnsignedInt = eq.apply(t)
-     inline def int: CInt = eq.apply(t).toInt
-     inline def uint: CUnsignedInt = eq.apply(t)
-
+    private[libtest] trait _BindgenEnumCInt[T](using eq: T =:= CInt):
+      given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
+      extension (inline t: T)
+        inline def value: CInt = eq.apply(t)
+        inline def int: CInt = eq.apply(t).toInt
+    private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
+      given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+      extension (inline t: T)
+        inline def value: CUnsignedInt = eq.apply(t)
+        inline def int: CInt = eq.apply(t).toInt
+        inline def uint: CUnsignedInt = eq.apply(t)
 
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/3381111922951997248header.h
+   * [bindgen] header: /tmp/17318186132266237622header.h
   */
   opaque type MySigned = CInt
   object MySigned extends _BindgenEnumCInt[MySigned]:
@@ -498,7 +497,7 @@ object enumerations:
       inline def is(b: MySigned): Boolean = (a &amp; b) == b
 
   /**
-   * [bindgen] header: /tmp/3381111922951997248header.h
+   * [bindgen] header: /tmp/17318186132266237622header.h
   */
   opaque type MyUnsigned = CUnsignedInt
   object MyUnsigned extends _BindgenEnumCUnsignedInt[MyUnsigned]:
@@ -519,7 +518,7 @@ object enumerations:
       inline def is(b: MyUnsigned): Boolean = (a &amp; b) == b
 
 object types:
-  export _root_.libtest.enumerations.*
+    export _root_.libtest.enumerations.*
 
 object all:
   export _root_.libtest.enumerations.MySigned
@@ -551,20 +550,20 @@ import _root_.scala.scalanative.*
 object aliases:
   import _root_.libtest.aliases.*
   /**
-   * [bindgen] header: /tmp/1454421548420741423header.h
+   * [bindgen] header: /tmp/8716568389020085520header.h
   */
   opaque type Cursor = Ptr[Byte]
-  object Cursor: 
+  object Cursor:
     given _tag: Tag[Cursor] = Tag.Ptr(Tag.Byte)
     inline def apply(inline o: Ptr[Byte]): Cursor = o
     extension (v: Cursor)
       inline def value: Ptr[Byte] = v
 
   /**
-   * [bindgen] header: /tmp/1454421548420741423header.h
+   * [bindgen] header: /tmp/8716568389020085520header.h
   */
   opaque type Visitor = CFuncPtr1[Ptr[Cursor], CInt]
-  object Visitor: 
+  object Visitor:
     given _tag: Tag[Visitor] = Tag.materializeCFuncPtr1[Ptr[Cursor], CInt]
     inline def fromPtr(ptr: Ptr[Byte] | Ptr[?]): Visitor = CFuncPtr.fromPtr(ptr.asInstanceOf[Ptr[Byte]])
     inline def apply(inline o: CFuncPtr1[Ptr[Cursor], CInt]): Visitor = o
@@ -573,7 +572,7 @@ object aliases:
       inline def toPtr: Ptr[?] = CFuncPtr.toPtr(v)
 
 object types:
-  export _root_.libtest.aliases.*
+    export _root_.libtest.aliases.*
 
 object all:
   export _root_.libtest.aliases.Cursor
@@ -609,13 +608,13 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/12378278441164628468header.h
+   * [bindgen] header: /tmp/6862490599728224173header.h
   */
   opaque type Arr = CStruct1[Ptr[Byte]]
   object Arr:
     given _tag: Tag[Arr] = Tag.materializeCStruct1Tag[Ptr[Byte]]
     def apply()(using Zone): Ptr[Arr] = scala.scalanative.unsafe.alloc[Arr](1)
-    def apply(nested : Ptr[Arr])(using Zone): Ptr[Arr] = 
+    def apply(nested : Ptr[Arr])(using Zone): Ptr[Arr] =
       val ____ptr = apply()
       (!____ptr).nested = nested
       ____ptr
@@ -624,7 +623,7 @@ object structs:
       def nested_=(value: Ptr[Arr]): Unit = !struct.at1 = value.asInstanceOf[Ptr[Byte]]
 
 object types:
-  export _root_.libtest.structs.*
+    export _root_.libtest.structs.*
 
 object all:
   export _root_.libtest.structs.Arr

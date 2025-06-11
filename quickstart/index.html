@@ -93,7 +93,7 @@
 <h3><a href="#sbt-plugin-latest" id="sbt-plugin-latest">SBT plugin (latest)</a></h3>
 <p><strong>project/plugins.sbt</strong></p>
 <pre><code class="language-scala">resolvers += Resolver.sonatypeRepo(&quot;snapshots&quot;)
-addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.2.3+3-e393f806-SNAPSHOT&quot;)
+addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.2.3+8-fefbcd36-SNAPSHOT&quot;)
 </code></pre>
 <h2><a href="#usage" id="usage">Usage</a></h2>
 <p>This covers usage as part of an SBT project</p>
@@ -146,18 +146,17 @@ import _root_.scala.scalanative.libc.*
 import _root_.scala.scalanative.*
 
 object predef:
-  private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
-    given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-    extension (inline t: T)
-     inline def value: CUnsignedInt = eq.apply(t)
-     inline def int: CInt = eq.apply(t).toInt
-     inline def uint: CUnsignedInt = eq.apply(t)
-
+    private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
+      given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+      extension (inline t: T)
+        inline def value: CUnsignedInt = eq.apply(t)
+        inline def int: CInt = eq.apply(t).toInt
+        inline def uint: CUnsignedInt = eq.apply(t)
 
 object enumerations:
   import predef.*
   /**
-   * [bindgen] header: /tmp/2744492274511965666header.h
+   * [bindgen] header: /tmp/6013347458067783894header.h
   */
   opaque type bla = CUnsignedInt
   object bla extends _BindgenEnumCUnsignedInt[bla]:
@@ -181,7 +180,7 @@ private[libtest] object extern_functions:
   import _root_.libtest.enumerations.*
   import _root_.libtest.predef.*
   /**
-   * [bindgen] header: /tmp/2744492274511965666header.h
+   * [bindgen] header: /tmp/6013347458067783894header.h
   */
   def sum(one : bla, two : bla): Unit = extern
 
@@ -193,7 +192,7 @@ object functions:
   export extern_functions.*
 
 object types:
-  export _root_.libtest.enumerations.*
+    export _root_.libtest.enumerations.*
 
 object all:
   export _root_.libtest.enumerations.bla

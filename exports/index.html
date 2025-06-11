@@ -50,14 +50,14 @@ import _root_.scala.scalanative.*
 
 trait ExportedFunctions:
   /**
-   * [bindgen] header: /tmp/16182838389078881451header.h
+   * [bindgen] header: /tmp/1307186285610262352header.h
   */
   def myThing(n : CInt, i : CLongInt): CLongInt
 
 
 object functions extends ExportedFunctions:
   /**
-   * [bindgen] header: /tmp/16182838389078881451header.h
+   * [bindgen] header: /tmp/1307186285610262352header.h
   */
   @exported
   override def myThing(n : CInt, i : CLongInt): CLongInt = libtest.impl.Implementations.myThing(n, i)
@@ -104,13 +104,13 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/2686200234273239204header.h
+   * [bindgen] header: /tmp/3790079224121458286header.h
   */
   opaque type MyStuff = CStruct2[CInt, CString]
   object MyStuff:
     given _tag: Tag[MyStuff] = Tag.materializeCStruct2Tag[CInt, CString]
     def apply()(using Zone): Ptr[MyStuff] = scala.scalanative.unsafe.alloc[MyStuff](1)
-    def apply(length : CInt, str : CString)(using Zone): Ptr[MyStuff] = 
+    def apply(length : CInt, str : CString)(using Zone): Ptr[MyStuff] =
       val ____ptr = apply()
       (!____ptr).length = length
       (!____ptr).str = str
@@ -124,7 +124,7 @@ object structs:
 trait ExportedFunctions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/2686200234273239204header.h
+   * [bindgen] header: /tmp/3790079224121458286header.h
   */
   def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt
 
@@ -132,13 +132,13 @@ trait ExportedFunctions:
 object functions extends ExportedFunctions:
   import _root_.libtest.structs.*
   /**
-   * [bindgen] header: /tmp/2686200234273239204header.h
+   * [bindgen] header: /tmp/3790079224121458286header.h
   */
   @exported
   override def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt = libtest.impl.Implementations.myThing(n, str)
 
 object types:
-  export _root_.libtest.structs.*
+    export _root_.libtest.structs.*
 
 object all:
   export _root_.libtest.structs.MyStuff
