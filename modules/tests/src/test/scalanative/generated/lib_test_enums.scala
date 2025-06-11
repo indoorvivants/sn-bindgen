@@ -6,27 +6,22 @@ import _root_.scala.scalanative.libc.*
 import _root_.scala.scalanative.*
 
 object predef:
-  private[lib_test_enums] trait _BindgenEnumCUnsignedChar[T](using
-      eq: T =:= CUnsignedChar
-  ):
-    given Tag[T] = Tag.UByte.asInstanceOf[Tag[T]]
-    extension (inline t: T)
-      inline def value: CUnsignedChar = eq.apply(t)
-      inline def uint: CUnsignedInt = eq.apply(t)
-  private[lib_test_enums] trait _BindgenEnumCInt[T](using eq: T =:= CInt):
-    given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
-    extension (inline t: T)
-      inline def value: CInt = eq.apply(t)
-      inline def int: CInt = eq.apply(t).toInt
-  private[lib_test_enums] trait _BindgenEnumCUnsignedInt[T](using
-      eq: T =:= CUnsignedInt
-  ):
-    given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-    extension (inline t: T)
-      inline def value: CUnsignedInt = eq.apply(t)
-      inline def int: CInt = eq.apply(t).toInt
-      inline def uint: CUnsignedInt = eq.apply(t)
-end predef
+    private[lib_test_enums] trait _BindgenEnumCUnsignedChar[T](using eq: T =:= CUnsignedChar):
+      given Tag[T] = Tag.UByte.asInstanceOf[Tag[T]]
+      extension (inline t: T)
+        inline def value: CUnsignedChar = eq.apply(t)
+        inline def uint: CUnsignedInt = eq.apply(t)
+    private[lib_test_enums] trait _BindgenEnumCInt[T](using eq: T =:= CInt):
+      given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
+      extension (inline t: T)
+        inline def value: CInt = eq.apply(t)
+        inline def int: CInt = eq.apply(t).toInt
+    private[lib_test_enums] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
+      given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+      extension (inline t: T)
+        inline def value: CUnsignedInt = eq.apply(t)
+        inline def int: CInt = eq.apply(t).toInt
+        inline def uint: CUnsignedInt = eq.apply(t)
 
 object enumerations:
   import predef.*
@@ -39,15 +34,14 @@ object enumerations:
     val THREE = define(3)
     inline def getName(inline value: Enum1): Option[String] =
       inline value match
-        case ONE   => Some("ONE")
-        case TWO   => Some("TWO")
+        case ONE => Some("ONE")
+        case TWO => Some("TWO")
         case THREE => Some("THREE")
-        case _     => _root_.scala.None
+        case _ => _root_.scala.None
     extension (a: Enum1)
       inline def &(b: Enum1): Enum1 = a & b
       inline def |(b: Enum1): Enum1 = a | b
       inline def is(b: Enum1): Boolean = (a & b) == b
-  end Enum1
 
   opaque type Enum2 = CInt
   object Enum2 extends _BindgenEnumCInt[Enum2]:
@@ -60,17 +54,15 @@ object enumerations:
       inline value match
         case MINUS_ONE => Some("MINUS_ONE")
         case MINUS_TWO => Some("MINUS_TWO")
-        case FOUR      => Some("FOUR")
-        case _         => _root_.scala.None
+        case FOUR => Some("FOUR")
+        case _ => _root_.scala.None
     extension (a: Enum2)
       inline def &(b: Enum2): Enum2 = a & b
       inline def |(b: Enum2): Enum2 = a | b
       inline def is(b: Enum2): Boolean = (a & b) == b
-  end Enum2
 
   opaque type EnumBitwiseOperations = CUnsignedInt
-  object EnumBitwiseOperations
-      extends _BindgenEnumCUnsignedInt[EnumBitwiseOperations]:
+  object EnumBitwiseOperations extends _BindgenEnumCUnsignedInt[EnumBitwiseOperations]:
     given _tag: Tag[EnumBitwiseOperations] = Tag.UInt
     inline def define(inline a: Long): EnumBitwiseOperations = a.toUInt
     val BITWISE_ONE = define(1)
@@ -78,15 +70,14 @@ object enumerations:
     val BITWISE_THREE = define(3)
     inline def getName(inline value: EnumBitwiseOperations): Option[String] =
       inline value match
-        case BITWISE_ONE   => Some("BITWISE_ONE")
-        case BITWISE_TWO   => Some("BITWISE_TWO")
+        case BITWISE_ONE => Some("BITWISE_ONE")
+        case BITWISE_TWO => Some("BITWISE_TWO")
         case BITWISE_THREE => Some("BITWISE_THREE")
-        case _             => _root_.scala.None
+        case _ => _root_.scala.None
     extension (a: EnumBitwiseOperations)
       inline def &(b: EnumBitwiseOperations): EnumBitwiseOperations = a & b
       inline def |(b: EnumBitwiseOperations): EnumBitwiseOperations = a | b
       inline def is(b: EnumBitwiseOperations): Boolean = (a & b) == b
-  end EnumBitwiseOperations
 
   opaque type EnumKeywords = CUnsignedInt
   object EnumKeywords extends _BindgenEnumCUnsignedInt[EnumKeywords]:
@@ -104,22 +95,21 @@ object enumerations:
     val `def` = define(10)
     inline def getName(inline value: EnumKeywords): Option[String] =
       inline value match
-        case `match`  => Some("`match`")
-        case `true`   => Some("`true`")
-        case `false`  => Some("`false`")
-        case `class`  => Some("`class`")
+        case `match` => Some("`match`")
+        case `true` => Some("`true`")
+        case `false` => Some("`false`")
+        case `class` => Some("`class`")
         case `object` => Some("`object`")
-        case `null`   => Some("`null`")
-        case `type`   => Some("`type`")
-        case `val`    => Some("`val`")
-        case `var`    => Some("`var`")
-        case `def`    => Some("`def`")
-        case _        => _root_.scala.None
+        case `null` => Some("`null`")
+        case `type` => Some("`type`")
+        case `val` => Some("`val`")
+        case `var` => Some("`var`")
+        case `def` => Some("`def`")
+        case _ => _root_.scala.None
     extension (a: EnumKeywords)
       inline def &(b: EnumKeywords): EnumKeywords = a & b
       inline def |(b: EnumKeywords): EnumKeywords = a | b
       inline def is(b: EnumKeywords): Boolean = (a & b) == b
-  end EnumKeywords
 
   opaque type PackedEnum8 = CUnsignedChar
   object PackedEnum8 extends _BindgenEnumCUnsignedChar[PackedEnum8]:
@@ -129,17 +119,13 @@ object enumerations:
     val CENTER = define(2)
     inline def getName(inline value: PackedEnum8): Option[String] =
       inline value match
-        case TOP    => Some("TOP")
+        case TOP => Some("TOP")
         case CENTER => Some("CENTER")
-        case _      => _root_.scala.None
+        case _ => _root_.scala.None
     extension (a: PackedEnum8)
-      inline def &(b: PackedEnum8): PackedEnum8 =
-        ((a & b) & 0xff.toUInt).toUByte
-      inline def |(b: PackedEnum8): PackedEnum8 =
-        ((a | b) & 0xff.toUInt).toUByte
+      inline def &(b: PackedEnum8): PackedEnum8 = ((a & b) & 0xff.toUInt).toUByte
+      inline def |(b: PackedEnum8): PackedEnum8 = ((a | b) & 0xff.toUInt).toUByte
       inline def is(b: PackedEnum8): Boolean = (a & b) == b
-  end PackedEnum8
-end enumerations
 
 object structs:
   import _root_.lib_test_enums.enumerations.*
@@ -157,37 +143,31 @@ object structs:
       inline def getName(inline value: Enum0): Option[String] =
         inline value match
           case WHAT => Some("WHAT")
-          case THE  => Some("THE")
+          case THE => Some("THE")
           case HELL => Some("HELL")
-          case _    => _root_.scala.None
+          case _ => _root_.scala.None
       extension (a: Enum0)
         inline def &(b: Enum0): Enum0 = a & b
         inline def |(b: Enum0): Enum0 = a | b
         inline def is(b: Enum0): Boolean = (a & b) == b
-    end Enum0
     given _tag: Tag[EnumAnon] = Tag.materializeCStruct2Tag[EnumAnon.Enum0, CInt]
-    def apply()(using Zone): Ptr[EnumAnon] =
-      scala.scalanative.unsafe.alloc[EnumAnon](1)
-    def apply(protocol: EnumAnon.Enum0, howdy: CInt)(using
-        Zone
-    ): Ptr[EnumAnon] =
+    def apply()(using Zone): Ptr[EnumAnon] = scala.scalanative.unsafe.alloc[EnumAnon](1)
+    def apply(protocol : EnumAnon.Enum0, howdy : CInt)(using Zone): Ptr[EnumAnon] =
       val ____ptr = apply()
       (!____ptr).protocol = protocol
       (!____ptr).howdy = howdy
       ____ptr
     extension (struct: EnumAnon)
-      def protocol: EnumAnon.Enum0 = struct._1
+      def protocol : EnumAnon.Enum0 = struct._1
       def protocol_=(value: EnumAnon.Enum0): Unit = !struct.at1 = value
-      def howdy: CInt = struct._2
+      def howdy : CInt = struct._2
       def howdy_=(value: CInt): Unit = !struct.at2 = value
-  end EnumAnon
-end structs
 
 object constants:
   val WHAT: CUnsignedInt = 0.toUInt
   val THE: CUnsignedInt = 1.toUInt
   val HELL: CUnsignedInt = 2.toUInt
-
+  
 object types:
   export _root_.lib_test_enums.structs.*
   export _root_.lib_test_enums.enumerations.*

@@ -21,17 +21,14 @@ object structs:
   opaque type ClosureStruct = CStruct1[uint32_t]
   object ClosureStruct:
     given _tag: Tag[ClosureStruct] = Tag.materializeCStruct1Tag[uint32_t]
-    def apply()(using Zone): Ptr[ClosureStruct] =
-      scala.scalanative.unsafe.alloc[ClosureStruct](1)
-    def apply(test: uint32_t)(using Zone): Ptr[ClosureStruct] =
+    def apply()(using Zone): Ptr[ClosureStruct] = scala.scalanative.unsafe.alloc[ClosureStruct](1)
+    def apply(test : uint32_t)(using Zone): Ptr[ClosureStruct] =
       val ____ptr = apply()
       (!____ptr).test = test
       ____ptr
     extension (struct: ClosureStruct)
-      def test: uint32_t = struct._1
+      def test : uint32_t = struct._1
       def test_=(value: uint32_t): Unit = !struct.at1 = value
-  end ClosureStruct
-end structs
 
 object types:
   export _root_.lib_test_closure.structs.*
