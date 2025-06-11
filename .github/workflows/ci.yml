@@ -169,8 +169,11 @@ jobs:
       - name: Pull cache
         run: sbt pullRemoteCache || echo 'remote cache not found'
 
-      - name: Check generated code is up-to-date
-        run: sbt generateTestBindings && git diff --exit-code --ignore-space-at-eol -- modules/tests/src/test/scalanative/generated
+      ## Everything is different on windows, we cannot guarantee that generated bindings will be the same or even similar,
+      ## especially if they rely on some standard type aliases that windows implements differently.
+      ## Additionally, Windows uses unsigned enums.
+      # - name: Check generated code is up-to-date
+      #   run: sbt generateTestBindings && git diff --exit-code --ignore-space-at-eol -- modules/tests/src/test/scalanative/generated
 
       # Can't make shell type come from a matrix parameter:
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
