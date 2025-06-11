@@ -33,6 +33,7 @@ lazy val Versions = new {
   val opaqueNewtypes = "0.1.0"
 
   val Scala3 = "3.3.6"
+  val Scala3Next = "3.7.1"
   val Scala212 = "2.12.20"
   val Scala213 = "2.13.16"
   val Scala2 = List(Scala212, Scala213)
@@ -229,7 +230,12 @@ lazy val plugin = projectMatrix
     moduleName := "bindgen-sbt-plugin",
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
-        Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+        Seq(
+          "-Xmx1024M",
+          "-Dplugin.version=" + version.value,
+          "-Dstable.bindgen.version=" + previousStableVersion.value
+            .getOrElse("")
+        )
     },
     scalacOptions += "-Ywarn-unused-import",
     scriptedBufferLog := false,
@@ -355,10 +361,12 @@ lazy val exportTestsLibrary: Project = project
 
         assert(
           testsProcess.waitFor() == 0,
-          "Running export tests failed"
+          "❌ Running export tests failed"
         )
+
+        sLog.value.info("✅ Export tests passed")
       } else
-        System.err.println("Skipping export tests on windows")
+        System.err.println("⚠️ Skipping export tests on windows")
     }
   )
 
@@ -366,8 +374,9 @@ lazy val tests = projectMatrix
   .in(file("modules/tests"))
   .dependsOn(iface)
   .settings(remoteCacheMatrixSettings)
+  .disablePlugins(ScalafixPlugin)
   .someVariations(
-    Versions.Scala2 :+ Versions.Scala3,
+    Versions.Scala2 ++ List(Versions.Scala3),
     List(
       VirtualAxis.jvm,
       VirtualAxis.native
@@ -387,6 +396,7 @@ lazy val tests = projectMatrix
             Compile / bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBinary := (bindgen / Compile / nativeLink).value,
             bindgenBindings := Seq.empty,
+            crossVersion := CrossVersion.full,
             bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBindings := {
               collectBindings((Test / resourceDirectory).value / "scala-native")
@@ -581,7 +591,14 @@ buildBinary := {
     }
   val dest = (ThisBuild / baseDirectory).value / "bin" / name
 
-  IO.copyFile(built, dest)
+  import java.nio.file.*
+
+  Files.copy(
+    built.toPath(),
+    dest.toPath(),
+    StandardCopyOption.COPY_ATTRIBUTES,
+    StandardCopyOption.REPLACE_EXISTING
+  )
 
   dest
 }

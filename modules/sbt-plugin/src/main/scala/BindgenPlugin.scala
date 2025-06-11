@@ -208,7 +208,7 @@ object BindgenPlugin extends AutoPlugin {
         case BindgenMode.Manual(scalaDir, _) => scalaDir
       }
 
-      val files = incremental(
+      incremental(
         Config(bindgenVersion.value, bindgenBinary.value),
         (selected).distinct,
         dest,
@@ -328,6 +328,9 @@ object BindgenPlugin extends AutoPlugin {
       (changed: Boolean, in: Input) =>
         Tracked.diffOutputs(cacheFile / "output", FileInfo.exists) {
           (outDiff: ChangeReport[File]) =>
+            logger.debug(
+              s"[sn-bindgen] input changed: $changed, outDiff: $outDiff"
+            )
             if (changed || outDiff.modified.nonEmpty) {
               builder
                 .generate(defined, destination, lang, Some(clangPath))
@@ -336,10 +339,14 @@ object BindgenPlugin extends AutoPlugin {
         }
     }
 
-    val s: FilesInfo[HashFileInfo] =
-      FileInfo.hash(defined.map(_.headerFile).toSet)
-
-    tracker(Input(config, s, defined.map(InternalBinding.convert).toList)).toSeq
+    tracker(
+      Input(
+        config = config,
+        hash =
+          FileInfo.hash(defined.map(_.headerFile).toSet ++ Set(config.binary)),
+        configs = defined.map(InternalBinding.convert).toList
+      )
+    ).toSeq
   }
 
   def inputs(bindings: Seq[Binding]): Seq[java.nio.file.Path] =

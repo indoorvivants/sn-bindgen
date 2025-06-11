@@ -8,7 +8,7 @@ import _root_.scala.scalanative.*
 object constants:
   val HELLO: CUnsignedInt = 25.toUInt
   val BYEBYE: CUnsignedInt = 11.toUInt
-  
+
   val HOW: CInt = -1
   val DOESTHIS: CInt = -2
   val WORK: CInt = 0

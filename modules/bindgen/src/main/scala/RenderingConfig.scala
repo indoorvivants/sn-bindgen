@@ -25,7 +25,7 @@ object RenderingConfig:
     case Wildcard(value: FilterSpec) extends NameFilter(value)
 
     val compiled: Regex = this match
-      case Single(value) => Regex.quote(value).r
+      case Single(value)   => Regex.quote(value).r
       case Wildcard(value) =>
         val parts = value.split(Regex.quote("*"), -1).toList
         parts.mkString(".*").r.anchored

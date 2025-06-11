@@ -42,10 +42,7 @@ object structs:
   import _root_.lib_test_structs.enumerations.*
   import _root_.lib_test_structs.predef.*
   import _root_.lib_test_structs.structs.*
-  type StructAnonymousB = {
-    def str: CString
-  }
-  opaque type StructAnonymous <: StructAnonymousB =
+  opaque type StructAnonymous =
     CStruct3[CInt, StructAnonymous.Union0, StructAnonymous.Struct1]
   object StructAnonymous:
     opaque type Union0 = CArray[Byte, Nat._8]

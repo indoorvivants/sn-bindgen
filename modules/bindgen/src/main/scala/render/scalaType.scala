@@ -40,7 +40,7 @@ def scalaType(typ: CType)(using AliasResolver, Config): String =
     case Reference(n: Name.Model) =>
       renderName(n)
     case Reference(Name.BuiltIn(name)) => name.full
-    case Pointer(to) =>
+    case Pointer(to)                   =>
       to match
         case Void       => "Ptr[Byte]" // there's no void type on SN
         case CType.Byte => "CString"
@@ -52,7 +52,7 @@ def scalaType(typ: CType)(using AliasResolver, Config): String =
         case FloatingBase.Float      => "Float"
         case FloatingBase.Double     => "Double"
         case FloatingBase.LongDouble => "Double"
-    case ni: NumericIntegral => scalaNumericType(ni)
+    case ni: NumericIntegral   => scalaNumericType(ni)
     case Function(ret, params) =>
       val args = params.size
       val types =

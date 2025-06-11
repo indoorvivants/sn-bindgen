@@ -27,9 +27,8 @@ def shouldRender(definition: Def)(using config: Config) =
       val filename = definition.metadata.file.map(_.value)
 
       val fileMatches =
-        filename.flatMap(f =>
-          config.rendering.matchesPackage(_.externalPaths)(f)
-        )
+        filename
+          .flatMap(f => config.rendering.matchesPackage(_.externalPaths)(f))
       val nameMatches =
         config.rendering.matchesPackage(_.externalNames)(n)
 
@@ -50,7 +49,7 @@ def shouldRender(definition: Def)(using config: Config) =
 
 def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
   st match
-    case e: Def.Enum => true
+    case e: Def.Enum  => true
     case d: Def.Union =>
       d.anonymous.exists(hasEnum)
     case d: Def.Struct =>
@@ -221,13 +220,11 @@ def renderBinding(
   if !multiFileMode && hasAnyTypes then
     val l = to(simpleStream("types"))
     objectBlock(l)("object types") {
-      nest {
-        val l = to(simpleStream("types"))
-        if hasStructs then l(s"export _root_.${packageName}.structs.*")
-        if hasAliases then l(s"export _root_.${packageName}.aliases.*")
-        if hasUnions then l(s"export _root_.${packageName}.unions.*")
-        if hasAnyEnums then l(s"export _root_.${packageName}.enumerations.*")
-      }
+      val l = to(simpleStream("types"))
+      if hasStructs then l(s"export _root_.${packageName}.structs.*")
+      if hasAliases then l(s"export _root_.${packageName}.aliases.*")
+      if hasUnions then l(s"export _root_.${packageName}.unions.*")
+      if hasAnyEnums then l(s"export _root_.${packageName}.enumerations.*")
     }
   end if
 

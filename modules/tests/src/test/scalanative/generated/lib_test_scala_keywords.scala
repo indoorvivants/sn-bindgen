@@ -8,11 +8,28 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.lib_test_scala_keywords.structs.*
   import _root_.lib_test_scala_keywords.unions.*
-  opaque type StructKeywords = CStruct10[CChar, CLongInt, Ptr[Byte], Ptr[CInt], CInt, CInt, CInt, CInt, CInt, CInt]
+  opaque type StructKeywords = CStruct10[CChar, CLongInt, Ptr[Byte], Ptr[
+    CInt
+  ], CInt, CInt, CInt, CInt, CInt, CInt]
   object StructKeywords:
-    given _tag: Tag[StructKeywords] = Tag.materializeCStruct10Tag[CChar, CLongInt, Ptr[Byte], Ptr[CInt], CInt, CInt, CInt, CInt, CInt, CInt]
-    def apply()(using Zone): Ptr[StructKeywords] = scala.scalanative.unsafe.alloc[StructKeywords](1)
-    def apply(`object` : CChar, `final` : CLongInt, `class` : Ptr[Byte], `def` : Ptr[CInt], `val` : CInt, `var` : CInt, `new` : CInt, _notify : CInt, _wait : CInt, `macro` : CInt)(using Zone): Ptr[StructKeywords] = 
+    given _tag: Tag[StructKeywords] =
+      Tag.materializeCStruct10Tag[CChar, CLongInt, Ptr[Byte], Ptr[
+        CInt
+      ], CInt, CInt, CInt, CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[StructKeywords] =
+      scala.scalanative.unsafe.alloc[StructKeywords](1)
+    def apply(
+        `object`: CChar,
+        `final`: CLongInt,
+        `class`: Ptr[Byte],
+        `def`: Ptr[CInt],
+        `val`: CInt,
+        `var`: CInt,
+        `new`: CInt,
+        _notify: CInt,
+        _wait: CInt,
+        `macro`: CInt
+    )(using Zone): Ptr[StructKeywords] =
       val ____ptr = apply()
       (!____ptr).`object` = `object`
       (!____ptr).`final` = `final`
@@ -25,33 +42,53 @@ object structs:
       (!____ptr)._wait = _wait
       (!____ptr).`macro` = `macro`
       ____ptr
+    end apply
     extension (struct: StructKeywords)
-      def `object` : CChar = struct._1
+      def `object`: CChar = struct._1
       def object_=(value: CChar): Unit = !struct.at1 = value
-      def `final` : CLongInt = struct._2
+      def `final`: CLongInt = struct._2
       def final_=(value: CLongInt): Unit = !struct.at2 = value
-      def `class` : Ptr[Byte] = struct._3
+      def `class`: Ptr[Byte] = struct._3
       def class_=(value: Ptr[Byte]): Unit = !struct.at3 = value
-      def `def` : Ptr[CInt] = struct._4
+      def `def`: Ptr[CInt] = struct._4
       def def_=(value: Ptr[CInt]): Unit = !struct.at4 = value
-      def `val` : CInt = struct._5
+      def `val`: CInt = struct._5
       def val_=(value: CInt): Unit = !struct.at5 = value
-      def `var` : CInt = struct._6
+      def `var`: CInt = struct._6
       def var_=(value: CInt): Unit = !struct.at6 = value
-      def `new` : CInt = struct._7
+      def `new`: CInt = struct._7
       def new_=(value: CInt): Unit = !struct.at7 = value
-      def _notify : CInt = struct._8
+      def _notify: CInt = struct._8
       def _notify_=(value: CInt): Unit = !struct.at8 = value
-      def _wait : CInt = struct._9
+      def _wait: CInt = struct._9
       def _wait_=(value: CInt): Unit = !struct.at9 = value
-      def `macro` : CInt = struct._10
+      def `macro`: CInt = struct._10
       def macro_=(value: CInt): Unit = !struct.at10 = value
+    end extension
+  end StructKeywords
 
-  opaque type test_keywords_struct = CStruct10[CChar, CLongInt, Ptr[Byte], Ptr[CInt], CInt, CInt, CInt, CInt, CInt, CInt]
+  opaque type test_keywords_struct = CStruct10[CChar, CLongInt, Ptr[Byte], Ptr[
+    CInt
+  ], CInt, CInt, CInt, CInt, CInt, CInt]
   object test_keywords_struct:
-    given _tag: Tag[test_keywords_struct] = Tag.materializeCStruct10Tag[CChar, CLongInt, Ptr[Byte], Ptr[CInt], CInt, CInt, CInt, CInt, CInt, CInt]
-    def apply()(using Zone): Ptr[test_keywords_struct] = scala.scalanative.unsafe.alloc[test_keywords_struct](1)
-    def apply(`object` : CChar, `final` : CLongInt, `class` : Ptr[Byte], `def` : Ptr[CInt], `val` : CInt, `var` : CInt, `new` : CInt, _notify : CInt, _wait : CInt, `macro` : CInt)(using Zone): Ptr[test_keywords_struct] = 
+    given _tag: Tag[test_keywords_struct] =
+      Tag.materializeCStruct10Tag[CChar, CLongInt, Ptr[Byte], Ptr[
+        CInt
+      ], CInt, CInt, CInt, CInt, CInt, CInt]
+    def apply()(using Zone): Ptr[test_keywords_struct] =
+      scala.scalanative.unsafe.alloc[test_keywords_struct](1)
+    def apply(
+        `object`: CChar,
+        `final`: CLongInt,
+        `class`: Ptr[Byte],
+        `def`: Ptr[CInt],
+        `val`: CInt,
+        `var`: CInt,
+        `new`: CInt,
+        _notify: CInt,
+        _wait: CInt,
+        `macro`: CInt
+    )(using Zone): Ptr[test_keywords_struct] =
       val ____ptr = apply()
       (!____ptr).`object` = `object`
       (!____ptr).`final` = `final`
@@ -64,35 +101,40 @@ object structs:
       (!____ptr)._wait = _wait
       (!____ptr).`macro` = `macro`
       ____ptr
+    end apply
     extension (struct: test_keywords_struct)
-      def `object` : CChar = struct._1
+      def `object`: CChar = struct._1
       def object_=(value: CChar): Unit = !struct.at1 = value
-      def `final` : CLongInt = struct._2
+      def `final`: CLongInt = struct._2
       def final_=(value: CLongInt): Unit = !struct.at2 = value
-      def `class` : Ptr[Byte] = struct._3
+      def `class`: Ptr[Byte] = struct._3
       def class_=(value: Ptr[Byte]): Unit = !struct.at3 = value
-      def `def` : Ptr[CInt] = struct._4
+      def `def`: Ptr[CInt] = struct._4
       def def_=(value: Ptr[CInt]): Unit = !struct.at4 = value
-      def `val` : CInt = struct._5
+      def `val`: CInt = struct._5
       def val_=(value: CInt): Unit = !struct.at5 = value
-      def `var` : CInt = struct._6
+      def `var`: CInt = struct._6
       def var_=(value: CInt): Unit = !struct.at6 = value
-      def `new` : CInt = struct._7
+      def `new`: CInt = struct._7
       def new_=(value: CInt): Unit = !struct.at7 = value
-      def _notify : CInt = struct._8
+      def _notify: CInt = struct._8
       def _notify_=(value: CInt): Unit = !struct.at8 = value
-      def _wait : CInt = struct._9
+      def _wait: CInt = struct._9
       def _wait_=(value: CInt): Unit = !struct.at9 = value
-      def `macro` : CInt = struct._10
+      def `macro`: CInt = struct._10
       def macro_=(value: CInt): Unit = !struct.at10 = value
+    end extension
+  end test_keywords_struct
+end structs
 
 object unions:
   import _root_.lib_test_scala_keywords.structs.*
   import _root_.lib_test_scala_keywords.unions.*
   opaque type UnionKeywords = CArray[Byte, Nat._8]
   object UnionKeywords:
-    given _tag: Tag[UnionKeywords] = Tag.CArray[CChar, Nat._8](Tag.Byte, Tag.Nat8)
-    def apply()(using Zone): Ptr[UnionKeywords] = 
+    given _tag: Tag[UnionKeywords] =
+      Tag.CArray[CChar, Nat._8](Tag.Byte, Tag.Nat8)
+    def apply()(using Zone): Ptr[UnionKeywords] =
       val ___ptr = _root_.scala.scalanative.unsafe.alloc[UnionKeywords](1)
       ___ptr
     @scala.annotation.targetName("apply_object")
@@ -156,31 +198,44 @@ object unions:
       un.at(0).asInstanceOf[Ptr[CInt]].update(0, `macro`)
       ___ptr
     extension (struct: UnionKeywords)
-      def `object` : CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
-      def object_=(value: CChar): Unit = !struct.at(0).asInstanceOf[Ptr[CChar]] = value
-      def `final` : CLongInt = !struct.at(0).asInstanceOf[Ptr[CLongInt]]
-      def final_=(value: CLongInt): Unit = !struct.at(0).asInstanceOf[Ptr[CLongInt]] = value
-      def `class` : Ptr[Byte] = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]]
-      def class_=(value: Ptr[Byte]): Unit = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]] = value
-      def `def` : Ptr[CInt] = !struct.at(0).asInstanceOf[Ptr[Ptr[CInt]]]
-      def def_=(value: Ptr[CInt]): Unit = !struct.at(0).asInstanceOf[Ptr[Ptr[CInt]]] = value
-      def `val` : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def val_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def `var` : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def var_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def `new` : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def new_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def _notify : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def _notify_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def _wait : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def _wait_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def `macro` : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def macro_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
+      def `object`: CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
+      def object_=(value: CChar): Unit =
+        !struct.at(0).asInstanceOf[Ptr[CChar]] = value
+      def `final`: CLongInt = !struct.at(0).asInstanceOf[Ptr[CLongInt]]
+      def final_=(value: CLongInt): Unit =
+        !struct.at(0).asInstanceOf[Ptr[CLongInt]] = value
+      def `class`: Ptr[Byte] = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]]
+      def class_=(value: Ptr[Byte]): Unit =
+        !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]] = value
+      def `def`: Ptr[CInt] = !struct.at(0).asInstanceOf[Ptr[Ptr[CInt]]]
+      def def_=(value: Ptr[CInt]): Unit =
+        !struct.at(0).asInstanceOf[Ptr[Ptr[CInt]]] = value
+      def `val`: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def val_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def `var`: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def var_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def `new`: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def new_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def _notify: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def _notify_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def _wait: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def _wait_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def `macro`: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def macro_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+    end extension
+  end UnionKeywords
 
   opaque type test_keywords = CArray[Byte, Nat._8]
   object test_keywords:
-    given _tag: Tag[test_keywords] = Tag.CArray[CChar, Nat._8](Tag.Byte, Tag.Nat8)
-    def apply()(using Zone): Ptr[test_keywords] = 
+    given _tag: Tag[test_keywords] =
+      Tag.CArray[CChar, Nat._8](Tag.Byte, Tag.Nat8)
+    def apply()(using Zone): Ptr[test_keywords] =
       val ___ptr = _root_.scala.scalanative.unsafe.alloc[test_keywords](1)
       ___ptr
     @scala.annotation.targetName("apply_object")
@@ -244,36 +299,56 @@ object unions:
       un.at(0).asInstanceOf[Ptr[CInt]].update(0, `macro`)
       ___ptr
     extension (struct: test_keywords)
-      def `object` : CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
-      def object_=(value: CChar): Unit = !struct.at(0).asInstanceOf[Ptr[CChar]] = value
-      def `final` : CLongInt = !struct.at(0).asInstanceOf[Ptr[CLongInt]]
-      def final_=(value: CLongInt): Unit = !struct.at(0).asInstanceOf[Ptr[CLongInt]] = value
-      def `class` : Ptr[Byte] = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]]
-      def class_=(value: Ptr[Byte]): Unit = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]] = value
-      def `def` : Ptr[CInt] = !struct.at(0).asInstanceOf[Ptr[Ptr[CInt]]]
-      def def_=(value: Ptr[CInt]): Unit = !struct.at(0).asInstanceOf[Ptr[Ptr[CInt]]] = value
-      def `val` : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def val_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def `var` : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def var_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def `new` : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def new_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def _notify : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def _notify_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def _wait : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def _wait_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def `macro` : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def macro_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-
+      def `object`: CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
+      def object_=(value: CChar): Unit =
+        !struct.at(0).asInstanceOf[Ptr[CChar]] = value
+      def `final`: CLongInt = !struct.at(0).asInstanceOf[Ptr[CLongInt]]
+      def final_=(value: CLongInt): Unit =
+        !struct.at(0).asInstanceOf[Ptr[CLongInt]] = value
+      def `class`: Ptr[Byte] = !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]]
+      def class_=(value: Ptr[Byte]): Unit =
+        !struct.at(0).asInstanceOf[Ptr[Ptr[Byte]]] = value
+      def `def`: Ptr[CInt] = !struct.at(0).asInstanceOf[Ptr[Ptr[CInt]]]
+      def def_=(value: Ptr[CInt]): Unit =
+        !struct.at(0).asInstanceOf[Ptr[Ptr[CInt]]] = value
+      def `val`: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def val_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def `var`: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def var_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def `new`: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def new_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def _notify: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def _notify_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def _wait: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def _wait_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+      def `macro`: CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def macro_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] =
+        value
+    end extension
+  end test_keywords
+end unions
 
 @extern
 private[lib_test_scala_keywords] object extern_functions:
   import _root_.lib_test_scala_keywords.structs.*
   import _root_.lib_test_scala_keywords.unions.*
-  private[lib_test_scala_keywords] def __sn_wrap_lib_test_scala_keywords_test_alloc_collision(alloc : CInt, the_struct : Ptr[StructKeywords]): Unit = extern
+  private[lib_test_scala_keywords] def __sn_wrap_lib_test_scala_keywords_test_alloc_collision(
+      alloc: CInt,
+      the_struct: Ptr[StructKeywords]
+  ): Unit = extern
 
-  def test_keywords(`def` : CInt, `class` : CInt, `final` : CInt, `object` : CInt): CInt = extern
-
+  def test_keywords(
+      `def`: CInt,
+      `class`: CInt,
+      `final`: CInt,
+      `object`: CInt
+  ): CInt = extern
+end extern_functions
 
 object functions:
   import _root_.lib_test_scala_keywords.structs.*
@@ -281,13 +356,17 @@ object functions:
   import extern_functions.*
   export extern_functions.*
 
-  def test_alloc_collision(alloc : CInt, the_struct : Ptr[StructKeywords]): Unit = 
-    __sn_wrap_lib_test_scala_keywords_test_alloc_collision(alloc, the_struct)
-
-  def test_alloc_collision(alloc : CInt, the_struct : StructKeywords)(using Zone): Unit = 
-    val __ptr_0: Ptr[StructKeywords] = _root_.scala.scalanative.unsafe.alloc[StructKeywords](1)
+  def test_alloc_collision(alloc: CInt, the_struct: StructKeywords)(using
+      Zone
+  ): Unit =
+    val __ptr_0: Ptr[StructKeywords] =
+      _root_.scala.scalanative.unsafe.alloc[StructKeywords](1)
     !(__ptr_0 + 0) = the_struct
     __sn_wrap_lib_test_scala_keywords_test_alloc_collision(alloc, (__ptr_0 + 0))
+
+  def test_alloc_collision(alloc: CInt, the_struct: Ptr[StructKeywords]): Unit =
+    __sn_wrap_lib_test_scala_keywords_test_alloc_collision(alloc, the_struct)
+end functions
 
 object types:
   export _root_.lib_test_scala_keywords.structs.*

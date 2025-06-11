@@ -14,11 +14,11 @@ def referencedNames(typ: CType): Set[String] =
             case Reference(Name.Model(n, _)) => Nil -> Set(n)
             case Struct(fields, _)           => fields -> Set.empty
             case Union(fields, _)            => fields -> Set.empty
-            case Function(retType, params) =>
+            case Function(retType, params)   =>
               (retType :: params.map(_.of)) -> Set.empty
             case Arr(of, _)  => List(of) -> Set.empty
             case Pointer(of) => List(of) -> Set.empty
-            case _ =>
+            case _           =>
               Nil -> Set.empty
           end match
         end val
@@ -61,7 +61,7 @@ def definitionClosure(_d: Def)(using Config): Set[String] =
                   .toSet
                   .flatMap(referencedNames)
               }
-            case f: Def.Enum => Nil -> f.name.toSet.map(_.value)
+            case f: Def.Enum  => Nil -> f.name.toSet.map(_.value)
             case a: Def.Alias =>
               Nil -> (Set(a.name) ++ referencedNames(a.underlying))
           end match

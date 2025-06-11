@@ -52,8 +52,8 @@ end functionRewriter
 private def isDirectStructAccess(typ: CType)(using AliasResolver): Boolean =
   import CType.*
   typ match
-    case _: Struct  => true
-    case _: Pointer => false
+    case _: Struct                      => true
+    case _: Pointer                     => false
     case Reference(Name.Model(name, _)) =>
       isDirectStructAccess(aliasResolver(name))
     case _ => false

@@ -10,7 +10,7 @@ sealed trait DefBuilder[Builds]:
   import DefBuilder.*
   def build: Builds =
     this match
-      case e: Enum => Def.Enum(e.values.result(), e.name, e.intType, e.meta)
+      case e: Enum   => Def.Enum(e.values.result(), e.name, e.intType, e.meta)
       case e: Struct =>
         Def.Struct(
           e.fields.result(),
