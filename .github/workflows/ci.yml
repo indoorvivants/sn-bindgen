@@ -170,7 +170,7 @@ jobs:
         run: sbt pullRemoteCache || echo 'remote cache not found'
 
       - name: Check generated code is up-to-date
-        run: sbt generateTestBindings && git diff --exit-code -- modules/tests/src/test/scalanative/generated
+        run: sbt generateTestBindings && git diff --exit-code --ignore-space-at-eol -- modules/tests/src/test/scalanative/generated
 
       # Can't make shell type come from a matrix parameter:
       # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065/2
