@@ -5,7 +5,7 @@ import bindgen.*
 
 import CType.*
 
-def alias(model: Def.Alias, line: Appender)(using
+def alias(model: CDefinition.Alias, line: Appender)(using
     AliasResolver,
     Config
 ): Exported =

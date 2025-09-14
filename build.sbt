@@ -32,7 +32,7 @@ lazy val Versions = new {
   val detective = "0.1.0"
   val opaqueNewtypes = "0.1.0"
 
-  val Scala3 = "3.3.6"
+  val Scala3 = "3.7.3"
   val Scala212 = "2.12.20"
   val Scala213 = "2.13.16"
   val Scala2 = List(Scala212, Scala213)
@@ -137,6 +137,7 @@ lazy val bindgen = project
     libraryDependencies += "com.monovore" %%% "decline" % Versions.decline,
     libraryDependencies += "com.outr" %%% "scribe" % Versions.scribe,
     libraryDependencies += "com.indoorvivants" %%% "opaque-newtypes" % Versions.opaqueNewtypes,
+    libraryDependencies += "io.circe" %%% "circe-core" % "0.14.14",
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     scalacOptions += "-Wunused:all"
   )

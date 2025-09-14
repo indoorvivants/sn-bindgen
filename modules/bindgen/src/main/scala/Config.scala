@@ -40,7 +40,8 @@ case class Config(
     outputChannel: OutputChannel,
     tempDir: TempPath,
     excludeSystemPaths: List[SystemPath],
-    flavour: Flavour
+    flavour: Flavour,
+    schemaOutputFile: Option[SchemaOutputFile]
 )
 
 case class Context(
@@ -71,7 +72,8 @@ object Config:
       outputChannel = OutputChannel.cli,
       tempDir = TempPath(sys.props("java.io.tmpdir")),
       excludeSystemPaths = Nil,
-      flavour = Flavour.ScalaNative04
+      flavour = Flavour.ScalaNative04,
+      schemaOutputFile = None
     )
   object defaults:
     val indentSize = IndentationSize(3)
@@ -130,6 +132,9 @@ object HeaderFile extends OpaqueString[HeaderFile]
 
 opaque type OutputFile = File
 object OutputFile extends OpaqueFile[OutputFile]
+
+opaque type SchemaOutputFile = File
+object SchemaOutputFile extends OpaqueFile[SchemaOutputFile]
 
 opaque type TempPath = File
 object TempPath extends OpaqueFile[TempPath]

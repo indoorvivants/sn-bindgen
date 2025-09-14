@@ -1,19 +1,19 @@
 package bindgen
 
-import Def.*
+import CDefinition.*
 import CType.*
 
 case class Binding(
-    aliases: Set[Def.Alias],
-    unions: Set[Def.Union],
-    structs: Set[Def.Struct],
-    enums: Set[Def.Enum],
-    functions: Set[Def.Function],
-    unnamedEnums: Set[Def.Enum]
+    aliases: Set[CDefinition.Alias],
+    unions: Set[CDefinition.Union],
+    structs: Set[CDefinition.Struct],
+    enums: Set[CDefinition.Enum],
+    functions: Set[CDefinition.Function],
+    unnamedEnums: Set[CDefinition.Enum]
 ):
   lazy val all = (aliases ++ unions ++ structs ++ enums ++ functions).toSeq
 
-  def filterAll(f: Def => Boolean) =
+  def filterAll(f: CDefinition => Boolean) =
     copy(
       aliases = aliases.filter(f),
       unions = unions.filter(f),

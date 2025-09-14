@@ -3,16 +3,16 @@ package bindgen
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-import Def.*
+import CDefinition.*
 import CType.*
 
 sealed trait DefBuilder[Builds]:
   import DefBuilder.*
   def build: Builds =
     this match
-      case e: Enum => Def.Enum(e.values.result(), e.name, e.intType, e.meta)
+      case e: Enum => CDefinition.Enum(e.values.result(), e.name, e.intType, e.meta)
       case e: Struct =>
-        Def.Struct(
+        CDefinition.Struct(
           e.fields.result(),
           e.name,
           e.anonymous.result(),
@@ -20,7 +20,7 @@ sealed trait DefBuilder[Builds]:
           e.meta
         )
       case e: Union =>
-        Def.Union(
+        CDefinition.Union(
           e.fields.result,
           e.name,
           e.anonymous.result(),
@@ -29,7 +29,7 @@ sealed trait DefBuilder[Builds]:
         )
       case e: Function =>
         import e.*
-        Def.Function(
+        CDefinition.Function(
           name,
           returnType,
           parameters.result(),
@@ -45,25 +45,25 @@ object DefBuilder:
       var values: ListBuffer[(String, Long)],
       var name: Option[EnumName],
       var intType: Option[CType.NumericIntegral],
-      var meta: Meta
-  ) extends DefBuilder[Def.Enum]
+      var meta: Metadata
+  ) extends DefBuilder[CDefinition.Enum]
 
   case class Struct(
       var fields: ListBuffer[(StructParameterName, CType)],
       var name: StructName,
-      var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
+      var anonymous: ListBuffer[CDefinition.Union | CDefinition.Struct | CDefinition.Enum],
       var staticSize: Long,
-      var meta: Meta,
+      var meta: Metadata,
       var anonymousFieldStructMapping: ListBuffer[(Int, StructName)]
-  ) extends DefBuilder[Def.Struct]
+  ) extends DefBuilder[CDefinition.Struct]
 
   case class Union(
       var fields: ListBuffer[(UnionParameterName, CType)],
       var name: UnionName,
-      var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
+      var anonymous: ListBuffer[CDefinition.Union | CDefinition.Struct | CDefinition.Enum],
       var staticSize: Long,
-      var meta: Meta
-  ) extends DefBuilder[Def.Union]
+      var meta: Metadata
+  ) extends DefBuilder[CDefinition.Union]
 
   case class Function(
       var name: FunctionName,
@@ -72,10 +72,10 @@ object DefBuilder:
       val originalCType: OriginalCType,
       var numArguments: Int,
       var variadic: Boolean,
-      var meta: Meta
-  ) extends DefBuilder[Def.Function]
+      var meta: Metadata
+  ) extends DefBuilder[CDefinition.Function]
 
   case class Alias(name: String, underlying: CType)
-      extends DefBuilder[Def.Alias]
+      extends DefBuilder[CDefinition.Alias]
 
 end DefBuilder

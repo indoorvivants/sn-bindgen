@@ -11,7 +11,7 @@ import fluent.*
 def visitEnum(rootCursor: CXCursor, isTypeDef: Boolean)(using
     Zone,
     Config
-): bindgen.Def.Enum =
+): bindgen.CDefinition.Enum =
   val intType =
     Option(constructType(clang_getEnumDeclIntegerType(rootCursor))).collect {
       case n: CType.NumericIntegral => n

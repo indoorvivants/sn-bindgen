@@ -33,12 +33,12 @@ object ClangDetector:
     val proces = new java.lang.ProcessBuilder(cmd*)
       .start()
 
-    io.Source
+    scala.io.Source
       .fromInputStream(proces.getErrorStream())
       .getLines
       .foreach(logger.err(_))
 
-    io.Source
+    scala.io.Source
       .fromInputStream(proces.getInputStream())
       .getLines
       .foreach(logger.out(_))

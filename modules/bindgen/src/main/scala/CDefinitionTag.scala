@@ -1,8 +1,7 @@
 package bindgen
 
-enum DefTag:
+enum CDefinitionTag:
   case Union, Alias, Struct, Function, Enum
 
-object DefTag:
-  import DefTag.*
+object CDefinitionTag:
   def all = Set(Union, Alias, Struct, Function, Enum)

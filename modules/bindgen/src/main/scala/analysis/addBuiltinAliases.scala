@@ -3,12 +3,12 @@ package bindgen
 def addBuiltInAliases(binding: BindingBuilder)(using
     LoggingConfig
 ): BindingBuilder =
-  val replaceTypes = DefTag.all - DefTag.Function
+  val replaceTypes = CDefinitionTag.all - CDefinitionTag.Function
   BuiltinType.all.foreach { tpe =>
-    val al = Def.Alias(
+    val al = CDefinition.Alias(
       name = tpe.short,
       underlying = CType.Reference(Name.BuiltIn(tpe)),
-      meta = Meta.empty
+      meta = Metadata.empty
     )
     replaceTypes.foreach { tg =>
 
@@ -17,7 +17,7 @@ def addBuiltInAliases(binding: BindingBuilder)(using
 
       binding.named.get(DefName(tpe.short, tg)).collect {
         case BindingDefinition(
-              Def.Alias(
+              CDefinition.Alias(
                 "va_list",
                 CType.Reference(
                   Name.Model(ref, _)
@@ -26,9 +26,9 @@ def addBuiltInAliases(binding: BindingBuilder)(using
               ),
               _
             ) if annoyingBastards(ref) =>
-          binding.remove(DefName(tpe.short, DefTag.Alias))
+          binding.remove(DefName(tpe.short, CDefinitionTag.Alias))
           annoyingBastards.foreach { b =>
-            binding.remove(DefName(b, DefTag.Alias))
+            binding.remove(DefName(b, CDefinitionTag.Alias))
           }
 
           binding.add(al, location = Location.systemHeader)
