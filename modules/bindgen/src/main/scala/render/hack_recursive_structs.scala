@@ -51,7 +51,7 @@ case class ParameterRewrite(
 )
 
 def hack_recursive_structs(
-    struct: Def.Struct
+    struct: CDefinition.Struct
 )(using Config, AliasResolver): Map[Int, ParameterRewrite] =
   val structName = struct.name
 

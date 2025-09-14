@@ -3,7 +3,7 @@ import opaque_newtypes.given
 
 import scala.collection.mutable
 
-private def functionsAreSame(a: Def.Function, b: Def.Function): Boolean =
+private def functionsAreSame(a: CDefinition.Function, b: CDefinition.Function): Boolean =
   if a.name == b.name then
     val aParams = a.parameters.map(_.typ)
     val bParams = b.parameters.map(_.typ)
@@ -11,14 +11,14 @@ private def functionsAreSame(a: Def.Function, b: Def.Function): Boolean =
     aParams == bParams
   else false
 
-private def readabilityScore(func: Def.Function): Int =
+private def readabilityScore(func: CDefinition.Function): Int =
   func.parameters.count(!_.generatedName)
 
-def deduplicateFunctions(res: Set[Def.Function])(using
+def deduplicateFunctions(res: Set[CDefinition.Function])(using
     Config
-): mutable.Set[Def.Function] =
+): mutable.Set[CDefinition.Function] =
   trace(s"Deduplicating ${res.size} functions")
-  val toRemove = mutable.Set.empty[Def.Function]
+  val toRemove = mutable.Set.empty[CDefinition.Function]
   val vec = res.toArray.sortBy(_.name)
 
   vec.zipWithIndex.foreach { case (func, i) =>

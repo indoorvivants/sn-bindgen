@@ -7,7 +7,7 @@ import scala.scalanative.unsafe.*
 
 import fluent.*
 
-def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
+def visitFunction(functionCursor: CXCursor)(using Zone, Config): CDefinition.Function =
   val typ = clang_getCursorType(functionCursor)
   val isVariadic = clang_Cursor_isVariadic(functionCursor).toInt == 1
   val functionName = clang_getCursorSpelling(functionCursor).string

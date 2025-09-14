@@ -16,7 +16,7 @@ def extractMetadata(cursor: CXCursor)(using Zone) =
     null
   )
 
-  Meta(
+  Metadata(
     comment = Option(clang_Cursor_getBriefCommentText(cursor))
       .map(_.string)
       .filter(_ != null)

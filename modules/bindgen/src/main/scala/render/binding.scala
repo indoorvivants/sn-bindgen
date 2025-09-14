@@ -4,7 +4,7 @@ package rendering
 import bindgen.*
 import opaque_newtypes.given
 
-case class Constants(enums: Seq[Def.Enum])
+case class Constants(enums: Seq[CDefinition.Enum])
 
 opaque type StreamName = String
 object StreamName extends opaque_newtypes.OpaqueString[StreamName]
@@ -20,7 +20,7 @@ enum Exported:
 enum RenderMode:
   case Objects, Files
 
-def shouldRender(definition: Def)(using config: Config) =
+def shouldRender(definition: CDefinition)(using config: Config) =
   definition.defName
     .map(_.n)
     .flatMap { n =>
@@ -48,12 +48,12 @@ def shouldRender(definition: Def)(using config: Config) =
     }
     .isEmpty
 
-def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
+def hasEnum(st: CDefinition.Union | CDefinition.Struct | CDefinition.Enum): Boolean =
   st match
-    case e: Def.Enum => true
-    case d: Def.Union =>
+    case _: CDefinition.Enum => true
+    case d: CDefinition.Union =>
       d.anonymous.exists(hasEnum)
-    case d: Def.Struct =>
+    case d: CDefinition.Struct =>
       d.anonymous.exists(hasEnum)
 
 def renderBinding(
@@ -265,7 +265,7 @@ private def maybeObjectBlock(out: LineBuilder, mode: RenderMode)(
 end maybeObjectBlock
 
 private def renderAliases(
-    aliases: List[Def.Alias],
+    aliases: List[CDefinition.Alias],
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
@@ -300,7 +300,7 @@ private def renderExports(
 end renderExports
 
 private def renderUnions(
-    unions: List[Def.Union],
+    unions: List[CDefinition.Union],
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
@@ -314,7 +314,7 @@ private def renderUnions(
 end renderUnions
 
 private def renderStructs(
-    structs: List[Def.Struct],
+    structs: List[CDefinition.Struct],
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
@@ -329,7 +329,7 @@ end renderStructs
 
 private def renderConstants(
     out: LineBuilder,
-    enums: List[Def.Enum],
+    enums: List[CDefinition.Enum],
     mode: RenderMode
 )(using Config, AliasResolver) =
   if enums.nonEmpty then
@@ -337,7 +337,7 @@ private def renderConstants(
       constants(Constants(enums), to(out))
     }
 
-private def renderAll[A <: (Def | GeneratedFunction)](
+private def renderAll[A <: (CDefinition | GeneratedFunction)](
     defs: Seq[A],
     out: LineBuilder,
     how: (A, Appender) => Exported | Unit
@@ -345,7 +345,7 @@ private def renderAll[A <: (Def | GeneratedFunction)](
   val exported = List.newBuilder[Exported]
   defs.zipWithIndex.foreach { case (en, idx) =>
     en match
-      case df: Def =>
+      case df: CDefinition =>
         df.defName.foreach { name =>
           trace(s"Rendering $name")
         }
@@ -419,7 +419,7 @@ end enumPredef
 
 private def renderEnumerations(
     out: LineBuilder,
-    enums: List[Def.Enum],
+    enums: List[CDefinition.Enum],
     mode: RenderMode
 )(using
     Config,

@@ -2,9 +2,11 @@ package bindgen
 
 import CType.*
 
-case class Hints(staticSize: Long)
+import ParameterName.given
 
-enum CType:
+case class Hints(staticSize: Long) derives io.circe.Codec.AsObject
+
+enum CType derives io.circe.Codec.AsObject:
   case Arr(of: CType, size: Option[Long])
   case Pointer(of: CType)
   case Enum(underlying: NumericIntegral)
@@ -23,21 +25,14 @@ enum CType:
   case Reference(name: Name)
 end CType
 
-given Ordering[SignType] = Ordering.by:
-  case SignType.Signed   => 0
-  case SignType.Unsigned => 1
-
-given Ordering[IntegralBase] = Ordering.by:
-  case IntegralBase.Char     => 0
-  case IntegralBase.Short    => 1
-  case IntegralBase.Int      => 2
-  case IntegralBase.Long     => 3
-  case IntegralBase.LongLong => 3
+given io.circe.Codec[CType.NumericIntegral] = ???
+  //summon[io.circe.Codec[CType]].asInstanceOf
 
 given Ordering[CType.NumericIntegral] = Ordering.by(s => (s.base, s.sign))
 
 object CType:
   case class Parameter(name: Option[ParameterName], of: CType)
+      derives io.circe.Codec.AsObject
 
   val Int: NumericIntegral =
     CType.NumericIntegral(IntegralBase.Int, SignType.Signed)

@@ -1,7 +1,7 @@
 package bindgen
 package rendering
 
-def struct(struct: Def.Struct, line: Appender)(using
+def struct(struct: CDefinition.Struct, line: Appender)(using
     c: Config,
     ar: AliasResolver
 ): Exported =
@@ -73,11 +73,11 @@ def struct(struct: Def.Struct, line: Appender)(using
   line(s"opaque type $structName = ${scalaType(finalStructType)}")
   objectBlock(line)(s"object ${sanitiseBeforeColon(structName.value)}") {
     struct.anonymous.foreach {
-      case s: Def.Struct =>
+      case s: CDefinition.Struct =>
         rendering.struct(s, line)
-      case u: Def.Union =>
+      case u: CDefinition.Union =>
         rendering.union(u, line)
-      case e: Def.Enum =>
+      case e: CDefinition.Enum =>
         rendering.enumeration(e, line)
     }
     if struct.fields.nonEmpty then

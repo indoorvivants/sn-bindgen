@@ -32,6 +32,16 @@ object CLI:
     .map(OutputFile.apply(_))
     .orNone
 
+  private val schemaOutputFile = Opts
+    .option[String](
+      "schema-out",
+      help =
+        "Path where to dump the JSON rendered results of analysis"
+    )
+    .map(SchemaOutputFile.apply(_))
+    .orNone
+
+
   private val tempDir = Opts
     .option[String](
       "temp-dir",
@@ -402,7 +412,8 @@ object CLI:
       Opts(OutputChannel.cli),
       tempDir,
       excludeSystemPaths,
-      flavour
+      flavour,
+      schemaOutputFile
     ).mapN(Config.apply)
 
   val command = Command(

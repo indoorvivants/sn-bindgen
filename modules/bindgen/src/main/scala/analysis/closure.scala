@@ -30,14 +30,14 @@ def referencedNames(typ: CType): Set[String] =
   go(List(typ), Set.empty)
 end referencedNames
 
-def definitionClosure(_d: Def)(using Config): Set[String] =
+def definitionClosure(_d: CDefinition)(using Config): Set[String] =
   @tailrec
-  def go(types: List[Def], acc: Set[String]): Set[String] =
+  def go(types: List[CDefinition], acc: Set[String]): Set[String] =
     types match
       case b :: rest =>
         val (next, names) =
           b match
-            case f: Def.Function =>
+            case f: CDefinition.Function =>
               Nil -> {
                 Set(f.name.value) ++
                   referencedNames(f.returnType) ++
@@ -46,7 +46,7 @@ def definitionClosure(_d: Def)(using Config): Set[String] =
                   }
               }
 
-            case f: Def.Struct =>
+            case f: CDefinition.Struct =>
               f.anonymous -> {
                 Set(f.name.value) ++
                   f.fields
@@ -54,15 +54,15 @@ def definitionClosure(_d: Def)(using Config): Set[String] =
                     .toSet
                     .flatMap(referencedNames)
               }
-            case f: Def.Union =>
+            case f: CDefinition.Union =>
               Nil -> {
                 Set(f.name.value) ++ f.fields
                   .map(_._2)
                   .toSet
                   .flatMap(referencedNames)
               }
-            case f: Def.Enum => Nil -> f.name.toSet.map(_.value)
-            case a: Def.Alias =>
+            case f: CDefinition.Enum => Nil -> f.name.toSet.map(_.value)
+            case a: CDefinition.Alias =>
               Nil -> (Set(a.name) ++ referencedNames(a.underlying))
           end match
         end val
@@ -83,7 +83,7 @@ def computeClosure(named: Map[DefName, BindingDefinition])(using
     if notVisited.isEmpty then result
     else
       val grown = notVisited.flatMap { k =>
-        DefTag.all.flatMap { tg =>
+        CDefinitionTag.all.flatMap { tg =>
           named
             .get(DefName(k, tg))
             .map(n => definitionClosure(n.item))

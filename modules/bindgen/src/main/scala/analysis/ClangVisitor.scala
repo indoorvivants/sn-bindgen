@@ -55,7 +55,7 @@ object ClangVisitor:
 
               if !en.name.exists(_.value == name) then
                 binding.add(
-                  Def.Alias(
+                  CDefinition.Alias(
                     name,
                     constructType(typ),
                     extractMetadata(cursor)
@@ -68,7 +68,7 @@ object ClangVisitor:
 
               val item =
                 if typ.spelling.startsWith("union ") then
-                  Def.Union(
+                  CDefinition.Union(
                     fields = struct.fields.map { case (n, f) =>
                       n.into(UnionParameterName) -> f
                     },
@@ -81,8 +81,8 @@ object ClangVisitor:
 
               if name != "" then binding.add(item, location)
             else if typ.kind != CXTypeKind.CXType_Invalid then
-              val alias: Def.Alias =
-                Def.Alias(
+              val alias: CDefinition.Alias =
+                CDefinition.Alias(
                   name,
                   constructType(typ),
                   extractMetadata(cursor)
@@ -102,7 +102,7 @@ object ClangVisitor:
             val isAnonymous = clang_Cursor_isAnonymous(cursor).toInt != 0
             if name != "" && !isAnonymous then
               val en = visitStruct(cursor, name)
-              val union = Def.Union(
+              val union = CDefinition.Union(
                 fields = en.fields.map { case (n, f) =>
                   n.into(UnionParameterName) -> f
                 },

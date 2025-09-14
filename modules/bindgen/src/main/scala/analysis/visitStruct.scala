@@ -13,7 +13,7 @@ class StructCollector(val struct: DefBuilder.Struct, var numAnonymous: Int)
 def visitStruct(cursor: CXCursor, name: String)(using
     Config,
     Zone
-): Def.Struct =
+): CDefinition.Struct =
   val (ptr, memory) = Captured.unsafe[StructCollector](
     StructCollector(
       struct = DefBuilder.Struct(
@@ -55,9 +55,9 @@ def visitStruct(cursor: CXCursor, name: String)(using
           if isAnonymous then
             val last = builder.anonymous.last
             val nestedName = last match
-              case un: Def.Union  => un.name.value
-              case st: Def.Struct => st.name.value
-              case en: Def.Enum   => en.name.get.value
+              case un: CDefinition.Union  => un.name.value
+              case st: CDefinition.Struct => st.name.value
+              case en: CDefinition.Enum   => en.name.get.value
 
             info(s"${builder.anonymousFieldStructMapping} -- $nestedName")
 
@@ -85,8 +85,8 @@ def visitStruct(cursor: CXCursor, name: String)(using
                 val last =
                   builder.anonymous.last // .apply(collector.numAnonymous)
                 val nestedName = last match
-                  case un: Def.Union  => un.name.value
-                  case st: Def.Struct => st.name.value
+                  case un: CDefinition.Union  => un.name.value
+                  case st: CDefinition.Struct => st.name.value
                 val numElements = clang_getArraySize(typ)
 
                 val fieldSpec =
@@ -128,7 +128,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
 
           val newValue = clang_Type_getSizeOf(clang_getCursorType(cursor))
           builder.anonymous.addOne(
-            Def.Union(
+            CDefinition.Union(
               fields = str.fields.map { case (n, field) =>
                 n.into(UnionParameterName) -> field
               },
@@ -159,7 +159,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
 
           builder.anonymous.addOne(
             removeFAM(
-              Def.Struct(
+              CDefinition.Struct(
                 fields = str.fields,
                 name = StructName(nestedName),
                 anonymous = str.anonymous,
@@ -182,7 +182,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
           CXChildVisitResult.CXChildVisit_Continue
         else if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
           val nestedName = "Enum" + builder.anonymous.size
-          val str: Def.Enum =
+          val str: CDefinition.Enum =
             visitEnum(cursor, isTypeDef = true)
               .copy(name = Some(EnumName(nestedName)))
           builder.anonymous.addOne(
@@ -208,9 +208,9 @@ def visitStruct(cursor: CXCursor, name: String)(using
   }
 end visitStruct
 
-def removeFAM(model: Def.Struct, name: Option[String] = None)(using
+def removeFAM(model: CDefinition.Struct, name: Option[String] = None)(using
     Config
-): Def.Struct =
+): CDefinition.Struct =
 
   val hasFlexibleArrayMember = model.fields.lastOption.collectFirst {
     case (_, CType.IncompleteArray(_)) => true

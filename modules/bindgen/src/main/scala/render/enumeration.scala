@@ -1,14 +1,14 @@
 package bindgen
 package rendering
 
-def enumeration(model: Def.Enum, line: Appender)(using
+def enumeration(model: CDefinition.Enum, line: Appender)(using
     Config,
     AliasResolver
 ) =
-  val values = List.newBuilder[(String, String)]
+  // val values = List.newBuilder[(String, String)]
   val opaqueType = model.name.get
   val numericType = model.intType.getOrElse(CType.Int)
-  val enumSuffix = if numericType.sign == SignType.Unsigned then "U" else ""
+  // val enumSuffix = if numericType.sign == SignType.Unsigned then "U" else ""
   val underlyingTypeRender = scalaType(numericType)
   val traitName = enumBaseTraitName(numericType)
 
@@ -37,9 +37,9 @@ def enumeration(model: Def.Enum, line: Appender)(using
       line(lhs + " = " + rhs)
     }
     defBlock(line)(
-      s"inline def getName(inline value: $opaqueType): Option[String] ="
+      s"def getName(value: $opaqueType): Option[String] ="
     ) {
-      defBlock(line)("inline value match") {
+      defBlock(line)("value match") {
         model.values.foreach { case (constName, value) =>
           line(s"""case ${escape(constName)} => Some("${escape(constName)}")""")
         }

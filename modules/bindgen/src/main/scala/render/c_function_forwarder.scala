@@ -13,8 +13,8 @@ def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
       f.arguments.zipWithIndex
         .foreach { case (fp, i) =>
           arglist.addOne {
-            if pointers.contains(i) then s"${fp.originalTyp.s} *${fp.name}"
-            else s"${fp.originalTyp.s} ${fp.name}"
+            if pointers.contains(i) then s"${fp.originalTyp.representation} *${fp.name}"
+            else s"${fp.originalTyp.representation} ${fp.name}"
           }
         }
 
@@ -30,7 +30,7 @@ def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
       if !returnAsWell then
         val returnKeyword = if f.returnType != CType.Void then "return " else ""
         line(
-          s"${f.originalCType.s} ${f.name}(${arglist.result
+          s"${f.originalCType.representation} ${f.name}(${arglist.result
               .mkString(", ")}) {\n $returnKeyword$to(${delegateCallList.mkString(", ")});\n};\n"
         )
       else

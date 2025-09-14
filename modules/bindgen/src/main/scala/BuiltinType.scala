@@ -14,7 +14,7 @@ case class BuiltinType(
     size: Int,
     alignment: Int,
     header: Option[String]
-)
+) derives io.circe.Codec.AsObject
 
 object BuiltinType:
   def apply[T: Tag](short: String, full: String, header: String) =

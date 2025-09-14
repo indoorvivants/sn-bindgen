@@ -3,6 +3,8 @@ package bindgen
 import bindgen.rendering.{RenderedOutput, renderBinding}
 
 import scala.scalanative.unsafe.Zone
+import scala.util.Using
+import java.io.FileWriter
 
 case class ConfiguredEnvironment(
     clang: ClangInfo,
@@ -20,11 +22,16 @@ class InteractiveDriver(config: Config, environment: ConfiguredEnvironment):
   ): Either[BindingError, RenderedOutput] =
     analyse(context).map: binding =>
       given Context = context
+      config.schemaOutputFile.foreach: path =>
+        import io.circe.syntax.*
+        val rendered = binding.all.asJson.noSpacesSortKeys
+        Using(new FileWriter(path.value)): fw =>
+          fw.write(rendered)
       renderBinding(binding, outputMode)
 end InteractiveDriver
 
 object InteractiveDriver:
-  def init(using Config, Zone): Either[BindingError, InteractiveDriver] =
+  def init(using Config): Either[BindingError, InteractiveDriver] =
     val config = summon[Config]
     for clang <- clangInfo(config.systemPathDetection)
     yield InteractiveDriver(

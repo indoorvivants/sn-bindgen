@@ -1,7 +1,7 @@
 package bindgen
 package rendering
 
-def renderComment(line: Appender, meta: Meta)(using config: Config) =
+def renderComment(line: Appender, meta: Metadata)(using config: Config) =
   val hasDoc = meta.comment.exists(_.value.trim().nonEmpty)
   val shouldRenderComment =
     config.rendering.comments == RenderComments.Yes && hasDoc
