@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        OS: ["macos-13", "macos-14"]
+        OS: ["macos-15", "macos-15-intel"]
     runs-on: ${{ matrix.OS }}
     steps:
       - uses: actions/checkout@v4
