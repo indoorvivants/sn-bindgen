@@ -1,12 +1,12 @@
 package bindgen
 package rendering
 
-def enumeration(model: Def.Enum, line: Appender)(using
+def enumeration(model: ResolvedEnum, line: Appender)(using
     Config,
     AliasResolver
 ) =
   val values = List.newBuilder[(String, String)]
-  val opaqueType = model.name.get
+  val opaqueType = model.name
   val numericType = model.intType.getOrElse(CType.Int)
   val enumSuffix = if numericType.sign == SignType.Unsigned then "U" else ""
   val underlyingTypeRender = scalaType(numericType)

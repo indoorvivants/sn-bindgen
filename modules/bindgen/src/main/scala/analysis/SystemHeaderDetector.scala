@@ -10,9 +10,6 @@ class SystemHeaderDetector(
   private val includes = clangInfo.includePaths.map(Paths.get(_))
   private val excludes = excludeSystemPaths.map(_.value).map(Paths.get(_))
 
-  println(clangInfo)
-  println(excludeSystemPaths)
-
   def isSystem(filename: String): Boolean =
     val path = java.nio.file.Paths.get(filename)
 

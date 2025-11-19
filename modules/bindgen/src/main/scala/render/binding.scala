@@ -3,6 +3,11 @@ package rendering
 
 import bindgen.*
 import opaque_newtypes.given
+import bindgen.ResolvedStruct
+import bindgen.ResolvedStruct
+import bindgen.ResolvedEnum
+import bindgen.ResolvedEnum
+import bindgen.ResolvedEnum
 
 case class Constants(enums: Seq[Def.Enum])
 
@@ -86,17 +91,23 @@ def renderBinding(
 
   val exportMode = summon[Config].exportMode
 
+  val all = rawBinding.all
+
   given AliasResolver =
-    AliasResolver.create(rawBinding.all)
+    AliasResolver.create(all)
 
   val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
     deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))
 
-  val resolvedStructs = binding.structs.map(NameResolver.resolveStruct(_))
-  val resolveUnions = binding.unions.map(NameResolver.resolveUnion(_))
+  // val resolvedStructs = binding.structs.map(NameResolver.resolveStruct(_))
+  // val resolveUnions = binding.unions.map(NameResolver.resolveUnion(_))
 
-  trace("Resolved structs", resolvedStructs.toSeq.map(pprint.apply(_)))
-  trace("Resolved unions", resolveUnions.toSeq.map(pprint.apply(_)))
+  val resolvedStructs = all.collect { case rs: ResolvedStruct => rs }
+  val resolvedUnions = all.collect { case rs: ResolvedUnion => rs }
+  val resolvedEnums = all.collect { case rs: ResolvedEnum => rs }
+
+  // trace("Resolved structs", resolvedStructs.toSeq.map(pprint.apply(_)))
+  // trace("Resolved unions", resolveUnions.toSeq.map(pprint.apply(_)))
 
   def create(name: String)(subPackage: String = name) =
     val lb = LineBuilder()
@@ -142,9 +153,7 @@ def renderBinding(
         "enumerations",
         renderEnumerations(
           simpleStream("enumerations"),
-          binding.enums.toList
-            .sortBy(_.name)
-            .filter(_.name.isDefined),
+          resolvedEnums.sortBy(_.name.value).toList,
           mode = renderMode
         )
       )
@@ -178,7 +187,7 @@ def renderBinding(
       updateExports(
         "unions",
         renderUnions(
-          resolveUnions.toList.sortBy(_.name),
+          resolvedUnions.toList.sortBy(_.name),
           simpleStream("unions"),
           mode = renderMode,
           typeImports
@@ -344,7 +353,7 @@ private def renderConstants(
     }
 
 private def renderAll[
-    A <: (Def.Enum | Def.Alias | ResolvedStruct | ResolvedUnion |
+    A <: (ResolvedEnum | Def.Alias | ResolvedStruct | ResolvedUnion |
       GeneratedFunction)
 ](
     defs: Seq[A],
@@ -354,14 +363,19 @@ private def renderAll[
   val exported = List.newBuilder[Exported]
   defs.zipWithIndex.foreach { case (en, idx) =>
     en match
-      case df: Def =>
-        df.defName.foreach { name =>
-          trace(s"Rendering $name")
-        }
+      case df: Def.Alias =>
+        trace(s"Rendering alias ${df.name}")
+      case df: ResolvedEnum =>
+        trace(s"Rendering enum ${df.name}")
+      case df: ResolvedStruct =>
+        trace(s"Rendering struct ${df.fqn}")
+      case df: ResolvedUnion =>
+        trace(s"Rendering union ${df.fqn}")
       case sf: GeneratedFunction.ScalaFunction =>
         trace(s"Rendering Scala function '${sf.name}'")
       case sf: GeneratedFunction.CFunction =>
         trace(s"Rendering C function '${sf.name}'")
+    end match
     try
       how(
         en,
@@ -428,7 +442,7 @@ end enumPredef
 
 private def renderEnumerations(
     out: LineBuilder,
-    enums: List[Def.Enum],
+    enums: List[ResolvedEnum],
     mode: RenderMode
 )(using
     Config,

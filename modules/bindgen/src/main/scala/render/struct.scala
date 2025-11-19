@@ -75,7 +75,7 @@ def struct(struct: ResolvedStruct, line: Appender)(using
         rendering.struct(s, line)
       case u: ResolvedUnion =>
         rendering.union(u, line)
-      case e: Def.Enum =>
+      case e: ResolvedEnum =>
         rendering.enumeration(e, line)
     }
     if struct.fields.nonEmpty then

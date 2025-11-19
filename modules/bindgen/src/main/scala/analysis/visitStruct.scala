@@ -125,7 +125,7 @@ def visitStruct(cursor: CXCursor, name: Option[String])(using
             CXChildVisitResult.CXChildVisit_Continue
 
           case (ck, anon, tk) =>
-            error(
+            warning(
               "Unexpected cursor state",
               Seq(
                 "cursor_kind" -> cursor.kind.spelling,
@@ -133,8 +133,7 @@ def visitStruct(cursor: CXCursor, name: Option[String])(using
                 "type_spelling" -> typ.spelling
               )
             )
-
-            sys.exit(-1)
+            CXChildVisitResult.CXChildVisit_Continue
 
         end match
       }

@@ -1,31 +1,40 @@
 typedef struct {
-  int run;
+  // int run;
+
+  // union {
+  //   char test;
+  // };
+
+  // union {
+  //   char test;
+  // } hal;
 
   union {
-    char test;
-  };
+    int r0;
+    long r1;
+  } flan[2]; // 9
 
-  union {
-    char test;
-  } hal;
+  // enum { A, B, C };
 
-  enum { A, B, C };
+  // union {
+  //   int a;
+  //   union {
+  //     char y;
+  //     char *z;
+  //   };
+  //   struct {
+  //     char x;
+  //   } bla;
+  // } help;
 
-  union {
-    int a;
-    struct {
-      char x;
-    } bla;
-  } help;
+  // struct {
+  //   int cozy[5];
+  // } c;
 
-  struct {
-    int cozy[5];
-  } c;
-
-  union {
-    char bla;
-    int x;
-  };
+  // union {
+  //   char bla;
+  //   int x;
+  // };
 
 } Yest;
 // typedef struct {
