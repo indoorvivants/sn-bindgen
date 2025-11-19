@@ -92,6 +92,12 @@ def renderBinding(
   val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
     deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))
 
+  val resolvedStructs = binding.structs.map(NameResolver.resolveStruct(_))
+  val resolveUnions = binding.unions.map(NameResolver.resolveUnion(_))
+
+  trace("Resolved structs", resolvedStructs.toSeq.map(pprint.apply(_)))
+  trace("Resolved unions", resolveUnions.toSeq.map(pprint.apply(_)))
+
   def create(name: String)(subPackage: String = name) =
     val lb = LineBuilder()
     lb.appendLine(s"package $packageName")
@@ -160,7 +166,7 @@ def renderBinding(
       updateExports(
         "structs",
         renderStructs(
-          binding.structs.toList.sortBy(_.name),
+          resolvedStructs.toList.sortBy(_.name),
           simpleStream("structs"),
           mode = renderMode,
           typeImports
@@ -172,7 +178,7 @@ def renderBinding(
       updateExports(
         "unions",
         renderUnions(
-          binding.unions.toList.sortBy(_.name),
+          resolveUnions.toList.sortBy(_.name),
           simpleStream("unions"),
           mode = renderMode,
           typeImports
@@ -300,7 +306,7 @@ private def renderExports(
 end renderExports
 
 private def renderUnions(
-    unions: List[Def.Union],
+    unions: List[ResolvedUnion],
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
@@ -314,7 +320,7 @@ private def renderUnions(
 end renderUnions
 
 private def renderStructs(
-    structs: List[Def.Struct],
+    structs: List[ResolvedStruct],
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
@@ -337,7 +343,10 @@ private def renderConstants(
       constants(Constants(enums), to(out))
     }
 
-private def renderAll[A <: (Def | GeneratedFunction)](
+private def renderAll[
+    A <: (Def.Enum | Def.Alias | ResolvedStruct | ResolvedUnion |
+      GeneratedFunction)
+](
     defs: Seq[A],
     out: LineBuilder,
     how: (A, Appender) => Exported | Unit

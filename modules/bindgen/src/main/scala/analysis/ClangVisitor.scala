@@ -64,15 +64,13 @@ object ClangVisitor:
                 )
               end if
             else if referencedType.kind == CXTypeKind.CXType_Record then
-              val struct = visitStruct(typeDecl, name)
+              val struct = visitStruct(typeDecl, Some(name))
 
               val item =
                 if typ.spelling.startsWith("union ") then
                   Def.Union(
-                    fields = struct.fields.map { case (n, f) =>
-                      n.into(UnionParameterName) -> f
-                    },
-                    name = struct.name.into(UnionName),
+                    fields = struct.fields,
+                    name = struct.name.map(_.into(UnionName)),
                     anonymous = struct.anonymous,
                     meta = extractMetadata(typeDecl),
                     staticSize = struct.staticSize
@@ -101,12 +99,10 @@ object ClangVisitor:
             val name = clang_getCursorSpelling(cursor).string
             val isAnonymous = clang_Cursor_isAnonymous(cursor).toInt != 0
             if name != "" && !isAnonymous then
-              val en = visitStruct(cursor, name)
+              val en = visitStruct(cursor, Some(name))
               val union = Def.Union(
-                fields = en.fields.map { case (n, f) =>
-                  n.into(UnionParameterName) -> f
-                },
-                name = en.name.into(UnionName),
+                fields = en.fields,
+                name = en.name.map(_.into(UnionName)),
                 anonymous = en.anonymous,
                 meta = extractMetadata(cursor),
                 staticSize = en.staticSize
@@ -120,7 +116,7 @@ object ClangVisitor:
             val isAnonymous = clang_Cursor_isAnonymous(cursor).toInt != 0
             trace(s"Cursor: [${cursor.spelling}], ${isAnonymous}")
             if name != "" && !isAnonymous then
-              val en = visitStruct(cursor, name)
+              val en = visitStruct(cursor, Some(name))
               binding.add(en, location)
           end if
 

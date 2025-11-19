@@ -5,7 +5,7 @@ import bindgen.*
 def scalaTag(typ: CType)(using AliasResolver, Config): String =
   import CType.*
   typ match
-    case model @ Struct(fields, _) if fields.size <= 22 =>
+    case model @ Struct(fields, _, _) if fields.size <= 22 =>
       val paramTypes = model.fields.map(scalaType).mkString(", ")
 
       if model.fields.size > 0 then

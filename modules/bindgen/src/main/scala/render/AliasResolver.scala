@@ -13,12 +13,18 @@ object AliasResolver:
     def go(definitions: Seq[Def]): Unit =
       definitions.foreach {
         case st @ Def.Struct(fields, name, _, staticSize, _) =>
-          val typ = CType.Struct(fields.map(_._2).toList, Hints(staticSize))
-          mapping += name.value -> typ
+          val typ = Def.typeOf(
+            st
+          )
+          name.map: value =>
+            mapping += value.value -> typ
           mapping ++= traverse(st)
         case u @ Def.Union(fields, name, _, staticSize, _) =>
-          val typ = CType.Struct(fields.map(_._2).toList, Hints(staticSize))
-          mapping += name.value -> typ
+          val typ = Def.typeOf(
+            u
+          )
+          name.map: value =>
+            mapping += value.value -> typ
           mapping ++= traverse(u)
         case Def.Alias(name, underlying, _) =>
           mapping += name -> underlying
@@ -55,9 +61,9 @@ object AliasResolver:
 
       val thisName = prepend +
         (s match
-          case u: Def.Union  => u.name.value
-          case u: Def.Struct => u.name.value
-          case e: Def.Enum   => e.name.get.value
+          // case u: Def.Union  => u.name.value
+          // case u: Def.Struct => u.name.value
+          case e: Def.Enum => e.name.get.value
         )
 
       s match

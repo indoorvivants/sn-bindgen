@@ -22,7 +22,7 @@ import ArtifactNames.*
 import java.nio.file.Paths
 
 lazy val Versions = new {
-  val decline = "2.5.0"
+  val decline = "2.5.1-SNAPSHOT"
   val scribe = "3.15.3"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
@@ -33,6 +33,7 @@ lazy val Versions = new {
   val opaqueNewtypes = "0.1.0"
 
   val Scala3 = "3.3.6"
+  val Scala3_Next = "3.7.3"
   val Scala212 = "2.12.20"
   val Scala213 = "2.13.16"
   val Scala2 = List(Scala212, Scala213)
@@ -54,7 +55,7 @@ inThisBuild(
         "keynmol",
         "Anton Sviridov",
         "velvetbaldmime@protonmail.com",
-        url("https://blog.indoorvivants.com")
+        url("https://indoorvivants.com")
       )
     )
   )
@@ -116,7 +117,8 @@ lazy val bindgen = project
   .in(file("modules/bindgen"))
   .dependsOn(libclang)
   .enablePlugins(ScalaNativePlugin, ScalaNativeJUnitPlugin, BuildInfoPlugin)
-  .settings(nativeCommon)
+  // .settings(nativeCommon)
+  .settings(scalaVersion := Versions.Scala3_Next)
   .settings(Compile / nativeConfig ~= environmentConfiguration)
   .settings(nativeConfig ~= usesLibClang)
   .settings(
@@ -136,6 +138,7 @@ lazy val bindgen = project
     libraryDependencies += "com.indoorvivants.detective" %%% "platform" % Versions.detective,
     libraryDependencies += "com.monovore" %%% "decline" % Versions.decline,
     libraryDependencies += "com.outr" %%% "scribe" % Versions.scribe,
+    libraryDependencies += "com.lihaoyi" %%% "pprint" % "0.9.4",
     libraryDependencies += "com.indoorvivants" %%% "opaque-newtypes" % Versions.opaqueNewtypes,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     scalacOptions += "-Wunused:all"
@@ -564,6 +567,27 @@ markdownDocuments / fileInputs ++=
     ).value.toGlob / "**" / "*.js"
   )
 
+lazy val bindgenTestFile = inputKey[Unit]("")
+bindgenTestFile := {
+  import complete.DefaultParsers.*
+  val args: Seq[String] = spaceDelimited("<arg>").parsed
+  val built = (bindgen / Compile / nativeLink).value
+
+  val log = sLog.value
+  val (testFile, rest) = (args.head, args.tail)
+
+  import scala.sys.process.*
+
+  val testFileLocation =
+    (tests.native(
+      Versions.Scala3
+    ) / Test / resourceDirectory).value / "scala-native" / testFile
+
+  val output =
+    s"$built --package test --scala --header $testFileLocation ${rest.mkString(" ")}".!!
+  log.info(output)
+}
+
 lazy val buildBinary = inputKey[File]("")
 buildBinary := {
   import complete.DefaultParsers.*
@@ -610,7 +634,7 @@ lazy val noPublish = Seq(
   publishLocal / skip := true
 )
 
-Global / onChangedBuildSource := ReloadOnSourceChanges
+// Global / onChangedBuildSource := ReloadOnSourceChanges
 
 lazy val versionDump =
   taskKey[Unit]("Dumps the version in a file named version")

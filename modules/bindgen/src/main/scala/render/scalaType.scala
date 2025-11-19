@@ -61,12 +61,17 @@ def scalaType(typ: CType)(using AliasResolver, Config): String =
           .mkString("[", ", ", "]")
       s"CFuncPtr$args$types"
 
-    case at @ Struct(fields, hints) =>
+    case at @ Struct(fields, hints, fieldNames) =>
       if fields.size > 22 then
         s"CArray[Byte, ${natDigits(hints.staticSize.toInt)}]"
       else if fields.nonEmpty then
-        val parameters = fields.map(scalaType).mkString("[", ", ", "]")
-        s"CStruct${fields.size}$parameters"
+        val parameters =
+          val raw = fields.map(scalaType)
+          if fieldNames.size == fields.size then
+            raw.zip(fieldNames).map((tpe, name) => s"$tpe /* $name */")
+          else raw
+
+        s"CStruct${fields.size}${parameters.mkString("[", ", ", "]")}"
       else "CStruct0"
 
     case at @ Union(fields, hints) =>

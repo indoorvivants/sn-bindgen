@@ -17,7 +17,7 @@ def isCyclical(typ: CType, structName: StructName)(using
             level + 1
           )
 
-      case Struct(fields, _) =>
+      case Struct(fields, _, _) =>
         if fields.size > 22 then
           Option.empty // implemented as CArray[Byte, ...] so cannot be self-referential
         else
@@ -51,7 +51,7 @@ case class ParameterRewrite(
 )
 
 def hack_recursive_structs(
-    struct: Def.Struct
+    struct: ResolvedStruct
 )(using Config, AliasResolver): Map[Int, ParameterRewrite] =
   val structName = struct.name
 

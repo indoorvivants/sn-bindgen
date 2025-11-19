@@ -37,9 +37,9 @@ def enumeration(model: Def.Enum, line: Appender)(using
       line(lhs + " = " + rhs)
     }
     defBlock(line)(
-      s"inline def getName(inline value: $opaqueType): Option[String] ="
+      s"def getName(value: $opaqueType): Option[String] ="
     ) {
-      defBlock(line)("inline value match") {
+      defBlock(line)("value match") {
         model.values.foreach { case (constName, value) =>
           line(s"""case ${escape(constName)} => Some("${escape(constName)}")""")
         }

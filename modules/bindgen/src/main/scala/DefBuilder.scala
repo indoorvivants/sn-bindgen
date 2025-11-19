@@ -49,8 +49,8 @@ object DefBuilder:
   ) extends DefBuilder[Def.Enum]
 
   case class Struct(
-      var fields: ListBuffer[(StructParameterName, CType)],
-      var name: StructName,
+      var fields: ListBuffer[FieldSpec],
+      var name: Option[StructName],
       var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
       var staticSize: Long,
       var meta: Meta,
@@ -58,8 +58,8 @@ object DefBuilder:
   ) extends DefBuilder[Def.Struct]
 
   case class Union(
-      var fields: ListBuffer[(UnionParameterName, CType)],
-      var name: UnionName,
+      var fields: ListBuffer[FieldSpec],
+      var name: Option[UnionName],
       var anonymous: ListBuffer[Def.Union | Def.Struct | Def.Enum],
       var staticSize: Long,
       var meta: Meta

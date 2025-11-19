@@ -1,0 +1,54 @@
+typedef struct {
+  // union {int a;} help;
+  union {
+    char test;
+  };
+
+  union {
+    char test;
+  } hal;
+
+  enum { A, B, C };
+
+  union {
+    int a;
+    struct {
+      char x;
+    } bla;
+  } help;
+
+  struct {
+    int cozy[5];
+  } c;
+
+  union {
+    char bla;
+    int x;
+  };
+
+} Yest;
+// typedef struct {
+//   union {
+//   	int a;
+//     float b;
+//     struct {
+//         float x;
+//         union {
+//             char* hello;
+//         };
+//     };
+
+//     struct {
+//         int bla;
+//     } howdy;
+
+//   };
+//   char* yo;
+//  } Help;
+
+// void test(){
+//     Help h;
+//     h.hello;
+//     // Help h = { .a = 1 };
+//     // return h.x;
+// }

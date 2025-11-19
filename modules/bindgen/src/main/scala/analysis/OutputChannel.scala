@@ -15,17 +15,17 @@ trait OutputChannel:
 end OutputChannel
 
 object OutputChannel:
-  def cli = new OutputChannel:
-    override inline def log[A](
+  val cli = new OutputChannel:
+    override def log[A](
         lc: LoggingConfig,
         level: LogLevel,
         msg: A,
         context: Seq[(String, Any)]
     ): Unit = consoleLogger(level, msg, context, lc, stderr(_))
 
-    override inline def stdout[A](msg: A): Unit =
+    override def stdout[A](msg: A): Unit =
       print(msg)
 
-    override inline def stderr[A](msg: A): Unit =
+    override def stderr[A](msg: A): Unit =
       System.err.print(msg)
 end OutputChannel

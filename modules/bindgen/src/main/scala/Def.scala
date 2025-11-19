@@ -37,6 +37,49 @@ case class Meta(
 object Meta:
   def empty: Meta = Meta(None, None)
 
+enum FieldName:
+  case Anon(idx: Int)
+  case Value(name: String)
+
+  def get = this match
+    case Anon(_)     => None
+    case Value(name) => Some(name)
+
+enum FieldSpec:
+  case Known(name: String, tpe: CType)
+  case Anon(nameHint: Option[String], unsafeId: Int)
+  case AnonArray(nameHint: Option[String], size: Long, unsafeId: Int)
+
+case class DeepField(
+    name: String,
+    typ: CType,
+    fieldPath: String
+)
+
+case class ResolvedStruct(
+    fields: List[(StructParameterName, CType)],
+    name: StructName,
+    anonymous: Vector[ResolvedUnion | ResolvedStruct | Def.Enum],
+    staticSize: Long,
+    deepFields: List[DeepField],
+    meta: Meta
+)
+
+case class ResolvedUnion(
+    fields: List[(UnionParameterName, CType)],
+    name: UnionName,
+    anonymous: Vector[ResolvedUnion | ResolvedStruct | Def.Enum],
+    staticSize: Long,
+    meta: Meta
+)
+
+case class ResolvedEnum(
+    values: List[(String, Long)],
+    name: EnumName,
+    intType: Option[CType.NumericIntegral],
+    meta: Meta
+)
+
 enum Def(meta: Meta):
   case Enum(
       values: List[(String, Long)],
@@ -46,16 +89,16 @@ enum Def(meta: Meta):
   ) extends Def(meta)
 
   case Struct(
-      fields: List[(StructParameterName, CType)],
-      name: StructName,
+      fields: List[FieldSpec],
+      name: Option[StructName],
       anonymous: List[Def.Union | Def.Struct | Def.Enum],
       staticSize: Long,
       meta: Meta
   ) extends Def(meta)
 
   case Union(
-      fields: List[(UnionParameterName, CType)],
-      name: UnionName,
+      fields: List[FieldSpec],
+      name: Option[UnionName],
       anonymous: List[Def.Union | Def.Struct | Def.Enum],
       staticSize: Long,
       meta: Meta
@@ -70,6 +113,7 @@ enum Def(meta: Meta):
       variadic: Boolean,
       meta: Meta
   ) extends Def(meta)
+
   case Alias(name: String, underlying: CType, meta: Meta) extends Def(meta)
 
   def metadata: Meta = meta
@@ -77,27 +121,65 @@ enum Def(meta: Meta):
   def defName: Option[DefName] =
     this match
       case Alias(name, _, _) => Some(DefName(name, DefTag.Alias))
-      case u: Union          => Some(DefName(u.name.value, DefTag.Union))
+      case u: Union          => u.name.map(n => DefName(n.value, DefTag.Union))
       case f: Function       => Some(DefName(f.name.value, DefTag.Function))
-      case s: Struct         => Some(DefName(s.name.value, DefTag.Struct))
+      case s: Struct         => s.name.map(n => DefName(n.value, DefTag.Struct))
       case e: Enum =>
         e.name.map(enumName => DefName(enumName.value, DefTag.Enum))
+
+  lazy val resolvedType: CType = this match
+    case Enum(values, name, intType, meta) => CType.Enum(intType.get)
+    case Struct(fields, name, anonymous, staticSize, meta) =>
+      val namer =
+        var unions = 0
+        var structs = 0
+        (
+          structName = (n: Option[StructName]) =>
+            n.getOrElse({
+              val s = StructName(s"Struct$structs")
+              structs += 1;
+              s
+            }),
+          unionName = (n: Option[UnionName]) =>
+            n.getOrElse({
+              val s = UnionName(s"Struct$unions")
+              unions += 1;
+              s
+            })
+        )
+      end namer
+      ???
+
+    case Union(fields, name, anonymous, staticSize, meta) => ???
+    case Function(
+          name,
+          returnType,
+          parameters,
+          originalCType,
+          numArguments,
+          variadic,
+          meta
+        ) =>
+      ???
+    case Alias(name, underlying, meta) => ???
+
 end Def
 
 object Def:
-  def typeOf(d: Function): CType.Function =
-    CType.Function(
-      d.returnType,
-      d.parameters.map { case fp =>
-        CType.Parameter(Some(ParameterName(fp.name)), fp.typ)
-      }.toList
-    )
-  def typeOf(d: Union): CType.Union =
-    CType.Union(d.fields.map(_._2).toList, Hints(d.staticSize))
-  def typeOf(d: Struct): CType.Struct =
-    CType.Struct(d.fields.map(_._2).toList, Hints(d.staticSize))
-  def typeOf(d: Enum): CType.Enum =
-    CType.Enum(d.intType.get)
+  def typeOf(d: Def) = d.resolvedType
+  // def typeOf(d: Function): CType.Function =
+  //   CType.Function(
+  //     d.returnType,
+  //     d.parameters.map { case fp =>
+  //       CType.Parameter(Some(ParameterName(fp.name)), fp.typ)
+  //     }.toList
+  //   )
+  // def typeOf(d: Union): CType.Union =
+  //   CType.Union(d.fields.map(_._2).toList, Hints(d.staticSize))
+  // def typeOf(d: Struct): CType.Struct =
+  //   CType.Struct(d.fields.map(_._2).toList, Hints(d.staticSize))
+  // def typeOf(d: Enum): CType.Enum =
+  //   CType.Enum(d.intType.get)
 end Def
 
 case class FunctionParameter(

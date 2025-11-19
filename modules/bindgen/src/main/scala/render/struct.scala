@@ -1,22 +1,20 @@
 package bindgen
 package rendering
 
-def struct(struct: Def.Struct, line: Appender)(using
+def struct(struct: ResolvedStruct, line: Appender)(using
     c: Config,
     ar: AliasResolver
 ): Exported =
   val rewriteRules = hack_recursive_structs(struct)
   val structName = struct.name
-  val structType: CType.Struct =
-    CType.Struct(struct.fields.map(_._2).toList, Hints(struct.staticSize))
-  val rewrittenStructType: CType.Struct = structType.copy(
-    fields = struct.fields
-      .map(_._2)
-      .zipWithIndex
-      .map { case (typ, idx) =>
-        rewriteRules.get(idx).map(_.newRawType).getOrElse(typ)
-      }
-      .toList
+  val structType: CType.Struct = CType.Struct(
+    fields = struct.fields.map(_._2),
+    hints = Hints(struct.staticSize)
+  )
+  val rewrittenStructType: CType.Struct = CType.Struct(
+    fields = structType.fields.zipWithIndex.map: (tpe, idx) =>
+      rewriteRules.get(idx).map(_.newRawType).getOrElse(tpe),
+    hints = Hints(struct.staticSize)
   )
 
   val madeOpaque = c.rendering.matches(_.opaqueStruct)(structName.value)
@@ -73,18 +71,14 @@ def struct(struct: Def.Struct, line: Appender)(using
   line(s"opaque type $structName = ${scalaType(finalStructType)}")
   objectBlock(line)(s"object ${sanitiseBeforeColon(structName.value)}") {
     struct.anonymous.foreach {
-      case s: Def.Struct =>
+      case s: ResolvedStruct =>
         rendering.struct(s, line)
-      case u: Def.Union =>
+      case u: ResolvedUnion =>
         rendering.union(u, line)
       case e: Def.Enum =>
         rendering.enumeration(e, line)
     }
     if struct.fields.nonEmpty then
-      val fieldTypes =
-        struct.fields.map(_._2).zipWithIndex.map { case (typ, idx) =>
-          rewriteRules.get(idx).map(_.newRawType).getOrElse(typ)
-        }
       val tag =
         s"given _tag: Tag[$structName] = ${scalaTag(finalStructType)}"
       line(tag)
@@ -100,12 +94,11 @@ def struct(struct: Def.Struct, line: Appender)(using
       val applyArgList = List.newBuilder[String]
 
       namedFieldsWithIndex.map { case ((name, typ), idx) =>
-        if name.value.nonEmpty then
-          val inputType =
-            rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
-          applyArgList.addOne(
-            s"${getter(name.value)} : ${scalaType(inputType)}"
-          )
+        val inputType =
+          rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
+        applyArgList.addOne(
+          s"${getter(name.value)} : ${scalaType(inputType)}"
+        )
       }
 
       val ignored = c.rendering.matches(_.noConstructor)(structName.value)

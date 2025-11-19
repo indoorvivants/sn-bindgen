@@ -3,7 +3,7 @@ package rendering
 
 import bindgen.*
 
-def union(model: Def.Union, line: Appender)(using Config)(using
+def union(model: ResolvedUnion, line: Appender)(using Config)(using
     ar: AliasResolver
 ): Exported =
   val unionName = model.name
@@ -28,9 +28,9 @@ def union(model: Def.Union, line: Appender)(using Config)(using
   line(s"opaque type $unionName = $tpe")
   objectBlock(line)(s"object ${sanitiseBeforeColon(unionName.value)}") {
     model.anonymous.foreach {
-      case s: Def.Struct =>
+      case s: ResolvedStruct =>
         rendering.struct(s, line)
-      case u: Def.Union =>
+      case u: ResolvedUnion =>
         rendering.union(u, line)
     }
 

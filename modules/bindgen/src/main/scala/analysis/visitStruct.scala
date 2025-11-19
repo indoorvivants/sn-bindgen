@@ -8,9 +8,7 @@ import scala.scalanative.unsigned.*
 
 import fluent.*
 
-class StructCollector(val struct: DefBuilder.Struct, var numAnonymous: Int)
-
-def visitStruct(cursor: CXCursor, name: String)(using
+def visitStructOld(cursor: CXCursor, name: Option[String])(using
     Config,
     Zone
 ): Def.Struct =
@@ -18,13 +16,14 @@ def visitStruct(cursor: CXCursor, name: String)(using
     StructCollector(
       struct = DefBuilder.Struct(
         fields = ListBuffer.empty,
-        name = StructName(name),
+        name = name.filter(_.nonEmpty).map(StructName(_)),
         anonymous = ListBuffer.empty,
         meta = extractMetadata(cursor),
         anonymousFieldStructMapping = ListBuffer.empty,
         staticSize = clang_Type_getSizeOf(clang_getCursorType(cursor))
       ),
-      numAnonymous = 0
+      numAnonymous = 0,
+      lastAction = None
     )
   )
 
@@ -40,39 +39,37 @@ def visitStruct(cursor: CXCursor, name: String)(using
 
         val builder = collector.struct
         trace(s"Cursor kind: ${cursor.kind.spelling}")
-        trace(s"Cursor: ${cursor.spelling}")
+        trace(
+          s"Cursor: ${cursor.spelling}, ptr = ${cursorPtr.toLong}, parent = ${cursorPtr.toLong}"
+        )
         if cursor.kind == CXCursorKind.CXCursor_FieldDecl then
           val fieldName =
-            StructParameterName(clang_getCursorSpelling(cursor).string)
+            clang_getCursorSpelling(cursor).string
           val typ = clang_getCursorType(cursor)
           val decl = clang_getTypeDeclaration(typ)
           val isAnonymous = clang_Cursor_isAnonymous(decl) == 1.toUInt
 
-          trace(s"Field name: $fieldName, ${builder.anonymous}")
+          trace(s"Field name: $fieldName, ${builder.anonymous}, $parentPtr")
           trace(
             s"typ spelling: ${typ.kindSpelling}, ${decl.spelling}, anonymous $isAnonymous"
           )
           if isAnonymous then
-            val last = builder.anonymous.last
-            val nestedName = last match
-              case un: Def.Union  => un.name.value
-              case st: Def.Struct => st.name.value
-              case en: Def.Enum   => en.name.get.value
-
-            info(s"${builder.anonymousFieldStructMapping} -- $nestedName")
-
-            val fieldSpec = fieldName -> CType.Reference(
-              Name.Model(builder.name.value + "." + nestedName)
+            val last = builder.anonymous.size
+            val fieldSpec = FieldSpec.Anon(
+              nameHint = Option(fieldName).filter(_.nonEmpty),
+              last - 1
             )
 
-            builder.anonymousFieldStructMapping.find(
-              _._2.value == nestedName
-            ) match
-              case None =>
-                builder.fields.addOne(fieldSpec)
-              case Some(idx) =>
-                builder.fields.update(idx._1, fieldSpec)
-                builder.anonymousFieldStructMapping.filterInPlace(_ != idx)
+            builder.fields.addOne(fieldSpec)
+
+            // builder.anonymousFieldStructMapping.find(
+            //   _._2.value == nestedName
+            // ) match
+            //   case None =>
+            //     builder.fields.addOne(fieldSpec)
+            //   case Some(idx) =>
+            //     builder.fields.update(idx._1, fieldSpec)
+            //     builder.anonymousFieldStructMapping.filterInPlace(_ != idx)
           else if typ.kind == CXTypeKind.CXType_ConstantArray
           then
             val speculateType = constructType(clang_getArrayElementType(typ))
@@ -83,75 +80,107 @@ def visitStruct(cursor: CXCursor, name: String)(using
               case _: CType.Struct | _: CType.Union |
                   CType.Reference(Name.Unnamed) =>
                 val last =
-                  builder.anonymous.last // .apply(collector.numAnonymous)
-                val nestedName = last match
-                  case un: Def.Union  => un.name.value
-                  case st: Def.Struct => st.name.value
+                  builder.anonymous.size // .apply(collector.numAnonymous)
+                // val nestedName = last match
+                //   case un: Def.Union  => un.name.value
+                //   case st: Def.Struct => st.name.value
                 val numElements = clang_getArraySize(typ)
 
-                val fieldSpec =
-                  fieldName -> constArrayType(
-                    CType.Reference(
-                      Name.Model(builder.name.value + "." + nestedName)
-                    ),
-                    numElements
+                builder.fields.addOne(
+                  FieldSpec.AnonArray(
+                    nameHint = Option(fieldName).filter(_.nonEmpty),
+                    size = numElements,
+                    unsafeId = last - 1
                   )
+                )
 
-                builder.anonymousFieldStructMapping.find(
-                  _._2.value == nestedName
-                ) match
-                  case None =>
-                    builder.fields.addOne(fieldSpec)
-                  case Some(idx) =>
-                    builder.fields.update(idx._1, fieldSpec)
-                    builder.anonymousFieldStructMapping.filterInPlace(_ != idx)
+              // val fieldSpec =
+              //   fieldName -> constArrayType(
+              //     CType.Reference(
+              //       Name.Model(builder.name.value + "." + nestedName)
+              //     ),
+              //     numElements
+              //   )
+
+              // builder.anonymousFieldStructMapping.find(
+              //   _._2.value == nestedName
+              // ) match
+              //   case None =>
+              //     builder.fields.addOne(fieldSpec)
+              //   case Some(idx) =>
+              //     builder.fields.update(idx._1, fieldSpec)
+              //     builder.anonymousFieldStructMapping.filterInPlace(_ != idx)
 
               case _ =>
                 builder.fields.addOne(
-                  fieldName -> constructType(clang_getCursorType(cursor))
+                  FieldSpec.Known(
+                    fieldName,
+                    constructType(
+                      clang_getCursorType(cursor)
+                    )
+                  )
                 )
             end match
           else
             builder.fields.addOne(
-              fieldName -> constructType(clang_getCursorType(cursor))
+              FieldSpec.Known(
+                fieldName,
+                constructType(
+                  clang_getCursorType(cursor)
+                )
+              )
             )
           end if
 
           CXChildVisitResult.CXChildVisit_Continue
         else if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
-          val nestedName = "Union" + builder.anonymous.size
-          val str = visitStruct(cursor, builder.name.value + "." + nestedName)
+          // val nestedName = "Union" + builder.anonymous.size
+          val str = visitStruct(cursor, None)
 
           trace(
-            s"Size of $nestedName: ${clang_Type_getSizeOf(clang_getCursorType(cursor))}, $str"
+            s"visiting anonymous union ${{
+                clang_getCursorSpelling(cursor).string
+              }}"
           )
 
           val newValue = clang_Type_getSizeOf(clang_getCursorType(cursor))
           builder.anonymous.addOne(
             Def.Union(
-              fields = str.fields.map { case (n, field) =>
-                n.into(UnionParameterName) -> field
-              },
-              name = UnionName(nestedName),
+              fields = str.fields,
+              name = None,
               anonymous = str.anonymous,
               meta = extractMetadata(cursor),
               staticSize = newValue
             )
           )
-          builder.anonymousFieldStructMapping.addOne(
-            builder.fields.size -> StructName(nestedName)
-          )
           builder.fields.addOne(
-            StructParameterName("") -> CType.Union(
-              str.fields.map(_._2),
-              Hints(newValue)
+            FieldSpec.Anon(
+              nameHint = None,
+              unsafeId = builder.anonymous.size - 1
             )
           )
+          // builder.anonymousFieldStructMapping.addOne(
+          //   builder.fields.size -> StructName(nestedName)
+          // )
+          // builder.fields.addOne(
+          //   StructParameterName("") -> CType.Union(
+          //     str.fields.map(_._2),
+          //     Hints(newValue)
+          //   )
+          // )
+          // builder.fields.addOne(
+          //   FieldSpec.Anon(None, builder.anonymous.size - 1)
+          // )
+          //
 
           CXChildVisitResult.CXChildVisit_Continue
         else if cursor.kind == CXCursorKind.CXCursor_StructDecl then
+          trace(
+            s"visiting anonymous struct ${{ clang_getCursorSpelling(cursor) }}"
+          )
+
           val nestedName = "Struct" + builder.anonymous.size
-          val str = visitStruct(cursor, builder.name.value + "." + nestedName)
+          val str = visitStruct(cursor, None)
           trace(
             s"Size of $nestedName: ${clang_Type_getSizeOf(clang_getCursorType(cursor))}"
           )
@@ -161,7 +190,7 @@ def visitStruct(cursor: CXCursor, name: String)(using
             removeFAM(
               Def.Struct(
                 fields = str.fields,
-                name = StructName(nestedName),
+                name = None,
                 anonymous = str.anonymous,
                 meta = extractMetadata(cursor),
                 staticSize = newValue
@@ -169,15 +198,19 @@ def visitStruct(cursor: CXCursor, name: String)(using
               Some(cursor.spelling)
             )
           )
-          builder.anonymousFieldStructMapping.addOne(
-            builder.fields.size -> StructName(nestedName)
-          )
-          builder.fields.addOne(
-            StructParameterName("") -> CType.Struct(
-              str.fields.map(_._2),
-              Hints(newValue)
-            )
-          )
+          // builder.anonymousFieldStructMapping.addOne(
+          //   builder.fields.size -> StructName(nestedName)
+          // )
+          // builder.fields.addOne(
+          //   StructParameterName("") -> CType.Struct(
+          //     str.fields.map(_._2),
+          //     Hints(newValue)
+          //   )
+          // )
+          //
+          // builder.fields.addOne(
+          //   FieldSpec.Anon(None, builder.anonymous.size - 1)
+          // )
 
           CXChildVisitResult.CXChildVisit_Continue
         else if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
@@ -206,14 +239,14 @@ def visitStruct(cursor: CXCursor, name: String)(using
     finally memory.deallocate()
     end try
   }
-end visitStruct
+end visitStructOld
 
 def removeFAM(model: Def.Struct, name: Option[String] = None)(using
     Config
 ): Def.Struct =
 
   val hasFlexibleArrayMember = model.fields.lastOption.collectFirst {
-    case (_, CType.IncompleteArray(_)) => true
+    case FieldSpec.Known(_, CType.IncompleteArray(_)) => true
   }.isDefined
 
   if hasFlexibleArrayMember then
