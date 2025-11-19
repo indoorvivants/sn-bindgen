@@ -3,7 +3,7 @@ package rendering
 
 import bindgen.*
 
-def union(model: Def.Union, line: Appender)(using Config)(using
+def union(model: ResolvedUnion, line: Appender)(using Config)(using
     ar: AliasResolver
 ): Exported =
   val unionName = model.name
@@ -28,9 +28,9 @@ def union(model: Def.Union, line: Appender)(using Config)(using
   line(s"opaque type $unionName = $tpe")
   objectBlock(line)(s"object ${sanitiseBeforeColon(unionName.value)}") {
     model.anonymous.foreach {
-      case s: Def.Struct =>
+      case s: ResolvedStruct =>
         rendering.struct(s, line)
-      case u: Def.Union =>
+      case u: ResolvedUnion =>
         rendering.union(u, line)
     }
 
@@ -39,12 +39,14 @@ def union(model: Def.Union, line: Appender)(using Config)(using
     line(tag)
 
     if model.fields.nonEmpty then
+      line("")
       defBlock(line)(s"def apply()(using Zone): Ptr[$unionName] =") {
         line(
           s"val ___ptr = _root_.scala.scalanative.unsafe.alloc[$unionName](1)"
         )
         line("___ptr")
       }
+      line("")
       model.fields.foreach { case (fieldName, fieldType) =>
         val typ = scalaType(fieldType)
         val getterName = getter(fieldName.value)
@@ -63,6 +65,8 @@ def union(model: Def.Union, line: Appender)(using Config)(using
           )
           line("___ptr")
         }
+
+        line("")
       }
       defBlock(line)(s"extension (struct: $unionName)") {
         model.fields.foreach { case (fieldName, fieldType) =>

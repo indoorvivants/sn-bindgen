@@ -8,22 +8,29 @@ object AliasResolver:
 
   inline def apply(inline f: String => CType): AliasResolver = f
 
-  def create(aliases: Seq[Def])(using Config): AliasResolver =
+  def create(
+      aliases: Seq[
+        ResolvedStruct | ResolvedUnion | ResolvedEnum | Def.Alias | Def.Function
+      ]
+  )(using Config): AliasResolver =
     val mapping = Map.newBuilder[String, CType]
-    def go(definitions: Seq[Def]): Unit =
+    def go(
+        definitions: Seq[
+          ResolvedStruct | ResolvedUnion | ResolvedEnum | Def.Alias |
+            Def.Function
+        ]
+    ): Unit =
       definitions.foreach {
-        case st @ Def.Struct(fields, name, _, staticSize, _) =>
-          val typ = CType.Struct(fields.map(_._2).toList, Hints(staticSize))
-          mapping += name.value -> typ
-          mapping ++= traverse(st)
-        case u @ Def.Union(fields, name, _, staticSize, _) =>
-          val typ = CType.Struct(fields.map(_._2).toList, Hints(staticSize))
-          mapping += name.value -> typ
-          mapping ++= traverse(u)
+        case s: ResolvedStruct =>
+          mapping += s.fqn.value -> s.typ
+          go(s.anonymous)
+        case s: ResolvedUnion =>
+          mapping += s.fqn.value -> s.typ
+          go(s.anonymous)
         case Def.Alias(name, underlying, _) =>
           mapping += name -> underlying
-        case Def.Enum(_, Some(name), Some(tp), _) =>
-          mapping += name.value -> tp
+        case s: ResolvedEnum =>
+          mapping += s.fqn.value -> s.typ
         case _ =>
       }
 
@@ -39,42 +46,4 @@ object AliasResolver:
     )
 
   end create
-
-  private def traverse(st: Def.Union | Def.Struct)(using
-      LoggingConfig
-  ) =
-    def go(
-        s: Def.Union | Def.Struct | Def.Enum,
-        bld: Tuple2[String, CType] => Unit,
-        prepend: String = ""
-    ): Unit =
-      val anonymous = s match
-        case u: Def.Union  => u.anonymous
-        case u: Def.Struct => u.anonymous
-        case e: Def.Enum   => Nil
-
-      val thisName = prepend +
-        (s match
-          case u: Def.Union  => u.name.value
-          case u: Def.Struct => u.name.value
-          case e: Def.Enum   => e.name.get.value
-        )
-
-      s match
-        case u: Def.Union =>
-          bld(thisName -> Def.typeOf(u))
-        case s: Def.Struct =>
-          bld(thisName -> Def.typeOf(s))
-        case s: Def.Enum =>
-          bld(thisName -> Def.typeOf(s))
-
-      anonymous.foreach { u =>
-        go(u, bld, prepend = thisName + ".")
-      }
-    end go
-
-    val bld = Map.newBuilder[String, CType]
-    go(st, bld.addOne(_))
-    bld.result
-  end traverse
 end AliasResolver

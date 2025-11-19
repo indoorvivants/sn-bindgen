@@ -13,10 +13,10 @@ class TestAnonymousNested:
     Zone {
 
       val struct =
-        AnonymousNestedStruct.Union0.Struct0(hat = 25, hat_mask = -50)
-      val union1 = AnonymousNestedStruct.Union0(!struct)
-      val union2 = AnonymousNestedStruct.Union0(button = 182)
-      val union3 = AnonymousNestedStruct.Union0(axis = 39.0f)
+        AnonymousNestedStruct.Value.Headgear(hat = 25, hat_mask = -50)
+      val union1 = AnonymousNestedStruct.Value(!struct)
+      val union2 = AnonymousNestedStruct.Value(button = 182)
+      val union3 = AnonymousNestedStruct.Value(axis = 39.0f)
 
       val largeStruct1 = !AnonymousNestedStruct(!union1, 25011)
 
@@ -38,10 +38,10 @@ class TestAnonymousNested:
   @Test def test_union() =
     Zone {
 
-      val struct = AnonymousNestedUnion.Union0.Struct0(hat = 25, hat_mask = -50)
-      val union1 = AnonymousNestedUnion.Union0(!struct)
-      val union2 = AnonymousNestedUnion.Union0(button = 182)
-      val union3 = AnonymousNestedUnion.Union0(axis = 39.0f)
+      val struct = AnonymousNestedUnion.Value.Headgear(hat = 25, hat_mask = -50)
+      val union1 = AnonymousNestedUnion.Value(!struct)
+      val union2 = AnonymousNestedUnion.Value(button = 182)
+      val union3 = AnonymousNestedUnion.Value(axis = 39.0f)
 
       val largeUnion1 = !AnonymousNestedUnion(value = !union1)
       val largeUnion2 = !AnonymousNestedUnion(value = !union2)

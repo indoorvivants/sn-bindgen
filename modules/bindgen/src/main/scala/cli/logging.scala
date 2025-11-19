@@ -32,7 +32,7 @@ class LogBuilder(level: LogLevel):
 
 end LogBuilder
 
-inline def consoleLogger[A](
+def consoleLogger[A](
     level: LogLevel,
     msg: A,
     context: Seq[(String, Any)] = Seq.empty,
@@ -45,6 +45,7 @@ inline def consoleLogger[A](
         LogLevel
           .color(level) + s"${LogLevel.name(level)} " + Console.RESET + msg.toString + "\n"
     )
+    val prefixRaw = s"[bindgen] ${LogLevel.name(level)} ".length
     if context.nonEmpty then
       val fMaxLength = context.map(_._1).maxBy(_.length).length
       context.foreach { case (field, value) =>
@@ -56,9 +57,9 @@ inline def consoleLogger[A](
           .map { case (valueLine, idx) =>
             if idx == 0 then
               stderr(
-                "    " + offset + Console.BOLD + field + Console.RESET + "  " + valueLine + "\n"
+                (" " * prefixRaw) + offset + Console.UNDERLINED + Console.BOLD + field + Console.RESET + "  " + valueLine + "\n"
               )
-            else stderr("    " + offset + filler + "  " + valueLine)
+            else stderr((" " * prefixRaw) + offset + filler + "  " + valueLine)
           }
           .toVector
       }

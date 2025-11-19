@@ -1,7 +1,8 @@
 package bindgen
 
+import bindgen.rendering.NameResolver
+
 import Def.*
-import CType.*
 
 case class Binding(
     aliases: Set[Def.Alias],
@@ -11,7 +12,12 @@ case class Binding(
     functions: Set[Def.Function],
     unnamedEnums: Set[Def.Enum]
 ):
-  lazy val all = (aliases ++ unions ++ structs ++ enums ++ functions).toSeq
+  lazy val all =
+    (aliases ++ unions.map(NameResolver.resolveUnion) ++
+      structs.map(NameResolver.resolveStruct) ++
+      enums.map(
+        NameResolver.resolveEnum
+      ) ++ functions).toSeq
 
   def filterAll(f: Def => Boolean) =
     copy(

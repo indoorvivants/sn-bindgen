@@ -256,7 +256,7 @@ object CLI:
         "render.no-constructor",
         help =
           "Comma-separated list of names (or wildcards) of structs, for which to NOT render the constructor\n" + "(apply method that takes all the parameters), useful when \n" + "you see a 'UTF8 string too large while running genBCode'\n" +
-            """examples: 
+            """examples:
             --render.no-constructor _GFileOutputStreamClass,_GFileIface
             --render.no-constructor 'nk_context,nk_style*'"""
       )
@@ -269,7 +269,7 @@ object CLI:
         help =
           "Comma-separated list of names (or wildcards) of structs, which will be rendered as CArray[...], rather than precise CStruct* - \n" +
             "this can be necessary to circumvent the UTF8 string too large issue\n" +
-            """examples: 
+            """examples:
             --render.opaque-struct_GFileOutputStreamClass,_GFileIface
             --render.opaque-struct 'nk_context,nk_style*'"""
       )

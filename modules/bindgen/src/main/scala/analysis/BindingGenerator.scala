@@ -44,7 +44,7 @@ object BindingGenerator:
               trace(
                 "Binding information after adding system alises:",
                 binding.named.toList.sortBy(_._1.n).map { case (k, v) =>
-                  k.toString -> v
+                  k.toString -> pprint.apply(v)
                 }
               )
               val closure = computeClosure(binding.named.filter { n =>

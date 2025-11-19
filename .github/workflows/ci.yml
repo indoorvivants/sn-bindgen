@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        OS: ["macos-13", "macos-14"]
+        OS: ["macos-15", "macos-15-intel"]
     runs-on: ${{ matrix.OS }}
     steps:
       - uses: actions/checkout@v4
@@ -109,10 +109,10 @@ jobs:
     name: Windows (Intel)
     strategy:
       fail-fast: false
-    runs-on: windows-2019
+    runs-on: windows-2022
     env:
       LLVM_BIN: 'C:\Program Files\LLVM\bin'
-      LLVM_VERSION: "17.0.6"
+      LLVM_VERSION: "19.1.0"
     steps:
       # This step is important to make sure scalafmt
       # checks don't fail
@@ -150,7 +150,7 @@ jobs:
         shell: pwsh
         run: |
           choco install llvm --version="$Env:LLVM_VERSION" --allow-downgrade
-          choco install sbt --version=1.9.7
+          choco install sbt --version=1.11.7
           clang --version
 
       - name: SBT remote cache

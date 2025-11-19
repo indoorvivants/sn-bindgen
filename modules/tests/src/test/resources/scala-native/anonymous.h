@@ -24,3 +24,11 @@ typedef union AnonymousNestedUnion {
     } value;
     int test;
 } AnonymousNestedUnion;
+
+// https://github.com/indoorvivants/sn-bindgen/issues/351#issuecomment-2854910220
+typedef struct AVStreamGroupTileGrid {
+    union {
+        int vertical;
+    } *offsets;
+
+} AVStreamGroupTileGrid;

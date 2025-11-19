@@ -81,7 +81,7 @@ val cSource =
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
-### Simple functions are converted to direct `@extern` functions
+## Simple functions are converted to direct `@extern` functions
 
 Where "Simple" means "not passing naked `structs`", because Scala Native cannot handle that (passing by pointer is okay)
 
@@ -201,3 +201,32 @@ val cSource =
 
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
+
+## Anonymous unions/structs are rendered in enclosing companion object
+
+In this example, we have several anonymous definitions as part of the struct.
+
+If the anonymous union/struct/enum is attached to a named field, that field's 
+name will be used as heuristic for naming the anonymous definition.
+
+Otherwise, `Union0`, `Struct1`, etc. naming scheme will be used.
+
+In the example below, `StructExample.Greeting`, `StructExample.Test`, `StructExample.Hello`,
+and `StructExample.Union0` will be generated
+
+Deep field access (e.g. calling `.x` on `StructExample` directly, like what C allows, is not supported yet,
+but planned.
+
+```scala mdoc:nest:passthrough
+val cSource = 
+"""
+|typedef struct {
+|  struct {int hello;} greeting;
+|  union {int x;};
+|  union {char z;} *test;
+|  enum {A, B, C} hello;
+|} StructExample;
+""".trim.stripMargin
+println(bindgen.BindgenRender.render(cSource, "libtest"))
+```
+

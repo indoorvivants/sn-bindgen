@@ -2,8 +2,6 @@ package bindgen
 
 import opaque_newtypes.*
 
-import Def.*
-
 case class Location(isFromMainFile: Boolean, isFromSystemHeader: Boolean):
   inline def shouldBeIncluded: Boolean = isFromMainFile || !isFromSystemHeader
 
@@ -37,6 +35,66 @@ case class Meta(
 object Meta:
   def empty: Meta = Meta(None, None)
 
+enum FieldName:
+  case Anon(idx: Int)
+  case Value(name: String)
+
+  def get = this match
+    case Anon(_)     => None
+    case Value(name) => Some(name)
+
+enum FieldSpec:
+  case Known(name: String, tpe: CType)
+  case Anon(nameHint: Option[String], unsafeId: Int, pointerDepth: Int = 0)
+  case AnonArray(nameHint: Option[String], size: Long, unsafeId: Int)
+
+case class DeepField(
+    name: String,
+    typ: CType,
+    fieldPath: String
+)
+
+case class ResolvedStruct(
+    fields: List[(StructParameterName, CType)],
+    name: StructName,
+    fqn: StructName,
+    anonymous: Vector[ResolvedUnion | ResolvedStruct | ResolvedEnum],
+    staticSize: Long,
+    deepFields: List[DeepField],
+    meta: Meta
+):
+  val typ =
+    CType.Struct(
+      fields.map(_._2),
+      hints = Hints(staticSize),
+      fieldNames = fields.map(_._1.value)
+    )
+end ResolvedStruct
+
+case class ResolvedUnion(
+    fields: List[(UnionParameterName, CType)],
+    name: UnionName,
+    fqn: UnionName,
+    anonymous: Vector[ResolvedUnion | ResolvedStruct | ResolvedEnum],
+    staticSize: Long,
+    meta: Meta
+):
+  val typ =
+    CType.Union(
+      fields.map(_._2),
+      hints = Hints(staticSize)
+    )
+end ResolvedUnion
+
+case class ResolvedEnum(
+    values: List[(String, Long)],
+    name: EnumName,
+    fqn: EnumName,
+    intType: Option[CType.NumericIntegral],
+    meta: Meta
+):
+  val typ = CType.Enum(intType.get)
+
 enum Def(meta: Meta):
   case Enum(
       values: List[(String, Long)],
@@ -46,16 +104,16 @@ enum Def(meta: Meta):
   ) extends Def(meta)
 
   case Struct(
-      fields: List[(StructParameterName, CType)],
-      name: StructName,
+      fields: List[FieldSpec],
+      name: Option[StructName],
       anonymous: List[Def.Union | Def.Struct | Def.Enum],
       staticSize: Long,
       meta: Meta
   ) extends Def(meta)
 
   case Union(
-      fields: List[(UnionParameterName, CType)],
-      name: UnionName,
+      fields: List[FieldSpec],
+      name: Option[UnionName],
       anonymous: List[Def.Union | Def.Struct | Def.Enum],
       staticSize: Long,
       meta: Meta
@@ -70,6 +128,7 @@ enum Def(meta: Meta):
       variadic: Boolean,
       meta: Meta
   ) extends Def(meta)
+
   case Alias(name: String, underlying: CType, meta: Meta) extends Def(meta)
 
   def metadata: Meta = meta
@@ -77,27 +136,12 @@ enum Def(meta: Meta):
   def defName: Option[DefName] =
     this match
       case Alias(name, _, _) => Some(DefName(name, DefTag.Alias))
-      case u: Union          => Some(DefName(u.name.value, DefTag.Union))
+      case u: Union          => u.name.map(n => DefName(n.value, DefTag.Union))
       case f: Function       => Some(DefName(f.name.value, DefTag.Function))
-      case s: Struct         => Some(DefName(s.name.value, DefTag.Struct))
+      case s: Struct         => s.name.map(n => DefName(n.value, DefTag.Struct))
       case e: Enum =>
         e.name.map(enumName => DefName(enumName.value, DefTag.Enum))
-end Def
 
-object Def:
-  def typeOf(d: Function): CType.Function =
-    CType.Function(
-      d.returnType,
-      d.parameters.map { case fp =>
-        CType.Parameter(Some(ParameterName(fp.name)), fp.typ)
-      }.toList
-    )
-  def typeOf(d: Union): CType.Union =
-    CType.Union(d.fields.map(_._2).toList, Hints(d.staticSize))
-  def typeOf(d: Struct): CType.Struct =
-    CType.Struct(d.fields.map(_._2).toList, Hints(d.staticSize))
-  def typeOf(d: Enum): CType.Enum =
-    CType.Enum(d.intType.get)
 end Def
 
 case class FunctionParameter(
@@ -113,8 +157,6 @@ enum Name:
   case Model(value: String, meta: Meta = Meta.empty)
   case BuiltIn(value: BuiltinType)
   case Unnamed
-
-import CType.*
 
 enum SignType:
   case Signed, Unsigned

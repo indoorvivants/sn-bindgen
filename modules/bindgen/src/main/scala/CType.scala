@@ -8,7 +8,7 @@ enum CType:
   case Arr(of: CType, size: Option[Long])
   case Pointer(of: CType)
   case Enum(underlying: NumericIntegral)
-  case Struct(fields: List[CType], hints: Hints)
+  case Struct(fields: List[CType], hints: Hints, fieldNames: List[String] = Nil)
   case Union(fields: List[CType], hints: Hints)
   case Function(returnType: CType, parameters: List[CType.Parameter])
   case IncompleteArray(of: CType)

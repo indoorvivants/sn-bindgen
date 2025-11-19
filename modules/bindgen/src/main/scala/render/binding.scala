@@ -1,7 +1,7 @@
 package bindgen
 package rendering
 
-import bindgen.*
+import bindgen.{ResolvedEnum, ResolvedStruct, *}
 import opaque_newtypes.given
 
 case class Constants(enums: Seq[Def.Enum])
@@ -48,14 +48,6 @@ def shouldRender(definition: Def)(using config: Config) =
     }
     .isEmpty
 
-def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
-  st match
-    case e: Def.Enum => true
-    case d: Def.Union =>
-      d.anonymous.exists(hasEnum)
-    case d: Def.Struct =>
-      d.anonymous.exists(hasEnum)
-
 def renderBinding(
     rawBinding: Binding,
     outputMode: OutputMode
@@ -65,9 +57,7 @@ def renderBinding(
 ): RenderedOutput =
   val binding = rawBinding.filterAll(shouldRender)
 
-  val hasAnyEnums = binding.enums.nonEmpty || binding.unions.exists(
-    hasEnum
-  ) || binding.structs.exists(hasEnum)
+  val hasAnyEnums = binding.enums.exists(_.name.nonEmpty)
   val hasAliases = binding.aliases.nonEmpty
   val hasUnions = binding.unions.nonEmpty
   val hasStructs = binding.structs.nonEmpty
@@ -86,11 +76,17 @@ def renderBinding(
 
   val exportMode = summon[Config].exportMode
 
+  val all = rawBinding.all
+
   given AliasResolver =
-    AliasResolver.create(rawBinding.all)
+    AliasResolver.create(all)
 
   val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
     deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))
+
+  val resolvedStructs = all.collect { case rs: ResolvedStruct => rs }
+  val resolvedUnions = all.collect { case rs: ResolvedUnion => rs }
+  val resolvedEnums = all.collect { case rs: ResolvedEnum => rs }
 
   def create(name: String)(subPackage: String = name) =
     val lb = LineBuilder()
@@ -136,9 +132,7 @@ def renderBinding(
         "enumerations",
         renderEnumerations(
           simpleStream("enumerations"),
-          binding.enums.toList
-            .sortBy(_.name)
-            .filter(_.name.isDefined),
+          resolvedEnums.sortBy(_.name.value).toList,
           mode = renderMode
         )
       )
@@ -160,7 +154,7 @@ def renderBinding(
       updateExports(
         "structs",
         renderStructs(
-          binding.structs.toList.sortBy(_.name),
+          resolvedStructs.toList.sortBy(_.name),
           simpleStream("structs"),
           mode = renderMode,
           typeImports
@@ -172,7 +166,7 @@ def renderBinding(
       updateExports(
         "unions",
         renderUnions(
-          binding.unions.toList.sortBy(_.name),
+          resolvedUnions.toList.sortBy(_.name),
           simpleStream("unions"),
           mode = renderMode,
           typeImports
@@ -300,28 +294,32 @@ private def renderExports(
 end renderExports
 
 private def renderUnions(
-    unions: List[Def.Union],
+    unions: List[ResolvedUnion],
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
 )(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
   maybeObjectBlock(out, mode)("object unions") {
-    if mode == RenderMode.Objects then typeImports.render(out)
+    if mode == RenderMode.Objects then
+      typeImports.render(out)
+      out.emptyLine
     exported ++= renderAll(unions, out, union)
   }
   exported.result()
 end renderUnions
 
 private def renderStructs(
-    structs: List[Def.Struct],
+    structs: List[ResolvedStruct],
     out: LineBuilder,
     mode: RenderMode,
     typeImports: TypeImports
 )(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
   maybeObjectBlock(out, mode)("object structs") {
-    if mode == RenderMode.Objects then typeImports.render(out)
+    if mode == RenderMode.Objects then
+      typeImports.render(out)
+      out.emptyLine
     exported ++= renderAll(structs, out, struct)
   }
   exported.result()
@@ -337,7 +335,10 @@ private def renderConstants(
       constants(Constants(enums), to(out))
     }
 
-private def renderAll[A <: (Def | GeneratedFunction)](
+private def renderAll[
+    A <: (ResolvedEnum | Def.Alias | ResolvedStruct | ResolvedUnion |
+      GeneratedFunction)
+](
     defs: Seq[A],
     out: LineBuilder,
     how: (A, Appender) => Exported | Unit
@@ -345,14 +346,19 @@ private def renderAll[A <: (Def | GeneratedFunction)](
   val exported = List.newBuilder[Exported]
   defs.zipWithIndex.foreach { case (en, idx) =>
     en match
-      case df: Def =>
-        df.defName.foreach { name =>
-          trace(s"Rendering $name")
-        }
+      case df: Def.Alias =>
+        trace(s"Rendering alias ${df.name}")
+      case df: ResolvedEnum =>
+        trace(s"Rendering enum ${df.name}")
+      case df: ResolvedStruct =>
+        trace(s"Rendering struct ${df.fqn}")
+      case df: ResolvedUnion =>
+        trace(s"Rendering union ${df.fqn}")
       case sf: GeneratedFunction.ScalaFunction =>
         trace(s"Rendering Scala function '${sf.name}'")
       case sf: GeneratedFunction.CFunction =>
         trace(s"Rendering C function '${sf.name}'")
+    end match
     try
       how(
         en,
@@ -419,7 +425,7 @@ end enumPredef
 
 private def renderEnumerations(
     out: LineBuilder,
-    enums: List[Def.Enum],
+    enums: List[ResolvedEnum],
     mode: RenderMode
 )(using
     Config,

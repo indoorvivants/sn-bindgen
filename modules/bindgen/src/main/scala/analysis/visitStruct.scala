@@ -8,189 +8,159 @@ import scala.scalanative.unsigned.*
 
 import fluent.*
 
-class StructCollector(val struct: DefBuilder.Struct, var numAnonymous: Int)
+case class Nestor(level: Int)
 
-def visitStruct(cursor: CXCursor, name: String)(using
+def nestTrace(msg: String)(using Nestor, Config) =
+  trace(" ➡ " * summon[Nestor].level + msg)
+
+def nestTrace(msg: String, context: Seq[(String, Any)])(using Nestor, Config) =
+  trace(" ➡ " * summon[Nestor].level + msg, context)
+
+def goDeep[A](using n: Nestor)(f: Nestor ?=> A) =
+  f(using n.copy(level = n.level + 1))
+
+enum LastAction:
+  case Anon, Field, NamedField
+
+class StructCollector(
+    val struct: DefBuilder.Struct,
+    var numAnonymous: Int,
+    var lastAction: Option[LastAction]
+)
+
+def visitStruct(cursor: CXCursor, name: Option[String])(using
     Config,
     Zone
-): Def.Struct =
-  val (ptr, memory) = Captured.unsafe[StructCollector](
+)(using n: Nestor = Nestor(0)): Def.Struct =
+  val (ptr, memory) = Captured.unsafe(
     StructCollector(
       struct = DefBuilder.Struct(
         fields = ListBuffer.empty,
-        name = StructName(name),
+        name = name.filter(_.nonEmpty).map(StructName(_)),
         anonymous = ListBuffer.empty,
         meta = extractMetadata(cursor),
         anonymousFieldStructMapping = ListBuffer.empty,
         staticSize = clang_Type_getSizeOf(clang_getCursorType(cursor))
       ),
-      numAnonymous = 0
-    )
+      numAnonymous = 0,
+      lastAction = None
+    ) -> n
   )
-
-  trace(s"visitStruct: ${cursor.spelling}")
 
   val visitor = CXCursorVisitorPtr {
     (cursorPtr: Ptr[CXCursor], parentPtr: Ptr[CXCursor], d: CXClientData) =>
-      val (collector, config) = !d.unwrap[Captured[StructCollector]]
+      val ((collector, nestor), config) =
+        !d.unwrap[Captured[(StructCollector, Nestor)]]
       given Config = config
+      given Nestor = nestor
       val cursor = !cursorPtr
 
       Zone {
 
+        val typ = clang_getCursorType(cursor)
+        val decl = clang_getTypeDeclaration(typ)
+        val isAnonymous = clang_Cursor_isAnonymous(decl) == 1.toUInt
+
         val builder = collector.struct
-        trace(s"Cursor kind: ${cursor.kind.spelling}")
-        trace(s"Cursor: ${cursor.spelling}")
-        if cursor.kind == CXCursorKind.CXCursor_FieldDecl then
-          val fieldName =
-            StructParameterName(clang_getCursorSpelling(cursor).string)
-          val typ = clang_getCursorType(cursor)
-          val decl = clang_getTypeDeclaration(typ)
-          val isAnonymous = clang_Cursor_isAnonymous(decl) == 1.toUInt
 
-          trace(s"Field name: $fieldName, ${builder.anonymous}")
-          trace(
-            s"typ spelling: ${typ.kindSpelling}, ${decl.spelling}, anonymous $isAnonymous"
-          )
-          if isAnonymous then
-            val last = builder.anonymous.last
-            val nestedName = last match
-              case un: Def.Union  => un.name.value
-              case st: Def.Struct => st.name.value
-              case en: Def.Enum   => en.name.get.value
+        nestTrace(
+          s"Entering visitStruct visitor",
+          Seq(
+            "kind" -> cursor.kind.spelling,
+            "is_anonymous" -> isAnonymous,
+            "last_action" -> collector.lastAction
+          ) ++
+            Option
+              .when(!isAnonymous)("spelling" -> cursor.spelling)
+              .toSeq
+        )
 
-            info(s"${builder.anonymousFieldStructMapping} -- $nestedName")
+        import FieldVisitors.*
+        (cursor.kind, isAnonymous, typ.kind) match
+          case (CXCursorKind.CXCursor_FieldDecl, true, _) =>
+            visitAnonymousField(cursor, collector)
+            CXChildVisitResult.CXChildVisit_Continue
 
-            val fieldSpec = fieldName -> CType.Reference(
-              Name.Model(builder.name.value + "." + nestedName)
-            )
+          case (
+                CXCursorKind.CXCursor_FieldDecl,
+                false,
+                CXTypeKind.CXType_ConstantArray
+              ) =>
+            visitAnonymousArrayField(cursor, collector)
+            CXChildVisitResult.CXChildVisit_Continue
 
-            builder.anonymousFieldStructMapping.find(
-              _._2.value == nestedName
-            ) match
-              case None =>
-                builder.fields.addOne(fieldSpec)
-              case Some(idx) =>
-                builder.fields.update(idx._1, fieldSpec)
-                builder.anonymousFieldStructMapping.filterInPlace(_ != idx)
-          else if typ.kind == CXTypeKind.CXType_ConstantArray
-          then
-            val speculateType = constructType(clang_getArrayElementType(typ))
-            trace(
-              s"when array: $speculateType, ${typ.spelling}"
-            )
-            speculateType match
-              case _: CType.Struct | _: CType.Union |
-                  CType.Reference(Name.Unnamed) =>
-                val last =
-                  builder.anonymous.last // .apply(collector.numAnonymous)
-                val nestedName = last match
-                  case un: Def.Union  => un.name.value
-                  case st: Def.Struct => st.name.value
-                val numElements = clang_getArraySize(typ)
+          case (CXCursorKind.CXCursor_FieldDecl, false, _) =>
+            val tpe = constructType(clang_getCursorType(cursor))
 
-                val fieldSpec =
-                  fieldName -> constArrayType(
-                    CType.Reference(
-                      Name.Model(builder.name.value + "." + nestedName)
-                    ),
-                    numElements
-                  )
+            def unnamedPointerDepth(t: CType): Option[Int] =
+              t match
+                case CType.Reference(Name.Unnamed) => Some(0)
+                case CType.Pointer(to) => unnamedPointerDepth(to).map(_ + 1)
+                case _                 => None
 
-                builder.anonymousFieldStructMapping.find(
-                  _._2.value == nestedName
-                ) match
-                  case None =>
-                    builder.fields.addOne(fieldSpec)
-                  case Some(idx) =>
-                    builder.fields.update(idx._1, fieldSpec)
-                    builder.anonymousFieldStructMapping.filterInPlace(_ != idx)
+            val fieldName =
+              clang_getCursorSpelling(cursor).string
 
-              case _ =>
-                builder.fields.addOne(
-                  fieldName -> constructType(clang_getCursorType(cursor))
+            if collector.lastAction == Some(LastAction.Anon) then
+              collector.struct.fields.addOne(
+                FieldSpec.Anon(
+                  nameHint =
+                    if fieldName.nonEmpty then Some(fieldName) else None,
+                  unsafeId = collector.struct.anonymous.size - 1,
+                  pointerDepth = unnamedPointerDepth(tpe).getOrElse(0)
                 )
-            end match
-          else
-            builder.fields.addOne(
-              fieldName -> constructType(clang_getCursorType(cursor))
+              )
+              collector.lastAction = Some(LastAction.Field)
+            else
+              builder.fields.addOne(
+                FieldSpec.Known(
+                  fieldName,
+                  constructType(
+                    clang_getCursorType(cursor)
+                  )
+                )
+              )
+
+              collector.lastAction = Some(LastAction.NamedField)
+            end if
+
+            CXChildVisitResult.CXChildVisit_Continue
+          case (
+                CXCursorKind.CXCursor_UnionDecl,
+                true,
+                _
+              ) =>
+            visitAnonymousUnion(cursor, collector)
+            CXChildVisitResult.CXChildVisit_Continue
+
+          case (
+                CXCursorKind.CXCursor_StructDecl,
+                true,
+                _
+              ) =>
+            visitAnonymousStruct(cursor, collector)
+            CXChildVisitResult.CXChildVisit_Continue
+
+          case (
+                CXCursorKind.CXCursor_EnumDecl,
+                _,
+                _
+              ) =>
+            visitAnonymousEnum(cursor, collector)
+            CXChildVisitResult.CXChildVisit_Continue
+
+          case (ck, anon, tk) =>
+            trace(
+              "Unexpected cursor state",
+              Seq(
+                "cursor_kind" -> cursor.kind.spelling,
+                "is_anonymous" -> anon,
+                "type_spelling" -> typ.spelling
+              )
             )
-          end if
+            CXChildVisitResult.CXChildVisit_Continue
 
-          CXChildVisitResult.CXChildVisit_Continue
-        else if cursor.kind == CXCursorKind.CXCursor_UnionDecl then
-          val nestedName = "Union" + builder.anonymous.size
-          val str = visitStruct(cursor, builder.name.value + "." + nestedName)
-
-          trace(
-            s"Size of $nestedName: ${clang_Type_getSizeOf(clang_getCursorType(cursor))}, $str"
-          )
-
-          val newValue = clang_Type_getSizeOf(clang_getCursorType(cursor))
-          builder.anonymous.addOne(
-            Def.Union(
-              fields = str.fields.map { case (n, field) =>
-                n.into(UnionParameterName) -> field
-              },
-              name = UnionName(nestedName),
-              anonymous = str.anonymous,
-              meta = extractMetadata(cursor),
-              staticSize = newValue
-            )
-          )
-          builder.anonymousFieldStructMapping.addOne(
-            builder.fields.size -> StructName(nestedName)
-          )
-          builder.fields.addOne(
-            StructParameterName("") -> CType.Union(
-              str.fields.map(_._2),
-              Hints(newValue)
-            )
-          )
-
-          CXChildVisitResult.CXChildVisit_Continue
-        else if cursor.kind == CXCursorKind.CXCursor_StructDecl then
-          val nestedName = "Struct" + builder.anonymous.size
-          val str = visitStruct(cursor, builder.name.value + "." + nestedName)
-          trace(
-            s"Size of $nestedName: ${clang_Type_getSizeOf(clang_getCursorType(cursor))}"
-          )
-          val newValue = clang_Type_getSizeOf(clang_getCursorType(cursor))
-
-          builder.anonymous.addOne(
-            removeFAM(
-              Def.Struct(
-                fields = str.fields,
-                name = StructName(nestedName),
-                anonymous = str.anonymous,
-                meta = extractMetadata(cursor),
-                staticSize = newValue
-              ),
-              Some(cursor.spelling)
-            )
-          )
-          builder.anonymousFieldStructMapping.addOne(
-            builder.fields.size -> StructName(nestedName)
-          )
-          builder.fields.addOne(
-            StructParameterName("") -> CType.Struct(
-              str.fields.map(_._2),
-              Hints(newValue)
-            )
-          )
-
-          CXChildVisitResult.CXChildVisit_Continue
-        else if cursor.kind == CXCursorKind.CXCursor_EnumDecl then
-          val nestedName = "Enum" + builder.anonymous.size
-          val str: Def.Enum =
-            visitEnum(cursor, isTypeDef = true)
-              .copy(name = Some(EnumName(nestedName)))
-          builder.anonymous.addOne(
-            str
-          )
-          CXChildVisitResult.CXChildVisit_Continue
-        else CXChildVisitResult.CXChildVisit_Continue
-        end if
+        end match
       }
   }
 
@@ -202,7 +172,16 @@ def visitStruct(cursor: CXCursor, name: String)(using
         CXClientData.wrap(ptr)
       )
 
-      removeFAM((!ptr)._1.struct.build)
+      val collected = (!ptr)._1._1
+
+      collected.lastAction match
+        case Some(LastAction.Anon) =>
+          collected.struct.fields.addOne(
+            FieldSpec.Anon(nameHint = None, collected.struct.anonymous.size - 1)
+          )
+        case _ =>
+
+      removeFAM(collected.struct.build)
     finally memory.deallocate()
     end try
   }
@@ -213,7 +192,7 @@ def removeFAM(model: Def.Struct, name: Option[String] = None)(using
 ): Def.Struct =
 
   val hasFlexibleArrayMember = model.fields.lastOption.collectFirst {
-    case (_, CType.IncompleteArray(_)) => true
+    case FieldSpec.Known(_, CType.IncompleteArray(_)) => true
   }.isDefined
 
   if hasFlexibleArrayMember then
@@ -226,3 +205,185 @@ def removeFAM(model: Def.Struct, name: Option[String] = None)(using
   else model
 
 end removeFAM
+
+object FieldVisitors:
+  def visitAnonymousEnum(
+      cursor: CXCursor,
+      collector: StructCollector
+  )(using Nestor, Config, Zone) =
+    nestTrace(
+      "Cursor is anonymous enum",
+      Seq("last_action" -> collector.lastAction)
+    )
+
+    if collector.lastAction == Some(LastAction.Anon) then
+      collector.struct.fields.addOne(
+        FieldSpec.Anon(
+          nameHint = None,
+          unsafeId = collector.struct.anonymous.size - 1
+        )
+      )
+
+    val str: Def.Enum =
+      goDeep(visitEnum(cursor, isTypeDef = true))
+
+    collector.struct.anonymous.addOne(
+      str
+    )
+    collector.lastAction = Some(LastAction.Anon)
+  end visitAnonymousEnum
+
+  def visitAnonymousStruct(
+      cursor: CXCursor,
+      collector: StructCollector
+  )(using Nestor, Config, Zone) =
+    nestTrace(
+      "Cursor is anonymous struct",
+      Seq(
+        "sizeof" -> clang_Type_getSizeOf(clang_getCursorType(cursor)),
+        "last_action" -> collector.lastAction
+      )
+    )
+
+    if collector.lastAction == Some(LastAction.Anon) then
+      collector.struct.fields.addOne(
+        FieldSpec.Anon(
+          nameHint = None,
+          unsafeId = collector.struct.anonymous.size - 1
+        )
+      )
+
+    val str = goDeep(visitStruct(cursor, None))
+    val newValue = clang_Type_getSizeOf(clang_getCursorType(cursor))
+
+    collector.struct.anonymous.addOne(
+      removeFAM(
+        Def.Struct(
+          fields = str.fields,
+          name = None,
+          anonymous = str.anonymous,
+          meta = extractMetadata(cursor),
+          staticSize = newValue
+        ),
+        Some(cursor.spelling)
+      )
+    )
+
+    collector.lastAction = Some(LastAction.Anon)
+  end visitAnonymousStruct
+
+  def visitAnonymousUnion(
+      cursor: CXCursor,
+      collector: StructCollector
+  )(using Nestor, Config, Zone) =
+    nestTrace(
+      "Cursor is anonymous union"
+    )
+
+    if collector.lastAction == Some(LastAction.Anon) then
+      collector.struct.fields.addOne(
+        FieldSpec.Anon(
+          nameHint = None,
+          unsafeId = collector.struct.anonymous.size - 1
+        )
+      )
+
+    val str = goDeep(visitStruct(cursor, None))
+
+    val newValue = clang_Type_getSizeOf(clang_getCursorType(cursor))
+    collector.struct.anonymous.addOne(
+      Def.Union(
+        fields = str.fields,
+        name = None,
+        anonymous = str.anonymous,
+        meta = extractMetadata(cursor),
+        staticSize = newValue
+      )
+    )
+
+    collector.lastAction = Some(LastAction.Anon)
+  end visitAnonymousUnion
+
+  def visitAnonymousField(
+      cursor: CXCursor,
+      collector: StructCollector
+  )(using Nestor, Config, Zone) =
+    val fieldName =
+      clang_getCursorSpelling(cursor).string
+    val typ = clang_getCursorType(cursor)
+    val decl = clang_getTypeDeclaration(typ)
+
+    nestTrace(
+      s"Cursor is anonymous field `$fieldName`",
+      Seq(
+        "type_spelling" -> typ.kindSpelling,
+        "declaration" -> decl.spelling
+      )
+    )
+
+    assert(
+      collector.lastAction == Some(LastAction.Anon),
+      s"This field is anonymous, expected last action to be collecting a union/struct/enum, got ${collector.lastAction}"
+    )
+    val last = collector.struct.anonymous.size
+    val fieldSpec = FieldSpec.Anon(
+      nameHint = Option(fieldName).filter(_.nonEmpty),
+      last - 1
+    )
+
+    collector.struct.fields.addOne(fieldSpec)
+    collector.lastAction = Some(LastAction.Field)
+  end visitAnonymousField
+
+  def visitAnonymousArrayField(
+      cursor: CXCursor,
+      collector: StructCollector
+  )(using Nestor, Config, Zone) =
+    val fieldName =
+      clang_getCursorSpelling(cursor).string
+    val typ = clang_getCursorType(cursor)
+    val speculateType = constructType(clang_getArrayElementType(typ))
+    nestTrace(
+      "Cursor is a constant array",
+      Seq(
+        "speculated_type" -> speculateType,
+        "type_spelling" -> typ.spelling
+      )
+    )
+
+    speculateType match
+      case _: CType.Struct | _: CType.Union | CType.Reference(Name.Unnamed) =>
+        val last =
+          collector.struct.anonymous.size
+        val numElements = clang_getArraySize(typ)
+
+        collector.struct.fields.addOne(
+          FieldSpec.AnonArray(
+            nameHint = Option(fieldName).filter(_.nonEmpty),
+            size = numElements,
+            unsafeId = last - 1
+          )
+        )
+
+      case _ =>
+        if collector.lastAction == Some(LastAction.Anon) then
+          collector.struct.fields.addOne(
+            FieldSpec.Anon(
+              nameHint = None,
+              unsafeId = collector.struct.anonymous.size - 1
+            )
+          )
+
+        collector.struct.fields.addOne(
+          FieldSpec.Known(
+            fieldName,
+            constructType(
+              clang_getCursorType(cursor)
+            )
+          )
+        )
+    end match
+
+    collector.lastAction = Some(LastAction.Field)
+  end visitAnonymousArrayField
+end FieldVisitors

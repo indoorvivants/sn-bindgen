@@ -1,22 +1,20 @@
 package bindgen
 package rendering
 
-def struct(struct: Def.Struct, line: Appender)(using
+def struct(struct: ResolvedStruct, line: Appender)(using
     c: Config,
     ar: AliasResolver
 ): Exported =
   val rewriteRules = hack_recursive_structs(struct)
   val structName = struct.name
-  val structType: CType.Struct =
-    CType.Struct(struct.fields.map(_._2).toList, Hints(struct.staticSize))
-  val rewrittenStructType: CType.Struct = structType.copy(
-    fields = struct.fields
-      .map(_._2)
-      .zipWithIndex
-      .map { case (typ, idx) =>
-        rewriteRules.get(idx).map(_.newRawType).getOrElse(typ)
-      }
-      .toList
+  val structType: CType.Struct = CType.Struct(
+    fields = struct.fields.map(_._2),
+    hints = Hints(struct.staticSize)
+  )
+  val rewrittenStructType: CType.Struct = CType.Struct(
+    fields = structType.fields.zipWithIndex.map: (tpe, idx) =>
+      rewriteRules.get(idx).map(_.newRawType).getOrElse(tpe),
+    hints = Hints(struct.staticSize)
   )
 
   val madeOpaque = c.rendering.matches(_.opaqueStruct)(structName.value)
@@ -71,24 +69,18 @@ def struct(struct: Def.Struct, line: Appender)(using
 
   renderComment(line, struct.meta)
   line(s"opaque type $structName = ${scalaType(finalStructType)}")
+  line("")
   objectBlock(line)(s"object ${sanitiseBeforeColon(structName.value)}") {
-    struct.anonymous.foreach {
-      case s: Def.Struct =>
-        rendering.struct(s, line)
-      case u: Def.Union =>
-        rendering.union(u, line)
-      case e: Def.Enum =>
-        rendering.enumeration(e, line)
-    }
     if struct.fields.nonEmpty then
-      val fieldTypes =
-        struct.fields.map(_._2).zipWithIndex.map { case (typ, idx) =>
-          rewriteRules.get(idx).map(_.newRawType).getOrElse(typ)
-        }
       val tag =
         s"given _tag: Tag[$structName] = ${scalaTag(finalStructType)}"
       line(tag)
 
+      line("")
+
+      line(
+        s"// Allocates ${structName} on the heap – fields are not initalised or zeroed out"
+      )
       line(
         s"def apply()(using Zone): Ptr[$structName] = scala.scalanative.unsafe.alloc[$structName](1)"
       )
@@ -100,12 +92,11 @@ def struct(struct: Def.Struct, line: Appender)(using
       val applyArgList = List.newBuilder[String]
 
       namedFieldsWithIndex.map { case ((name, typ), idx) =>
-        if name.value.nonEmpty then
-          val inputType =
-            rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
-          applyArgList.addOne(
-            s"${getter(name.value)} : ${scalaType(inputType)}"
-          )
+        val inputType =
+          rewriteRules.get(idx).map(_.newRichType).getOrElse(typ)
+        applyArgList.addOne(
+          s"${getter(name.value)} : ${scalaType(inputType)}"
+        )
       }
 
       val ignored = c.rendering.matches(_.noConstructor)(structName.value)
@@ -129,6 +120,8 @@ def struct(struct: Def.Struct, line: Appender)(using
             s"Not rendering the constructor for ${structName.value}, as requested by '$v' filter"
           )
       end match
+
+      line("")
 
       defBlock(line)(s"extension (struct: $structName)") {
         if !structIsOpaque then
@@ -207,7 +200,7 @@ def struct(struct: Def.Struct, line: Appender)(using
           end renderAlignment
 
           namedFieldsWithIndex.foreach { case ((_, fieldType), idx) =>
-            val tpe = scalaType(fieldType)
+            // val tpe = scalaType(fieldType)
             if idx == 0 then
               line(s"res(0) = align(0, ${renderAlignment(fieldType)})")
             else
@@ -222,6 +215,20 @@ def struct(struct: Def.Struct, line: Appender)(using
       end if
     else line(s"given _tag: Tag[$structName] = Tag.materializeCStruct0Tag")
     end if
+
+    line("")
+
+    struct.anonymous.zipWithIndex.foreach { (anon, idx) =>
+      anon match
+        case s: ResolvedStruct =>
+          rendering.struct(s, line)
+        case u: ResolvedUnion =>
+          rendering.union(u, line)
+        case e: ResolvedEnum =>
+          rendering.enumeration(e, line)
+
+      if idx != struct.anonymous.length - 1 then line("")
+    }
 
   }
 

@@ -3,7 +3,6 @@ package bindgen
 import opaque_newtypes.*
 
 import java.io.File
-import scala.util.chaining.*
 
 enum OutputMode:
   case StdOut

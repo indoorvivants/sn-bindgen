@@ -66,6 +66,10 @@ def escape(name: String) =
   else name
 end escape
 
+def escapeInCase(name: String) =
+  if name == "_" then "`$underscore`"
+  else "`" + name + "`"
+
 // I know, I know... the name is perfect.
 def sanitiseBeforeColon(name: String) =
   if name.endsWith("_") then s"$name " else name
