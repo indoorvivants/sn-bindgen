@@ -109,7 +109,7 @@ jobs:
     name: Windows (Intel)
     strategy:
       fail-fast: false
-    runs-on: windows-2019
+    runs-on: windows-2022
     env:
       LLVM_BIN: 'C:\Program Files\LLVM\bin'
       LLVM_VERSION: "17.0.6"
