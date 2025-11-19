@@ -23,7 +23,7 @@ import java.nio.file.Paths
 
 lazy val Versions = new {
   val decline = "2.5.0"
-  val scribe = "3.15.3"
+  val scribe = "3.17.0"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
