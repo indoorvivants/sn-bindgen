@@ -1,4 +1,4 @@
-<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/tomorrow-night-blue.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">sn-bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/reporting-issues/index.html">Reporting issues</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
+<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/tomorrow-night-blue.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">sn-bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/reporting-issues/index.html">Reporting issues</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#anonymous-unionsstructs-are-rendered-in-enclosing-companion-object">Anonymous unions/structs are rendered in enclosing companion object</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
 <p>For those types, we generate getters, setters, <code>Tag</code> definition, and two <code>apply</code> methods:</p>
 <ol>
 <li>A constructor, which takes all the parameters as arguments</li>
@@ -29,12 +29,13 @@ import _root_.scala.scalanative.*
 
 object structs:
   import _root_.libtest.structs.*
-  /**
-   * [bindgen] header: /tmp/5329184691365410186header.h
-  */
+
   opaque type Big = CStruct3[CInt, CString, Small]
+  
   object Big:
     given _tag: Tag[Big] = Tag.materializeCStruct3Tag[CInt, CString, Small]
+    
+    // Allocates Big on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Big] = scala.scalanative.unsafe.alloc[Big](1)
     def apply(x : CInt, hello : CString, sm : Small)(using Zone): Ptr[Big] =
       val ____ptr = apply()
@@ -42,6 +43,7 @@ object structs:
       (!____ptr).hello = hello
       (!____ptr).sm = sm
       ____ptr
+    
     extension (struct: Big)
       def x : CInt = struct._1
       def x_=(value: CInt): Unit = !struct.at1 = value
@@ -49,21 +51,24 @@ object structs:
       def hello_=(value: CString): Unit = !struct.at2 = value
       def sm : Small = struct._3
       def sm_=(value: Small): Unit = !struct.at3 = value
+    
 
-  /**
-   * [bindgen] header: /tmp/5329184691365410186header.h
-  */
   opaque type Small = CStruct1[CLongLong]
+  
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
+    
+    // Allocates Small on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
     def apply(number : CLongLong)(using Zone): Ptr[Small] =
       val ____ptr = apply()
       (!____ptr).number = number
       ____ptr
+    
     extension (struct: Small)
       def number : CLongLong = struct._1
       def number_=(value: CLongLong): Unit = !struct.at1 = value
+    
 
 object types:
     export _root_.libtest.structs.*
@@ -110,36 +115,41 @@ import _root_.scala.scalanative.*
 
 object structs:
   import _root_.libtest.structs.*
-  /**
-   * [bindgen] header: /tmp/3204398986505980580header.h
-  */
+
   opaque type Disabled = CStruct2[CInt, CString]
+  
   object Disabled:
     given _tag: Tag[Disabled] = Tag.materializeCStruct2Tag[CInt, CString]
+    
+    // Allocates Disabled on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Disabled] = scala.scalanative.unsafe.alloc[Disabled](1)
+    
     extension (struct: Disabled)
       def x : CInt = struct._1
       def x_=(value: CInt): Unit = !struct.at1 = value
       def hello : CString = struct._2
       def hello_=(value: CString): Unit = !struct.at2 = value
+    
 
-  /**
-   * [bindgen] header: /tmp/3204398986505980580header.h
-  */
   opaque type Enabled = CStruct2[CInt, CString]
+  
   object Enabled:
     given _tag: Tag[Enabled] = Tag.materializeCStruct2Tag[CInt, CString]
+    
+    // Allocates Enabled on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Enabled] = scala.scalanative.unsafe.alloc[Enabled](1)
     def apply(x : CInt, hello : CString)(using Zone): Ptr[Enabled] =
       val ____ptr = apply()
       (!____ptr).x = x
       (!____ptr).hello = hello
       ____ptr
+    
     extension (struct: Enabled)
       def x : CInt = struct._1
       def x_=(value: CInt): Unit = !struct.at1 = value
       def hello : CString = struct._2
       def hello_=(value: CString): Unit = !struct.at2 = value
+    
 
 object types:
     export _root_.libtest.structs.*
@@ -181,51 +191,57 @@ import _root_.scala.scalanative.*
 object structs:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
-  /**
-   * [bindgen] header: /tmp/1411539632294768186header.h
-  */
+
   opaque type Small = CStruct1[CLongLong]
+  
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
+    
+    // Allocates Small on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
     def apply(number : CLongLong)(using Zone): Ptr[Small] =
       val ____ptr = apply()
       (!____ptr).number = number
       ____ptr
+    
     extension (struct: Small)
       def number : CLongLong = struct._1
       def number_=(value: CLongLong): Unit = !struct.at1 = value
+    
 
 object unions:
   import _root_.libtest.structs.*
   import _root_.libtest.unions.*
-  /**
-   * [bindgen] header: /tmp/1411539632294768186header.h
-  */
+
   opaque type Big = CArray[Byte, Nat._8]
   object Big:
     given _tag: Tag[Big] = Tag.CArray[CChar, Nat._8](Tag.Byte, Tag.Nat8)
+    
     def apply()(using Zone): Ptr[Big] =
       val ___ptr = _root_.scala.scalanative.unsafe.alloc[Big](1)
       ___ptr
+    
     @scala.annotation.targetName(&quot;apply_x&quot;)
     def apply(x: CInt)(using Zone): Ptr[Big] =
       val ___ptr = _root_.scala.scalanative.unsafe.alloc[Big](1)
       val un = !___ptr
       un.at(0).asInstanceOf[Ptr[CInt]].update(0, x)
       ___ptr
+    
     @scala.annotation.targetName(&quot;apply_hello&quot;)
     def apply(hello: CString)(using Zone): Ptr[Big] =
       val ___ptr = _root_.scala.scalanative.unsafe.alloc[Big](1)
       val un = !___ptr
       un.at(0).asInstanceOf[Ptr[CString]].update(0, hello)
       ___ptr
+    
     @scala.annotation.targetName(&quot;apply_sm&quot;)
     def apply(sm: Small)(using Zone): Ptr[Big] =
       val ___ptr = _root_.scala.scalanative.unsafe.alloc[Big](1)
       val un = !___ptr
       un.at(0).asInstanceOf[Ptr[Small]].update(0, sm)
       ___ptr
+    
     extension (struct: Big)
       def x : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
       def x_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
@@ -246,7 +262,7 @@ object all:
 </code></pre>
 </div>
 </div>
-<h3><a href="#simple-functions-are-converted-to-direct-extern-functions" id="simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct <code>@extern</code> functions</a></h3>
+<h2><a href="#simple-functions-are-converted-to-direct-extern-functions" id="simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct <code>@extern</code> functions</a></h2>
 <p>Where &quot;Simple&quot; means &quot;not passing naked <code>structs</code>&quot;, because Scala Native cannot handle that (passing by pointer is okay)</p>
 <div class = "flex-col w-full gap-4">
 <div class = "w-12/12">
@@ -270,33 +286,30 @@ import _root_.scala.scalanative.*
 
 object structs:
   import _root_.libtest.structs.*
-  /**
-   * [bindgen] header: /tmp/17395625893597201512header.h
-  */
+
   opaque type Small = CStruct1[CLongLong]
+  
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
+    
+    // Allocates Small on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
     def apply(number : CLongLong)(using Zone): Ptr[Small] =
       val ____ptr = apply()
       (!____ptr).number = number
       ____ptr
+    
     extension (struct: Small)
       def number : CLongLong = struct._1
       def number_=(value: CLongLong): Unit = !struct.at1 = value
+    
 
 
 @extern
 private[libtest] object extern_functions:
   import _root_.libtest.structs.*
-  /**
-   * [bindgen] header: /tmp/17395625893597201512header.h
-  */
   def simple(x : CInt, y : CString): CLongInt = extern
 
-  /**
-   * [bindgen] header: /tmp/17395625893597201512header.h
-  */
   def with_pointers(x : Ptr[Small], y : CInt): Ptr[Small] = extern
 
 
@@ -343,20 +356,23 @@ import _root_.scala.scalanative.*
 
 object structs:
   import _root_.libtest.structs.*
-  /**
-   * [bindgen] header: /tmp/17633262761939173844header.h
-  */
+
   opaque type Small = CStruct1[CLongLong]
+  
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
+    
+    // Allocates Small on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
     def apply(number : CLongLong)(using Zone): Ptr[Small] =
       val ____ptr = apply()
       (!____ptr).number = number
       ____ptr
+    
     extension (struct: Small)
       def number : CLongLong = struct._1
       def number_=(value: CLongLong): Unit = !struct.at1 = value
+    
 
 
 @extern
@@ -372,30 +388,18 @@ object functions:
   import extern_functions.*
   export extern_functions.*
 
-  /**
-   * [bindgen] header: /tmp/17633262761939173844header.h
-  */
   def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
     __sn_wrap_libtest_bad_arguments(n, n2)
 
-  /**
-   * [bindgen] header: /tmp/17633262761939173844header.h
-  */
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](2)
     !(__ptr_0 + 0) = n
     !(__ptr_0 + 1) = n2
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
-  /**
-   * [bindgen] header: /tmp/17633262761939173844header.h
-  */
   def bad_return_type()(__return : Ptr[Small]): Unit =
     __sn_wrap_libtest_bad_return_type(__return)
 
-  /**
-   * [bindgen] header: /tmp/17633262761939173844header.h
-  */
   def bad_return_type()(using Zone): Small =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](1)
     __sn_wrap_libtest_bad_return_type((__ptr_0 + 0))
@@ -475,9 +479,6 @@ object predef:
 
 object enumerations:
   import predef.*
-  /**
-   * [bindgen] header: /tmp/3997442774629643373header.h
-  */
   opaque type MySigned = CInt
   object MySigned extends _BindgenEnumCInt[MySigned]:
     given _tag: Tag[MySigned] = Tag.Int
@@ -485,20 +486,17 @@ object enumerations:
     val X = define(-1)
     val Y = define(4)
     val Z = define(228)
-    inline def getName(inline value: MySigned): Option[String] =
-      inline value match
-        case X =&gt; Some(&quot;X&quot;)
-        case Y =&gt; Some(&quot;Y&quot;)
-        case Z =&gt; Some(&quot;Z&quot;)
+    def getName(value: MySigned): Option[String] =
+      value match
+        case `X` =&gt; Some(&quot;X&quot;)
+        case `Y` =&gt; Some(&quot;Y&quot;)
+        case `Z` =&gt; Some(&quot;Z&quot;)
         case _ =&gt; _root_.scala.None
     extension (a: MySigned)
       inline def &amp;(b: MySigned): MySigned = a &amp; b
       inline def |(b: MySigned): MySigned = a | b
       inline def is(b: MySigned): Boolean = (a &amp; b) == b
 
-  /**
-   * [bindgen] header: /tmp/3997442774629643373header.h
-  */
   opaque type MyUnsigned = CUnsignedInt
   object MyUnsigned extends _BindgenEnumCUnsignedInt[MyUnsigned]:
     given _tag: Tag[MyUnsigned] = Tag.UInt
@@ -506,11 +504,11 @@ object enumerations:
     val U_X = define(1)
     val U_Y = define(4)
     val U_Z = define(228)
-    inline def getName(inline value: MyUnsigned): Option[String] =
-      inline value match
-        case U_X =&gt; Some(&quot;U_X&quot;)
-        case U_Y =&gt; Some(&quot;U_Y&quot;)
-        case U_Z =&gt; Some(&quot;U_Z&quot;)
+    def getName(value: MyUnsigned): Option[String] =
+      value match
+        case `U_X` =&gt; Some(&quot;U_X&quot;)
+        case `U_Y` =&gt; Some(&quot;U_Y&quot;)
+        case `U_Z` =&gt; Some(&quot;U_Z&quot;)
         case _ =&gt; _root_.scala.None
     extension (a: MyUnsigned)
       inline def &amp;(b: MyUnsigned): MyUnsigned = a &amp; b
@@ -549,9 +547,6 @@ import _root_.scala.scalanative.*
 
 object aliases:
   import _root_.libtest.aliases.*
-  /**
-   * [bindgen] header: /tmp/11596951585862729315header.h
-  */
   opaque type Cursor = Ptr[Byte]
   object Cursor:
     given _tag: Tag[Cursor] = Tag.Ptr(Tag.Byte)
@@ -559,9 +554,6 @@ object aliases:
     extension (v: Cursor)
       inline def value: Ptr[Byte] = v
 
-  /**
-   * [bindgen] header: /tmp/11596951585862729315header.h
-  */
   opaque type Visitor = CFuncPtr1[Ptr[Cursor], CInt]
   object Visitor:
     given _tag: Tag[Visitor] = Tag.materializeCFuncPtr1[Ptr[Cursor], CInt]
@@ -607,20 +599,23 @@ import _root_.scala.scalanative.*
 
 object structs:
   import _root_.libtest.structs.*
-  /**
-   * [bindgen] header: /tmp/3741485443112852180header.h
-  */
+
   opaque type Arr = CStruct1[Ptr[Byte]]
+  
   object Arr:
     given _tag: Tag[Arr] = Tag.materializeCStruct1Tag[Ptr[Byte]]
+    
+    // Allocates Arr on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Arr] = scala.scalanative.unsafe.alloc[Arr](1)
     def apply(nested : Ptr[Arr])(using Zone): Ptr[Arr] =
       val ____ptr = apply()
       (!____ptr).nested = nested
       ____ptr
+    
     extension (struct: Arr)
       def nested : Ptr[Arr] = struct._1.asInstanceOf[Ptr[Arr]]
       def nested_=(value: Ptr[Arr]): Unit = !struct.at1 = value.asInstanceOf[Ptr[Byte]]
+    
 
 object types:
     export _root_.libtest.structs.*
@@ -665,6 +660,151 @@ object constants:
   val DOESTHIS: CInt = -2
   val WORK: CInt = 0
   
+
+
+</code></pre>
+</div>
+</div>
+<h2><a href="#anonymous-unionsstructs-are-rendered-in-enclosing-companion-object" id="anonymous-unionsstructs-are-rendered-in-enclosing-companion-object">Anonymous unions/structs are rendered in enclosing companion object</a></h2>
+<p>In this example, we have several anonymous definitions as part of the struct.</p>
+<p>If the anonymous union/struct/enum is attached to a named field, that field's
+name will be used as heuristic for naming the anonymous definition.</p>
+<p>Otherwise, <code>Union0</code>, <code>Struct1</code>, etc. naming scheme will be used.</p>
+<p>In the example below, <code>StructExample.Greeting</code>, <code>StructExample.Test</code>, <code>StructExample.Hello</code>,
+and <code>StructExample.Union0</code> will be generated</p>
+<p>Deep field access (e.g. calling <code>.x</code> on <code>StructExample</code> directly, like what C allows, is not supported yet,
+but planned.</p>
+<div class = "flex-col w-full gap-4">
+<div class = "w-12/12">
+<p><strong>Source <code>C</code> code</strong></p>
+<pre><code class="language-c">typedef struct {
+  struct {int hello;} greeting;
+  union {int x;};
+  union {char z;} *test;
+  enum {A, B, C} hello;
+} StructExample;
+</code></pre>
+</div>
+<div class = "w-12/12">
+<p><strong>Generated <code>Scala</code> code</strong></p>
+<pre><code class="language-scala">package libtest
+
+import _root_.scala.scalanative.unsafe.*
+import _root_.scala.scalanative.unsigned.*
+import _root_.scala.scalanative.libc.*
+import _root_.scala.scalanative.*
+
+object structs:
+  import _root_.libtest.structs.*
+
+  opaque type StructExample = CStruct4[StructExample.Greeting, StructExample.Union0, Ptr[StructExample.Test], StructExample.Hello]
+  
+  object StructExample:
+    given _tag: Tag[StructExample] = Tag.materializeCStruct4Tag[StructExample.Greeting, StructExample.Union0, Ptr[StructExample.Test], StructExample.Hello]
+    
+    // Allocates StructExample on the heap ??? fields are not initalised or zeroed out
+    def apply()(using Zone): Ptr[StructExample] = scala.scalanative.unsafe.alloc[StructExample](1)
+    def apply(greeting : StructExample.Greeting, _2 : StructExample.Union0, test : Ptr[StructExample.Test], hello : StructExample.Hello)(using Zone): Ptr[StructExample] =
+      val ____ptr = apply()
+      (!____ptr).greeting = greeting
+      (!____ptr)._2 = _2
+      (!____ptr).test = test
+      (!____ptr).hello = hello
+      ____ptr
+    
+    extension (struct: StructExample)
+      def greeting : StructExample.Greeting = struct._1
+      def greeting_=(value: StructExample.Greeting): Unit = !struct.at1 = value
+      def _2 : StructExample.Union0 = struct._2
+      def _2_=(value: StructExample.Union0): Unit = !struct.at2 = value
+      def test : Ptr[StructExample.Test] = struct._3
+      def test_=(value: Ptr[StructExample.Test]): Unit = !struct.at3 = value
+      def hello : StructExample.Hello = struct._4
+      def hello_=(value: StructExample.Hello): Unit = !struct.at4 = value
+    
+    opaque type Greeting = CStruct1[CInt]
+    
+    object Greeting:
+      given _tag: Tag[Greeting] = Tag.materializeCStruct1Tag[CInt]
+      
+      // Allocates Greeting on the heap ??? fields are not initalised or zeroed out
+      def apply()(using Zone): Ptr[Greeting] = scala.scalanative.unsafe.alloc[Greeting](1)
+      def apply(hello : CInt)(using Zone): Ptr[Greeting] =
+        val ____ptr = apply()
+        (!____ptr).hello = hello
+        ____ptr
+      
+      extension (struct: Greeting)
+        def hello : CInt = struct._1
+        def hello_=(value: CInt): Unit = !struct.at1 = value
+      
+    
+    opaque type Union0 = CArray[Byte, Nat._4]
+    object Union0:
+      given _tag: Tag[Union0] = Tag.CArray[CChar, Nat._4](Tag.Byte, Tag.Nat4)
+      
+      def apply()(using Zone): Ptr[Union0] =
+        val ___ptr = _root_.scala.scalanative.unsafe.alloc[Union0](1)
+        ___ptr
+      
+      @scala.annotation.targetName(&quot;apply_x&quot;)
+      def apply(x: CInt)(using Zone): Ptr[Union0] =
+        val ___ptr = _root_.scala.scalanative.unsafe.alloc[Union0](1)
+        val un = !___ptr
+        un.at(0).asInstanceOf[Ptr[CInt]].update(0, x)
+        ___ptr
+      
+      extension (struct: Union0)
+        def x : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+        def x_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
+    
+    opaque type Test = CArray[Byte, Nat._1]
+    object Test:
+      given _tag: Tag[Test] = Tag.CArray[CChar, Nat._1](Tag.Byte, Tag.Nat1)
+      
+      def apply()(using Zone): Ptr[Test] =
+        val ___ptr = _root_.scala.scalanative.unsafe.alloc[Test](1)
+        ___ptr
+      
+      @scala.annotation.targetName(&quot;apply_z&quot;)
+      def apply(z: CChar)(using Zone): Ptr[Test] =
+        val ___ptr = _root_.scala.scalanative.unsafe.alloc[Test](1)
+        val un = !___ptr
+        un.at(0).asInstanceOf[Ptr[CChar]].update(0, z)
+        ___ptr
+      
+      extension (struct: Test)
+        def z : CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
+        def z_=(value: CChar): Unit = !struct.at(0).asInstanceOf[Ptr[CChar]] = value
+    
+    opaque type Hello = CUnsignedInt
+    object Hello extends _BindgenEnumCUnsignedInt[Hello]:
+      given _tag: Tag[Hello] = Tag.UInt
+      inline def define(inline a: Long): Hello = a.toUInt
+      val A = define(0)
+      val B = define(1)
+      val C = define(2)
+      def getName(value: Hello): Option[String] =
+        value match
+          case `A` =&gt; Some(&quot;A&quot;)
+          case `B` =&gt; Some(&quot;B&quot;)
+          case `C` =&gt; Some(&quot;C&quot;)
+          case _ =&gt; _root_.scala.None
+      extension (a: Hello)
+        inline def &amp;(b: Hello): Hello = a &amp; b
+        inline def |(b: Hello): Hello = a | b
+        inline def is(b: Hello): Boolean = (a &amp; b) == b
+
+object constants:
+  val A: CUnsignedInt = 0.toUInt
+  val B: CUnsignedInt = 1.toUInt
+  val C: CUnsignedInt = 2.toUInt
+  
+object types:
+    export _root_.libtest.structs.*
+
+object all:
+  export _root_.libtest.structs.StructExample
 
 
 </code></pre>
