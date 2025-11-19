@@ -39,12 +39,14 @@ def union(model: ResolvedUnion, line: Appender)(using Config)(using
     line(tag)
 
     if model.fields.nonEmpty then
+      line("")
       defBlock(line)(s"def apply()(using Zone): Ptr[$unionName] =") {
         line(
           s"val ___ptr = _root_.scala.scalanative.unsafe.alloc[$unionName](1)"
         )
         line("___ptr")
       }
+      line("")
       model.fields.foreach { case (fieldName, fieldType) =>
         val typ = scalaType(fieldType)
         val getterName = getter(fieldName.value)
@@ -63,6 +65,8 @@ def union(model: ResolvedUnion, line: Appender)(using Config)(using
           )
           line("___ptr")
         }
+
+        line("")
       }
       defBlock(line)(s"extension (struct: $unionName)") {
         model.fields.foreach { case (fieldName, fieldType) =>

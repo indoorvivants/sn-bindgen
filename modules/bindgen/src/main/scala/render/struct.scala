@@ -69,20 +69,18 @@ def struct(struct: ResolvedStruct, line: Appender)(using
 
   renderComment(line, struct.meta)
   line(s"opaque type $structName = ${scalaType(finalStructType)}")
+  line("")
   objectBlock(line)(s"object ${sanitiseBeforeColon(structName.value)}") {
-    struct.anonymous.foreach {
-      case s: ResolvedStruct =>
-        rendering.struct(s, line)
-      case u: ResolvedUnion =>
-        rendering.union(u, line)
-      case e: ResolvedEnum =>
-        rendering.enumeration(e, line)
-    }
     if struct.fields.nonEmpty then
       val tag =
         s"given _tag: Tag[$structName] = ${scalaTag(finalStructType)}"
       line(tag)
 
+      line("")
+
+      line(
+        s"// Allocates ${structName} on the heap – fields are not initalised or zeroed out"
+      )
       line(
         s"def apply()(using Zone): Ptr[$structName] = scala.scalanative.unsafe.alloc[$structName](1)"
       )
@@ -122,6 +120,8 @@ def struct(struct: ResolvedStruct, line: Appender)(using
             s"Not rendering the constructor for ${structName.value}, as requested by '$v' filter"
           )
       end match
+
+      line("")
 
       defBlock(line)(s"extension (struct: $structName)") {
         if !structIsOpaque then
@@ -215,6 +215,20 @@ def struct(struct: ResolvedStruct, line: Appender)(using
       end if
     else line(s"given _tag: Tag[$structName] = Tag.materializeCStruct0Tag")
     end if
+
+    line("")
+
+    struct.anonymous.zipWithIndex.foreach { (anon, idx) =>
+      anon match
+        case s: ResolvedStruct =>
+          rendering.struct(s, line)
+        case u: ResolvedUnion =>
+          rendering.union(u, line)
+        case e: ResolvedEnum =>
+          rendering.enumeration(e, line)
+
+      if idx != struct.anonymous.length - 1 then line("")
+    }
 
   }
 

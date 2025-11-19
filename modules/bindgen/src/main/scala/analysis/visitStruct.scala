@@ -150,7 +150,7 @@ def visitStruct(cursor: CXCursor, name: Option[String])(using
             CXChildVisitResult.CXChildVisit_Continue
 
           case (ck, anon, tk) =>
-            warning(
+            trace(
               "Unexpected cursor state",
               Seq(
                 "cursor_kind" -> cursor.kind.spelling,

@@ -301,7 +301,9 @@ private def renderUnions(
 )(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
   maybeObjectBlock(out, mode)("object unions") {
-    if mode == RenderMode.Objects then typeImports.render(out)
+    if mode == RenderMode.Objects then
+      typeImports.render(out)
+      out.emptyLine
     exported ++= renderAll(unions, out, union)
   }
   exported.result()
@@ -315,7 +317,9 @@ private def renderStructs(
 )(using Config, AliasResolver, Context) =
   val exported = List.newBuilder[Exported]
   maybeObjectBlock(out, mode)("object structs") {
-    if mode == RenderMode.Objects then typeImports.render(out)
+    if mode == RenderMode.Objects then
+      typeImports.render(out)
+      out.emptyLine
     exported ++= renderAll(structs, out, struct)
   }
   exported.result()

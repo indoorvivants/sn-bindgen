@@ -89,7 +89,8 @@ object BindgenRender:
         packageName,
         "--header",
         p.toString,
-        "--scala"
+        "--scala",
+        "--render.no-location"
       ) ++ extra
     val cmdC =
       Seq(
@@ -98,7 +99,8 @@ object BindgenRender:
         packageName,
         "--header",
         p.toString,
-        "--c"
+        "--c",
+        "--render.no-location"
       ) ++ extra
 
     val generatedScala = StringBuilder()
