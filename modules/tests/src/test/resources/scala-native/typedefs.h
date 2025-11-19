@@ -5,7 +5,7 @@ typedef enum DUCKDB_TYPEs {
 } duckdb_type;
 
 typedef struct DUCKDB_COLUMNs{
-  duckdb_type type;
+  // duckdb_type type;
   char *name;
   void *internal_data;
 } duckdb_column;

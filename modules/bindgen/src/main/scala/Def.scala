@@ -48,7 +48,7 @@ enum FieldName:
 
 enum FieldSpec:
   case Known(name: String, tpe: CType)
-  case Anon(nameHint: Option[String], unsafeId: Int)
+  case Anon(nameHint: Option[String], unsafeId: Int, pointerDepth: Int = 0)
   case AnonArray(nameHint: Option[String], size: Long, unsafeId: Int)
 
 case class DeepField(

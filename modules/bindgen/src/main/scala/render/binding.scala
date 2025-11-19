@@ -53,13 +53,13 @@ def shouldRender(definition: Def)(using config: Config) =
     }
     .isEmpty
 
-def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
-  st match
-    case e: Def.Enum => true
-    case d: Def.Union =>
-      d.anonymous.exists(hasEnum)
-    case d: Def.Struct =>
-      d.anonymous.exists(hasEnum)
+// def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
+//   st match
+//     case e: Def.Enum => true
+//     case d: Def.Union =>
+//       d.anonymous.exists(hasEnum)
+//     case d: Def.Struct =>
+//       d.anonymous.exists(hasEnum)
 
 def renderBinding(
     rawBinding: Binding,
@@ -70,9 +70,7 @@ def renderBinding(
 ): RenderedOutput =
   val binding = rawBinding.filterAll(shouldRender)
 
-  val hasAnyEnums = binding.enums.nonEmpty || binding.unions.exists(
-    hasEnum
-  ) || binding.structs.exists(hasEnum)
+  val hasAnyEnums = binding.enums.exists(_.name.nonEmpty)
   val hasAliases = binding.aliases.nonEmpty
   val hasUnions = binding.unions.nonEmpty
   val hasStructs = binding.structs.nonEmpty

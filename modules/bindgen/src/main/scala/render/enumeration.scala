@@ -41,7 +41,7 @@ def enumeration(model: ResolvedEnum, line: Appender)(using
     ) {
       defBlock(line)("value match") {
         model.values.foreach { case (constName, value) =>
-          line(s"""case ${escape(constName)} => Some("${escape(constName)}")""")
+          line(s"""case ${escapeInCase(constName)} => Some("${constName}")""")
         }
         line("case _ => _root_.scala.None")
       }

@@ -200,7 +200,7 @@ def struct(struct: ResolvedStruct, line: Appender)(using
           end renderAlignment
 
           namedFieldsWithIndex.foreach { case ((_, fieldType), idx) =>
-            val tpe = scalaType(fieldType)
+            // val tpe = scalaType(fieldType)
             if idx == 0 then
               line(s"res(0) = align(0, ${renderAlignment(fieldType)})")
             else

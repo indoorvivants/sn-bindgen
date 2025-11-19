@@ -7,6 +7,7 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import fluent.*
+import java.lang.ref.Reference
 
 case class Nestor(level: Int)
 
@@ -65,7 +66,11 @@ def visitStruct(cursor: CXCursor, name: Option[String])(using
 
         nestTrace(
           s"Entering visitStruct visitor",
-          Seq("kind" -> cursor.kind.spelling, "is_anonymous" -> isAnonymous) ++
+          Seq(
+            "kind" -> cursor.kind.spelling,
+            "is_anonymous" -> isAnonymous,
+            "last_action" -> collector.lastAction
+          ) ++
             Option
               .when(!isAnonymous)("spelling" -> cursor.spelling)
               .toSeq
@@ -86,23 +91,44 @@ def visitStruct(cursor: CXCursor, name: Option[String])(using
             CXChildVisitResult.CXChildVisit_Continue
 
           case (CXCursorKind.CXCursor_FieldDecl, false, _) =>
+            val tpe = constructType(clang_getCursorType(cursor))
+
+            def unnamedPointerDepth(t: CType): Option[Int] =
+              t match
+                case CType.Reference(Name.Unnamed) => Some(0)
+                case CType.Pointer(to) => unnamedPointerDepth(to).map(_ + 1)
+                case _                 => None
+
+
             val fieldName =
               clang_getCursorSpelling(cursor).string
-            builder.fields.addOne(
-              FieldSpec.Known(
-                fieldName,
-                constructType(
-                  clang_getCursorType(cursor)
+
+            if collector.lastAction == Some(LastAction.Anon) then
+              collector.struct.fields.addOne(
+                FieldSpec.Anon(
+                  nameHint = if fieldName.nonEmpty then Some(fieldName) else None,
+                  unsafeId = collector.struct.anonymous.size - 1,
+                  pointerDepth = unnamedPointerDepth(tpe).getOrElse(0)
                 )
               )
-            )
+              collector.lastAction = Some(LastAction.Field)
+            else
+              builder.fields.addOne(
+                FieldSpec.Known(
+                  fieldName,
+                  constructType(
+                    clang_getCursorType(cursor)
+                  )
+                )
+              )
 
-            collector.lastAction = Some(LastAction.NamedField)
+              collector.lastAction = Some(LastAction.NamedField)
+            end if
 
             CXChildVisitResult.CXChildVisit_Continue
           case (
                 CXCursorKind.CXCursor_UnionDecl,
-                _,
+                true,
                 _
               ) =>
             visitAnonymousUnion(cursor, collector)
@@ -110,7 +136,7 @@ def visitStruct(cursor: CXCursor, name: Option[String])(using
 
           case (
                 CXCursorKind.CXCursor_StructDecl,
-                _,
+                true,
                 _
               ) =>
             visitAnonymousStruct(cursor, collector)
@@ -325,6 +351,7 @@ object FieldVisitors:
         "type_spelling" -> typ.spelling
       )
     )
+
     speculateType match
       case _: CType.Struct | _: CType.Union | CType.Reference(Name.Unnamed) =>
         val last =
@@ -340,6 +367,14 @@ object FieldVisitors:
         )
 
       case _ =>
+        if collector.lastAction == Some(LastAction.Anon) then
+          collector.struct.fields.addOne(
+            FieldSpec.Anon(
+              nameHint = None,
+              unsafeId = collector.struct.anonymous.size - 1
+            )
+          )
+
         collector.struct.fields.addOne(
           FieldSpec.Known(
             fieldName,

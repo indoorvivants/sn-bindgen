@@ -3,6 +3,10 @@ package rendering
 
 import scala.caps.unsafe
 
+def wrapPointer(depth: Int, tpe: CType): CType =
+  if depth <= 0 then tpe
+  else wrapPointer(depth - 1, CType.Pointer(tpe))
+
 object NameResolver:
   private def goStruct(
       str: Def.Struct,
@@ -11,7 +15,12 @@ object NameResolver:
   ): ResolvedStruct =
     val newAnon = List.newBuilder[ResolvedStruct | ResolvedUnion | ResolvedEnum]
 
-    def handleAnon(nameHint: Option[String], unsafeId: Int, idx: Int) =
+    def handleAnon(
+        nameHint: Option[String],
+        unsafeId: Int,
+        idx: Int,
+        pointerDepth: Int
+    ) =
       str.anonymous(unsafeId) match
         case e: Def.Enum =>
           val name = namer.genEnumName(nameHint)
@@ -23,8 +32,9 @@ object NameResolver:
             meta = e.meta
           )
           newAnon += resolved
+          val fieldName = nameHint.getOrElse("_" + idx.toString())
           Some(
-            StructParameterName("_" + idx) -> CType.Reference(
+            StructParameterName(fieldName) -> CType.Reference(
               Name.Model(resolved.fqn.value)
             )
           )
@@ -39,8 +49,11 @@ object NameResolver:
           newAnon += resolved
           val fieldName = nameHint.getOrElse("_" + idx.toString())
           Some(
-            StructParameterName(fieldName) -> CType.Reference(
-              Name.Model((prepend :+ name.value).mkString("."))
+            StructParameterName(fieldName) -> wrapPointer(
+              pointerDepth,
+              CType.Reference(
+                Name.Model((prepend :+ name.value).mkString("."))
+              )
             )
           )
 
@@ -56,8 +69,11 @@ object NameResolver:
           val fieldName = nameHint
             .getOrElse("_" + idx)
           Some(
-            StructParameterName(fieldName) -> CType.Reference(
-              Name.Model((prepend :+ name.value).mkString("."))
+            StructParameterName(fieldName) -> wrapPointer(
+              pointerDepth,
+              CType.Reference(
+                Name.Model((prepend :+ name.value).mkString("."))
+              )
             )
           )
     end handleAnon
@@ -68,17 +84,16 @@ object NameResolver:
         case (FieldSpec.Known(name, tpe), _) =>
           Some(StructParameterName(name) -> tpe)
 
-        case (FieldSpec.Anon(nameHint, unsafeId), idx) =>
-          handleAnon(nameHint, unsafeId, idx)
+        case (FieldSpec.Anon(nameHint, unsafeId, pointerDepth), idx) =>
+          handleAnon(nameHint, unsafeId, idx, pointerDepth)
 
         case (FieldSpec.AnonArray(nameHint, size, unsafeId), idx) =>
-          val anon = handleAnon(nameHint, unsafeId, idx)
+          val anon = handleAnon(nameHint, unsafeId, idx, pointerDepth = 0)
           anon.map: (fs, ct) =>
             fs -> CType.Arr(ct, Some(size))
-          
 
-
-    val nm = namer.genStructName(str.name.map(_.value))
+    val nm =
+      str.name.getOrElse(namer.genStructName(None))
     ResolvedStruct(
       name = nm,
       fqn = if prepend.isEmpty then nm else StructName(prepend.mkString(".")),
@@ -110,8 +125,9 @@ object NameResolver:
             meta = e.meta
           )
           newAnon += resolved
+          val fieldName = nameHint.getOrElse("_" + idx.toString())
           Some(
-            UnionParameterName("_" + idx) -> CType.Reference(
+            UnionParameterName(fieldName) -> CType.Reference(
               Name.Model(resolved.fqn.value)
             )
           )
@@ -155,7 +171,7 @@ object NameResolver:
         case (FieldSpec.Known(name, tpe), _) =>
           Some(UnionParameterName(name) -> tpe)
 
-        case (FieldSpec.Anon(nameHint, unsafeId), idx) =>
+        case (FieldSpec.Anon(nameHint, unsafeId, pointerDepth), idx) =>
           handleAnon(nameHint, unsafeId, idx)
 
         case (FieldSpec.AnonArray(nameHint, size, unsafeId), idx) =>
@@ -163,12 +179,14 @@ object NameResolver:
           anon.map: (fs, ct) =>
             fs -> CType.Arr(ct, Some(size))
 
-    val newValue = namer.genUnionName(str.name.map(_.value))
+    val nm =
+      str.name.getOrElse(namer.genUnionName(None))
+
     ResolvedUnion(
-      name = newValue,
+      name = nm,
       fields = newFields,
       fqn =
-        if prepend.isEmpty then newValue
+        if prepend.isEmpty then nm
         else UnionName(prepend.mkString(".")),
       anonymous = newAnon.result.toVector,
       staticSize = str.staticSize,
