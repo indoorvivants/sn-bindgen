@@ -28,7 +28,7 @@ lazy val Versions = new {
   val junit = "0.13.3"
   val scalameta = "4.5.13"
   val pluginTargetSN = "0.5.7"
-  val pluginTargetSBT = "1.10.7"
+  val pluginTargetSBT = "1.10.11"
   val detective = "0.1.0"
   val opaqueNewtypes = "0.1.0"
 
