@@ -7,7 +7,6 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import fluent.*
-import java.lang.ref.Reference
 
 case class Nestor(level: Int)
 
@@ -99,14 +98,14 @@ def visitStruct(cursor: CXCursor, name: Option[String])(using
                 case CType.Pointer(to) => unnamedPointerDepth(to).map(_ + 1)
                 case _                 => None
 
-
             val fieldName =
               clang_getCursorSpelling(cursor).string
 
             if collector.lastAction == Some(LastAction.Anon) then
               collector.struct.fields.addOne(
                 FieldSpec.Anon(
-                  nameHint = if fieldName.nonEmpty then Some(fieldName) else None,
+                  nameHint =
+                    if fieldName.nonEmpty then Some(fieldName) else None,
                   unsafeId = collector.struct.anonymous.size - 1,
                   pointerDepth = unnamedPointerDepth(tpe).getOrElse(0)
                 )

@@ -3,7 +3,6 @@ package bindgen
 import opaque_newtypes.*
 
 import Def.*
-import scala.annotation.static
 
 case class Location(isFromMainFile: Boolean, isFromSystemHeader: Boolean):
   inline def shouldBeIncluded: Boolean = isFromMainFile || !isFromSystemHeader
@@ -214,8 +213,6 @@ enum Name:
   case Model(value: String, meta: Meta = Meta.empty)
   case BuiltIn(value: BuiltinType)
   case Unnamed
-
-import CType.*
 
 enum SignType:
   case Signed, Unsigned

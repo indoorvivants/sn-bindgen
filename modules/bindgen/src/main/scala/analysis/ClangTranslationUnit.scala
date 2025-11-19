@@ -25,7 +25,6 @@ object ClangTranslationUnit:
     info(s"Using following clang flags", allClangFlags)
     val filename = toCString(file)
     val l = List.newBuilder[String]
-    import CXTranslationUnit_Flags as flags
 
     val mem =
       val ptr = alloc[CString](allClangFlags.size)

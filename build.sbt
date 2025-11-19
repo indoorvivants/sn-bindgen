@@ -22,7 +22,7 @@ import ArtifactNames.*
 import java.nio.file.Paths
 
 lazy val Versions = new {
-  val decline = "2.5.1-SNAPSHOT"
+  val decline = "2.5.0"
   val scribe = "3.15.3"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
@@ -32,10 +32,10 @@ lazy val Versions = new {
   val detective = "0.1.0"
   val opaqueNewtypes = "0.1.0"
 
-  val Scala3 = "3.3.6"
+  val Scala3 = "3.3.7"
   val Scala3_Next = "3.7.3"
   val Scala212 = "2.12.20"
-  val Scala213 = "2.13.16"
+  val Scala213 = "2.13.17"
   val Scala2 = List(Scala212, Scala213)
 
 }
@@ -551,7 +551,7 @@ def usesLibClang(conf: NativeConfig) = {
 
 // --------------SETTINGS-------------------------
 
-ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("snapshots")
+ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
 
 lazy val markdownDocuments = taskKey[Seq[java.nio.file.Path]]("")
 markdownDocuments := {

@@ -14,9 +14,9 @@ object Generate:
       CLI.command.parse(arguments, sys.env) match
         case Left(help) =>
           val (modified, code) =
-            if help.errors.nonEmpty then help -> -1
+            if help.errors.nonEmpty then help.copy(body = Nil) -> -1
             else help -> 0
-          System.err.println(modified.render(com.monovore.decline.Help.Colors).mkString("\n"))
+          System.err.println(modified)
           sys.exit(code)
         case Right(suspendedConfig) =>
           val config = suspendedConfig.build(rest)

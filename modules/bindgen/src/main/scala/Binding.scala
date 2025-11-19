@@ -1,8 +1,8 @@
 package bindgen
 
-import Def.*
-import CType.*
 import bindgen.rendering.NameResolver
+
+import Def.*
 
 case class Binding(
     aliases: Set[Def.Alias],

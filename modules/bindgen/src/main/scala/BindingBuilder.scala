@@ -3,8 +3,6 @@ package bindgen
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-import Def.*
-
 class BindingBuilder(
     var named: mutable.Map[DefName, BindingDefinition] = mutable.Map.empty,
     var unnamed: ListBuffer[BindingDefinition] = ListBuffer.empty

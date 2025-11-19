@@ -1,10 +1,6 @@
 package bindgen
 
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-
-import Def.*
-import CType.*
 
 sealed trait DefBuilder[Builds]:
   import DefBuilder.*

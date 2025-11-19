@@ -1,13 +1,8 @@
 package bindgen
 package rendering
 
-import bindgen.*
+import bindgen.{ResolvedEnum, ResolvedStruct, *}
 import opaque_newtypes.given
-import bindgen.ResolvedStruct
-import bindgen.ResolvedStruct
-import bindgen.ResolvedEnum
-import bindgen.ResolvedEnum
-import bindgen.ResolvedEnum
 
 case class Constants(enums: Seq[Def.Enum])
 

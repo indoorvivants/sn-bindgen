@@ -3,7 +3,6 @@ package bindgen
 import bindgen.RenderingConfig.FilterSpec
 import opaque_newtypes.*
 
-import scala.util.chaining.*
 import scala.util.matching.Regex
 
 object RenderingConfig:

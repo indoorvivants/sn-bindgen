@@ -6,8 +6,6 @@ import java.nio.file.*
 import scala.sys.process.ProcessLogger
 import scala.util.Try
 
-import Platform.OS.*
-
 case class ClangInfo(
     includePaths: List[String]
 )

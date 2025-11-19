@@ -1,4 +1,4 @@
-resolvers ++= Resolver.sonatypeOssRepos("snapshots")
+resolvers += Resolver.sonatypeCentralSnapshots
 
 addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.5.8")
 

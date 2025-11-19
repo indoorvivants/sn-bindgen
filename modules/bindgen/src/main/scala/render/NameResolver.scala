@@ -1,8 +1,6 @@
 package bindgen
 package rendering
 
-import scala.caps.unsafe
-
 def wrapPointer(depth: Int, tpe: CType): CType =
   if depth <= 0 then tpe
   else wrapPointer(depth - 1, CType.Pointer(tpe))
