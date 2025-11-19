@@ -1,5 +1,6 @@
 typedef struct {
-  // union {int a;} help;
+  int run;
+
   union {
     char test;
   };
