@@ -46,42 +46,4 @@ object AliasResolver:
     )
 
   end create
-
-  // private def traverse(st: Def.Union | Def.Struct)(using
-  //     LoggingConfig
-  // ) =
-  //   def go(
-  //       s: Def.Union | Def.Struct | Def.Enum,
-  //       bld: Tuple2[String, CType] => Unit,
-  //       prepend: String = ""
-  //   ): Unit =
-  //     val anonymous = s match
-  //       case u: Def.Union  => u.anonymous
-  //       case u: Def.Struct => u.anonymous
-  //       case e: Def.Enum   => Nil
-
-  //     val thisName = prepend +
-  //       (s match
-  //         // case u: Def.Union  => u.name.value
-  //         // case u: Def.Struct => u.name.value
-  //         case e: Def.Enum => e.name.get.value
-  //       )
-
-  //     s match
-  //       case u: Def.Union =>
-  //         bld(thisName -> Def.typeOf(u))
-  //       case s: Def.Struct =>
-  //         bld(thisName -> Def.typeOf(s))
-  //       case s: Def.Enum =>
-  //         bld(thisName -> Def.typeOf(s))
-
-  //     anonymous.foreach { u =>
-  //       go(u, bld, prepend = thisName + ".")
-  //     }
-  //   end go
-
-  //   val bld = Map.newBuilder[String, CType]
-  //   go(st, bld.addOne(_))
-  //   bld.result
-  // end traverse
 end AliasResolver

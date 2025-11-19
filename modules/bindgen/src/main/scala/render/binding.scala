@@ -48,14 +48,6 @@ def shouldRender(definition: Def)(using config: Config) =
     }
     .isEmpty
 
-// def hasEnum(st: Def.Union | Def.Struct | Def.Enum): Boolean =
-//   st match
-//     case e: Def.Enum => true
-//     case d: Def.Union =>
-//       d.anonymous.exists(hasEnum)
-//     case d: Def.Struct =>
-//       d.anonymous.exists(hasEnum)
-
 def renderBinding(
     rawBinding: Binding,
     outputMode: OutputMode
@@ -92,15 +84,9 @@ def renderBinding(
   val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
     deduplicateFunctions(binding.functions).flatMap(functionRewriter(_))
 
-  // val resolvedStructs = binding.structs.map(NameResolver.resolveStruct(_))
-  // val resolveUnions = binding.unions.map(NameResolver.resolveUnion(_))
-
   val resolvedStructs = all.collect { case rs: ResolvedStruct => rs }
   val resolvedUnions = all.collect { case rs: ResolvedUnion => rs }
   val resolvedEnums = all.collect { case rs: ResolvedEnum => rs }
-
-  // trace("Resolved structs", resolvedStructs.toSeq.map(pprint.apply(_)))
-  // trace("Resolved unions", resolveUnions.toSeq.map(pprint.apply(_)))
 
   def create(name: String)(subPackage: String = name) =
     val lb = LineBuilder()

@@ -2,8 +2,6 @@ package bindgen
 
 import opaque_newtypes.*
 
-import Def.*
-
 case class Location(isFromMainFile: Boolean, isFromSystemHeader: Boolean):
   inline def shouldBeIncluded: Boolean = isFromMainFile || !isFromSystemHeader
 
@@ -144,61 +142,7 @@ enum Def(meta: Meta):
       case e: Enum =>
         e.name.map(enumName => DefName(enumName.value, DefTag.Enum))
 
-  // lazy val resolvedType: CType = this match
-  //   case Enum(values, name, intType, meta) => CType.Enum(intType.get)
-  //   case Struct(fields, name, anonymous, staticSize, meta) =>
-  //     val namer =
-  //       var unions = 0
-  //       var structs = 0
-  //       (
-  //         structName = (n: Option[StructName]) =>
-  //           n.getOrElse({
-  //             val s = StructName(s"Struct$structs")
-  //             structs += 1;
-  //             s
-  //           }),
-  //         unionName = (n: Option[UnionName]) =>
-  //           n.getOrElse({
-  //             val s = UnionName(s"Struct$unions")
-  //             unions += 1;
-  //             s
-  //           })
-  //       )
-  //     end namer
-  //     ???
-
-  //   case Union(fields, name, anonymous, staticSize, meta) => ???
-  //   case Function(
-  //         name,
-  //         returnType,
-  //         parameters,
-  //         originalCType,
-  //         numArguments,
-  //         variadic,
-  //         meta
-  //       ) =>
-  //     ???
-  //   case Alias(name, underlying, meta) => ???
 end Def
-
-// end Def
-
-// object Def:
-// def typeOf(d: Def) = d.resolvedType
-// def typeOf(d: Function): CType.Function =
-//   CType.Function(
-//     d.returnType,
-//     d.parameters.map { case fp =>
-//       CType.Parameter(Some(ParameterName(fp.name)), fp.typ)
-//     }.toList
-//   )
-// def typeOf(d: Union): CType.Union =
-//   CType.Union(d.fields.map(_._2).toList, Hints(d.staticSize))
-// def typeOf(d: Struct): CType.Struct =
-//   CType.Struct(d.fields.map(_._2).toList, Hints(d.staticSize))
-// def typeOf(d: Enum): CType.Enum =
-//   CType.Enum(d.intType.get)
-// end Def
 
 case class FunctionParameter(
     name: String,
