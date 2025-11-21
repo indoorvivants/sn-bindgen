@@ -388,14 +388,14 @@ object functions:
   import extern_functions.*
   export extern_functions.*
 
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_arguments(n, n2)
+
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](2)
     !(__ptr_0 + 0) = n
     !(__ptr_0 + 1) = n2
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
-
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_arguments(n, n2)
 
   def bad_return_type()(using Zone): Small =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](1)
