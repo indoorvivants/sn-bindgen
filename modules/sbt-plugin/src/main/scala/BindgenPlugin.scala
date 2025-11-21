@@ -127,7 +127,15 @@ object BindgenPlugin extends AutoPlugin {
             "com.indoorvivants",
             "bindgen_native0.5_3",
             bindgenVersion.value
-          ).intransitive().classifier(jarString(platform))
+          ).intransitive()
+            .artifacts(
+              Artifact(
+                name = "bindgen_native0.5_3",
+                `type` = "exe",
+                extension = "exe",
+                classifier = jarString(platform)
+              )
+            )
         ).headOption.getOrElse(
           throw new Exception("Could not download the binary for bindgen")
         )
