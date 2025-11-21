@@ -208,8 +208,8 @@ lazy val localBindgenArtifact = project
 
     def build(classifier: String) =
       Artifact("bindgen", classifier)
-        .withExtension("jar")
-        .withType("jar")
+        .withExtension("exe")
+        .withType("exe")
         .withConfigurations(Vector(Compile))
     addArtifact(
       Def.setting(build(jarString(Platform.target))),
@@ -460,11 +460,9 @@ def artifactFileNames: Map[Target, String] = {
     arch <- Seq(Arch.Intel, Arch.Arm)
     bits <- Seq(Bits.x32, Bits.x64)
     target = Platform.Target(os, arch, bits)
-    ext = os match {
-      case OS.Windows => ".exe"
-      case _          => ""
-    }
-    fileName = s"sn-bindgen-${coursierString(target)}$ext"
+    // We publish all artifacts with .exe artifacts
+    // because Sonatype Central prohibits non-jar files
+    fileName = s"sn-bindgen-${coursierString(target)}.exe"
   } yield target -> fileName
 
   artifacts.toMap
@@ -477,8 +475,8 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
 
   def build(classifier: String, file: File): (String, (Artifact, File)) = {
     val artif = Artifact("bindgen", classifier)
-      .withExtension("jar")
-      .withType("jar")
+      .withExtension("exe")
+      .withType("exe")
       .withConfigurations(Vector(Compile))
 
     classifier -> (artif, file)
