@@ -497,16 +497,13 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     .collect(Collectors.toList())
     .asScala
     .map { path =>
-      println(path)
-      // We publish all artifacts with .exe artifacts
-      // because Sonatype Central prohibits non-jar files
       path.getFileName().toString -> path.toFile
     }
     .toMap
 
   val result = artifactFileNames.flatMap { case (target, fileName) =>
     allFiles.get(fileName).map { file =>
-      build(jarString(target).stripSuffix(".exe") + ".exe", file)
+      build(jarString(target), file)
     }
   }.toMap
 
