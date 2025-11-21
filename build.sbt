@@ -1,3 +1,7 @@
+import com.indoorvivants.detective.Platform.OS.Linux
+import com.indoorvivants.detective.Platform.OS.MacOS
+import com.indoorvivants.detective.Platform.OS.Unknown
+import com.indoorvivants.detective.Platform.OS.Windows
 import scala.scalanative.build
 import sbt.internal.bsp.BuildTarget
 import scala.collection.immutable
@@ -157,6 +161,7 @@ lazy val bindgen = project
       val expected = Seq(
         Target(Windows, Intel, x64),
         Target(MacOS, Intel, x64),
+        Target(MacOS, Arm, x64),
         Target(Linux, Intel, x64)
       ).map(jarString)
       val packaged = packagedArtifacts.value
@@ -460,9 +465,11 @@ def artifactFileNames: Map[Target, String] = {
     arch <- Seq(Arch.Intel, Arch.Arm)
     bits <- Seq(Bits.x32, Bits.x64)
     target = Platform.Target(os, arch, bits)
-    // We publish all artifacts with .exe artifacts
-    // because Sonatype Central prohibits non-jar files
-    fileName = s"sn-bindgen-${coursierString(target)}.exe"
+    ext = os match {
+      case Windows => ".exe"
+      case _       => ""
+    }
+    fileName = s"sn-bindgen-${coursierString(target)}$ext"
   } yield target -> fileName
 
   artifacts.toMap
@@ -490,15 +497,20 @@ def detectBinaryArtifacts: Map[String, (Artifact, File)] = if (
     .collect(Collectors.toList())
     .asScala
     .map { path =>
+      println(path)
+      // We publish all artifacts with .exe artifacts
+      // because Sonatype Central prohibits non-jar files
       path.getFileName().toString -> path.toFile
     }
     .toMap
 
-  artifactFileNames.flatMap { case (target, fileName) =>
+  val result = artifactFileNames.flatMap { case (target, fileName) =>
     allFiles.get(fileName).map { file =>
-      build(jarString(target), file)
+      build(jarString(target).stripSuffix(".exe") + ".exe", file)
     }
   }.toMap
+
+  result
 
 } else Map.empty
 
