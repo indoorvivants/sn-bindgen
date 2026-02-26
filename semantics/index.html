@@ -1,4 +1,4 @@
-<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/tomorrow-night-blue.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">sn-bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/reporting-issues/index.html">Reporting issues</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#anonymous-unionsstructs-are-rendered-in-enclosing-companion-object">Anonymous unions/structs are rendered in enclosing companion object</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
+<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/stackoverflow-light.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">sn-bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/reporting-issues/index.html">Reporting issues</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
 <p>For those types, we generate getters, setters, <code>Tag</code> definition, and two <code>apply</code> methods:</p>
 <ol>
 <li>A constructor, which takes all the parameters as arguments</li>
@@ -388,22 +388,22 @@ object functions:
   import extern_functions.*
   export extern_functions.*
 
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_arguments(n, n2)
-
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](2)
     !(__ptr_0 + 0) = n
     !(__ptr_0 + 1) = n2
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
-  def bad_return_type()(__return : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_return_type(__return)
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_arguments(n, n2)
 
   def bad_return_type()(using Zone): Small =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](1)
     __sn_wrap_libtest_bad_return_type((__ptr_0 + 0))
     !(__ptr_0 + 0)
+
+  def bad_return_type()(__return : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_return_type(__return)
 
 object types:
     export _root_.libtest.structs.*
@@ -476,6 +476,7 @@ object predef:
         inline def value: CUnsignedInt = eq.apply(t)
         inline def int: CInt = eq.apply(t).toInt
         inline def uint: CUnsignedInt = eq.apply(t)
+
 
 object enumerations:
   import predef.*
@@ -665,14 +666,14 @@ object constants:
 </code></pre>
 </div>
 </div>
-<h2><a href="#anonymous-unionsstructs-are-rendered-in-enclosing-companion-object" id="anonymous-unionsstructs-are-rendered-in-enclosing-companion-object">Anonymous unions/structs are rendered in enclosing companion object</a></h2>
+<h2><a href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately" id="anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></h2>
 <p>In this example, we have several anonymous definitions as part of the struct.</p>
 <p>If the anonymous union/struct/enum is attached to a named field, that field's
 name will be used as heuristic for naming the anonymous definition.</p>
 <p>Otherwise, <code>Union0</code>, <code>Struct1</code>, etc. naming scheme will be used.</p>
-<p>In the example below, <code>StructExample.Greeting</code>, <code>StructExample.Test</code>, <code>StructExample.Hello</code>,
-and <code>StructExample.Union0</code> will be generated</p>
-<p>Deep field access (e.g. calling <code>.x</code> on <code>StructExample</code> directly, like what C allows, is not supported yet,
+<p>In the example below, <code>StructExample_Greeting</code>, <code>StructExample_Test</code>, <code>StructExample_Hello</code>,
+and <code>StructExample_Union0</code> will be generated</p>
+<p>Deep field access (e.g. calling <code>.x</code> on <code>StructExample</code> directly, like what C allows, <strong>is not supported yet</strong>,
 but planned.</p>
 <div class = "flex-col w-full gap-4">
 <div class = "w-12/12">
@@ -694,17 +695,26 @@ import _root_.scala.scalanative.unsigned.*
 import _root_.scala.scalanative.libc.*
 import _root_.scala.scalanative.*
 
+object predef:
+    private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
+      given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+      extension (inline t: T)
+        inline def value: CUnsignedInt = eq.apply(t)
+        inline def int: CInt = eq.apply(t).toInt
+        inline def uint: CUnsignedInt = eq.apply(t)
+
 object structs:
+  import _root_.libtest.predef.*
   import _root_.libtest.structs.*
 
-  opaque type StructExample = CStruct4[StructExample.Greeting, StructExample.Union0, Ptr[StructExample.Test], StructExample.Hello]
+  opaque type StructExample = CStruct4[StructExample_Greeting, StructExample_Union0, Ptr[StructExample_Test], StructExample_Hello]
   
   object StructExample:
-    given _tag: Tag[StructExample] = Tag.materializeCStruct4Tag[StructExample.Greeting, StructExample.Union0, Ptr[StructExample.Test], StructExample.Hello]
+    given _tag: Tag[StructExample] = Tag.materializeCStruct4Tag[StructExample_Greeting, StructExample_Union0, Ptr[StructExample_Test], StructExample_Hello]
     
     // Allocates StructExample on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[StructExample] = scala.scalanative.unsafe.alloc[StructExample](1)
-    def apply(greeting : StructExample.Greeting, _2 : StructExample.Union0, test : Ptr[StructExample.Test], hello : StructExample.Hello)(using Zone): Ptr[StructExample] =
+    def apply(greeting : StructExample_Greeting, _2 : StructExample_Union0, test : Ptr[StructExample_Test], hello : StructExample_Hello)(using Zone): Ptr[StructExample] =
       val ____ptr = apply()
       (!____ptr).greeting = greeting
       (!____ptr)._2 = _2
@@ -713,87 +723,87 @@ object structs:
       ____ptr
     
     extension (struct: StructExample)
-      def greeting : StructExample.Greeting = struct._1
-      def greeting_=(value: StructExample.Greeting): Unit = !struct.at1 = value
-      def _2 : StructExample.Union0 = struct._2
-      def _2_=(value: StructExample.Union0): Unit = !struct.at2 = value
-      def test : Ptr[StructExample.Test] = struct._3
-      def test_=(value: Ptr[StructExample.Test]): Unit = !struct.at3 = value
-      def hello : StructExample.Hello = struct._4
-      def hello_=(value: StructExample.Hello): Unit = !struct.at4 = value
+      def greeting : StructExample_Greeting = struct._1
+      def greeting_=(value: StructExample_Greeting): Unit = !struct.at1 = value
+      def _2 : StructExample_Union0 = struct._2
+      def _2_=(value: StructExample_Union0): Unit = !struct.at2 = value
+      def test : Ptr[StructExample_Test] = struct._3
+      def test_=(value: Ptr[StructExample_Test]): Unit = !struct.at3 = value
+      def hello : StructExample_Hello = struct._4
+      def hello_=(value: StructExample_Hello): Unit = !struct.at4 = value
     
-    opaque type Greeting = CStruct1[CInt]
+  opaque type StructExample_Greeting = CStruct1[CInt]
+  
+  object StructExample_Greeting:
+    given _tag: Tag[StructExample_Greeting] = Tag.materializeCStruct1Tag[CInt]
     
-    object Greeting:
-      given _tag: Tag[Greeting] = Tag.materializeCStruct1Tag[CInt]
-      
-      // Allocates Greeting on the heap ??? fields are not initalised or zeroed out
-      def apply()(using Zone): Ptr[Greeting] = scala.scalanative.unsafe.alloc[Greeting](1)
-      def apply(hello : CInt)(using Zone): Ptr[Greeting] =
-        val ____ptr = apply()
-        (!____ptr).hello = hello
-        ____ptr
-      
-      extension (struct: Greeting)
-        def hello : CInt = struct._1
-        def hello_=(value: CInt): Unit = !struct.at1 = value
-      
+    // Allocates StructExample_Greeting on the heap ??? fields are not initalised or zeroed out
+    def apply()(using Zone): Ptr[StructExample_Greeting] = scala.scalanative.unsafe.alloc[StructExample_Greeting](1)
+    def apply(hello : CInt)(using Zone): Ptr[StructExample_Greeting] =
+      val ____ptr = apply()
+      (!____ptr).hello = hello
+      ____ptr
     
-    opaque type Union0 = CArray[Byte, Nat._4]
-    object Union0:
-      given _tag: Tag[Union0] = Tag.CArray[CChar, Nat._4](Tag.Byte, Tag.Nat4)
-      
-      def apply()(using Zone): Ptr[Union0] =
-        val ___ptr = _root_.scala.scalanative.unsafe.alloc[Union0](1)
-        ___ptr
-      
-      @scala.annotation.targetName(&quot;apply_x&quot;)
-      def apply(x: CInt)(using Zone): Ptr[Union0] =
-        val ___ptr = _root_.scala.scalanative.unsafe.alloc[Union0](1)
-        val un = !___ptr
-        un.at(0).asInstanceOf[Ptr[CInt]].update(0, x)
-        ___ptr
-      
-      extension (struct: Union0)
-        def x : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-        def x_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
+    extension (struct: StructExample_Greeting)
+      def hello : CInt = struct._1
+      def hello_=(value: CInt): Unit = !struct.at1 = value
     
-    opaque type Test = CArray[Byte, Nat._1]
-    object Test:
-      given _tag: Tag[Test] = Tag.CArray[CChar, Nat._1](Tag.Byte, Tag.Nat1)
-      
-      def apply()(using Zone): Ptr[Test] =
-        val ___ptr = _root_.scala.scalanative.unsafe.alloc[Test](1)
-        ___ptr
-      
-      @scala.annotation.targetName(&quot;apply_z&quot;)
-      def apply(z: CChar)(using Zone): Ptr[Test] =
-        val ___ptr = _root_.scala.scalanative.unsafe.alloc[Test](1)
-        val un = !___ptr
-        un.at(0).asInstanceOf[Ptr[CChar]].update(0, z)
-        ___ptr
-      
-      extension (struct: Test)
-        def z : CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
-        def z_=(value: CChar): Unit = !struct.at(0).asInstanceOf[Ptr[CChar]] = value
+  
+  opaque type StructExample_Union0 = CArray[Byte, Nat._4]
+  object StructExample_Union0:
+    given _tag: Tag[StructExample_Union0] = Tag.CArray[CChar, Nat._4](Tag.Byte, Tag.Nat4)
     
-    opaque type Hello = CUnsignedInt
-    object Hello extends _BindgenEnumCUnsignedInt[Hello]:
-      given _tag: Tag[Hello] = Tag.UInt
-      inline def define(inline a: Long): Hello = a.toUInt
-      val A = define(0)
-      val B = define(1)
-      val C = define(2)
-      def getName(value: Hello): Option[String] =
-        value match
-          case `A` =&gt; Some(&quot;A&quot;)
-          case `B` =&gt; Some(&quot;B&quot;)
-          case `C` =&gt; Some(&quot;C&quot;)
-          case _ =&gt; _root_.scala.None
-      extension (a: Hello)
-        inline def &amp;(b: Hello): Hello = a &amp; b
-        inline def |(b: Hello): Hello = a | b
-        inline def is(b: Hello): Boolean = (a &amp; b) == b
+    def apply()(using Zone): Ptr[StructExample_Union0] =
+      val ___ptr = _root_.scala.scalanative.unsafe.alloc[StructExample_Union0](1)
+      ___ptr
+    
+    @scala.annotation.targetName(&quot;apply_x&quot;)
+    def apply(x: CInt)(using Zone): Ptr[StructExample_Union0] =
+      val ___ptr = _root_.scala.scalanative.unsafe.alloc[StructExample_Union0](1)
+      val un = !___ptr
+      un.at(0).asInstanceOf[Ptr[CInt]].update(0, x)
+      ___ptr
+    
+    extension (struct: StructExample_Union0)
+      def x : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      def x_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
+  
+  opaque type StructExample_Test = CArray[Byte, Nat._1]
+  object StructExample_Test:
+    given _tag: Tag[StructExample_Test] = Tag.CArray[CChar, Nat._1](Tag.Byte, Tag.Nat1)
+    
+    def apply()(using Zone): Ptr[StructExample_Test] =
+      val ___ptr = _root_.scala.scalanative.unsafe.alloc[StructExample_Test](1)
+      ___ptr
+    
+    @scala.annotation.targetName(&quot;apply_z&quot;)
+    def apply(z: CChar)(using Zone): Ptr[StructExample_Test] =
+      val ___ptr = _root_.scala.scalanative.unsafe.alloc[StructExample_Test](1)
+      val un = !___ptr
+      un.at(0).asInstanceOf[Ptr[CChar]].update(0, z)
+      ___ptr
+    
+    extension (struct: StructExample_Test)
+      def z : CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
+      def z_=(value: CChar): Unit = !struct.at(0).asInstanceOf[Ptr[CChar]] = value
+  
+  opaque type StructExample_Hello = CUnsignedInt
+  object StructExample_Hello extends _BindgenEnumCUnsignedInt[StructExample_Hello]:
+    given _tag: Tag[StructExample_Hello] = Tag.UInt
+    inline def define(inline a: Long): StructExample_Hello = a.toUInt
+    val A = define(0)
+    val B = define(1)
+    val C = define(2)
+    def getName(value: StructExample_Hello): Option[String] =
+      value match
+        case `A` =&gt; Some(&quot;A&quot;)
+        case `B` =&gt; Some(&quot;B&quot;)
+        case `C` =&gt; Some(&quot;C&quot;)
+        case _ =&gt; _root_.scala.None
+    extension (a: StructExample_Hello)
+      inline def &amp;(b: StructExample_Hello): StructExample_Hello = a &amp; b
+      inline def |(b: StructExample_Hello): StructExample_Hello = a | b
+      inline def is(b: StructExample_Hello): Boolean = (a &amp; b) == b
 
 object constants:
   val A: CUnsignedInt = 0.toUInt
@@ -810,7 +820,7 @@ object all:
 </code></pre>
 </div>
 </div>
-</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2025 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
+</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2026 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               gtag('js', new Date());
 
