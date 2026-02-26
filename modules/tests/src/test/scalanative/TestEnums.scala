@@ -58,10 +58,10 @@ class TestEnums:
   @Test def test_anon_enum(): Unit =
     Zone:
       val test = EnumAnon()
-      (!test).protocol = EnumAnon.Protocol.WHAT
+      (!test).protocol = EnumAnon_Protocol.WHAT
       (!test).howdy = 25
 
-      assert((!test).protocol == EnumAnon.Protocol.WHAT)
+      assert((!test).protocol == EnumAnon_Protocol.WHAT)
       assert((!test).howdy == 25)
   end test_anon_enum
 
@@ -77,6 +77,6 @@ class TestEnums:
     summon[Tag[Enum1]]
     summon[Tag[Enum2]]
     summon[Tag[EnumKeywords]]
-    summon[Tag[EnumAnon.Protocol]]
+    summon[Tag[EnumAnon_Protocol]]
 
 end TestEnums
