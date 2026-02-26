@@ -12,12 +12,12 @@ case class Binding(
     functions: Set[Def.Function],
     unnamedEnums: Set[Def.Enum]
 ):
-  lazy val all =
-    (aliases ++ unions.map(NameResolver.resolveUnion) ++
+  def resolve(using Config) =
+    (aliases ++
+      unions.map(NameResolver.resolveUnion) ++
       structs.map(NameResolver.resolveStruct) ++
-      enums.map(
-        NameResolver.resolveEnum
-      ) ++ functions).toSeq
+      enums.map(NameResolver.resolveEnum) ++
+      functions).toSeq
 
   def filterAll(f: Def => Boolean) =
     copy(

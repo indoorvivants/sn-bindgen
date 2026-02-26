@@ -217,19 +217,18 @@ def struct(struct: ResolvedStruct, line: Appender)(using
     end if
 
     line("")
+  }
 
-    struct.anonymous.zipWithIndex.foreach { (anon, idx) =>
-      anon match
-        case s: ResolvedStruct =>
-          rendering.struct(s, line)
-        case u: ResolvedUnion =>
-          rendering.union(u, line)
-        case e: ResolvedEnum =>
-          rendering.enumeration(e, line)
+  struct.anonymous.zipWithIndex.foreach { (anon, idx) =>
+    anon match
+      case s: ResolvedStruct =>
+        rendering.struct(s, line)
+      case u: ResolvedUnion =>
+        rendering.union(u, line)
+      case e: ResolvedEnum =>
+        rendering.enumeration(e, line)
 
-      if idx != struct.anonymous.length - 1 then line("")
-    }
-
+    if idx != struct.anonymous.length - 1 then line("")
   }
 
   Exported.Yes(structName.value)
