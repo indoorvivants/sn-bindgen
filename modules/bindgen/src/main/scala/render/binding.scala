@@ -3,6 +3,9 @@ package rendering
 
 import bindgen.{ResolvedEnum, ResolvedStruct, *}
 import opaque_newtypes.given
+import bindgen.CType
+import bindgen.CType
+import bindgen.CType
 
 case class Constants(enums: Seq[Def.Enum])
 
@@ -57,14 +60,40 @@ def renderBinding(
 ): RenderedOutput =
   val binding = rawBinding.filterAll(shouldRender)
 
-  val hasAnyEnums = binding.enums.exists(_.name.nonEmpty)
+  // In order
+  def anonymousEnumBases(struct: Def.Struct | Def.Union | Def.Enum) =
+    @annotation.tailrec
+    def go(
+        ls: List[Def.Struct | Def.Union | Def.Enum],
+        acc: Set[Option[CType.NumericIntegral]]
+    ): Set[Option[CType.NumericIntegral]] =
+      ls match
+        case Nil                   => acc
+        case (e: Def.Enum) :: rest => go(rest, acc + e.intType)
+        case (u: Def.Union) :: rest =>
+          go(u.anonymous ++ rest, acc)
+        case (u: Def.Struct) :: rest =>
+          go(u.anonymous ++ rest, acc)
+
+    go(List(struct), Set.empty)
+  end anonymousEnumBases
+
+  val enumBases =
+    binding.structs.flatMap(anonymousEnumBases) ++
+      binding.unions.flatMap(anonymousEnumBases) ++
+      binding.enums.flatMap(anonymousEnumBases)
+
+  val hasAnyEnums = enumBases.nonEmpty
+  val hasAnyTopLevelEnums = binding.enums.nonEmpty
   val hasAliases = binding.aliases.nonEmpty
   val hasUnions = binding.unions.nonEmpty
   val hasStructs = binding.structs.nonEmpty
   val hasConstants = binding.unnamedEnums.nonEmpty
   val hasAnyTypes = hasAnyEnums || hasAliases || hasUnions || hasStructs
   val typeImports = TypeImports(
-    enums = hasAnyEnums,
+    // We only need type imports for top level enums
+    anonEnums = hasAnyEnums && !hasAnyTopLevelEnums,
+    enums = hasAnyTopLevelEnums,
     aliases = hasAliases,
     structs = hasStructs,
     unions = hasUnions
@@ -76,7 +105,7 @@ def renderBinding(
 
   val exportMode = summon[Config].exportMode
 
-  val all = rawBinding.all
+  val all = rawBinding.resolve
 
   given AliasResolver =
     AliasResolver.create(all)
@@ -128,10 +157,12 @@ def renderBinding(
   if summon[Context].lang == Lang.Scala then
 
     if hasAnyEnums then
+      val enums = simpleStream("enumerations")
+      renderEnumPredef(enums, enumBases = enumBases, mode = renderMode)
       updateExports(
         "enumerations",
         renderEnumerations(
-          simpleStream("enumerations"),
+          enums,
           resolvedEnums.sortBy(_.name.value).toList,
           mode = renderMode
         )
@@ -220,7 +251,8 @@ def renderBinding(
         if hasStructs then l(s"export _root_.${packageName}.structs.*")
         if hasAliases then l(s"export _root_.${packageName}.aliases.*")
         if hasUnions then l(s"export _root_.${packageName}.unions.*")
-        if hasAnyEnums then l(s"export _root_.${packageName}.enumerations.*")
+        if hasAnyTopLevelEnums then
+          l(s"export _root_.${packageName}.enumerations.*")
       }
     }
   end if
@@ -408,6 +440,7 @@ private def enumPredef(
 
   val traitName = enumBaseTraitName(intType)
 
+  // TODO: remove reliance on `eq.apply`, use explicit `.asInstanceOf`
   objectBlock(to(lb))(
     s"private[${safePackageName}] trait $traitName[T](using eq: T =:= $renderedScalaType)"
   ) {
@@ -423,6 +456,24 @@ private def enumPredef(
   lb.result.linesIterator.toList
 end enumPredef
 
+private def renderEnumPredef(
+    out: LineBuilder,
+    enumBases: Set[Option[CType.NumericIntegral]],
+    mode: RenderMode
+)(using
+    Config,
+    AliasResolver,
+    Context
+) =
+  maybeObjectBlock(out, mode)("object predef") {
+    val safePackageName = packageName.split('.').last
+    enumBases.foreach: base =>
+      enumPredef(safePackageName, base).foreach(to(out))
+  }
+
+  out.emptyLine
+end renderEnumPredef
+
 private def renderEnumerations(
     out: LineBuilder,
     enums: List[ResolvedEnum],
@@ -437,11 +488,6 @@ private def renderEnumerations(
   val exported = List.newBuilder[Exported]
 
   if enumBases.nonEmpty then
-    maybeObjectBlock(out, mode)("object predef") {
-      val safePackageName = packageName.split('.').last
-      enumBases.foreach: base =>
-        enumPredef(safePackageName, base).foreach(to(out))
-    }
     if mode == RenderMode.Objects then out.emptyLine
     maybeObjectBlock(out, mode)("object enumerations") {
       if mode == RenderMode.Objects then to(out)("import predef.*")

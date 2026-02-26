@@ -27,13 +27,6 @@ def union(model: ResolvedUnion, line: Appender)(using Config)(using
   renderComment(line, model.meta)
   line(s"opaque type $unionName = $tpe")
   objectBlock(line)(s"object ${sanitiseBeforeColon(unionName.value)}") {
-    model.anonymous.foreach {
-      case s: ResolvedStruct =>
-        rendering.struct(s, line)
-      case u: ResolvedUnion =>
-        rendering.union(u, line)
-    }
-
     val tag =
       s"given _tag: Tag[$unionName] = ${scalaTag(unionType)}"
     line(tag)
@@ -84,5 +77,13 @@ def union(model: ResolvedUnion, line: Appender)(using Config)(using
       }
     end if
   }
+
+  model.anonymous.foreach {
+    case s: ResolvedStruct =>
+      rendering.struct(s, line)
+    case u: ResolvedUnion =>
+      rendering.union(u, line)
+  }
+
   Exported.Yes(unionName.value)
 end union
