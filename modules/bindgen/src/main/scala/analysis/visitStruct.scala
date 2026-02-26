@@ -321,10 +321,6 @@ object FieldVisitors:
       )
     )
 
-    assert(
-      collector.lastAction == Some(LastAction.Anon),
-      s"This field is anonymous, expected last action to be collecting a union/struct/enum, got ${collector.lastAction}"
-    )
     val last = collector.struct.anonymous.size
     val fieldSpec = FieldSpec.Anon(
       nameHint = Option(fieldName).filter(_.nonEmpty),

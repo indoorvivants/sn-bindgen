@@ -50,6 +50,15 @@ struct st_h2o_context_t {
           } num_conns;
       } _conns;
   };
+
+struct AnonMultiField {
+    enum {AYE, NAY};
+    struct {
+        int counter;
+    } num_sent, num_received;
+};
+
+
 // This case is here because previously we had a bug where anonymous
 // definitions under unions were not considered for computing closure
 #include <sys/stat.h>
