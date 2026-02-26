@@ -6,7 +6,7 @@ import org.junit.Test
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
-class TestAnonymousNested:
+class TestAnonymous:
   import lib_test_anonymous.types.*
 
   @Test def test_struct() =
@@ -56,5 +56,4 @@ class TestAnonymousNested:
       assertEquals(25011, largeUnion4.test)
 
     }
-
-end TestAnonymousNested
+end TestAnonymous

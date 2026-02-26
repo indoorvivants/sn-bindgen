@@ -50,3 +50,14 @@ struct st_h2o_context_t {
           } num_conns;
       } _conns;
   };
+// This case is here because previously we had a bug where anonymous
+// definitions under unions were not considered for computing closure
+#include <sys/stat.h>
+struct st_h2o_filecache_ref_t {
+    union {
+        struct {
+            /* used if fd != -1 */
+            struct stat MY_FIELD;
+        };
+    };
+};

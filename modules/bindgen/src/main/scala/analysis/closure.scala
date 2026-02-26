@@ -57,7 +57,7 @@ def definitionClosure(_d: Def)(using Config): Set[String] =
                     .flatMap(referencedNames)
               }
             case f: Def.Union =>
-              Nil -> {
+              f.anonymous -> {
                 f.name.toSet.map(_.value) ++
                   f.fields
                     .collect { case FieldSpec.Known(_, tpe) =>
