@@ -202,7 +202,7 @@ val cSource =
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
 
-## Anonymous unions/structs are rendered in enclosing companion object
+## Anonymous unions/structs are fully qualified and rendered separately
 
 In this example, we have several anonymous definitions as part of the struct.
 
@@ -211,10 +211,10 @@ name will be used as heuristic for naming the anonymous definition.
 
 Otherwise, `Union0`, `Struct1`, etc. naming scheme will be used.
 
-In the example below, `StructExample.Greeting`, `StructExample.Test`, `StructExample.Hello`,
-and `StructExample.Union0` will be generated
+In the example below, `StructExample_Greeting`, `StructExample_Test`, `StructExample_Hello`,
+and `StructExample_Union0` will be generated
 
-Deep field access (e.g. calling `.x` on `StructExample` directly, like what C allows, is not supported yet,
+Deep field access (e.g. calling `.x` on `StructExample` directly, like what C allows, **is not supported yet**,
 but planned.
 
 ```scala mdoc:nest:passthrough
@@ -229,4 +229,3 @@ val cSource =
 """.trim.stripMargin
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
-
