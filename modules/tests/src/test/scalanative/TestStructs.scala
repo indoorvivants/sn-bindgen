@@ -26,8 +26,8 @@ class TestStructs:
 
       val arr = stackalloc[CArray[Int, Nat.Digit2[Nat._2, Nat._5]]]()
       (!arr).update(7, -1293939)
-      val cs0 = StructComplex.Kiss('h')
-      val cs1 = StructComplex.Yass(25)
+      val cs0 = StructComplex_Kiss('h')
+      val cs1 = StructComplex_Yass(25)
       val cx =
         !StructComplex(st1, st2, 111, !cs0, my_bool.m_false, !cs1, c"yes", !arr)
 
@@ -51,12 +51,12 @@ class TestStructs:
 
         val arr = stackalloc[CArray[Int, Nat.Digit2[Nat._2, Nat._5]]]()
         (!arr).update(7, -1293939)
-        val anonStruct0 = StructComplexOpaque.Kiss('h')
-        val anonStruct1 = StructComplexOpaque.Yass(25)
-        val anonUnion0 = StructComplexOpaque.Union0.apply(25)
-        val arr2 = stackalloc[CArray[StructComplexOpaque.Flan, Nat._2]]()
-        (!arr2).update(0, !StructComplexOpaque.Flan(50))
-        val anonUnion1 = StructComplexOpaque.Top(100123456789L.toSize)
+        val anonStruct0 = StructComplexOpaque_Kiss('h')
+        val anonStruct1 = StructComplexOpaque_Yass(25)
+        val anonUnion0 = StructComplexOpaque_Union0.apply(25)
+        val arr2 = stackalloc[CArray[StructComplexOpaque_Flan, Nat._2]]()
+        (!arr2).update(0, !StructComplexOpaque_Flan(50))
+        val anonUnion1 = StructComplexOpaque_Top(100123456789L.toSize)
         val struct =
           !StructComplexOpaque(
             p1 = st1,
@@ -89,7 +89,7 @@ class TestStructs:
         assertEquals(struct.test(7), -1293939)
         assertEquals(struct.yass.HELLO, 25)
 
-        struct.yass = !StructComplexOpaque.Yass(5117)
+        struct.yass = !StructComplexOpaque_Yass(5117)
         assertEquals(struct.yass.HELLO, 5117)
 
         assertEquals(struct.kiss.yo, 'h')
@@ -111,8 +111,8 @@ class TestStructs:
 
   @Test def test_anonymous() =
     Zone {
-      val context = !StructAnonymous.Context(25)
-      val header = !StructAnonymous.Header(c"k1", c"v1")
+      val context = !StructAnonymous_Context(25)
+      val header = !StructAnonymous_Header(c"k1", c"v1")
       val struct = !StructAnonymous(25, context, header)
 
       assertEquals(25, context.num)

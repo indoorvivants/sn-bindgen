@@ -5,12 +5,19 @@ def wrapPointer(depth: Int, tpe: CType): CType =
   if depth <= 0 then tpe
   else wrapPointer(depth - 1, CType.Pointer(tpe))
 
+// TODO: This class is not implemented well – structs and unions are just similar enough to be handled generically,
+// but different enough that it doesn't quite work.
+// The proper solution (I think) is to create a `FieldBag` class that has a `layout: Struct | Union` field – and
+// everything else should just depend on the layout.
 object NameResolver:
+  private def renderName(prepend: Vector[String], name: String) =
+    (prepend :+ name).mkString("_")
+
   private def goStruct(
       str: Def.Struct,
       prepend: Vector[String],
-      namer: Namer
-  ): ResolvedStruct =
+      namer: AnonymousNameGenerator
+  )(using Config): ResolvedStruct =
     val newAnon = List.newBuilder[ResolvedStruct | ResolvedUnion | ResolvedEnum]
 
     def handleAnon(
@@ -21,11 +28,12 @@ object NameResolver:
     ) =
       str.anonymous(unsafeId) match
         case e: Def.Enum =>
-          val name = namer.genEnumName(nameHint)
+          val anonEnumName = namer.genEnumName(nameHint)
+          val name = renderName(prepend, anonEnumName.value)
           val resolved = ResolvedEnum(
             e.values,
-            name = name,
-            fqn = EnumName((prepend :+ name.value).mkString(".")),
+            name = EnumName(name),
+            fqn = EnumName(name),
             intType = e.intType,
             meta = e.meta
           )
@@ -37,12 +45,13 @@ object NameResolver:
             )
           )
         case s: Def.Struct =>
-          val name = namer.genStructName(nameHint)
+          val anonStructName = namer.genStructName(nameHint)
+          val name = renderName(prepend, anonStructName.value)
           val resolved =
             goStruct(
-              s.copy(name = Some(name)),
-              prepend :+ name.value,
-              createNamer
+              s.copy(name = Some(StructName(name))),
+              prepend :+ anonStructName.value,
+              AnonymousNameGenerator()
             )
           newAnon += resolved
           val fieldName = nameHint.getOrElse("_" + idx.toString())
@@ -50,27 +59,28 @@ object NameResolver:
             StructParameterName(fieldName) -> wrapPointer(
               pointerDepth,
               CType.Reference(
-                Name.Model((prepend :+ name.value).mkString("."))
+                Name.Model(name)
               )
             )
           )
 
         case u: Def.Union =>
-          val name = namer.genUnionName(nameHint)
+          val anonUnionName = namer.genUnionName(nameHint)
+          val name = renderName(prepend, anonUnionName.value)
+          // val name = namer.genUnionName(nameHint)
           val resolved =
             goUnion(
-              u.copy(name = Some(name)),
-              prepend :+ name.value,
-              createNamer
+              u.copy(name = Some(UnionName(name))),
+              prepend :+ anonUnionName.value,
+              AnonymousNameGenerator()
             )
           newAnon += resolved
-          val fieldName = nameHint
-            .getOrElse("_" + idx)
+          val fieldName = nameHint.getOrElse("_" + idx)
           Some(
             StructParameterName(fieldName) -> wrapPointer(
               pointerDepth,
               CType.Reference(
-                Name.Model((prepend :+ name.value).mkString("."))
+                Name.Model(name)
               )
             )
           )
@@ -90,11 +100,12 @@ object NameResolver:
           anon.map: (fs, ct) =>
             fs -> CType.Arr(ct, Some(size))
 
-    val nm =
-      str.name.getOrElse(namer.genStructName(None))
+    val structName = str.name.getOrElse(namer.genStructName(None)).value
     ResolvedStruct(
-      name = nm,
-      fqn = if prepend.isEmpty then nm else StructName(prepend.mkString(".")),
+      name = StructName(structName),
+      fqn = StructName(
+        if prepend.isEmpty then structName else prepend.mkString("_")
+      ),
       fields = newFields,
       anonymous = newAnon.result.toVector,
       staticSize = str.staticSize,
@@ -107,18 +118,19 @@ object NameResolver:
   private def goUnion(
       str: Def.Union,
       prepend: Vector[String],
-      namer: Namer
-  ): ResolvedUnion =
+      namer: AnonymousNameGenerator
+  )(using Config): ResolvedUnion =
     val newAnon = List.newBuilder[ResolvedStruct | ResolvedUnion | ResolvedEnum]
 
     def handleAnon(nameHint: Option[String], unsafeId: Int, idx: Int) =
       str.anonymous(unsafeId) match
         case e: Def.Enum =>
-          val name = namer.genEnumName(nameHint)
+          val anonEnumName = namer.genEnumName(nameHint)
+          val name = renderName(prepend, anonEnumName.value)
           val resolved = ResolvedEnum(
             e.values,
-            name = name,
-            fqn = EnumName((prepend :+ name.value).mkString(".")),
+            name = EnumName(name),
+            fqn = EnumName(name),
             intType = e.intType,
             meta = e.meta
           )
@@ -130,35 +142,39 @@ object NameResolver:
             )
           )
         case s: Def.Struct =>
-          val name = namer.genStructName(nameHint)
+          val anonStructName = namer.genStructName(nameHint)
+          val name = renderName(prepend, anonStructName.value)
+
           val resolved =
             goStruct(
-              s.copy(name = Some(name)),
-              prepend :+ name.value,
-              createNamer
+              s.copy(name = Some(StructName(name))),
+              prepend :+ anonStructName.value,
+              AnonymousNameGenerator()
             )
           newAnon += resolved
           val fieldName = nameHint.getOrElse("_" + idx.toString())
           Some(
             UnionParameterName(fieldName) -> CType.Reference(
-              Name.Model((prepend :+ name.value).mkString("."))
+              Name.Model(name)
             )
           )
 
         case u: Def.Union =>
-          val name = namer.genUnionName(nameHint)
+          val anonUnionName = namer.genUnionName(nameHint)
+          val name = renderName(prepend, anonUnionName.value)
+          // val name = namer.genUnionName(nameHint)
           val resolved =
             goUnion(
-              u.copy(name = Some(name)),
-              prepend :+ name.value,
-              createNamer
+              u.copy(name = Some(UnionName(name))),
+              prepend :+ anonUnionName.value,
+              AnonymousNameGenerator()
             )
           newAnon += resolved
           val fieldName = nameHint
             .getOrElse("_" + idx)
           Some(
             UnionParameterName(fieldName) -> CType.Reference(
-              Name.Model((prepend :+ name.value).mkString("."))
+              Name.Model(name)
             )
           )
     end handleAnon
@@ -185,7 +201,7 @@ object NameResolver:
       fields = newFields,
       fqn =
         if prepend.isEmpty then nm
-        else UnionName(prepend.mkString(".")),
+        else UnionName(prepend.mkString("_")),
       anonymous = newAnon.result.toVector,
       staticSize = str.staticSize,
       // deepFields =
@@ -194,11 +210,22 @@ object NameResolver:
     )
   end goUnion
 
-  def resolveStruct(s: Def.Struct): ResolvedStruct =
-    goStruct(s, s.name.toVector.map(_.value), createNamer)
+  def resolveStruct(s: Def.Struct)(using Config): ResolvedStruct =
+    val resolved =
+      goStruct(s, s.name.toVector.map(_.value), AnonymousNameGenerator())
+    trace(
+      "Resolved struct",
+      Seq(
+        "raw" -> pprint(s),
+        "resolved" -> pprint(resolved)
+      )
+    )
 
-  def resolveUnion(s: Def.Union): ResolvedUnion =
-    goUnion(s, s.name.toVector.map(_.value), createNamer)
+    resolved
+  end resolveStruct
+
+  def resolveUnion(s: Def.Union)(using Config): ResolvedUnion =
+    goUnion(s, s.name.toVector.map(_.value), AnonymousNameGenerator())
 
   def resolveEnum(s: Def.Enum): ResolvedEnum =
     // goUnion(s, s.name.toVector.map(_.value), createNamer)
@@ -212,48 +239,4 @@ object NameResolver:
       meta = s.meta
     )
 
-  type Namer =
-    (
-        genStructName: Option[String] => StructName,
-        genUnionName: Option[String] => UnionName,
-        genEnumName: Option[String] => EnumName
-    )
-
-  def createNamer: Namer =
-    var unions = 0
-    var structs = 0
-    var enums = 0
-    (
-      genStructName = (hint: Option[String]) =>
-        StructName(
-          hint
-            .map(_.capitalize)
-            .getOrElse({
-              val res = s"Struct$structs"
-              structs += 1
-              res
-            })
-        ),
-      genUnionName = (hint: Option[String]) =>
-        UnionName(
-          hint
-            .map(_.capitalize)
-            .getOrElse({
-              val res = s"Union$unions"
-              unions += 1
-              res
-            })
-        ),
-      genEnumName = (hint: Option[String]) =>
-        EnumName(
-          hint
-            .map(_.capitalize)
-            .getOrElse({
-              val res = s"Enum$enums"
-              enums += 1
-              res
-            })
-        )
-    )
-  end createNamer
 end NameResolver
