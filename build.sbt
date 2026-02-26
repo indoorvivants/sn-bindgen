@@ -37,7 +37,7 @@ lazy val Versions = new {
   val opaqueNewtypes = "0.1.0"
 
   val Scala3 = "3.3.7"
-  val Scala3_Next = "3.7.3"
+  val Scala3_Next = "3.8.2"
   val Scala212 = "2.12.20"
   val Scala213 = "2.13.17"
   val Scala2 = List(Scala212, Scala213)
@@ -395,6 +395,7 @@ lazy val tests = projectMatrix
           .settings(
             Compile / bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBinary := (bindgen / Compile / nativeLink).value,
+            Test / scalacOptions ++= Seq("-explain-cyclic"),
             bindgenBindings := Seq.empty,
             bindgenBinary := (bindgen / Compile / nativeLink).value,
             Test / bindgenBindings := {
