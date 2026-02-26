@@ -36,7 +36,7 @@ typedef struct AVStreamGroupTileGrid {
 
 // https://github.com/scala/scala3/issues/25345
 typedef void* h2o_linklist_t;
-typedef int size_t;
+typedef int size_bla;
 
 struct st_h2o_context_t {
       enum { WHAT, THE, HELL } protocol;
@@ -44,9 +44,9 @@ struct st_h2o_context_t {
           h2o_linklist_t idle, active, shutdown;
           union {
               struct {
-                  size_t idle, active, shutdown;
+                  size_bla idle, active, shutdown;
               };
-              size_t counters[1];
+              size_bla counters[1];
           } num_conns;
       } _conns;
   };
