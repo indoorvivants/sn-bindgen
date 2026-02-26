@@ -1,6 +1,6 @@
 resolvers += Resolver.sonatypeCentralSnapshots
 
-addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.5.8")
+addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.5.10")
 
 addSbtPlugin("com.indoorvivants" % "sbt-commandmatrix" % "0.0.5")
 
