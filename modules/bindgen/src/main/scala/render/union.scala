@@ -3,7 +3,7 @@ package rendering
 
 import bindgen.*
 
-def union(model: ResolvedUnion, line: Appender)(using Config)(using
+def union(model: ResolvedUnion, line: Appender)(using Config, Context)(using
     ar: AliasResolver
 ): Exported =
   val unionName = model.name
@@ -68,10 +68,10 @@ def union(model: ResolvedUnion, line: Appender)(using Config)(using
           val typ = scalaType(fieldType)
 
           line(
-            s"def $getterName : $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
+            s"inline def $getterName : $typ = !struct.at(0).asInstanceOf[Ptr[$typ]]"
           )
           line(
-            s"def $setterName(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
+            s"inline def $setterName(value: $typ): Unit = !struct.at(0).asInstanceOf[Ptr[$typ]] = value"
           )
         }
       }

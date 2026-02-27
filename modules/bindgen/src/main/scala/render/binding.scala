@@ -443,11 +443,13 @@ private def enumPredef(
   ) {
     to(lb)(s"given Tag[T] = Tag.$renderedTagName.asInstanceOf[Tag[T]]")
     defBlock(to(lb))("extension (inline t: T)") {
-      to(lb)(s"inline def value: $renderedScalaType = eq.apply(t)")
+      to(lb)(
+        s"inline def value: $renderedScalaType = t.asInstanceOf[$renderedScalaType]"
+      )
       if intType.base == IntegralBase.Int then
-        to(lb)(s"inline def int: CInt = eq.apply(t).toInt")
+        to(lb)(s"inline def int: CInt = value.toInt")
       if intType.sign == SignType.Unsigned then
-        to(lb)(s"inline def uint: CUnsignedInt = eq.apply(t)")
+        to(lb)(s"inline def uint: CUnsignedInt = value")
     }
   }
   lb.result.linesIterator.toList
