@@ -35,6 +35,17 @@ object structs:
   object Big:
     given _tag: Tag[Big] = Tag.materializeCStruct3Tag[CInt, CString, Small]
     
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: Big)
+        inline def x : CInt = struct._1
+        inline def x_=(value: CInt): Unit = (!struct.at1 = value)
+        inline def hello : CString = struct._2
+        inline def hello_=(value: CString): Unit = (!struct.at2 = value)
+        inline def sm : Small = struct._3
+        inline def sm_=(value: Small): Unit = (!struct.at3 = value)
+      end extension
+    
     // Allocates Big on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Big] = scala.scalanative.unsafe.alloc[Big](1)
     def apply(x : CInt, hello : CString, sm : Small)(using Zone): Ptr[Big] =
@@ -44,19 +55,19 @@ object structs:
       (!____ptr).sm = sm
       ____ptr
     
-    extension (struct: Big)
-      def x : CInt = struct._1
-      def x_=(value: CInt): Unit = !struct.at1 = value
-      def hello : CString = struct._2
-      def hello_=(value: CString): Unit = !struct.at2 = value
-      def sm : Small = struct._3
-      def sm_=(value: Small): Unit = !struct.at3 = value
     
 
   opaque type Small = CStruct1[CLongLong]
   
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
+    
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: Small)
+        inline def number : CLongLong = struct._1
+        inline def number_=(value: CLongLong): Unit = (!struct.at1 = value)
+      end extension
     
     // Allocates Small on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
@@ -65,9 +76,6 @@ object structs:
       (!____ptr).number = number
       ____ptr
     
-    extension (struct: Small)
-      def number : CLongLong = struct._1
-      def number_=(value: CLongLong): Unit = !struct.at1 = value
     
 
 object types:
@@ -121,20 +129,33 @@ object structs:
   object Disabled:
     given _tag: Tag[Disabled] = Tag.materializeCStruct2Tag[CInt, CString]
     
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: Disabled)
+        inline def x : CInt = struct._1
+        inline def x_=(value: CInt): Unit = (!struct.at1 = value)
+        inline def hello : CString = struct._2
+        inline def hello_=(value: CString): Unit = (!struct.at2 = value)
+      end extension
+    
     // Allocates Disabled on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Disabled] = scala.scalanative.unsafe.alloc[Disabled](1)
     
-    extension (struct: Disabled)
-      def x : CInt = struct._1
-      def x_=(value: CInt): Unit = !struct.at1 = value
-      def hello : CString = struct._2
-      def hello_=(value: CString): Unit = !struct.at2 = value
     
 
   opaque type Enabled = CStruct2[CInt, CString]
   
   object Enabled:
     given _tag: Tag[Enabled] = Tag.materializeCStruct2Tag[CInt, CString]
+    
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: Enabled)
+        inline def x : CInt = struct._1
+        inline def x_=(value: CInt): Unit = (!struct.at1 = value)
+        inline def hello : CString = struct._2
+        inline def hello_=(value: CString): Unit = (!struct.at2 = value)
+      end extension
     
     // Allocates Enabled on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Enabled] = scala.scalanative.unsafe.alloc[Enabled](1)
@@ -144,11 +165,6 @@ object structs:
       (!____ptr).hello = hello
       ____ptr
     
-    extension (struct: Enabled)
-      def x : CInt = struct._1
-      def x_=(value: CInt): Unit = !struct.at1 = value
-      def hello : CString = struct._2
-      def hello_=(value: CString): Unit = !struct.at2 = value
     
 
 object types:
@@ -197,6 +213,13 @@ object structs:
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
     
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: Small)
+        inline def number : CLongLong = struct._1
+        inline def number_=(value: CLongLong): Unit = (!struct.at1 = value)
+      end extension
+    
     // Allocates Small on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
     def apply(number : CLongLong)(using Zone): Ptr[Small] =
@@ -204,9 +227,6 @@ object structs:
       (!____ptr).number = number
       ____ptr
     
-    extension (struct: Small)
-      def number : CLongLong = struct._1
-      def number_=(value: CLongLong): Unit = !struct.at1 = value
     
 
 object unions:
@@ -243,12 +263,12 @@ object unions:
       ___ptr
     
     extension (struct: Big)
-      def x : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def x_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
-      def hello : CString = !struct.at(0).asInstanceOf[Ptr[CString]]
-      def hello_=(value: CString): Unit = !struct.at(0).asInstanceOf[Ptr[CString]] = value
-      def sm : Small = !struct.at(0).asInstanceOf[Ptr[Small]]
-      def sm_=(value: Small): Unit = !struct.at(0).asInstanceOf[Ptr[Small]] = value
+      inline def x : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      inline def x_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
+      inline def hello : CString = !struct.at(0).asInstanceOf[Ptr[CString]]
+      inline def hello_=(value: CString): Unit = !struct.at(0).asInstanceOf[Ptr[CString]] = value
+      inline def sm : Small = !struct.at(0).asInstanceOf[Ptr[Small]]
+      inline def sm_=(value: Small): Unit = !struct.at(0).asInstanceOf[Ptr[Small]] = value
 
 object types:
     export _root_.libtest.structs.*
@@ -292,6 +312,13 @@ object structs:
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
     
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: Small)
+        inline def number : CLongLong = struct._1
+        inline def number_=(value: CLongLong): Unit = (!struct.at1 = value)
+      end extension
+    
     // Allocates Small on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
     def apply(number : CLongLong)(using Zone): Ptr[Small] =
@@ -299,9 +326,6 @@ object structs:
       (!____ptr).number = number
       ____ptr
     
-    extension (struct: Small)
-      def number : CLongLong = struct._1
-      def number_=(value: CLongLong): Unit = !struct.at1 = value
     
 
 
@@ -362,6 +386,13 @@ object structs:
   object Small:
     given _tag: Tag[Small] = Tag.materializeCStruct1Tag[CLongLong]
     
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: Small)
+        inline def number : CLongLong = struct._1
+        inline def number_=(value: CLongLong): Unit = (!struct.at1 = value)
+      end extension
+    
     // Allocates Small on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Small] = scala.scalanative.unsafe.alloc[Small](1)
     def apply(number : CLongLong)(using Zone): Ptr[Small] =
@@ -369,9 +400,6 @@ object structs:
       (!____ptr).number = number
       ____ptr
     
-    extension (struct: Small)
-      def number : CLongLong = struct._1
-      def number_=(value: CLongLong): Unit = !struct.at1 = value
     
 
 
@@ -468,14 +496,14 @@ object predef:
     private[libtest] trait _BindgenEnumCInt[T](using eq: T =:= CInt):
       given Tag[T] = Tag.Int.asInstanceOf[Tag[T]]
       extension (inline t: T)
-        inline def value: CInt = eq.apply(t)
-        inline def int: CInt = eq.apply(t).toInt
+        inline def value: CInt = t.asInstanceOf[CInt]
+        inline def int: CInt = value.toInt
     private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
       given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
       extension (inline t: T)
-        inline def value: CUnsignedInt = eq.apply(t)
-        inline def int: CInt = eq.apply(t).toInt
-        inline def uint: CUnsignedInt = eq.apply(t)
+        inline def value: CUnsignedInt = t.asInstanceOf[CUnsignedInt]
+        inline def int: CInt = value.toInt
+        inline def uint: CUnsignedInt = value
 
 
 object enumerations:
@@ -558,11 +586,11 @@ object aliases:
   opaque type Visitor = CFuncPtr1[Ptr[Cursor], CInt]
   object Visitor:
     given _tag: Tag[Visitor] = Tag.materializeCFuncPtr1[Ptr[Cursor], CInt]
-    inline def fromPtr(ptr: Ptr[Byte] | Ptr[?]): Visitor = CFuncPtr.fromPtr(ptr.asInstanceOf[Ptr[Byte]])
+    inline def fromPtr(ptr: Ptr[Byte] | CVoidPtr): Visitor = CFuncPtr.fromPtr(ptr.asInstanceOf[Ptr[Byte]])
     inline def apply(inline o: CFuncPtr1[Ptr[Cursor], CInt]): Visitor = o
     extension (v: Visitor)
       inline def value: CFuncPtr1[Ptr[Cursor], CInt] = v
-      inline def toPtr: Ptr[?] = CFuncPtr.toPtr(v)
+      inline def toPtr: CVoidPtr = CFuncPtr.toPtr(v)
 
 object types:
     export _root_.libtest.aliases.*
@@ -606,6 +634,13 @@ object structs:
   object Arr:
     given _tag: Tag[Arr] = Tag.materializeCStruct1Tag[Ptr[Byte]]
     
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: Arr)
+        inline def nested : Ptr[Arr] = struct._1.asInstanceOf[Ptr[Arr]]
+        inline def nested_=(value: Ptr[Arr]): Unit = (!struct.at1 = value.asInstanceOf[Ptr[Byte]])
+      end extension
+    
     // Allocates Arr on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[Arr] = scala.scalanative.unsafe.alloc[Arr](1)
     def apply(nested : Ptr[Arr])(using Zone): Ptr[Arr] =
@@ -613,9 +648,6 @@ object structs:
       (!____ptr).nested = nested
       ____ptr
     
-    extension (struct: Arr)
-      def nested : Ptr[Arr] = struct._1.asInstanceOf[Ptr[Arr]]
-      def nested_=(value: Ptr[Arr]): Unit = !struct.at1 = value.asInstanceOf[Ptr[Byte]]
     
 
 object types:
@@ -699,9 +731,9 @@ object predef:
     private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
       given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
       extension (inline t: T)
-        inline def value: CUnsignedInt = eq.apply(t)
-        inline def int: CInt = eq.apply(t).toInt
-        inline def uint: CUnsignedInt = eq.apply(t)
+        inline def value: CUnsignedInt = t.asInstanceOf[CUnsignedInt]
+        inline def int: CInt = value.toInt
+        inline def uint: CUnsignedInt = value
 
 object structs:
   import _root_.libtest.predef.*
@@ -711,6 +743,19 @@ object structs:
   
   object StructExample:
     given _tag: Tag[StructExample] = Tag.materializeCStruct4Tag[StructExample_Greeting, StructExample_Union0, Ptr[StructExample_Test], StructExample_Hello]
+    
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: StructExample)
+        inline def greeting : StructExample_Greeting = struct._1
+        inline def greeting_=(value: StructExample_Greeting): Unit = (!struct.at1 = value)
+        inline def _2 : StructExample_Union0 = struct._2
+        inline def _2_=(value: StructExample_Union0): Unit = (!struct.at2 = value)
+        inline def test : Ptr[StructExample_Test] = struct._3
+        inline def test_=(value: Ptr[StructExample_Test]): Unit = (!struct.at3 = value)
+        inline def hello : StructExample_Hello = struct._4
+        inline def hello_=(value: StructExample_Hello): Unit = (!struct.at4 = value)
+      end extension
     
     // Allocates StructExample on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[StructExample] = scala.scalanative.unsafe.alloc[StructExample](1)
@@ -722,20 +767,18 @@ object structs:
       (!____ptr).hello = hello
       ____ptr
     
-    extension (struct: StructExample)
-      def greeting : StructExample_Greeting = struct._1
-      def greeting_=(value: StructExample_Greeting): Unit = !struct.at1 = value
-      def _2 : StructExample_Union0 = struct._2
-      def _2_=(value: StructExample_Union0): Unit = !struct.at2 = value
-      def test : Ptr[StructExample_Test] = struct._3
-      def test_=(value: Ptr[StructExample_Test]): Unit = !struct.at3 = value
-      def hello : StructExample_Hello = struct._4
-      def hello_=(value: StructExample_Hello): Unit = !struct.at4 = value
     
   opaque type StructExample_Greeting = CStruct1[CInt]
   
   object StructExample_Greeting:
     given _tag: Tag[StructExample_Greeting] = Tag.materializeCStruct1Tag[CInt]
+    
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: StructExample_Greeting)
+        inline def hello : CInt = struct._1
+        inline def hello_=(value: CInt): Unit = (!struct.at1 = value)
+      end extension
     
     // Allocates StructExample_Greeting on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[StructExample_Greeting] = scala.scalanative.unsafe.alloc[StructExample_Greeting](1)
@@ -744,9 +787,6 @@ object structs:
       (!____ptr).hello = hello
       ____ptr
     
-    extension (struct: StructExample_Greeting)
-      def hello : CInt = struct._1
-      def hello_=(value: CInt): Unit = !struct.at1 = value
     
   
   opaque type StructExample_Union0 = CArray[Byte, Nat._4]
@@ -765,8 +805,8 @@ object structs:
       ___ptr
     
     extension (struct: StructExample_Union0)
-      def x : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
-      def x_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
+      inline def x : CInt = !struct.at(0).asInstanceOf[Ptr[CInt]]
+      inline def x_=(value: CInt): Unit = !struct.at(0).asInstanceOf[Ptr[CInt]] = value
   
   opaque type StructExample_Test = CArray[Byte, Nat._1]
   object StructExample_Test:
@@ -784,8 +824,8 @@ object structs:
       ___ptr
     
     extension (struct: StructExample_Test)
-      def z : CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
-      def z_=(value: CChar): Unit = !struct.at(0).asInstanceOf[Ptr[CChar]] = value
+      inline def z : CChar = !struct.at(0).asInstanceOf[Ptr[CChar]]
+      inline def z_=(value: CChar): Unit = !struct.at(0).asInstanceOf[Ptr[CChar]] = value
   
   opaque type StructExample_Hello = CUnsignedInt
   object StructExample_Hello extends _BindgenEnumCUnsignedInt[StructExample_Hello]:

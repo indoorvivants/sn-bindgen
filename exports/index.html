@@ -103,6 +103,15 @@ object structs:
   object MyStuff:
     given _tag: Tag[MyStuff] = Tag.materializeCStruct2Tag[CInt, CString]
     
+    export fields.*
+    private[libtest] object fields:
+      extension (struct: MyStuff)
+        inline def length : CInt = struct._1
+        inline def length_=(value: CInt): Unit = (!struct.at1 = value)
+        inline def str : CString = struct._2
+        inline def str_=(value: CString): Unit = (!struct.at2 = value)
+      end extension
+    
     // Allocates MyStuff on the heap ??? fields are not initalised or zeroed out
     def apply()(using Zone): Ptr[MyStuff] = scala.scalanative.unsafe.alloc[MyStuff](1)
     def apply(length : CInt, str : CString)(using Zone): Ptr[MyStuff] =
@@ -111,11 +120,6 @@ object structs:
       (!____ptr).str = str
       ____ptr
     
-    extension (struct: MyStuff)
-      def length : CInt = struct._1
-      def length_=(value: CInt): Unit = !struct.at1 = value
-      def str : CString = struct._2
-      def str_=(value: CString): Unit = !struct.at2 = value
     
 
 trait ExportedFunctions:
