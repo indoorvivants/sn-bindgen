@@ -302,7 +302,7 @@ object Binding {
     val bindgenArguments = List.empty[String]
     val excludeSystemPaths = List.empty[Path]
     val exportMode = false
-    val flavour = Flavour.ScalaNative04
+    val flavour = Flavour.ScalaNative05
     val useBraces = false
   }
 

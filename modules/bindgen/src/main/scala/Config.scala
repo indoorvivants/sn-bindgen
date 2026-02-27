@@ -70,7 +70,7 @@ object Config:
       outputChannel = OutputChannel.cli,
       tempDir = TempPath(sys.props("java.io.tmpdir")),
       excludeSystemPaths = Nil,
-      flavour = Flavour.ScalaNative04
+      flavour = Flavour.ScalaNative05
     )
   object defaults:
     val indentSize = IndentationSize(3)

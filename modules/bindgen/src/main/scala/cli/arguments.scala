@@ -96,8 +96,9 @@ object CLI:
   private val isC =
     Opts.flag("c", help = "Generate C part of the binding").orFalse
 
-  private val lang: Opts[Lang] = (isScala, isC).mapN { case (scala, c) =>
-    if scala then Lang.Scala else Lang.C
+  private val lang: Opts[Lang] = (isScala, isC).mapN { case (_, c) =>
+    if c then Lang.C
+    else Lang.Scala // make Scala the default when no flags are passed
   }
 
   private val flavour =
@@ -115,7 +116,7 @@ object CLI:
             )
           case Some(v) =>
             Validated.validNel(v)
-      .withDefault(Flavour.ScalaNative04)
+      .withDefault(Flavour.ScalaNative05)
   end flavour
 
   private val printFiles =
