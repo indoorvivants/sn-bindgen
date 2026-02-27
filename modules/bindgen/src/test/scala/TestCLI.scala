@@ -90,6 +90,20 @@ class TestCLI:
   @Test def test_langs() =
     assertEquals(Lang.Scala, parseExtra("--scala").context.lang)
     assertEquals(Lang.C, parseExtra("--c").context.lang)
+    assertEquals(Lang.Scala, parseExtra().context.lang)
+
+  @Test def test_flavour() =
+    // SN 0.5 is the default
+    assertEquals(Flavour.ScalaNative05, parseExtra().config.flavour)
+    assertEquals(
+      Flavour.ScalaNative04,
+      parseExtra("--flavour", "scala-native04").config.flavour
+    )
+    assertEquals(
+      Flavour.ScalaNative05,
+      parseExtra("--flavour", "scala-native05").config.flavour
+    )
+  end test_flavour
 
   @Test def test_out() =
     assertEquals(
