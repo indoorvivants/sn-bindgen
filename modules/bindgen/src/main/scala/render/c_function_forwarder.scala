@@ -3,6 +3,9 @@ package rendering
 
 import scala.collection.mutable.ListBuffer
 
+// Pattern to match C array types like "int64_t[4]" or "int[10][20]"
+private val arrayTypePattern = """^(.+?)(\[.+\])$""".r
+
 def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
     AliasResolver,
     Config
@@ -14,7 +17,13 @@ def cFunctionForwarder(f: GeneratedFunction.CFunction, line: Appender)(using
         .foreach { case (fp, i) =>
           arglist.addOne {
             if pointers.contains(i) then s"${fp.originalTyp.s} *${fp.name}"
-            else s"${fp.originalTyp.s} ${fp.name}"
+            else
+              // Handle array types: "int64_t[4]" should become "int64_t name[4]"
+              fp.originalTyp.s match
+                case arrayTypePattern(baseType, arraySuffix) =>
+                  s"$baseType ${fp.name}$arraySuffix"
+                case _ =>
+                  s"${fp.originalTyp.s} ${fp.name}"
           }
         }
 
