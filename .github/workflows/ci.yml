@@ -64,7 +64,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        OS: ["ubuntu-22.04", "ubuntu-22.04-arm"]
+        OS: ["ubuntu-24.04", "ubuntu-24.04-arm"]
     runs-on: ${{ matrix.OS }}
     steps:
       - uses: actions/checkout@v4
