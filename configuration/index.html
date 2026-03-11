@@ -33,103 +33,103 @@ the code.</p>
 <p><em>Before version 0.2.3</em>:</p>
 <p><code>--clang bla</code> or <code>--clang-include &lt;folder&gt;</code> to specifically create <code>-I&lt;folder&gt;</code> flag</p>
 <h3><a href="#full-help" id="full-help">Full help</a></h3>
-<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--scala] [--c] [--link-name &lt;string&gt;] [--use-braces] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file] [--export] [--exclude-system-path &lt;string&gt;]... [--flavour &lt;string&gt;]
+<pre><code class='hljs language-text'>[33m[1mUsage: [0mbindgen --package &lt;string&gt; --header &lt;string&gt; [--scala] [--c] [--link-name &lt;string&gt;] [--use-braces] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file] [--export] [--exclude-system-path &lt;string&gt;]... [--flavour &lt;string&gt;]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.3.1
+Version: 0.4.0-RC1
 Built using Scala 3.8.2 and Scala Native 0.5.10
 
-Options and flags:
-    --help
+[33m[1mOptions and flags:[0m
+    [1m[32m--help[0m
         Display this help text.
-    --package &lt;string&gt;
+    [1m[32m--package[0m [4m&lt;string&gt;[0m
         Package name (Scala) for generated code
-    --header &lt;string&gt;
+    [1m[32m--header[0m [4m&lt;string&gt;[0m
         C header file with definitions you want bindings for
-    --scala
+    [1m[32m--scala[0m
         Generate Scala part of the binding
-    --c
+    [1m[32m--c[0m
         Generate C part of the binding
-    --link-name &lt;string&gt;
+    [1m[32m--link-name[0m [4m&lt;string&gt;[0m
         Library name for linkage (i.e. 'clang' is equivalent to -lclang flag)
-    --indentation-size &lt;integer&gt;
+    [1m[32m--indentation-size[0m [4m&lt;integer&gt;[0m
         number of spaces used for indentation (default: 2)
-    --base-indentation &lt;integer&gt;
+    [1m[32m--base-indentation[0m [4m&lt;integer&gt;[0m
         Base indentation of generated Scala code (default: 0)
-    --use-braces
+    [1m[32m--use-braces[0m
         Generate Scala part of the binding with braces or significant whitespace
-    --c-import &lt;string&gt;
+    [1m[32m--c-import[0m [4m&lt;string&gt;[0m
         List of C imports to add to generated C file (at the very least you will need the header file for the library itself)
-    --clang-include &lt;string&gt;
+    [1m[32m--clang-include[0m [4m&lt;string&gt;[0m
         List of include paths passed to Clang
-    --clang &lt;string&gt;
+    [1m[32m--clang[0m [4m&lt;string&gt;[0m
         List of flags to pass directly to Clang
-    --quiet
+    [1m[32m--quiet[0m
         Don't output the binding to STDOUT (if you are debugging, for example)
-    --trace
+    [1m[32m--trace[0m
         Output 'trace' log messages or above
-    --info
+    [1m[32m--info[0m
         Output 'info' log messages or above
-    --warning
+    [1m[32m--warning[0m
         Output 'warning' log messages or above (this is the default)
-    --error
+    [1m[32m--error[0m
         Output 'error' log messages or above
-    --exclusive-prefix &lt;string&gt;
+    [1m[32m--exclusive-prefix[0m [4m&lt;string&gt;[0m
         When provided, only definitions that start with this prefix will be rendered
-    --llvm-bin &lt;string&gt;
+    [1m[32m--llvm-bin[0m [4m&lt;string&gt;[0m
         Path to the LLVM installation bin/ folder
         If provided, the clang binary from that folder will be used to
         figure out system headers folders
-    --clang-path &lt;string&gt;
+    [1m[32m--clang-path[0m [4m&lt;string&gt;[0m
         Path to the Clang executable
         If provided, the binary will be used 
         figure out system headers folders
-    --no-system
+    [1m[32m--no-system[0m
         Do NOT attempt to find clang binary and use it to figure out system headers
         Note that this puts the responsibility of providing paths to common system headers on you
         You can use --clang-include option for that
-    --render.no-constructor &lt;string&gt;
+    [1m[32m--render.no-constructor[0m [4m&lt;string&gt;[0m
         Comma-separated list of names (or wildcards) of structs, for which to NOT render the constructor
         (apply method that takes all the parameters), useful when 
         you see a 'UTF8 string too large while running genBCode'
         examples:
                     --render.no-constructor _GFileOutputStreamClass,_GFileIface
                     --render.no-constructor 'nk_context,nk_style*'
-    --render.opaque-structs &lt;string&gt;
+    [1m[32m--render.opaque-structs[0m [4m&lt;string&gt;[0m
         Comma-separated list of names (or wildcards) of structs, which will be rendered as CArray[...], rather than precise CStruct* - 
         this can be necessary to circumvent the UTF8 string too large issue
         examples:
                     --render.opaque-struct_GFileOutputStreamClass,_GFileIface
                     --render.opaque-struct 'nk_context,nk_style*'
-    --render.no-comments
+    [1m[32m--render.no-comments[0m
         Don't render the comment strings from the source
-    --render.no-location
+    [1m[32m--render.no-location[0m
         Don't render the header location for each symbol
-    --render.external-path &lt;string&gt;
+    [1m[32m--render.external-path[0m [4m&lt;string&gt;[0m
         Render all definitions from a matching path as if they were imported from some package
         example: --render.external-path '*/cairo.h=libcairo'
-    --render.external-name &lt;string&gt;
+    [1m[32m--render.external-name[0m [4m&lt;string&gt;[0m
         Render all definitions with matchign names as if they were imported from some package
         example: --render.external-name 'cairo_*=libcairo'
-    --out &lt;string&gt;
+    [1m[32m--out[0m [4m&lt;string&gt;[0m
         Path to file where code will be generated. If not provided, result is sent to STDOUT
-    --multi-file
+    [1m[32m--multi-file[0m
         Produce binding in multiple files, which should improve compilation times if the number of types/functions is large
-    --print-files
+    [1m[32m--print-files[0m
         (internal use only) Output to stdout the files written by bindgen, 1 per line
-    --export
+    [1m[32m--export[0m
         Generate functions as @exported, so that the generated Scala code can be used as part of a shared/static library
-    --temp-dir &lt;string&gt;
+    [1m[32m--temp-dir[0m [4m&lt;string&gt;[0m
         Path where temporary files will be created during clang interrogation (clang needs to be invoked to get the system headers paths
-    --exclude-system-path &lt;string&gt;
+    [1m[32m--exclude-system-path[0m [4m&lt;string&gt;[0m
         List of paths to mark as non-system (helpful if Clang reports some paths you'd rather not ignore)
-    --flavour &lt;string&gt;
+    [1m[32m--flavour[0m [4m&lt;string&gt;[0m
         Flavour of bindings to generate, all values: scala-native04, scala-native05
 
-Environment Variables:
-    LLVM_BIN=&lt;string&gt;
+[33m[1mEnvironment Variables:[0m
+    [1m[32mLLVM_BIN[0m=&lt;string&gt;
         Path to LLVM installation's bin/ folderIf provided, the clang binary from that folder will be used to
-    figure out system headers folders
+        figure out system headers folders
 </code></pre>
 </div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2026 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
