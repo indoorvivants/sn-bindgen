@@ -1,6 +1,7 @@
 package bindgen
 
 import bindgen.rendering.*
+import com.monovore.decline.HelpFormat
 
 import java.io.{File, FileWriter}
 import scala.scalanative.unsafe.*
@@ -13,11 +14,25 @@ object Generate:
     Zone:
       CLI.command.parse(arguments, sys.env) match
         case Left(help) =>
-          val (modified, code) =
-            if help.errors.nonEmpty then help.copy(body = Nil) -> -1
-            else help -> 0
-          System.err.println(modified)
-          sys.exit(code)
+          val base =
+            // We manually implement auto colors until Decline 2.6.1 is released:
+            // https://github.com/bkirwi/decline/pull/645
+            HelpFormat.Colors.withColors(
+              !sys.env.contains("NO_COLOR")
+            )
+          val format =
+            if help.errors.nonEmpty then
+              base
+                .withCommands(false)
+                .withDescription(false)
+                .withOptions(false)
+                .withEnv(false)
+            else base
+
+          System.err.println(
+            help.render(format)
+          )
+          if help.errors.nonEmpty then sys.exit(-1) else sys.exit(0)
         case Right(suspendedConfig) =>
           val config = suspendedConfig.build(rest)
           validateConfig(config) match
