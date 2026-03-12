@@ -26,10 +26,14 @@ object BindgenRender:
     val genCCode = generatedCSource
       .map { cs =>
         s"""
-          |**Generated `C` code**
+          |<div class = "bindgen-generated-c">
+          |<div class = "bindgen-generated-c-title">Glue C code</div>
+          |
           |```c
           |${cs}
           |```
+          |
+          |</div>
           """.trim.stripMargin
       }
       .getOrElse("")
@@ -37,22 +41,27 @@ object BindgenRender:
     s"""
     |
     |
-    |<div class = "flex-col w-full gap-4">
-    |<div class = "w-12/12">
+    |<div class = "bindgen-comparison-container">
     |
-    |**Source `C` code**
+    |<div class = "bindgen-original-c">
+    |<div class = "bindgen-original-c-title">C code</div>
+    |
     |```c
     |${cSource}
     |```
     |
     |</div>
+    |</div>
     |
-    |<div class = "w-12/12">
+    |<div class = "bindgen-generated">
+    |<div class = "bindgen-generated-scala">
+    | <div class = "bindgen-generated-scala-title">Scala code</div>
     |
-    |**Generated `Scala` code**
     |```scala
     |${scalaSource}
     |```
+    |
+    | </div>
     |
     |$genCCode
     |
@@ -138,7 +147,11 @@ object BindgenRender:
     "<pre><code class='hljs language-text'>" +
       safe(
         os.proc(Seq(binary, "--help"))
-          .call(mergeErrIntoOut = true, check = false)
+          .call(
+            mergeErrIntoOut = true,
+            check = false,
+            env = Map("NO_COLOR" -> "true")
+          )
           .out
           .text()
       ) + "</code></pre>"

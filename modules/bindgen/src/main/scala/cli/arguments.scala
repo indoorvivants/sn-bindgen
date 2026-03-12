@@ -374,6 +374,10 @@ object CLI:
     .orFalse
     .map(ExportMode.apply(_))
 
+  val help = Opts
+    .flag("help", help = "Display help", short = "h", Visibility.Partial)
+    .asHelp
+
   case class CLIConfig(
       context: Context,
       config: Config
