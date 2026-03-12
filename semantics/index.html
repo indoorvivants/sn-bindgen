@@ -1,12 +1,12 @@
-<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/stackoverflow-light.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">sn-bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/reporting-issues/index.html">Reporting issues</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
+<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/atom-one-dark.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/extra.css" /><link rel="stylesheet" href="/assets/styles.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="sb-body"><header class="sb-header"><div class="sb-title-container"><a class="sb-title-link" href="/">sn-bindgen</a><p class="sb-title-tagline">Scala 3 Native binding generator to C libraries</p></div><div id="sb-search-container"></div><div class="sb-site-links"><a class="sb-github-link" href="https://github.com/indoorvivants/sn-bindgen"><img class="sb-github-image" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="sb-main-container"><aside class="sb-aside"><ul class="sb-navbar-container sb-navbar-container-0"><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/index.html">Home</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/quickstart/index.html">Quick start</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/configuration/index.html">Configuration </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/semantics/index.html">Semantics </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/cookbook/index.html">Cookbook</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/exports/index.html">Exports </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/limitations/index.html">Limitations</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/reporting-issues/index.html">Reporting issues</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/motivation/index.html">Motivation</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li></ul></aside><article class="sb-article"><div class="sb-toc-container"><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="sbt-toc-list-link" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="sbt-toc-list-link" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="sbt-toc-list-link" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="sbt-toc-list-link" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="sbt-toc-list-link" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="sbt-toc-list-link" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="sbt-toc-list-link" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="sbt-toc-list-link" href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
 <p>For those types, we generate getters, setters, <code>Tag</code> definition, and two <code>apply</code> methods:</p>
 <ol>
 <li>A constructor, which takes all the parameters as arguments</li>
 <li>An allocator, which only creates an instance on the heap, without initialising it</li>
 </ol>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef struct {
   long long number;
 } Small;
@@ -18,8 +18,10 @@ typedef struct {
 } Big;
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -87,6 +89,7 @@ object all:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
 <h3><a href="#you-can-disable-constructor-generation" id="you-can-disable-constructor-generation">You can disable constructor generation</a></h3>
@@ -98,9 +101,9 @@ code):</p>
 <p>To work around it, you can disable constructor generation by passing a comma-separated
 list of struct names using the <code>--render.no-constructor</code> option in CLI, and <code>noConstructor</code>
 parameter in the <code>Binding(...)</code> specification.</p>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef struct {
   int x;
   char* hello;
@@ -112,8 +115,10 @@ typedef struct {
 } Disabled;
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -176,14 +181,15 @@ object all:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
 <h2><a href="#unions-are-converted-to-opaque-types" id="unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></h2>
 <p>For a union with <code>N</code> members, <code>N</code> constructors will be generated,
 along with getters and setters.</p>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef struct {
   long long number;
 } Small;
@@ -195,8 +201,10 @@ typedef union {
 } Big;
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -280,13 +288,14 @@ object all:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
 <h2><a href="#simple-functions-are-converted-to-direct-extern-functions" id="simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct <code>@extern</code> functions</a></h2>
 <p>Where &quot;Simple&quot; means &quot;not passing naked <code>structs</code>&quot;, because Scala Native cannot handle that (passing by pointer is okay)</p>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef struct {
   long long number;
 } Small;
@@ -295,8 +304,10 @@ long simple(int x, char *y);
 Small* with_pointers(Small *x, int y);
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -352,15 +363,16 @@ object all:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
 <h2><a href="#problematic-functions-generate-c-forwarders" id="problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></h2>
 <p>Where &quot;Problematic&quot; means having a struct as one of its arguments or return type.
 In this case we generate several variations of public Scala functions,
 but they all delegate to an external C function which takes its arguments as <strong>pointers</strong>, and (optionally) returns its value in a provided heap-allocated location.</p>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef struct {
   long long number;
 } Small;
@@ -369,8 +381,10 @@ void bad_arguments(Small n, Small n2);
 Small bad_return_type();
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -416,22 +430,22 @@ object functions:
   import extern_functions.*
   export extern_functions.*
 
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_arguments(n, n2)
+
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](2)
     !(__ptr_0 + 0) = n
     !(__ptr_0 + 1) = n2
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_arguments(n, n2)
+  def bad_return_type()(__return : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_return_type(__return)
 
   def bad_return_type()(using Zone): Small =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](1)
     __sn_wrap_libtest_bad_return_type((__ptr_0 + 0))
     !(__ptr_0 + 0)
-
-  def bad_return_type()(__return : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_return_type(__return)
 
 object types:
     export _root_.libtest.structs.*
@@ -443,7 +457,9 @@ object all:
 
 
 </code></pre>
-<p><strong>Generated <code>C</code> code</strong></p>
+ </div>
+<div class = "bindgen-generated-c">
+<div class = "bindgen-generated-c-title">Glue C code</div>
 <pre><code class="language-c">#include &lt;string.h&gt;
 
 void __sn_wrap_libtest_bad_arguments(Small *n, Small *n2) {
@@ -462,14 +478,15 @@ void __sn_wrap_libtest_bad_return_type(Small *____return) {
 </code></pre>
 </div>
 </div>
+</div>
 <h2><a href="#enums-are-generated-for-specific-c-type" id="enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></h2>
 <p>Whatever type clang reports for a particular enum - that's the type that will be
 used for the enum.</p>
 <p>This is important, as on Windows enums are <code>int</code> by default, whereas on Linux and OS X they are <code>unsigned int</code> (if there's no negative elements).</p>
 <p>This documentation is built on Linux.</p>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef enum {
   U_X = 1,
   U_Y = 4,
@@ -483,8 +500,10 @@ typedef enum {
 } MySigned;
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -553,20 +572,23 @@ object all:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
 <h2><a href="#function-pointers-are-defined-as-opaque-types" id="function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></h2>
 <p>The inlining in <code>apply</code> method is important - it's a restricting of Scala Native
 that the function must be statically known.</p>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef void* Cursor;
 typedef int (*Visitor)(Cursor*);
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -601,15 +623,16 @@ object all:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
 <h2><a href="#recursive-structs-are-rewritten-with-opaque-pointers" id="recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></h2>
 <p>This is invisible to the user, so doesn't impact the experience, but
 can complicate reading the code.</p>
 <p>Scala cannot have recursive type aliases.</p>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef struct Arr;
 
 typedef struct {
@@ -617,8 +640,10 @@ typedef struct {
 } Arr;
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -658,12 +683,13 @@ object all:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
 <h2><a href="#global-enums-are-rendered-as-constants" id="global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></h2>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">enum {
   HELLO = 25,
   BYEBYE = 11
@@ -676,8 +702,10 @@ enum {
 };
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -696,6 +724,7 @@ object constants:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
 <h2><a href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately" id="anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></h2>
@@ -707,9 +736,9 @@ name will be used as heuristic for naming the anonymous definition.</p>
 and <code>StructExample_Union0</code> will be generated</p>
 <p>Deep field access (e.g. calling <code>.x</code> on <code>StructExample</code> directly, like what C allows, <strong>is not supported yet</strong>,
 but planned.</p>
-<div class = "flex-col w-full gap-4">
-<div class = "w-12/12">
-<p><strong>Source <code>C</code> code</strong></p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
 <pre><code class="language-c">typedef struct {
   struct {int hello;} greeting;
   union {int x;};
@@ -718,8 +747,10 @@ but planned.</p>
 } StructExample;
 </code></pre>
 </div>
-<div class = "w-12/12">
-<p><strong>Generated <code>Scala</code> code</strong></p>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
 import _root_.scala.scalanative.unsafe.*
@@ -858,9 +889,10 @@ object all:
 
 
 </code></pre>
+ </div>
 </div>
 </div>
-</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2026 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
+</div></article></main><footer class="sb-footer">© 2021-2026 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               gtag('js', new Date());
 

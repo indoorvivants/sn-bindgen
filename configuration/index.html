@@ -1,4 +1,4 @@
-<html><head><title>sn-bindgen: Configuration </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/stackoverflow-light.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/styles.css" /><link rel="stylesheet" href="/assets/tailwind.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="bg-gradient-to-r from-emerald-800 to-sky-700 mt-4 w-full"><header class="flex m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl flex-col md:flex-row md:items-center justify-between mb-2"><div><a class="block text-6xl text-white" href="/">sn-bindgen</a><p class="text-white">Scala 3 Native binding generator to C libraries</p></div><div id="searchContainer"></div><div class="site-links"><a href="https://github.com/indoorvivants/sn-bindgen"><img class="w-12 opacity-70 hover:opacity-100" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="rounded-xl bg-white m-2 mb-4 md:m-auto md:w-11/12 lg:max-w-7xl p-4 flex flex-col-reverse md:flex-row gap-6"><aside class="lg:w-64 shrink-1 lg:shrink-0 grow-0 md:border-r-2 max-w-[300px] border-slate-200 pr-2"><ul class="text-2xl p-4 block"><li><a class="" href="/index.html">Home</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/quickstart/index.html">Quick start</a><ul class="text-xl p-2 block"></ul></li><li><a class="font-bold" href="/configuration/index.html">Configuration </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/semantics/index.html">Semantics </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/cookbook/index.html">Cookbook</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/exports/index.html">Exports </a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/limitations/index.html">Limitations</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/reporting-issues/index.html">Reporting issues</a><ul class="text-xl p-2 block"></ul></li><li><a class="" href="/motivation/index.html">Motivation</a><ul class="text-xl p-2 block"></ul></li></ul></aside><article class="grow-4 lg:max-w-6xl markdown"><div class="float-right p-3 rounded-md border-2 border-sky-700 max-w-12 m-4"><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#sbt-plugin">SBT plugin</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#choosing-a-different-version">Choosing a different version</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#overriding-path-to-bindgen-binary">Overriding path to bindgen binary</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#different-modes-of-operation">Different modes of operation</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#sourceresource-generator-mode">Source/resource generator mode</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#manual-mode">Manual mode</a></li></ul></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#cli">CLI</a><ul class="list-disc my-0 mx-2 text-sm"><li><a class="underline hover:no-underline text-sky-700 text-base" href="#passing-clang-flags">Passing clang flags</a></li><li><a class="underline hover:no-underline text-sky-700 text-base" href="#full-help">Full help</a></li></ul></li></ul></div><div><h2><a href="#sbt-plugin" id="sbt-plugin">SBT plugin</a></h2>
+<html><head><title>sn-bindgen: Configuration </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/atom-one-dark.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/extra.css" /><link rel="stylesheet" href="/assets/styles.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="sb-body"><header class="sb-header"><div class="sb-title-container"><a class="sb-title-link" href="/">sn-bindgen</a><p class="sb-title-tagline">Scala 3 Native binding generator to C libraries</p></div><div id="sb-search-container"></div><div class="sb-site-links"><a class="sb-github-link" href="https://github.com/indoorvivants/sn-bindgen"><img class="sb-github-image" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="sb-main-container"><aside class="sb-aside"><ul class="sb-navbar-container sb-navbar-container-0"><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/index.html">Home</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/quickstart/index.html">Quick start</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/configuration/index.html">Configuration </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/semantics/index.html">Semantics </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/cookbook/index.html">Cookbook</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/exports/index.html">Exports </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/limitations/index.html">Limitations</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/reporting-issues/index.html">Reporting issues</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/motivation/index.html">Motivation</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li></ul></aside><article class="sb-article"><div class="sb-toc-container"><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#sbt-plugin">SBT plugin</a><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#choosing-a-different-version">Choosing a different version</a></li><li><a class="sbt-toc-list-link" href="#overriding-path-to-bindgen-binary">Overriding path to bindgen binary</a></li><li><a class="sbt-toc-list-link" href="#different-modes-of-operation">Different modes of operation</a></li><li><a class="sbt-toc-list-link" href="#sourceresource-generator-mode">Source/resource generator mode</a></li><li><a class="sbt-toc-list-link" href="#manual-mode">Manual mode</a></li></ul></li><li><a class="sbt-toc-list-link" href="#cli">CLI</a><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#passing-clang-flags">Passing clang flags</a></li><li><a class="sbt-toc-list-link" href="#full-help">Full help</a></li></ul></li></ul></div><div><h2><a href="#sbt-plugin" id="sbt-plugin">SBT plugin</a></h2>
 <h3><a href="#choosing-a-different-version" id="choosing-a-different-version">Choosing a different version</a></h3>
 <p>Use <code>bindgenVersion</code> to choose another version of bindgen (by default it matches the plugin version)</p>
 <h3><a href="#overriding-path-to-bindgen-binary" id="overriding-path-to-bindgen-binary">Overriding path to bindgen binary</a></h3>
@@ -33,105 +33,105 @@ the code.</p>
 <p><em>Before version 0.2.3</em>:</p>
 <p><code>--clang bla</code> or <code>--clang-include &lt;folder&gt;</code> to specifically create <code>-I&lt;folder&gt;</code> flag</p>
 <h3><a href="#full-help" id="full-help">Full help</a></h3>
-<pre><code class='hljs language-text'>[33m[1mUsage: [0mbindgen --package &lt;string&gt; --header &lt;string&gt; [--scala] [--c] [--link-name &lt;string&gt;] [--use-braces] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file] [--export] [--exclude-system-path &lt;string&gt;]... [--flavour &lt;string&gt;]
+<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--scala] [--c] [--link-name &lt;string&gt;] [--use-braces] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file] [--export] [--exclude-system-path &lt;string&gt;]... [--flavour &lt;string&gt;]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.4.0-RC1
+Version: 0.4.0
 Built using Scala 3.8.2 and Scala Native 0.5.10
 
-[33m[1mOptions and flags:[0m
-    [1m[32m--help[0m
+Options and flags:
+    --help
         Display this help text.
-    [1m[32m--package[0m [4m&lt;string&gt;[0m
+    --package &lt;string&gt;
         Package name (Scala) for generated code
-    [1m[32m--header[0m [4m&lt;string&gt;[0m
+    --header &lt;string&gt;
         C header file with definitions you want bindings for
-    [1m[32m--scala[0m
+    --scala
         Generate Scala part of the binding
-    [1m[32m--c[0m
+    --c
         Generate C part of the binding
-    [1m[32m--link-name[0m [4m&lt;string&gt;[0m
+    --link-name &lt;string&gt;
         Library name for linkage (i.e. 'clang' is equivalent to -lclang flag)
-    [1m[32m--indentation-size[0m [4m&lt;integer&gt;[0m
+    --indentation-size &lt;integer&gt;
         number of spaces used for indentation (default: 2)
-    [1m[32m--base-indentation[0m [4m&lt;integer&gt;[0m
+    --base-indentation &lt;integer&gt;
         Base indentation of generated Scala code (default: 0)
-    [1m[32m--use-braces[0m
+    --use-braces
         Generate Scala part of the binding with braces or significant whitespace
-    [1m[32m--c-import[0m [4m&lt;string&gt;[0m
+    --c-import &lt;string&gt;
         List of C imports to add to generated C file (at the very least you will need the header file for the library itself)
-    [1m[32m--clang-include[0m [4m&lt;string&gt;[0m
+    --clang-include &lt;string&gt;
         List of include paths passed to Clang
-    [1m[32m--clang[0m [4m&lt;string&gt;[0m
+    --clang &lt;string&gt;
         List of flags to pass directly to Clang
-    [1m[32m--quiet[0m
+    --quiet
         Don't output the binding to STDOUT (if you are debugging, for example)
-    [1m[32m--trace[0m
+    --trace
         Output 'trace' log messages or above
-    [1m[32m--info[0m
+    --info
         Output 'info' log messages or above
-    [1m[32m--warning[0m
+    --warning
         Output 'warning' log messages or above (this is the default)
-    [1m[32m--error[0m
+    --error
         Output 'error' log messages or above
-    [1m[32m--exclusive-prefix[0m [4m&lt;string&gt;[0m
+    --exclusive-prefix &lt;string&gt;
         When provided, only definitions that start with this prefix will be rendered
-    [1m[32m--llvm-bin[0m [4m&lt;string&gt;[0m
+    --llvm-bin &lt;string&gt;
         Path to the LLVM installation bin/ folder
         If provided, the clang binary from that folder will be used to
         figure out system headers folders
-    [1m[32m--clang-path[0m [4m&lt;string&gt;[0m
+    --clang-path &lt;string&gt;
         Path to the Clang executable
         If provided, the binary will be used 
         figure out system headers folders
-    [1m[32m--no-system[0m
+    --no-system
         Do NOT attempt to find clang binary and use it to figure out system headers
         Note that this puts the responsibility of providing paths to common system headers on you
         You can use --clang-include option for that
-    [1m[32m--render.no-constructor[0m [4m&lt;string&gt;[0m
+    --render.no-constructor &lt;string&gt;
         Comma-separated list of names (or wildcards) of structs, for which to NOT render the constructor
         (apply method that takes all the parameters), useful when 
         you see a 'UTF8 string too large while running genBCode'
         examples:
                     --render.no-constructor _GFileOutputStreamClass,_GFileIface
                     --render.no-constructor 'nk_context,nk_style*'
-    [1m[32m--render.opaque-structs[0m [4m&lt;string&gt;[0m
+    --render.opaque-structs &lt;string&gt;
         Comma-separated list of names (or wildcards) of structs, which will be rendered as CArray[...], rather than precise CStruct* - 
         this can be necessary to circumvent the UTF8 string too large issue
         examples:
                     --render.opaque-struct_GFileOutputStreamClass,_GFileIface
                     --render.opaque-struct 'nk_context,nk_style*'
-    [1m[32m--render.no-comments[0m
+    --render.no-comments
         Don't render the comment strings from the source
-    [1m[32m--render.no-location[0m
+    --render.no-location
         Don't render the header location for each symbol
-    [1m[32m--render.external-path[0m [4m&lt;string&gt;[0m
+    --render.external-path &lt;string&gt;
         Render all definitions from a matching path as if they were imported from some package
         example: --render.external-path '*/cairo.h=libcairo'
-    [1m[32m--render.external-name[0m [4m&lt;string&gt;[0m
+    --render.external-name &lt;string&gt;
         Render all definitions with matchign names as if they were imported from some package
         example: --render.external-name 'cairo_*=libcairo'
-    [1m[32m--out[0m [4m&lt;string&gt;[0m
+    --out &lt;string&gt;
         Path to file where code will be generated. If not provided, result is sent to STDOUT
-    [1m[32m--multi-file[0m
+    --multi-file
         Produce binding in multiple files, which should improve compilation times if the number of types/functions is large
-    [1m[32m--print-files[0m
+    --print-files
         (internal use only) Output to stdout the files written by bindgen, 1 per line
-    [1m[32m--export[0m
+    --export
         Generate functions as @exported, so that the generated Scala code can be used as part of a shared/static library
-    [1m[32m--temp-dir[0m [4m&lt;string&gt;[0m
+    --temp-dir &lt;string&gt;
         Path where temporary files will be created during clang interrogation (clang needs to be invoked to get the system headers paths
-    [1m[32m--exclude-system-path[0m [4m&lt;string&gt;[0m
+    --exclude-system-path &lt;string&gt;
         List of paths to mark as non-system (helpful if Clang reports some paths you'd rather not ignore)
-    [1m[32m--flavour[0m [4m&lt;string&gt;[0m
+    --flavour &lt;string&gt;
         Flavour of bindings to generate, all values: scala-native04, scala-native05
 
-[33m[1mEnvironment Variables:[0m
-    [1m[32mLLVM_BIN[0m=&lt;string&gt;
+Environment Variables:
+    LLVM_BIN=&lt;string&gt;
         Path to LLVM installation's bin/ folderIf provided, the clang binary from that folder will be used to
         figure out system headers folders
 </code></pre>
-</div></article></main><footer class="text-center m-4 p-4 text-lg text-white font-bold m-auto w-full">© 2021-2026 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
+</div></article></main><footer class="sb-footer">© 2021-2026 Anton Sviridov</footer><script src="https://www.googletagmanager.com/gtag/js?id=G-2V7BY56Z37"></script><script> window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               gtag('js', new Date());
 
