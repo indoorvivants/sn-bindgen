@@ -21,7 +21,7 @@ object Docs extends LibrarySite.App:
       highlighting = SyntaxHighlighting.HighlightJS.default
         .copy(
           languages = List("scala", "c", "dockerfile"),
-          theme = "stackoverflow-light"
+          theme = "atom-one-dark"
         )
     )
   override def extra(site: Site[LibrarySite.Doc]) =

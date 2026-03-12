@@ -1,0 +1,88 @@
+table.compatibility {
+  /* border:1px solid darkgrey; */
+  border-collapse: collapse;
+}
+table.compatibility th, td{
+  /* border:1px solid darkgrey; */
+  border-collapse: collapse;
+  padding: 8px;
+}
+
+/* Bindgen code comparison styles */
+.bindgen-comparison-container {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.bindgen-original-c,
+.bindgen-generated-scala,
+.bindgen-generated-c {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--sb-border-color, #e5e7eb);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: var(--sb-bg-secondary, #f9fafb);
+}
+
+.bindgen-original-c-title,
+.bindgen-generated-scala-title,
+.bindgen-generated-c-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1rem;
+  background-color: var(--sb-header-bg, #0f172a);
+  color: var(--sb-header-text, #ffffff);
+  border-bottom: 1px solid var(--sb-border-color, #e5e7eb);
+}
+
+.bindgen-original-c pre,
+.bindgen-generated-scala pre,
+.bindgen-generated-c pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.bindgen-original-c code,
+.bindgen-generated-scala code,
+.bindgen-generated-c code {
+  font-family: var(--sb-font-mono, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace);
+}
+
+.bindgen-generated {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.bindgen-generated .bindgen-generated-scala,
+.bindgen-generated .bindgen-generated-c {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Single column layout when only generated code is shown */
+.bindgen-generated:only-child {
+  margin-top: 0;
+}
+
+/* Responsive: stack vertically on smaller screens */
+@media (max-width: 900px) {
+  .bindgen-comparison-container,
+  .bindgen-generated {
+    flex-direction: column;
+  }
+
+  .bindgen-original-c,
+  .bindgen-generated-scala,
+  .bindgen-generated-c {
+    flex: none;
+    width: 100%;
+  }
+}
