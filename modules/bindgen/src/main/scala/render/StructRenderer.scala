@@ -41,6 +41,8 @@ private[rendering] class StructRenderer(struct: ResolvedStruct, line: Appender)(
     struct.fields.zipWithIndex.toVector
   val namedFields = namedFieldsWithIndex.map(_._1)
 
+  info(struct.fields)
+
   val applyArgList = List.newBuilder[String]
 
   namedFieldsWithIndex.map { case ((name, typ), idx) =>

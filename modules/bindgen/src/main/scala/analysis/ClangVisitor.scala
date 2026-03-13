@@ -25,15 +25,66 @@ object ClangVisitor:
 
           val loc = cursor.location
 
-          val location = Location(
-            loc.isFromMainFile,
-            loc.isFromSystemHeader || systemDetector.isSystem(loc.getFilename)
-          )
+          lazy val location =
+            val filename = loc.getFilename
+            Location(
+              loc.isFromMainFile,
+              loc.isFromSystemHeader || filename.isEmpty || filename
+                .exists(
+                  systemDetector.isSystem
+                )
+            )
 
           if cursor.kind == CXCursorKind.CXCursor_FunctionDecl then
             val function = visitFunction(cursor)
 
             binding.add(function, location)
+          end if
+
+          if cursor.kind == CXCursorKind.CXCursor_MacroDefinition
+          then
+            val name = cursor.spelling
+            val extent = cursor.extent
+
+            val tokensPtr = stackalloc[Ptr[CXToken]]()
+            val numTokensPtr = stackalloc[CUnsignedInt]()
+
+            val tu = clang_Cursor_getTranslationUnit(cursor)
+
+            clang_tokenize(tu, extent, tokensPtr, numTokensPtr)
+
+            val tokens = List.newBuilder[(CXTokenKind, String)]
+            for i <- 0 until (!numTokensPtr).toInt
+            do
+
+              val tokRef = (!tokensPtr).apply(i)
+              val king = clang_getTokenKind(tokRef)
+              val spelling = clang_getTokenSpelling(tu, tokRef)
+              val token =
+                fromCString(clang_getCString(spelling))
+
+              clang_disposeString(spelling)
+
+              tokens += king -> token
+            end for
+
+            clang_disposeTokens(tu, !tokensPtr, !numTokensPtr)
+
+            val definition =
+              MacroDefinition.fromTokens(name, tokens.result().tail)
+
+            trace(
+              "Macro definition:",
+              Seq(
+                "location" -> location.toString,
+                "name" -> name,
+                "tokens" -> tokens.result().toString,
+                "def" -> definition
+              )
+            )
+
+            if location.shouldBeIncluded then
+              definition.foreach(binding.macroDefinitions += _)
           end if
 
           if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then

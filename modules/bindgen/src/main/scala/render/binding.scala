@@ -3,8 +3,9 @@ package rendering
 
 import bindgen.{CType, ResolvedEnum, ResolvedStruct, *}
 import opaque_newtypes.given
+import bindgen.MacroDefinition
 
-case class Constants(enums: Seq[Def.Enum])
+case class Constants(enums: Seq[Def.Enum], macros: List[MacroDefinition])
 
 opaque type StreamName = String
 object StreamName extends opaque_newtypes.OpaqueString[StreamName]
@@ -85,7 +86,7 @@ def renderBinding(
   val hasAliases = binding.aliases.nonEmpty
   val hasUnions = binding.unions.nonEmpty
   val hasStructs = binding.structs.nonEmpty
-  val hasConstants = binding.unnamedEnums.nonEmpty
+  val hasConstants = binding.unnamedEnums.nonEmpty || binding.macros.nonEmpty
   val hasAnyTypes = hasAnyEnums || hasAliases || hasUnions || hasStructs
   val typeImports = TypeImports(
     // We only need type imports for top level enums
@@ -237,6 +238,7 @@ def renderBinding(
     renderConstants(
       simpleStream("constants"),
       binding.unnamedEnums.toList,
+      binding.macros,
       mode = renderMode
     )
 
@@ -357,11 +359,12 @@ end renderStructs
 private def renderConstants(
     out: LineBuilder,
     enums: List[Def.Enum],
+    macros: List[MacroDefinition],
     mode: RenderMode
 )(using Config, AliasResolver) =
-  if enums.nonEmpty then
+  if enums.nonEmpty || macros.nonEmpty then
     maybeObjectBlock(out, mode)("object constants") {
-      constants(Constants(enums), to(out))
+      constants(Constants(enums, macros), to(out))
     }
 
 private def renderAll[

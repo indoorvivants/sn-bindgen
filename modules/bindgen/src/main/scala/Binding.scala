@@ -9,6 +9,7 @@ case class Binding(
     unions: Set[Def.Union],
     structs: Set[Def.Struct],
     enums: Set[Def.Enum],
+    macros: List[MacroDefinition],
     functions: Set[Def.Function],
     unnamedEnums: Set[Def.Enum]
 ):

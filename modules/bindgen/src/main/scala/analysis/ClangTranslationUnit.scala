@@ -41,7 +41,7 @@ object ClangTranslationUnit:
       allClangFlags.size,
       null,
       0.toUInt,
-      CXTranslationUnit_Flags.CXTranslationUnit_None.uint
+      CXTranslationUnit_Flags.CXTranslationUnit_DetailedPreprocessingRecord.uint
     )
 
     if unit == null.asInstanceOf[CXTranslationUnit] then

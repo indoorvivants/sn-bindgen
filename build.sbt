@@ -268,7 +268,7 @@ lazy val libclang = project
     bindgenBinary := sys.env
       .get("SN_BINDGEN_BINARY_OVERRIDE")
       .map(new File(_))
-      .get,
+      .getOrElse((LocalProject("bindgen") / Compile / nativeLink).value),
     bindgenBindings := {
       val detected =
         llvmFolder(nativeConfig.value.clang.toAbsolutePath()).llvmInclude

@@ -5,7 +5,8 @@ import scala.collection.mutable.ListBuffer
 
 class BindingBuilder(
     var named: mutable.Map[DefName, BindingDefinition] = mutable.Map.empty,
-    var unnamed: ListBuffer[BindingDefinition] = ListBuffer.empty
+    var unnamed: ListBuffer[BindingDefinition] = ListBuffer.empty,
+    var macroDefinitions: ListBuffer[MacroDefinition] = ListBuffer.empty
 ):
   def add(item: Def, location: Location) =
     item.defName.foreach { n =>
@@ -38,6 +39,8 @@ class BindingBuilder(
     case BindingDefinition(item: Def.Enum, _) => item
   }.toSet
 
+  def macros = macroDefinitions.toList
+
   def functions: Set[Def.Function] = named.collect {
     case (k, BindingDefinition(item: Def.Function, _)) => item
   }.toSet
@@ -49,6 +52,7 @@ class BindingBuilder(
       structs = this.structs,
       functions = this.functions,
       enums = this.enums,
+      macros = this.macros,
       unnamedEnums = this.unnamedEnums
     )
 end BindingBuilder

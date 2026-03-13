@@ -47,6 +47,7 @@ end clang_visitChildren
 extension (cursor: CXCursor)
   def location(using Zone): CXSourceLocation = clang_getCursorLocation(cursor)
   def spelling(using Zone): String = clang_getCursorSpelling(cursor).string
+  def extent(using Zone) = clang_getCursorExtent(cursor)
   def tpe(using Zone): CXType = clang_getCursorType(cursor)
 
 extension (cursorKind: CXCursorKind)
@@ -67,7 +68,12 @@ extension (loc: CXSourceLocation)
   def getFilename(using Zone) =
     val file = stackalloc[CXFile](1)
     clang_getFileLocation(loc, file, null, null, null)
-    clang_getFileName(!file).string
+    val fname = clang_getFileName(!file)
+    val orig = clang_getCString(fname)
+    Option.when(orig != null):
+      val str = fromCString(orig)
+      clang_disposeString(fname)
+      str
 end extension
 
 extension (cx: CXClientData.type)
