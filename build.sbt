@@ -453,7 +453,7 @@ lazy val docs =
       },
       subatomicMdocVariables ++=
         {
-          if (isVersionStable.value) Some(version.value)
+          if (!isSnapshot.value && isVersionStable.value) Some(version.value)
           else previousStableVersion.value
         }
           .map("STABLE_VERSION" -> _)
