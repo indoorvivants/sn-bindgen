@@ -133,7 +133,10 @@ lazy val bindgen = project
   .settings(
     buildInfoPackage := "bindgen",
     buildInfoKeys := Seq[BuildInfoKey](
-      BuildInfoKey("version" -> previousStableVersion.value.getOrElse("dev")),
+      BuildInfoKey("version" -> {
+        if (isVersionStable.value) version.value
+        else previousStableVersion.value.getOrElse("dev")
+      }),
       scalaVersion,
       scalaBinaryVersion,
       BuildInfoKey("nativeVersion" -> nativeVersion)
@@ -266,7 +269,6 @@ lazy val libclang = project
       .get("SN_BINDGEN_BINARY_OVERRIDE")
       .map(new File(_))
       .get,
-    // .getOrElse((LocalProject("bindgen") / Compile / nativeLink).value),
     bindgenBindings := {
       val detected =
         llvmFolder(nativeConfig.value.clang.toAbsolutePath()).llvmInclude
@@ -449,9 +451,13 @@ lazy val docs =
 
         Seq(out)
       },
-      subatomicMdocVariables ++= previousStableVersion.value
-        .map("STABLE_VERSION" -> _)
-        .toMap,
+      subatomicMdocVariables ++=
+        {
+          if (isVersionStable.value) Some(version.value)
+          else previousStableVersion.value
+        }
+          .map("STABLE_VERSION" -> _)
+          .toMap,
       libraryDependencies += "com.lihaoyi" %% "scalatags" % "0.12.0"
     )
 // --------------HELPERS-------------------------
