@@ -234,12 +234,16 @@ def renderBinding(
   end if
 
   if hasConstants then
-    renderConstants(
-      simpleStream("constants"),
-      binding.unnamedEnums.toList,
-      binding.macros,
-      mode = renderMode
+    updateExports(
+      "constants",
+      renderConstants(
+        simpleStream("constants"),
+        binding.unnamedEnums.toList,
+        binding.macros,
+        mode = renderMode
+      )
     )
+  end if
 
   if !multiFileMode && hasAnyTypes then
     val l = to(simpleStream("types"))
@@ -361,10 +365,14 @@ private def renderConstants(
     macros: List[MacroDefinition],
     mode: RenderMode
 )(using Config, AliasResolver) =
+  val exported = List.newBuilder[Exported]
   if enums.nonEmpty || macros.nonEmpty then
     maybeObjectBlock(out, mode)("object constants") {
-      constants(Constants(enums, macros), to(out))
+      exported ++= constants(Constants(enums, macros), to(out))
     }
+
+  exported.result()
+end renderConstants
 
 private def renderAll[
     A <: (ResolvedEnum | Def.Alias | ResolvedStruct | ResolvedUnion |

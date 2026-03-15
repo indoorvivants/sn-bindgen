@@ -7,7 +7,6 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import lib_test_macro_definitions.all.*
-import lib_test_macro_definitions.constants.*
 
 class TestMacroDefinitions:
   @Test def test_HELLO_0(): Unit =
