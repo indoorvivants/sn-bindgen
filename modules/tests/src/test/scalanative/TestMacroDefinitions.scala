@@ -115,6 +115,12 @@ class TestMacroDefinitions:
     assertEquals(macro_definitions_lookup(c"AUDIO_U16MSB"), AUDIO_U16MSB.toLong)
   @Test def test_AUDIO_S16MSB(): Unit =
     assertEquals(macro_definitions_lookup(c"AUDIO_S16MSB"), AUDIO_S16MSB.toLong)
+
+  @Test def test_AUDIO_U16(): Unit =
+    assertNotEquals(
+      "",
+      compileErrors("AUDIO_U16")
+    )
   // @Test def test_AUDIO_U16(): Unit =
   //   assertEquals(macro_definitions_lookup(c"AUDIO_U16"), AUDIO_U16.toLong)
   // @Test def test_AUDIO_S16(): Unit =

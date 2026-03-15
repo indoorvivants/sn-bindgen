@@ -85,7 +85,7 @@ object ClangVisitor:
                 )
               )
 
-              definition.foreach(binding.macroDefinitions += _)
+              binding.macroDefinitions += definition
             end if
           end if
 
