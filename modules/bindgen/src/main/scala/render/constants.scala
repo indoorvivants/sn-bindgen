@@ -4,12 +4,15 @@ package rendering
 def constants(model: Constants, line: Appender)(using
     Config,
     AliasResolver
-) =
+): List[Exported] =
+  val exports = List.newBuilder[Exported]
+
   model.enums.foreach { e =>
     val numericType = e.intType.getOrElse(CType.Int)
     val st = scalaType(numericType)
 
     e.values.foreach { case (name, value) =>
+      exports += Exported.Yes(name)
       if numericType.sign == SignType.Signed then
         line(s"val $name: $st = $value")
       else
@@ -28,6 +31,7 @@ def constants(model: Constants, line: Appender)(using
     model.macros.foreach:
       case MacroDefinition.Floating(name, sign, digits, value, kind) => ???
       case a @ MacroDefinition.Integral(name, sign, kind, digits, value, lit) =>
+        exports += Exported.Yes(name)
         val signStr = if value == Sign.Neg then "-" else ""
 
         import SignType.*, IntegralBase.*,
@@ -173,6 +177,7 @@ def constants(model: Constants, line: Appender)(using
 
         if inlining == Yes then line(s"inline val $name = $repr")
         else line(s"val $name = $repr")
-
   end if
+
+  exports.result()
 end constants

@@ -31,8 +31,7 @@ enum MacroDefinition(_name: String):
 end MacroDefinition
 
 object MacroDefinition:
-  private type AllowedIntegral = IntegralBase.Int.type |
-    IntegralBase.Long.type | IntegralBase.LongLong.type
+
   def fromTokens(name: String, tokens: List[(CXTokenKind, String)])(using
       Config
   ) =
@@ -52,8 +51,6 @@ object MacroDefinition:
           i -= 1
         (suff.toLowerCase(), digits.take(digits.length - suff.length))
 
-      info(suffix)
-
       val signType =
         if suffix.contains('u') then SignType.Unsigned
         else SignType.Signed
@@ -66,7 +63,9 @@ object MacroDefinition:
     end justDigits
 
     inline def isDigit(c: Char) =
-      (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || c == 'l' || c == 'L' || c == 'u' || c == 'U'
+      (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') ||
+        (c >= 'A' && c <= 'F') || c == 'l' || c == 'L' ||
+        c == 'u' || c == 'U' || c == 'x' || c == 'X' || c == 'B' || c == 'b'
 
     def produce(value: Sign, digits: String) =
       def integral(lit: LiteralBase, d: String) =
@@ -108,10 +107,7 @@ object MacroDefinition:
         case (CXToken_Literal, digits) :: Nil =>
           produce(Sign.Pos, digits.filterNot(_ == '\''))
 
-        case other =>
-          warning(
-            s"Macro constant $name is ignored as it can't be parsed: ${other.map(_._2).mkString}"
-          )
+        case _ =>
           None
 
     end withSign
@@ -129,15 +125,31 @@ object MacroDefinition:
 
       boundary:
         rest.foreach:
-          case (CXToken_Literal, digs)
-              if digs.forall(d => isDigit(d) || d == '\'') =>
-            newLiteral += digs.replace("'", "")
-          case _ => boundary.break(None)
+          // Definition such as 0xFF'FF'FF'FFu produces token of all those 3 types :-/
+          case (
+                CXToken_Literal | CXToken_Punctuation | CXToken_Identifier,
+                digs
+              ) =>
+            if digs.forall(d => isDigit(d) || d == '\'') then
+              newLiteral += digs.replace("'", "")
+            else boundary.break(None)
+          case _ =>
+            boundary.break(None)
 
         if newLiteral == "" then boundary.break(None)
         withSign(head ++ List((CXToken_Literal, newLiteral)))
     end coalesce
 
-    withSign(noComments).orElse(coalesce(noComments))
+    withSign(noComments).orElse(coalesce(noComments)) match
+      case Some(value) => Some(value)
+      case None =>
+        warning(
+          s"Macro constant $name is ignored as it can't be parsed: ${noComments.map(_._2).mkString}"
+        )
+        None
+
   end fromTokens
+
+  type AllowedIntegral =
+    IntegralBase.Int.type | IntegralBase.Long.type | IntegralBase.LongLong.type
 end MacroDefinition
