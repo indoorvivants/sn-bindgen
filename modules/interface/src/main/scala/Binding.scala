@@ -76,6 +76,10 @@ class Binding private (
     _.copy(opaqueStructs = structs)
   )
 
+  def withMacros(names: Set[String]): Binding = copy(
+    _.copy(macroDefinitions = names)
+  )
+
   def withExternalPaths(externals: Map[String, String]): Binding = copy(
     _.copy(externalPaths = externals)
   )

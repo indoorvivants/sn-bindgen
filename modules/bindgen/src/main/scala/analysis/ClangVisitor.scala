@@ -72,20 +72,26 @@ object ClangVisitor:
 
               clang_disposeTokens(tu, !tokensPtr, !numTokensPtr)
 
-              val definition =
-                MacroDefinition.fromTokens(name, tokens.result().tail)
+              if tokens
+                  .result()
+                  .filterNot(_._1 == CXTokenKind.CXToken_Comment)
+                  .length > 1
+              then
+                val definition =
+                  MacroDefinition.fromTokens(name, tokens.result().tail)
 
-              trace(
-                "Macro definition:",
-                Seq(
-                  "location" -> location.toString,
-                  "name" -> name,
-                  "tokens" -> tokens.result().toString,
-                  "def" -> definition
+                trace(
+                  "Macro definition:",
+                  Seq(
+                    "location" -> location.toString,
+                    "name" -> name,
+                    "tokens" -> tokens.result().toString,
+                    "def" -> definition
+                  )
                 )
-              )
 
-              binding.macroDefinitions += definition
+                binding.macroDefinitions += definition
+              end if
             end if
           end if
 

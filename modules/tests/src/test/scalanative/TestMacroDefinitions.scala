@@ -129,4 +129,33 @@ class TestMacroDefinitions:
     macro_definitions_lookup(c"SDL_BLENDMODE_INVALID"),
     SDL_BLENDMODE_INVALID.toLong
   )
+
+  @Test def test_DEDUP(): Unit = assertEquals(
+    macro_definitions_lookup(c"DEDUP_0"),
+    DEDUP_0.toLong
+  )
+
+  @Test def test_STR(): Unit =
+    Zone:
+      assertEquals(
+        fromCString(macro_definition_string(c"STR_VALID")),
+        "string"
+      )
+      assertEquals(
+        fromCString(macro_definition_string(c"STR_VALID_EMPTY")),
+        ""
+      )
+      assertEquals(
+        fromCString(macro_definition_string(c"STR_ESCAPED")),
+        "Hello \" world"
+      )
+      assertNotEquals(
+        "",
+        compileErrors("STR_INVALID")
+      )
+      assertNotEquals(
+        "",
+        compileErrors("STR_BAD_ESCAPE")
+      )
+
 end TestMacroDefinitions
