@@ -229,3 +229,36 @@ val cSource =
 """.trim.stripMargin
 println(bindgen.BindgenRender.render(cSource, "libtest"))
 ```
+
+## Some macro definitions are supported 
+
+As of 0.4.1, some macro definitions are supported – specifically for integer values and constant strings.
+
+To render macro definitions you need to opt in and provide a name filter:
+
+- In CLI, `--macros SDL_*,AUDIO_U8,STR_*` will render all macros that begin with `SDL_` or `STR_` , and macro named `AUDIO_U8`
+- In SBT, `.withMacros(Set("SDL_*", "AUDIO_U8", "STR_*"))` will produce the same result as above
+
+Unsupported macro definitions are rendered in a way that you will still be able to find their name, but attempting to reference them will provide a compiler error with the original definition of the macro from C file.
+
+Macros that are re-defined follow C policy and only the last implementation will be rendered.
+
+Bindgen tries hard to reproduce the constants as close to the source as possible, but if it can't (binary literals, unsigned literals, etc.) it will do the necessary conversion and provide a comment 
+with the original.
+
+```scala mdoc:nest:passthrough
+val cSource = 
+"""
+|// supported constants
+|#define SDL_HELLO -0x25
+|#define SDL_WORLD 0b1001011u
+|#define SDL_WORLD2 0xFF11u
+|#define STR_HELLO "hello"
+|#define STR_ESCAPED "he\"llo"
+|
+|// unsupported
+|#define AUDIO_U8 (SDL_WORLD2 + SDL_WORLD)
+|#define STR_BAD "he\"llo
+""".trim.stripMargin
+println(bindgen.BindgenRender.render(cSource, "libtest", "--macros", "SDL_*,AUDIO_U8,STR_*"))
+```

@@ -1,6 +1,13 @@
 #include <string.h>
 #include "macro_definitions.h"
 
+const char* macro_definition_string(const char* name) {
+    if (strcmp(name, "STR_VALID") == 0) return STR_VALID;
+    if (strcmp(name, "STR_VALID_EMPTY") == 0) return STR_VALID_EMPTY;
+    if (strcmp(name, "STR_ESCAPED") == 0) return STR_ESCAPED;
+    return NULL;
+}
+
 long long macro_definitions_lookup(const char *name) {
     if (strcmp(name, "HELLO_0") == 0) return (long)HELLO_0;
     if (strcmp(name, "HELLO_5") == 0) return (long)HELLO_5;
@@ -62,6 +69,7 @@ long long macro_definitions_lookup(const char *name) {
     if (strcmp(name, "AUDIO_S16MSB") == 0) return (long)AUDIO_S16MSB;
     if (strcmp(name, "AUDIO_U16") == 0) return (long)AUDIO_U16;
     if (strcmp(name, "AUDIO_S16") == 0) return (long)AUDIO_S16;
+    if (strcmp(name, "DEDUP_0") == 0) return (long)DEDUP_0;
     if (strcmp(name, "SDL_BLENDMODE_INVALID") == 0) return (long)SDL_BLENDMODE_INVALID;
     return -1L;
 }

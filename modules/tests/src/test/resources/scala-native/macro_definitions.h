@@ -1,4 +1,4 @@
-//!bindgen: --macros HELLO_*,INT_*,WS_*,BIN_*,OCT_*,ZERO_*,HEX_*,NEG_*,AUDIO_*,SDL_*,MAX_*,MIN_*
+//!bindgen: --macros HELLO_*,INT_*,WS_*,BIN_*,OCT_*,ZERO_*,HEX_*,NEG_*,AUDIO_*,SDL_*,MAX_*,MIN_*,STR_*,DEDUP_*
 
 #define HELLO_0 0x25
 #define HELLO_5 42
@@ -89,7 +89,17 @@
 #define AUDIO_S16       AUDIO_S16LSB
 
 #define SDL_BLENDMODE_INVALID               0x7FFFFFFFu
-#define SDL_TEST "string"
 #define SDL_TEST2 0.0f
 
+#define STR_VALID "string"
+#define STR_VALID_EMPTY ""
+#define STR_INVALID "blasd
+#define STR_ESCAPED "Hello \" world"
+#define STR_BAD_ESCAPE "Hello " world"
+
+#define DEDUP_0 25
+#define DEDUP_0 26
+
+
 long long macro_definitions_lookup(const char *name);
+const char* macro_definition_string(const char*name);

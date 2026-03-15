@@ -19,15 +19,16 @@ enum MacroDefinition(_name: String):
       value: Sign,
       lit: LiteralBase
   ) extends MacroDefinition(name)
-  case Floating(
-      name: String,
-      sign: SignType,
-      digits: String,
-      value: Sign,
-      kind: FloatingBase
-  ) extends MacroDefinition(name)
+  // case Floating(
+  //     name: String,
+  //     sign: SignType,
+  //     digits: String,
+  //     value: Sign,
+  //     kind: FloatingBase
+  // ) extends MacroDefinition(name)
 
   case Unsupported(name: String, raw: String) extends MacroDefinition(name)
+  case CStr(name: String, raw: String) extends MacroDefinition(name)
 
   def getName = _name
 end MacroDefinition
@@ -104,6 +105,17 @@ object MacroDefinition:
     import CXTokenKind.*
     def withSign(tokens: List[(CXTokenKind, String)]) =
       tokens match
+        case (CXToken_Literal, s"\"$rest\"") :: Nil =>
+          boundary:
+            for
+              i <- 0 until rest.length
+              c = rest(i)
+            do
+              if c == '"' && (i < 1 || rest(i - 1) != '\\') then
+                boundary.break(None)
+
+            Some(MacroDefinition.CStr(name, rest))
+
         case (CXToken_Punctuation, "-") :: (CXToken_Literal, digits) :: Nil =>
           produce(Sign.Neg, digits.filterNot(_ == '\''))
         case (CXToken_Literal, digits) :: Nil =>
