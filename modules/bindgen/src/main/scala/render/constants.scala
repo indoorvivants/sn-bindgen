@@ -30,6 +30,13 @@ def constants(model: Constants, line: Appender)(using
     if model.enums.nonEmpty then line("")
     model.macros.foreach:
       case MacroDefinition.Floating(name, sign, digits, value, kind) => ???
+      case MacroDefinition.Unsupported(name, raw) =>
+        val tripleQuote = "\"" * 3
+        line(
+          s"@scala.annotation.compileTimeOnly(${tripleQuote}Bindgen: unsupported macro definition, defined in C as $raw${tripleQuote})"
+        )
+        line(s"def $name = ???")
+        line("")
       case a @ MacroDefinition.Integral(name, sign, kind, digits, value, lit) =>
         exports += Exported.Yes(name)
         val signStr = if value == Sign.Neg then "-" else ""
@@ -177,6 +184,8 @@ def constants(model: Constants, line: Appender)(using
 
         if inlining == Yes then line(s"inline val $name = $repr")
         else line(s"val $name = $repr")
+
+        line("")
   end if
 
   exports.result()

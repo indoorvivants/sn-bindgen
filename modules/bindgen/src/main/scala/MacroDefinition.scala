@@ -27,6 +27,8 @@ enum MacroDefinition(_name: String):
       kind: FloatingBase
   ) extends MacroDefinition(name)
 
+  case Unsupported(name: String, raw: String) extends MacroDefinition(name)
+
   def getName = _name
 end MacroDefinition
 
@@ -34,7 +36,7 @@ object MacroDefinition:
 
   def fromTokens(name: String, tokens: List[(CXTokenKind, String)])(using
       Config
-  ) =
+  ): MacroDefinition =
     val noComments = tokens.collect {
       case (tok, value) if tok != CXTokenKind.CXToken_Comment =>
         tok -> value
@@ -140,14 +142,11 @@ object MacroDefinition:
         withSign(head ++ List((CXToken_Literal, newLiteral)))
     end coalesce
 
-    withSign(noComments).orElse(coalesce(noComments)) match
-      case Some(value) => Some(value)
-      case None =>
-        warning(
-          s"Macro constant $name is ignored as it can't be parsed: ${noComments.map(_._2).mkString}"
-        )
-        None
-
+    withSign(noComments)
+      .orElse(coalesce(noComments))
+      .getOrElse(
+        MacroDefinition.Unsupported(name, noComments.map(_._2).mkString)
+      )
   end fromTokens
 
   type AllowedIntegral =
