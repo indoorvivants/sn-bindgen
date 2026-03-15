@@ -1,9 +1,8 @@
 package bindgen
 package rendering
 
-import bindgen.{CType, ResolvedEnum, ResolvedStruct, *}
+import bindgen.{CType, MacroDefinition, ResolvedEnum, ResolvedStruct, *}
 import opaque_newtypes.given
-import bindgen.MacroDefinition
 
 case class Constants(enums: Seq[Def.Enum], macros: List[MacroDefinition])
 

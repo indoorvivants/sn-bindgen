@@ -46,45 +46,47 @@ object ClangVisitor:
             val name = cursor.spelling
             val extent = cursor.extent
 
-            val tokensPtr = stackalloc[Ptr[CXToken]]()
-            val numTokensPtr = stackalloc[CUnsignedInt]()
+            // if location.shouldBeIncluded then
+            if conf.rendering.matches(_.macroDefs)(name).isDefined then
+              val tokensPtr = stackalloc[Ptr[CXToken]]()
+              val numTokensPtr = stackalloc[CUnsignedInt]()
 
-            val tu = clang_Cursor_getTranslationUnit(cursor)
+              val tu = clang_Cursor_getTranslationUnit(cursor)
 
-            clang_tokenize(tu, extent, tokensPtr, numTokensPtr)
+              clang_tokenize(tu, extent, tokensPtr, numTokensPtr)
 
-            val tokens = List.newBuilder[(CXTokenKind, String)]
-            for i <- 0 until (!numTokensPtr).toInt
-            do
+              val tokens = List.newBuilder[(CXTokenKind, String)]
+              for i <- 0 until (!numTokensPtr).toInt
+              do
 
-              val tokRef = (!tokensPtr).apply(i)
-              val king = clang_getTokenKind(tokRef)
-              val spelling = clang_getTokenSpelling(tu, tokRef)
-              val token =
-                fromCString(clang_getCString(spelling))
+                val tokRef = (!tokensPtr).apply(i)
+                val king = clang_getTokenKind(tokRef)
+                val spelling = clang_getTokenSpelling(tu, tokRef)
+                val token =
+                  fromCString(clang_getCString(spelling))
 
-              clang_disposeString(spelling)
+                clang_disposeString(spelling)
 
-              tokens += king -> token
-            end for
+                tokens += king -> token
+              end for
 
-            clang_disposeTokens(tu, !tokensPtr, !numTokensPtr)
+              clang_disposeTokens(tu, !tokensPtr, !numTokensPtr)
 
-            val definition =
-              MacroDefinition.fromTokens(name, tokens.result().tail)
+              val definition =
+                MacroDefinition.fromTokens(name, tokens.result().tail)
 
-            trace(
-              "Macro definition:",
-              Seq(
-                "location" -> location.toString,
-                "name" -> name,
-                "tokens" -> tokens.result().toString,
-                "def" -> definition
+              trace(
+                "Macro definition:",
+                Seq(
+                  "location" -> location.toString,
+                  "name" -> name,
+                  "tokens" -> tokens.result().toString,
+                  "def" -> definition
+                )
               )
-            )
 
-            if location.shouldBeIncluded then
               definition.foreach(binding.macroDefinitions += _)
+            end if
           end if
 
           if cursor.kind == CXCursorKind.CXCursor_TypedefDecl then
