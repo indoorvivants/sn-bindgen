@@ -10,6 +10,7 @@ object RenderingConfig:
     RenderingConfig(
       noConstructor = Set.empty,
       opaqueStruct = Set.empty,
+      macroDefs = Set.empty,
       comments = RenderComments.Yes,
       location = RenderLocation.No,
       externalNames = Map.empty,
@@ -43,20 +44,33 @@ end RenderingConfig
 
 import RenderingConfig.NameFilter
 
+opaque type MacroNameFilter <: NameFilter = NameFilter
+object MacroNameFilter extends TotalWrapper[MacroNameFilter, NameFilter]
+
+opaque type OpaqueStructNameFilter <: NameFilter = NameFilter
+object OpaqueStructNameFilter
+    extends TotalWrapper[OpaqueStructNameFilter, NameFilter]
+
+opaque type NoConstructorNameFilter <: NameFilter = NameFilter
+object NoConstructorNameFilter
+    extends TotalWrapper[NoConstructorNameFilter, NameFilter]
+
 case class RenderingConfig(
-    noConstructor: Set[NameFilter],
-    opaqueStruct: Set[NameFilter],
+    noConstructor: Set[NoConstructorNameFilter],
+    opaqueStruct: Set[OpaqueStructNameFilter],
+    macroDefs: Set[MacroNameFilter],
     comments: RenderComments,
     location: RenderLocation,
     externalPaths: Map[NameFilter, PackageName],
     externalNames: Map[NameFilter, PackageName]
 ):
-  def matches(
-      f: this.type => Set[NameFilter]
-  )(name: String): Option[FilterSpec] = f(this).iterator
-    .map(_.matches(name))
-    .collectFirst { case a if a.isDefined => a }
-    .flatten
+  def matches[T <: NameFilter](
+      f: this.type => Set[T]
+  )(name: String): Option[FilterSpec] =
+    f(this).iterator
+      .map(_.matches(name))
+      .collectFirst { case a if a.isDefined => a }
+      .flatten
 
   def matchesPackage(f: this.type => Map[NameFilter, PackageName])(
       name: String

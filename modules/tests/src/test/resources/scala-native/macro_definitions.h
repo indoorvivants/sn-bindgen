@@ -1,3 +1,5 @@
+//!bindgen: --macros HELLO_*,INT_*,WS_*,BIN_*,OCT_*,ZERO_*,HEX_*,NEG_*,AUDIO_*,SDL_*,MAX_*,MIN_*
+
 #define HELLO_0 0x25
 #define HELLO_5 42
 #define HELLO_6 052
@@ -29,7 +31,7 @@
 #define INT_U5   42uL
 #define INT_U6   42ULL
 #define INT_U7   42Ull
-#define INT_U8   42uLl
+#define INT_U8   42ull
 
 /* ── Uppercase 0B binary prefix (C23) ── */
 #define BIN_UP1  0B101010
@@ -37,10 +39,10 @@
 #define BIN_UP3  0B1111'1111u
 
 /* ── Octal ── */
-#define OCT1     00
-#define OCT2     0777
-#define OCT3     -0755
-#define OCT4     0'177'777
+#define OCT_1     00
+#define OCT_2     0777
+#define OCT_3     -0755
+#define OCT_4     0'177'777
 
 /* ── Zero edge cases ── */
 #define ZERO_DEC  0
@@ -49,17 +51,19 @@
 #define ZERO_BIN  0b0
 #define ZERO_NEG  -0
 
+#define HEX_UINT 0x7FFFFFFFu
+
 /* ── Hex with digit separators (C23) ── */
-#define HEX_SEP1  0x'DEAD'BEEF
+#define HEX_SEP1  0xDEAD'BEEF
 #define HEX_SEP2  0xFF'FF'FF'FFu
 #define HEX_SEP3  0x0000'0001ULL
 
 /* ── Whitespace / comment variants ── */
-#define WS1  /* leading block comment */    42
-#define WS2  42  /* trailing comment */
-#define WS3	42
-#define WS4  /* c1 */ /* c2 */ 42
-#define WS5  // no value token
+#define WS_1  /* leading block comment */    42
+#define WS_2  42  /* trailing comment */
+#define WS_3	42
+#define WS_4  /* c1 */ /* c2 */ 42
+#define WS_5  // no value token
 
 /* ── Negative of every base ── */
 #define NEG_HEX   -0xDEAD
@@ -83,3 +87,9 @@
 #define AUDIO_S16MSB    0x9010  /**< As above, but big-endian byte order */
 #define AUDIO_U16       AUDIO_U16LSB
 #define AUDIO_S16       AUDIO_S16LSB
+
+#define SDL_BLENDMODE_INVALID               0x7FFFFFFFu
+#define SDL_TEST "string"
+#define SDL_TEST2 0.0f
+
+long long macro_definitions_lookup(const char *name);

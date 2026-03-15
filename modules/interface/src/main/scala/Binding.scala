@@ -17,6 +17,7 @@ class Binding private (
   def systemIncludes: Includes = impl.systemIncludes
   def noConstructor: Set[String] = impl.noConstructor
   def opaqueStructs: Set[String] = impl.opaqueStructs
+  def macroDefinitions: Set[String] = impl.macroDefinitions
   def multiFile: Boolean = impl.multiFile
   def noComments: Boolean = impl.noComments
   def noLocation: Boolean = impl.noLocation
@@ -271,6 +272,7 @@ object Binding {
       systemIncludes: Includes = Defaults.systemIncludes,
       noConstructor: Set[String] = Defaults.noConstructor,
       opaqueStructs: Set[String] = Defaults.opaqueStructs,
+      macroDefinitions: Set[String] = Defaults.macroDefinitions,
       multiFile: Boolean = Defaults.multiFile,
       noComments: Boolean = Defaults.noComments,
       noLocation: Boolean = Defaults.noLocation,
@@ -293,6 +295,7 @@ object Binding {
     val systemIncludes = Includes.ClangSearchPath
     val noConstructor = Set.empty[String]
     val opaqueStructs = Set.empty[String]
+    val macroDefinitions = Set.empty[String]
     val exclusivePrefixes = List.empty[String]
     val multiFile = false
     val noComments = false

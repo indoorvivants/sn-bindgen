@@ -2,8 +2,10 @@ package bindgen
 
 import libclang.CXTokenKind
 
+import scala.util.boundary
+
 enum LiteralBase:
-  case None, Hex, Binary
+  case None, Hex, Binary, Oct
 
 enum Sign:
   case Pos, Neg
@@ -63,16 +65,21 @@ object MacroDefinition:
       (digits = cleanDigits, signType = signType, int = intBase)
     end justDigits
 
+    inline def isDigit(c: Char) =
+      (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || c == 'l' || c == 'L' || c == 'u' || c == 'U'
+
     def produce(value: Sign, digits: String) =
       def integral(lit: LiteralBase, d: String) =
         val read = justDigits(d)
-        MacroDefinition.Integral(
-          name,
-          read.signType,
-          read.int,
-          read.digits,
-          value,
-          lit
+        Some(
+          MacroDefinition.Integral(
+            name,
+            read.signType,
+            read.int,
+            read.digits,
+            value,
+            lit
+          )
         )
       end integral
 
@@ -85,8 +92,11 @@ object MacroDefinition:
           integral(LiteralBase.Binary, rest)
         case s"0B$rest" =>
           integral(LiteralBase.Binary, rest)
-        case _ =>
+        case s"0$rest" if rest.nonEmpty && rest.forall(isDigit) =>
+          integral(LiteralBase.Oct, digits)
+        case rest if rest.forall(isDigit) =>
           integral(LiteralBase.None, digits)
+        case _ => None
       end match
     end produce
 
@@ -94,34 +104,40 @@ object MacroDefinition:
     def withSign(tokens: List[(CXTokenKind, String)]) =
       tokens match
         case (CXToken_Punctuation, "-") :: (CXToken_Literal, digits) :: Nil =>
-          Some(produce(Sign.Neg, digits.filterNot(_ == '\'')))
+          produce(Sign.Neg, digits.filterNot(_ == '\''))
         case (CXToken_Literal, digits) :: Nil =>
-          Some(produce(Sign.Pos, digits.filterNot(_ == '\'')))
+          produce(Sign.Pos, digits.filterNot(_ == '\''))
 
         case other =>
           warning(
             s"Macro constant $name is ignored as it can't be parsed: ${other.map(_._2).mkString}"
           )
           None
-        // inline def isDigit(c: Char) =
-        //   (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || c == 'l' || c == 'L' || c == 'u' || c == 'U'
 
-        // val (digitTokens, sign) =
-        //   other match
-        //     case (CXToken_Punctuation, "-") ::
-        //         (
-        //           CXToken_Literal,
-        //           digits
-        //         ) :: Nil =>
-        //       produce(Sign.Neg)
-
-        // val collected = other.collect {
-        //   case (CXToken_Literal, s"'$digs'") if digs.forall(isDigit) => digs
-        //   case (CXToken_Literal, s"$digs") if digs.forall(isDigit)   => digs
-        // }
     end withSign
 
-    withSign(noComments)
+    // This function assembles literals with apostrophes (e.g. 0'177'777) into a single literal
+    // Clang sends this type of literal as multiple literal tokens that can contain apostrophes
+    def coalesce(tokens: Seq[(CXTokenKind, String)]) =
+      val (head, rest) = tokens match
+        case (a @ (CXToken_Punctuation, "-")) :: rest =>
+          (a :: rest, rest)
+        case rest =>
+          (Nil, rest)
 
+      var newLiteral = ""
+
+      boundary:
+        rest.foreach:
+          case (CXToken_Literal, digs)
+              if digs.forall(d => isDigit(d) || d == '\'') =>
+            newLiteral += digs.replace("'", "")
+          case _ => boundary.break(None)
+
+        if newLiteral == "" then boundary.break(None)
+        withSign(head ++ List((CXToken_Literal, newLiteral)))
+    end coalesce
+
+    withSign(noComments).orElse(coalesce(noComments))
   end fromTokens
 end MacroDefinition

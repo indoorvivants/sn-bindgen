@@ -29,51 +29,150 @@ def constants(model: Constants, line: Appender)(using
       case MacroDefinition.Floating(name, sign, digits, value, kind) => ???
       case a @ MacroDefinition.Integral(name, sign, kind, digits, value, lit) =>
         val signStr = if value == Sign.Neg then "-" else ""
-        val (baseStr, newDigits, comment) = lit match
-          case LiteralBase.None => ("", digits, Option.empty[String])
-          case LiteralBase.Hex  => ("0x", digits, None)
-          case LiteralBase.Binary =>
-            (
-              "",
-              Integer.parseInt(digits, 2).toString,
-              Some(s"Converted from binary: $signStr${digits}")
-            )
 
-        val postStr = kind match
-          case IntegralBase.Int      => ""
-          case IntegralBase.Long     => "L"
-          case IntegralBase.LongLong => "L"
+        import SignType.*, IntegralBase.*,
+          LiteralBase.{None as NoLiteral, Hex, Binary, Oct}
+
+        enum Inlining:
+          case Yes, No
+
+        import Inlining.*
+
+        import java.lang.Long as JLong
+
+        val (inlining: Inlining, repr: String, comment: Option[String]) =
+          (sign, kind, lit) match
+            case (Signed, Int, NoLiteral) => (Yes, signStr + digits, None)
+            case (Signed, Long, NoLiteral) =>
+              (Yes, signStr + digits + "L", None)
+            case (Signed, LongLong, NoLiteral) =>
+              (Yes, signStr + digits + "L", None)
+            case (Signed, Int, Hex) => (Yes, signStr + "0x" + digits, None)
+            case (Signed, Long, Hex) =>
+              (Yes, signStr + "0x" + digits + "L", None)
+            case (Signed, LongLong, Hex) =>
+              (Yes, signStr + "0x" + digits + "L", None)
+
+            case (Signed, Int, Binary) =>
+              (
+                Yes,
+                signStr + Integer.parseInt(digits, 2).toString,
+                Some(s"Converted from binary: $signStr$digits")
+              )
+            case (Signed, Long, Binary) =>
+              (
+                Yes,
+                signStr + JLong.parseLong(digits, 2).toString,
+                Some(s"Converted from binary: $signStr$digits")
+              )
+            case (Signed, LongLong, Binary) =>
+              (
+                Yes,
+                signStr + JLong.parseLong(digits, 2).toString,
+                Some(s"Converted from binary: $signStr$digits")
+              )
+
+            case (Signed, Int, Oct) =>
+              (
+                Yes,
+                signStr + Integer.parseInt(digits, 8).toString,
+                Some(s"Converted from octal: $signStr$digits")
+              )
+            case (Signed, Long, Oct) =>
+              (
+                Yes,
+                signStr + JLong.parseLong(digits, 8).toString,
+                Some(s"Converted from octal: $signStr$digits")
+              )
+            case (Signed, LongLong, Oct) =>
+              (
+                Yes,
+                signStr + JLong.parseLong(digits, 8).toString,
+                Some(s"Converted from octal: $signStr$digits")
+              )
+
+            case (Unsigned, Int, NoLiteral) =>
+              (
+                No,
+                s"UInt.valueOf(${Integer.parseUnsignedInt(digits)})",
+                Some(s"Converted from unsigned int: $digits")
+              )
+            case (Unsigned, Long, NoLiteral) =>
+              (
+                No,
+                s"ULong.valueOf(${JLong.parseUnsignedLong(digits)}L)",
+                Some(s"Converted from unsigned long: $digits")
+              )
+            case (Unsigned, LongLong, NoLiteral) =>
+              (
+                No,
+                s"ULong.valueOf(${JLong.parseUnsignedLong(digits)}L)",
+                Some(s"Converted from unsigned long: $digits")
+              )
+
+            case (Unsigned, Int, Hex) =>
+              (
+                No,
+                s"UInt.valueOf(${Integer.parseUnsignedInt(java.math.BigInteger(digits, 16).toString)})",
+                Some(s"Converted from unsigned hex int: $digits")
+              )
+            case (Unsigned, Long, Hex) =>
+              (
+                No,
+                s"ULong.valueOf(${JLong.parseUnsignedLong(java.math.BigInteger(digits, 16).toString)})",
+                Some(s"Converted from unsigned hex long: $digits")
+              )
+            case (Unsigned, LongLong, Hex) =>
+              (
+                No,
+                s"ULong.valueOf(${JLong.parseUnsignedLong(java.math.BigInteger(digits, 16).toString)})",
+                Some(s"Converted from unsigned hex long: $digits")
+              )
+            case (Unsigned, Int, Binary) =>
+              (
+                No,
+                s"UInt.valueOf(${Integer.parseUnsignedInt(java.math.BigInteger(digits, 2).toString)})",
+                Some(s"Converted from unsigned binary int: $digits")
+              )
+            case (Unsigned, Long, Binary) =>
+              (
+                No,
+                s"ULong.valueOf(${JLong.parseUnsignedLong(java.math.BigInteger(digits, 2).toString)})",
+                Some(s"Converted from unsigned binary long: $digits")
+              )
+            case (Unsigned, LongLong, Binary) =>
+              (
+                No,
+                s"ULong.valueOf(${JLong.parseUnsignedLong(java.math.BigInteger(digits, 2).toString)})",
+                Some(s"Converted from unsigned binary long: $digits")
+              )
+
+            case (Unsigned, Int, Oct) =>
+              (
+                No,
+                s"UInt.valueOf(${Integer.parseUnsignedInt(java.math.BigInteger(digits, 8).toString)})",
+                Some(s"Converted from unsigned octal int: $digits")
+              )
+            case (Unsigned, Long, Oct) =>
+              (
+                No,
+                s"ULong.valueOf(${JLong.parseUnsignedLong(java.math.BigInteger(digits, 8).toString)})",
+                Some(s"Converted from unsigned octal long: $digits")
+              )
+            case (Unsigned, LongLong, Oct) =>
+              (
+                No,
+                s"ULong.valueOf(${JLong.parseUnsignedLong(java.math.BigInteger(digits, 8).toString)})",
+                Some(s"Converted from unsigned octal long: $digits")
+              )
 
         comment.foreach: com =>
           line("/**")
           line(s"* $com")
           line("*/")
-        sign match
-          case SignType.Signed =>
-            line(s"inline val $name = $signStr$baseStr$newDigits$postStr")
-          case SignType.Unsigned =>
-            val (accessor, parsedDigits, comment) = kind match
-              case IntegralBase.Int =>
-                (
-                  "UInt",
-                  Integer.parseUnsignedInt(newDigits).toString,
-                  s"Parsed from unsigned int: $newDigits"
-                )
-              case IntegralBase.Long | IntegralBase.LongLong =>
-                (
-                  "ULong",
-                  java.lang.Long.parseUnsignedLong(newDigits).toString,
-                  s"Parsed from unsigned long: $newDigits"
-                )
 
-            line("/**")
-            line(s"* $comment")
-            line("*/")
-
-            line(
-              s"val $name = $signStr$accessor.valueOf($baseStr$parsedDigits)"
-            )
-        end match
+        if inlining == Yes then line(s"inline val $name = $repr")
+        else line(s"val $name = $repr")
 
   end if
 end constants

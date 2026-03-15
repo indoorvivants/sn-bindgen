@@ -261,7 +261,11 @@ object CLI:
             --render.no-constructor _GFileOutputStreamClass,_GFileIface
             --render.no-constructor 'nk_context,nk_style*'"""
       )
-      .map(_.split(",").toSet.map(RenderingConfig.NameFilter(_)))
+      .map(
+        _.split(",").toSet
+          .map(RenderingConfig.NameFilter(_))
+          .map(NoConstructorNameFilter.apply(_))
+      )
       .withDefault(Set.empty)
 
     val opaqueStruct = Opts
@@ -271,10 +275,30 @@ object CLI:
           "Comma-separated list of names (or wildcards) of structs, which will be rendered as CArray[...], rather than precise CStruct* - \n" +
             "this can be necessary to circumvent the UTF8 string too large issue\n" +
             """examples:
-            --render.opaque-struct_GFileOutputStreamClass,_GFileIface
+            --render.opaque-struct _GFileOutputStreamClass,_GFileIface
             --render.opaque-struct 'nk_context,nk_style*'"""
       )
-      .map(_.split(",").toSet.map(RenderingConfig.NameFilter(_)))
+      .map(
+        _.split(",").toSet
+          .map(RenderingConfig.NameFilter(_))
+          .map(OpaqueStructNameFilter.apply(_))
+      )
+      .withDefault(Set.empty)
+
+    val macroDefs = Opts
+      .option[String](
+        "macros",
+        help =
+          "Comma-separated list of names (or wildcards) of macro definitions that bindgen will attempt to render.\n" +
+            """examples:
+            --macros SDL_CONTEXT,SDL_BLA
+            --macros 'SDL_*'"""
+      )
+      .map(
+        _.split(",").toSet
+          .map(RenderingConfig.NameFilter(_))
+          .map(MacroNameFilter.apply(_))
+      )
       .withDefault(Set.empty)
 
     val comments = Opts
@@ -338,6 +362,7 @@ object CLI:
     (
       noConstructor,
       opaqueStruct,
+      macroDefs,
       comments,
       location,
       externalPath,
