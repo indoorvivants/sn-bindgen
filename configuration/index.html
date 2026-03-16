@@ -33,10 +33,10 @@ the code.</p>
 <p><em>Before version 0.2.3</em>:</p>
 <p><code>--clang bla</code> or <code>--clang-include &lt;folder&gt;</code> to specifically create <code>-I&lt;folder&gt;</code> flag</p>
 <h3><a href="#full-help" id="full-help">Full help</a></h3>
-<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--scala] [--c] [--link-name &lt;string&gt;] [--use-braces] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--macros &lt;string&gt;] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file] [--export] [--exclude-system-path &lt;string&gt;]... [--flavour &lt;string&gt;]
+<pre><code class='hljs language-text'>Usage: bindgen --package &lt;string&gt; --header &lt;string&gt; [--scala] [--c] [--link-name &lt;string&gt;] [--use-braces] [--c-import &lt;string&gt;]... [--clang-include &lt;string&gt;]... [--clang &lt;string&gt;]... [--quiet] [--trace | --info | --warning | --error] [--llvm-bin &lt;string&gt; | --clang-path &lt;string&gt; | --no-system] [--render.no-constructor &lt;string&gt;] [--render.opaque-structs &lt;string&gt;] [--macros &lt;string&gt;] [--render.only-valid-macros] [--render.no-comments] [--render.no-location] [--render.external-path &lt;string&gt;]... [--render.external-name &lt;string&gt;]... [--out &lt;string&gt;] [--multi-file] [--export] [--exclude-system-path &lt;string&gt;]... [--flavour &lt;string&gt;]
 
 Generate Scala 3 native bindings from C header files
-Version: 0.4.1+8-adb61eac-SNAPSHOT
+Version: 0.4.1+10-7bdbbffa-SNAPSHOT
 Built using Scala 3.8.2 and Scala Native 0.5.10
 
 Options and flags:
@@ -106,6 +106,8 @@ Options and flags:
         examples:
                     --macros SDL_CONTEXT,SDL_BLA
                     --macros 'SDL_*'
+    --render.only-valid-macros
+        Don't render the macros that could not be parsed
     --render.no-comments
         Don't render the comment strings from the source
     --render.no-location
