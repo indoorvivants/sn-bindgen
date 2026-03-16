@@ -1,4 +1,4 @@
-//!bindgen: --macros HELLO_*,INT_*,WS_*,BIN_*,OCT_*,ZERO_*,HEX_*,NEG_*,AUDIO_*,SDL_*,MAX_*,MIN_*,STR_*,DEDUP_*
+//!bindgen: --macros HELLO_*,INT_*,WS_*,BIN_*,OCT_*,ZERO_*,HEX_*,NEG_*,AUDIO_*,SDL_*,MAX_*,MIN_*,STR_*,DEDUP_*,FLT_BASIC*,FLT_DOT*,FLT_NEG*,SCI_*
 
 #define HELLO_0 0x25
 #define HELLO_5 42
@@ -99,6 +99,93 @@
 
 #define DEDUP_0 25
 #define DEDUP_0 26
+
+/* ── Basic decimal floats ── */
+#define FLT_BASIC1   3.14f
+#define FLT_BASIC2   3.14F
+#define FLT_BASIC3   3.14
+#define FLT_BASIC4   3.14l
+#define FLT_BASIC5   3.14L
+
+/* ── Leading/trailing dot forms ── */
+#define FLT_DOT1   .5f
+#define FLT_DOT2   .5
+#define FLT_DOT3   .5L
+#define FLT_DOT4   5.f
+#define FLT_DOT5   5.
+#define FLT_DOT6   5.L
+#define FLT_DOT7   0.f
+#define FLT_DOT8   0.
+
+/* ── Negative ── */
+#define FLT_NEG1   -3.14f
+#define FLT_NEG2   -3.14
+#define FLT_NEG3   -3.14L
+#define FLT_NEG4   -.5f
+#define FLT_NEG5   -5.
+
+/* ── Scientific notation: basic ── */
+#define SCI_1   1e10
+#define SCI_2   1E10
+#define SCI_3   1e+10
+#define SCI_4   1e-10
+#define SCI_5   1.5e3f
+#define SCI_6   1.5E-3F
+#define SCI_7   .5e2L
+#define SCI_8   5.e2
+#define SCI_9   -1.5e10L
+#define SCI_10  -1e-3f
+
+/* ── Scientific notation: boundary exponents ── */
+#define SCI_EXP1   1e0
+#define SCI_EXP2   1e+0
+#define SCI_EXP3   1e-0
+#define SCI_EXP4   1e38f       /* near FLT_MAX magnitude */
+#define SCI_EXP5   1e308       /* near DBL_MAX magnitude */
+#define SCI_EXP6   1e-38f      /* near FLT_MIN magnitude */
+
+/* ── C23 digit separators: decimal ── */
+// #define FLT_SEP1   1'000.0f
+// #define FLT_SEP2   1'000'000.5
+// #define FLT_SEP3   3.141'592'653
+// #define FLT_SEP4   .000'001f
+// #define FLT_SEP5   1'000.
+
+// /* ── C23 digit separators: scientific ── */
+// #define FLT_SEP_SCI1   1'000.5e1'0
+// #define FLT_SEP_SCI2   1.234'567e+3f
+// #define FLT_SEP_SCI3   -1'500.0e-1'0L
+
+// /* ── C23 digit separators: hex floats ── */
+// #define FLT_SEP_HEX1   0x1.FFF'FFFp+1'2f
+// #define FLT_SEP_HEX2   0xDE'AD.0p+0
+// #define FLT_SEP_HEX3   0x1'0000p-1'6L
+
+/* ── Zero edge cases ── */
+#define FLT_ZERO1   0.0f
+#define FLT_ZERO2   0.0
+#define FLT_ZERO3   0.0L
+#define FLT_ZERO4   0.f
+#define FLT_ZERO5   .0f
+#define FLT_ZERO6   -0.0f      /* negative zero */
+#define FLT_ZERO7   0e0
+#define FLT_ZERO8   0x0p0      /* hex float zero */
+#define FLT_ZERO9   0x0.0p0f
+
+/* ── Whitespace / comment variants ── */
+#define FLT_WS1   /* comment */ 3.14f
+#define FLT_WS2   3.14f  /* trailing */
+#define FLT_WS3   /* c1 */ /* c2 */ 3.14
+
+/* ── Real-world named constants ── */
+#define FLT_PI       3.14159265358979323846
+#define FLT_E        2.71828182845904523536
+#define FLT_AVOGADRO 6.022e23
+#define FLT_PLANCK   6.626e-34
+#define FLT_MAX_F    3.402823466e+38f
+#define FLT_MIN_F    1.175494351e-38f
+#define FLT_MAX_D    1.7976931348623158e+308
+#define FLT_MIN_D    2.2250738585072014e-308
 
 
 long long macro_definitions_lookup(const char *name);

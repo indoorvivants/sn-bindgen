@@ -91,6 +91,9 @@ object PrintFiles extends YesNo[PrintFiles]
 opaque type RenderComments = Boolean
 object RenderComments extends YesNo[RenderComments]
 
+opaque type RenderOnlyValidMacros = Boolean
+object RenderOnlyValidMacros extends YesNo[RenderOnlyValidMacros]
+
 opaque type RenderLocation = Boolean
 object RenderLocation extends YesNo[RenderLocation]
 
