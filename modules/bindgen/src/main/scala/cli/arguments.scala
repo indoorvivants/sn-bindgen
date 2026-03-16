@@ -301,6 +301,14 @@ object CLI:
       )
       .withDefault(Set.empty)
 
+    val onlyValidMacros = Opts
+      .flag(
+        "render.only-valid-macros",
+        help = "Don't render the macros that could not be parsed"
+      )
+      .orFalse
+      .map(RenderOnlyValidMacros(_))
+
     val comments = Opts
       .flag(
         "render.no-comments",
@@ -363,6 +371,7 @@ object CLI:
       noConstructor,
       opaqueStruct,
       macroDefs,
+      onlyValidMacros,
       comments,
       location,
       externalPath,

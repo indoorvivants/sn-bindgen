@@ -36,29 +36,48 @@ def constants(model: Constants, line: Appender)(using
     val deduplicated = macroNames.flatMap(grouped.get(_).flatten)
 
     if model.enums.nonEmpty then line("")
+    var unsupportedNeedNewLine = false
     deduplicated
       .sortBy:
+        // Sort the unsupported constants to the bottom of the file, as the various error messages are quite noisy
         case _: MacroDefinition.CStr        => 1
         case _: MacroDefinition.Integral    => 2
+        case _: MacroDefinition.Floating    => 2
         case _: MacroDefinition.Unsupported => 3
+      .tapEach: md =>
+        trace(s"Rendering constant ${md.getName}")
       .foreach:
-        // case MacroDefinition.Floating(name, sign, digits, value, kind) => ???
+        case MacroDefinition.Floating(name, digits, value, kind) =>
+          exports += Exported.Yes(name)
+          unsupportedNeedNewLine = true
+          val suff = kind match
+            case bindgen.FloatingBase.Float  => "f"
+            case bindgen.FloatingBase.Double => "d"
+            case FloatingBase.LongDouble     => "d"
+
+          val signStr = value match
+            case Sign.Pos => ""
+            case Sign.Neg => "-"
+
+          line(s"inline val $name = $signStr$digits$suff")
+
         case MacroDefinition.CStr(name, raw) =>
           line(s"val $name = c\"$raw\"")
-          line("")
+          unsupportedNeedNewLine = true
         case MacroDefinition.Unsupported(name, raw) =>
+          if unsupportedNeedNewLine then line("")
           val tripleQuote = "\"" * 3
           line(
             s"@scala.annotation.compileTimeOnly(${tripleQuote}Bindgen: unsupported macro definition: $raw${tripleQuote})"
           )
           line(s"def $name = ???")
-          line("")
+          if !unsupportedNeedNewLine then line("")
         case MacroDefinition.Integral(name, sign, kind, digits, value, lit) =>
           exports += Exported.Yes(name)
+          unsupportedNeedNewLine = true
           val signStr = if value == Sign.Neg then "-" else ""
 
-          import SignType.*, IntegralBase.*,
-            LiteralBase.{None as NoLiteral, Hex, Binary, Oct}
+          import SignType.*, IntegralBase.*, LiteralBase.*
 
           enum Inlining:
             case Yes, No
@@ -69,10 +88,10 @@ def constants(model: Constants, line: Appender)(using
 
           val (inlining: Inlining, repr: String, comment: Option[String]) =
             (sign, kind, lit) match
-              case (Signed, Int, NoLiteral) => (Yes, signStr + digits, None)
-              case (Signed, Long, NoLiteral) =>
+              case (Signed, Int, Dec) => (Yes, signStr + digits, None)
+              case (Signed, Long, Dec) =>
                 (Yes, signStr + digits + "L", None)
-              case (Signed, LongLong, NoLiteral) =>
+              case (Signed, LongLong, Dec) =>
                 (Yes, signStr + digits + "L", None)
               case (Signed, Int, Hex) => (Yes, signStr + "0x" + digits, None)
               case (Signed, Long, Hex) =>
@@ -118,19 +137,19 @@ def constants(model: Constants, line: Appender)(using
                   Some(s"Converted from octal: $signStr$digits")
                 )
 
-              case (Unsigned, Int, NoLiteral) =>
+              case (Unsigned, Int, Dec) =>
                 (
                   No,
                   s"UInt.valueOf(${Integer.parseUnsignedInt(digits)})",
                   Some(s"Converted from unsigned int: $digits")
                 )
-              case (Unsigned, Long, NoLiteral) =>
+              case (Unsigned, Long, Dec) =>
                 (
                   No,
                   s"ULong.valueOf(${JLong.parseUnsignedLong(digits)}L)",
                   Some(s"Converted from unsigned long: $digits")
                 )
-              case (Unsigned, LongLong, NoLiteral) =>
+              case (Unsigned, LongLong, Dec) =>
                 (
                   No,
                   s"ULong.valueOf(${JLong.parseUnsignedLong(digits)}L)",
@@ -200,8 +219,6 @@ def constants(model: Constants, line: Appender)(using
 
           if inlining == Yes then line(s"inline val $name = $repr")
           else line(s"val $name = $repr")
-
-          line("")
   end if
 
   exports.result()

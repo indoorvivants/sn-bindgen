@@ -35,6 +35,7 @@ lazy val Versions = new {
   val pluginTargetSBT = "1.10.11"
   val detective = "0.1.0"
   val opaqueNewtypes = "0.1.0"
+  val parsley = "5.0.0-M19"
 
   val Scala3 = "3.3.7"
   val Scala3_Next = "3.8.2"
@@ -147,6 +148,7 @@ lazy val bindgen = project
     libraryDependencies += "com.outr" %%% "scribe" % Versions.scribe,
     libraryDependencies += "com.lihaoyi" %%% "pprint" % "0.9.4",
     libraryDependencies += "com.indoorvivants" %%% "opaque-newtypes" % Versions.opaqueNewtypes,
+    libraryDependencies += "com.github.j-mie6" %%% "parsley" % Versions.parsley,
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-s", "-v"),
     scalacOptions += "-Wunused:all"
   )

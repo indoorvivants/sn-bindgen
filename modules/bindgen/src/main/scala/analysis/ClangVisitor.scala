@@ -90,7 +90,12 @@ object ClangVisitor:
                   )
                 )
 
-                binding.macroDefinitions += definition
+                definition match
+                  case MacroDefinition.Unsupported(name, raw)
+                      if conf.rendering.onlyValidMacros.value =>
+                  // Don't add unsupported definition if a flag is enabled
+                  case _ =>
+                    binding.macroDefinitions += definition
               end if
             end if
           end if

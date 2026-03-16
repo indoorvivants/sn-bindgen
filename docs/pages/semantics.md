@@ -253,6 +253,8 @@ val cSource =
 |#define SDL_HELLO -0x25
 |#define SDL_WORLD 0b1001011u
 |#define SDL_WORLD2 0xFF11u
+|#define FLT_1 -3.14f
+|#define FLT_2 1.50e+10L
 |#define STR_HELLO "hello"
 |#define STR_ESCAPED "he\"llo"
 |
@@ -260,5 +262,5 @@ val cSource =
 |#define AUDIO_U8 (SDL_WORLD2 + SDL_WORLD)
 |#define STR_BAD "he\"llo
 """.trim.stripMargin
-println(bindgen.BindgenRender.render(cSource, "libtest", "--macros", "SDL_*,AUDIO_U8,STR_*"))
+println(bindgen.BindgenRender.render(cSource, "libtest", "--macros", "SDL_*,AUDIO_U8,STR_*,FLT_*"))
 ```
