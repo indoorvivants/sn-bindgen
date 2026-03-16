@@ -1,4 +1,4 @@
-<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/atom-one-dark.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/extra.css" /><link rel="stylesheet" href="/assets/styles.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="sb-body"><header class="sb-header"><div class="sb-title-container"><a class="sb-title-link" href="/">sn-bindgen</a><p class="sb-title-tagline">Scala 3 Native binding generator to C libraries</p></div><div id="sb-search-container"></div><div class="sb-site-links"><a class="sb-github-link" href="https://github.com/indoorvivants/sn-bindgen"><img class="sb-github-image" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="sb-main-container"><aside class="sb-aside"><ul class="sb-navbar-container sb-navbar-container-0"><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/index.html">Home</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/quickstart/index.html">Quick start</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/configuration/index.html">Configuration </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/semantics/index.html">Semantics </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/cookbook/index.html">Cookbook</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/exports/index.html">Exports </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/limitations/index.html">Limitations</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/reporting-issues/index.html">Reporting issues</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/motivation/index.html">Motivation</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li></ul></aside><article class="sb-article"><div class="sb-toc-container"><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="sbt-toc-list-link" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="sbt-toc-list-link" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="sbt-toc-list-link" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="sbt-toc-list-link" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="sbt-toc-list-link" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="sbt-toc-list-link" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="sbt-toc-list-link" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="sbt-toc-list-link" href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
+<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/atom-one-dark.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/extra.css" /><link rel="stylesheet" href="/assets/styles.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="sb-body"><header class="sb-header"><div class="sb-title-container"><a class="sb-title-link" href="/">sn-bindgen</a><p class="sb-title-tagline">Scala 3 Native binding generator to C libraries</p></div><div id="sb-search-container"></div><div class="sb-site-links"><a class="sb-github-link" href="https://github.com/indoorvivants/sn-bindgen"><img class="sb-github-image" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="sb-main-container"><aside class="sb-aside"><ul class="sb-navbar-container sb-navbar-container-0"><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/index.html">Home</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/quickstart/index.html">Quick start</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/configuration/index.html">Configuration </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/semantics/index.html">Semantics </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/cookbook/index.html">Cookbook</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/exports/index.html">Exports </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/limitations/index.html">Limitations</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/reporting-issues/index.html">Reporting issues</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/motivation/index.html">Motivation</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li></ul></aside><article class="sb-article"><div class="sb-toc-container"><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="sbt-toc-list-link" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="sbt-toc-list-link" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="sbt-toc-list-link" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="sbt-toc-list-link" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="sbt-toc-list-link" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="sbt-toc-list-link" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="sbt-toc-list-link" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="sbt-toc-list-link" href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></li><li><a class="sbt-toc-list-link" href="#some-macro-definitions-are-supported">Some macro definitions are supported</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
 <p>For those types, we generate getters, setters, <code>Tag</code> definition, and two <code>apply</code> methods:</p>
 <ol>
 <li>A constructor, which takes all the parameters as arguments</li>
@@ -430,14 +430,14 @@ object functions:
   import extern_functions.*
   export extern_functions.*
 
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_arguments(n, n2)
+
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](2)
     !(__ptr_0 + 0) = n
     !(__ptr_0 + 1) = n2
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
-
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_arguments(n, n2)
 
   def bad_return_type()(__return : Ptr[Small]): Unit =
     __sn_wrap_libtest_bad_return_type(__return)
@@ -722,6 +722,13 @@ object constants:
   val WORK: CInt = 0
   
 
+object all:
+  export _root_.libtest.constants.HELLO
+  export _root_.libtest.constants.BYEBYE
+  export _root_.libtest.constants.HOW
+  export _root_.libtest.constants.DOESTHIS
+  export _root_.libtest.constants.WORK
+
 
 </code></pre>
  </div>
@@ -886,6 +893,80 @@ object types:
 
 object all:
   export _root_.libtest.structs.StructExample
+  export _root_.libtest.constants.A
+  export _root_.libtest.constants.B
+  export _root_.libtest.constants.C
+
+
+</code></pre>
+ </div>
+</div>
+</div>
+<h2><a href="#some-macro-definitions-are-supported" id="some-macro-definitions-are-supported">Some macro definitions are supported</a></h2>
+<p>As of 0.4.1, some macro definitions are supported – specifically for integer values and constant strings.</p>
+<p>To render macro definitions you need to opt in and provide a name filter:</p>
+<ul>
+<li>In CLI, <code>--macros SDL_*,AUDIO_U8,STR_*</code> will render all macros that begin with <code>SDL_</code> or <code>STR_</code> , and macro named <code>AUDIO_U8</code></li>
+<li>In SBT, <code>.withMacros(Set(&quot;SDL_*&quot;, &quot;AUDIO_U8&quot;, &quot;STR_*&quot;))</code> will produce the same result as above</li>
+</ul>
+<p>Unsupported macro definitions are rendered in a way that you will still be able to find their name, but attempting to reference them will provide a compiler error with the original definition of the macro from C file.</p>
+<p>Macros that are re-defined follow C policy and only the last implementation will be rendered.</p>
+<p>Bindgen tries hard to reproduce the constants as close to the source as possible, but if it can't (binary literals, unsigned literals, etc.) it will do the necessary conversion and provide a comment
+with the original.</p>
+<div class = "bindgen-comparison-container">
+<div class = "bindgen-original-c">
+<div class = "bindgen-original-c-title">C code</div>
+<pre><code class="language-c">// supported constants
+#define SDL_HELLO -0x25
+#define SDL_WORLD 0b1001011u
+#define SDL_WORLD2 0xFF11u
+#define STR_HELLO &quot;hello&quot;
+#define STR_ESCAPED &quot;he\&quot;llo&quot;
+
+// unsupported
+#define AUDIO_U8 (SDL_WORLD2 + SDL_WORLD)
+#define STR_BAD &quot;he\&quot;llo
+</code></pre>
+</div>
+</div>
+<div class = "bindgen-generated">
+<div class = "bindgen-generated-scala">
+ <div class = "bindgen-generated-scala-title">Scala code</div>
+<pre><code class="language-scala">package libtest
+
+import _root_.scala.scalanative.unsafe.*
+import _root_.scala.scalanative.unsigned.*
+import _root_.scala.scalanative.libc.*
+import _root_.scala.scalanative.*
+
+object constants:
+  val STR_HELLO = c&quot;hello&quot;
+  
+  val STR_ESCAPED = c&quot;he\&quot;llo&quot;
+  
+  inline val SDL_HELLO = -0x25
+  
+  /**
+  * Converted from unsigned binary int: 1001011
+  */
+  val SDL_WORLD = UInt.valueOf(75)
+  
+  /**
+  * Converted from unsigned hex int: FF11
+  */
+  val SDL_WORLD2 = UInt.valueOf(65297)
+  
+  @scala.annotation.compileTimeOnly(&quot;&quot;&quot;Bindgen: unsupported macro definition: (SDL_WORLD2+SDL_WORLD)&quot;&quot;&quot;)
+  def AUDIO_U8 = ???
+  
+  @scala.annotation.compileTimeOnly(&quot;&quot;&quot;Bindgen: unsupported macro definition: &quot;he\&quot;llo&quot;&quot;&quot;)
+  def STR_BAD = ???
+  
+
+object all:
+  export _root_.libtest.constants.SDL_HELLO
+  export _root_.libtest.constants.SDL_WORLD
+  export _root_.libtest.constants.SDL_WORLD2
 
 
 </code></pre>
