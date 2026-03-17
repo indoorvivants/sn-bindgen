@@ -23,14 +23,12 @@ And point the binding generator at it:
 
 ```scala
 bindgenBindings += {
-    Binding
-      .builder(
-        (Compile / baseDirectory).value / "openssl-amalgam.h",
+    Binding(
+        Compile / baseDirectory).value / "openssl-amalgam.h",
         "openssl"
       )
       .withCImports(List("openssl/sha.h", "openssl/evp.h"))
       .withClangFlags(List("-I" + vcpkgConfigurator.value.includes("openssl")))
-      .build
 }
 ```
 
@@ -45,7 +43,7 @@ You can help the situation by using the multi-file mode - where the bindgen will
 as a folder and create several files there with definitions broken down by type.
 
 - To enable multi-file mode in CLI, use `--multi-file` parameter.
-- To enable multi-file mode in SBT, use `multiFile = true` in Binding specification.
+- To enable multi-file mode in SBT, use `.withMultiFile(true)` in Binding specification.
 
 ## (advanced) Splitting the binding into multiple packages
 
