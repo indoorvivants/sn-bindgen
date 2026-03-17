@@ -37,8 +37,17 @@ object LogLevel {
     } catch { case _: MatchError => None }
 }
 
+/** Controls which headers will be added by default when analysing the header
+  * (along with the main header supplied by user)
+  */
 sealed trait Includes extends Product with Serializable
 object Includes {
+
+  /** Headers that are output by Clang itself as its search path
+    */
   case object ClangSearchPath extends Includes
+
+  /** Don't add any default headers
+    */
   case object None extends Includes
 }

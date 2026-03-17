@@ -157,6 +157,26 @@ class TestCLI:
       ).config.rendering.externalNames
     )
 
+  @Test def test_macros() =
+    assertEquals(
+      Set(
+        NameFilter("HELLO_*"),
+        NameFilter("G_*"),
+        NameFilter("GTK_ONE")
+      ),
+      parseExtra(
+        "--macros",
+        "HELLO_*,GTK_ONE,G_*"
+      ).config.rendering.macroDefs
+    )
+
+  @Test def test_only_valid_macros() =
+    assertTrue(
+      parseExtra(
+        "--render.only-valid-macros"
+      ).config.rendering.onlyValidMacros.value
+    )
+
   @Test def test_clang_flags() =
     assertEquals(
       Seq("-Ibla", "-Ihello", "-x", "c++"),
@@ -170,5 +190,4 @@ class TestCLI:
         "c++"
       ).config.clangFlags.map(_.value)
     )
-
 end TestCLI
