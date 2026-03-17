@@ -41,7 +41,7 @@ contain all the functions from the header file
 - In CLI, this mode can be activated by using the `--export` flag 
 
 - In SBT, you can enable it by using `.withExport(true)` on the Binding builder: 
-    `Binding.builder(<headerFile>, <packageName>).withExport(true).build`
+    `Binding(<headerFile>, <packageName>).withExport(true)`
 
 If this sounds confusing, let's take a look at a very simple example, where the interface doesn't use anything other than primitive types:
 

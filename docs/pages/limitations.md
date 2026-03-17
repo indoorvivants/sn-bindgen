@@ -3,27 +3,7 @@ title: Limitations
 order: 5
 ---
 
-## Definitions like `#define SOME_VALUE 25` are not exported
-
-The world of C preprocessor directives is dark and impossible to formalise.
-Potentially in the future we can add a mode to export the simplest of definitions
-as global constants, but it's very limited and inflexible.
-
-Currently we recommend adding C forwarder functions for those cases, e.g. in the example of OpenSSL:
-
-```c
-#include "openssl/evp.h"
-
-// preprocessor constants
-int get_EVP_MAC_KEY() { return EVP_PKEY_HMAC; }
-
-int get_EVP_MAX_MD_SIZE() { return EVP_MAX_MD_SIZE; }
-
-// macro definition
-void get_OpenSSL_add_all_digests() { OpenSSL_add_all_digests(); }
-```
-
-## Variadic functions are not rendered (only before version 0.0.16)
+## (very old versions, before 0.0.16) Variadic functions are not rendered 
 
 **Note: in `bindgen >= 0.0.17` and Scala Native 0.4.12+ you can now have variadic functions**
 

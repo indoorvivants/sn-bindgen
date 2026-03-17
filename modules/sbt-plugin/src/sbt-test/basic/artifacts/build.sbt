@@ -3,14 +3,13 @@ enablePlugins(BindgenPlugin, ScalaNativePlugin, ScalaNativeJUnitPlugin)
 import bindgen.interface.Binding
 import java.util.concurrent.atomic.AtomicReference
 
-scalaVersion := "3.3.4"
+scalaVersion := "3.3.7"
 
 bindgenBindings := {
   Seq(
     Binding(
-      headerFile =
-        baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
-      packageName = getPackageName.value.get
+      baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
+      getPackageName.value.get
     )
   )
 }
@@ -18,9 +17,8 @@ bindgenBindings := {
 Test / bindgenBindings := {
   Seq(
     Binding(
-      headerFile =
-        baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
-      packageName = "gentests"
+      baseDirectory.value / "src" / "main" / "resources" / "scala-native" / "header.h",
+      "gentests"
     )
   )
 }

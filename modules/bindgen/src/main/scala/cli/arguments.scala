@@ -143,7 +143,8 @@ object CLI:
   private val clangFlag = Opts
     .options[String](
       "clang",
-      help = "List of flags to pass directly to Clang"
+      help =
+        "(deprecated, pass clang flags after --) List of flags to pass directly to Clang"
     )
     .map(_.toList)
     .withDefault(Nil)
