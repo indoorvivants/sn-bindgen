@@ -9,14 +9,12 @@ to merge results would be quite complex to be attempted.</p>
 </code></pre>
 <p>And point the binding generator at it:</p>
 <pre><code class="language-scala">bindgenBindings += {
-    Binding
-      .builder(
-        (Compile / baseDirectory).value / &quot;openssl-amalgam.h&quot;,
+    Binding(
+        Compile / baseDirectory).value / &quot;openssl-amalgam.h&quot;,
         &quot;openssl&quot;
       )
       .withCImports(List(&quot;openssl/sha.h&quot;, &quot;openssl/evp.h&quot;))
       .withClangFlags(List(&quot;-I&quot; + vcpkgConfigurator.value.includes(&quot;openssl&quot;)))
-      .build
 }
 </code></pre>
 <p>Example taken from <a href="https://github.com/indoorvivants/sn-bindgen-examples/blob/82c109aac423c1adacaf1a2a1458d6d0afdea7b6/build.sbt#L374">sn-bindgen-examples</a></p>
@@ -27,7 +25,7 @@ to compile.</p>
 as a folder and create several files there with definitions broken down by type.</p>
 <ul>
 <li>To enable multi-file mode in CLI, use <code>--multi-file</code> parameter.</li>
-<li>To enable multi-file mode in SBT, use <code>multiFile = true</code> in Binding specification.</li>
+<li>To enable multi-file mode in SBT, use <code>.withMultiFile(true)</code> in Binding specification.</li>
 </ul>
 <h2><a href="#advanced-splitting-the-binding-into-multiple-packages" id="advanced-splitting-the-binding-into-multiple-packages">(advanced) Splitting the binding into multiple packages</a></h2>
 <p><em>Note: this technique is annoyingly manual, prone to errors and should only be used if rendering the binding as a single entity breaks the compiler</em></p>

@@ -92,29 +92,28 @@
 </code></pre>
 <h3><a href="#sbt-plugin-latest" id="sbt-plugin-latest">SBT plugin (latest)</a></h3>
 <p><strong>project/plugins.sbt</strong></p>
-<pre><code class="language-scala">resolvers += Resolver.sonatypeRepo(&quot;snapshots&quot;)
-addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.4.1+10-7bdbbffa-SNAPSHOT&quot;)
+<pre><code class="language-scala">ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
+addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.4.1+13-9c2b0357-SNAPSHOT&quot;)
 </code></pre>
 <h2><a href="#usage" id="usage">Usage</a></h2>
 <p>This covers usage as part of an SBT project</p>
 <p><strong>build.sbt</strong></p>
 <pre><code class="language-scala">// only add this line if you're living on the edge and using
 // a version that has &quot;SNAPSHOT&quot; in it
-resolvers += Resolver.sonatypeRepo(&quot;snapshots&quot;)
-scalaVersion := &quot;3.2.2&quot;
+ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
+
+scalaVersion := &quot;3.3.7&quot;
 
 enablePlugins(ScalaNativePlugin, BindgenPlugin)
 
 import bindgen.interface.Binding
 
 bindgenBindings := Seq(
-  Binding
-    .builder(
+  Binding(
       /* 1 */  (Compile / resourceDirectory).value / &quot;scala-native&quot; / &quot;header.h&quot;,
       /* 2 */  &quot;libtest&quot;
     )
     .addCImport(&quot;header.h&quot;) /* 3 */
-    .build
   )
 )
 </code></pre>
