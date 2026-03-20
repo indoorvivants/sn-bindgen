@@ -14,7 +14,7 @@ class TestInterface {
 
   val c_code = """
       | union Test {int x; char y;};
-      | enum Bla {A = 1u, B = 2u};
+      | enum Bla {A = -1, B = 2};
       | typedef float Howdy;
       | typedef struct Hello {
       |   int bla;
@@ -160,7 +160,7 @@ class TestInterface {
     assertEquals(
       Set(
         probe.scalaFiles / "lib_check" / "enums" / "Bla.scala",
-        probe.scalaFiles / "lib_check" / "enums" / "_BindgenEnumCUnsignedInt.scala",
+        probe.scalaFiles / "lib_check" / "enums" / "_BindgenEnumCInt.scala",
         probe.scalaFiles / "lib_check" / "structs" / "Hello.scala",
         probe.scalaFiles / "lib_check" / "unions" / "Test.scala",
         probe.scalaFiles / "lib_check" / "aliases" / "Howdy.scala",
