@@ -1,8 +1,7 @@
 package bindgen
 package rendering
 
-import bindgen.*
-import bindgen.ResolvedEnum
+import bindgen.{ResolvedEnum, *}
 
 class UnionRenderer(model: ResolvedUnion, line: Appender)(using
     Config,

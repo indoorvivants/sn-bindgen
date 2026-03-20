@@ -21,6 +21,25 @@ trait RenderingBase:
     lb
   end createScalaStream
 
+  def createCStream(using Config, Context) =
+    val lb = LineBuilder()
+    lb.appendLine(
+      s"// This file was generated using sn-bindgen ${BuildInfo.version}: https://sn-bindgen.indoorvivants.com/"
+    )
+    lb.emptyLine
+    lb
+  end createCStream
+
+  def interspeseWithNewlines[T, A](out: LineBuilder, seq: Seq[T])(
+      f: T => A
+  ): Seq[A] =
+    val res = Seq.newBuilder[A]
+    seq.zipWithIndex.foreach { case (item, i) =>
+      res += f(item)
+      if i != seq.length - 1 then out.emptyLine
+    }
+    res.result()
+
   // wraps a block in the supplied object/class/trait if the render mode is such
   def maybeObjectBlock(out: LineBuilder, mode: RenderMode)(
       objectHeader: String
