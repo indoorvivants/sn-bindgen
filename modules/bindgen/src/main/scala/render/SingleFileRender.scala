@@ -109,14 +109,16 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
       if allExports.nonEmpty then renderExports(out, allExports)
       RenderedOutput.Single(out)
     else
-      val out = LineBuilder()
       if info.cFunctions.nonEmpty then
+        val out = createCStream
         renderCFunctionForwards(
           out,
           cFunctions = info.cFunctions.toList.sortBy(_.name.value)
         )
+        RenderedOutput.Single(out)
+      else RenderedOutput.Single(LineBuilder())
       end if
-      RenderedOutput.Single(out)
+
     end if
 
   end render
@@ -131,10 +133,12 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
     }
     out.emptyLine
 
-    cFunctions.toList
-      .sortBy(_.name.value)
-      .foreach: cf =>
-        cFunctionForwarder(cf, to(out))
+    interspeseWithNewlines(
+      out,
+      cFunctions.toList
+        .sortBy(_.name.value)
+    ): cf =>
+      cFunctionForwarder(cf, to(out))
   end renderCFunctionForwards
 
   private def renderEnums(
@@ -149,22 +153,26 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
       maybeObjectBlock(out, RenderMode.Objects)("object enumerations"):
         to(out)("import predef.*")
 
-        enums.foreach: resolvedEnum =>
-          exported += EnumRenderer(resolvedEnum, to(out)).render()
+        exported ++= interspeseWithNewlines(out, enums): resolvedEnum =>
+          EnumRenderer(resolvedEnum, to(out)).render()
     end if
     exported.result()
   end renderEnums
 
   private def renderStructs(
       out: LineBuilder,
-      structs: Iterable[ResolvedStruct],
+      structs: Seq[ResolvedStruct],
       typeImports: TypeImports
   )(using Config, AliasResolver, Context) =
     val exported = List.newBuilder[Exported]
     maybeObjectBlock(out, RenderMode.Objects)("object structs") {
       typeImports.render(out)
       out.emptyLine
-      structs.foreach: struct =>
+      interspeseWithNewlines(
+        out,
+        structs
+          .sortBy(_.name.value)
+      ): struct =>
         exported += StructRenderer(struct, to(out)).render()
     }
     exported.result()
@@ -172,15 +180,19 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
 
   private def renderUnions(
       out: LineBuilder,
-      unions: Iterable[ResolvedUnion],
+      unions: Seq[ResolvedUnion],
       typeImports: TypeImports
   )(using Config, AliasResolver, Context) =
     val exported = List.newBuilder[Exported]
     maybeObjectBlock(out, RenderMode.Objects)("object unions") {
       typeImports.render(out)
       out.emptyLine
-      unions.foreach: union =>
-        exported += UnionRenderer(union, to(out)).render()
+      exported ++= interspeseWithNewlines(
+        out,
+        unions
+          .sortBy(_.name.value)
+      ): union =>
+        UnionRenderer(union, to(out)).render()
     }
     exported.result()
   end renderUnions
@@ -208,7 +220,7 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
       Context
   ) =
     maybeObjectBlock(out, RenderMode.Objects)("object predef"):
-      enumBases.toList.sorted.foreach: base =>
+      interspeseWithNewlines(out, enumBases.toList.sorted): base =>
         val rend = EnumPredefRenderer(base)
         rend.render(out)
 
@@ -221,8 +233,8 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
     maybeObjectBlock(out, RenderMode.Objects)("object aliases"):
       typeImports.render(out)
 
-      aliases.foreach: alias =>
-        exported += AliasRender(alias, to(out)).render()
+      exported ++= interspeseWithNewlines(out, aliases): alias =>
+        AliasRender(alias, to(out)).render()
 
     exported.result()
   end renderAliases

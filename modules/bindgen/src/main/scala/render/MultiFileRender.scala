@@ -1,8 +1,6 @@
 package bindgen
 package rendering
 
-import scala.scalanative.unsafe.name
-
 class MultiFileRender(rawBinding: Binding) extends RenderingBase:
   def render()(using Config, Context) =
     val info = BindingInfo(rawBinding)

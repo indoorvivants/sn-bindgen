@@ -4,9 +4,9 @@ import bindgen.rendering.*
 import com.monovore.decline.HelpFormat
 
 import java.io.{File, FileWriter}
+import java.nio.file.Files
 import scala.scalanative.unsafe.*
 import scala.util.Using
-import java.nio.file.Files
 
 object Generate:
   def main(args: Array[String]): Unit =

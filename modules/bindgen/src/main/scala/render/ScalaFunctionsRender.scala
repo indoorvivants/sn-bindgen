@@ -53,9 +53,12 @@ class ScalaFunctionsRenderer(
           maybeObjectBlock(out, renderMode)(objectHeader) {
             if renderMode == RenderMode.Objects then typeImports.render(out)
 
-            exported ++= scalaExternFunctions.toList
-              .sortBy(functionSorter)
-              .map(f => ScalaFunctionRenderer(f, to(out), renderMode).render())
+            exported ++= interspeseWithNewlines(
+              out,
+              scalaExternFunctions.toList
+                .sortBy(functionSorter)
+            ): f =>
+              ScalaFunctionRenderer(f, to(out), renderMode).render()
           }
         end if
 
@@ -68,9 +71,13 @@ class ScalaFunctionsRenderer(
               to(out)("export extern_functions.*")
               out.emptyLine
 
-            exported ++= scalaRegularFunctions.toList
-              .sortBy(functionSorter)
-              .map(f => ScalaFunctionRenderer(f, to(out), renderMode).render())
+            exported ++=
+              interspeseWithNewlines(
+                out,
+                scalaRegularFunctions.toList
+                  .sortBy(functionSorter)
+              ): f =>
+                ScalaFunctionRenderer(f, to(out), renderMode).render()
           }
         end if
       else
@@ -97,8 +104,8 @@ class ScalaFunctionsRenderer(
         objectBlock(line)("trait ExportedFunctions") {
           if renderMode == RenderMode.Objects then typeImports.render(out)
           exported ++=
-            modified(ExportLocation.Trait)
-              .map(f => ScalaFunctionRenderer(f, to(out), renderMode).render())
+            interspeseWithNewlines(out, modified(ExportLocation.Trait)): f =>
+              ScalaFunctionRenderer(f, to(out), renderMode).render()
 
         }
 

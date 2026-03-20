@@ -1,9 +1,8 @@
 package bindgen
 
-import bindgen.rendering.{RenderedOutput, MultiFileRender}
+import bindgen.rendering.{MultiFileRender, RenderedOutput, SingleFileRender}
 
 import scala.scalanative.unsafe.Zone
-import bindgen.rendering.SingleFileRender
 
 case class ConfiguredEnvironment(
     clang: ClangInfo,

@@ -1,9 +1,15 @@
 package bindgen
 package rendering
 
-import bindgen.{CType, MacroDefinition, ResolvedEnum, ResolvedStruct, *}
+import bindgen.{
+  CType,
+  MacroDefinition,
+  ResolvedEnum,
+  ResolvedStruct,
+  warning,
+  *
+}
 import opaque_newtypes.given
-import bindgen.warning
 
 // def renderBinding(
 //     rawBinding: Binding,
