@@ -14,7 +14,7 @@ class TestInterface {
 
   val c_code = """
       | union Test {int x; char y;};
-      | enum Bla {A, B};
+      | enum Bla {A = 1u, B = 2u};
       | typedef float Howdy;
       | typedef struct Hello {
       |   int bla;
@@ -122,11 +122,19 @@ class TestInterface {
     val allFiles = probe.builder
       .generate(Seq(bind), probe.scalaFiles, BindingLang.Scala, plat)
 
-    assertTrue(exists(probe.scalaFiles / "lib_check" / "enumerations.scala"))
-    assertTrue(exists(probe.scalaFiles / "lib_check" / "structs.scala"))
-    assertTrue(exists(probe.scalaFiles / "lib_check" / "unions.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "enums" / "Bla.scala"))
+    assertTrue(
+      exists(probe.scalaFiles / "lib_check" / "structs" / "Hello.scala")
+    )
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "unions" / "Test.scala"))
+    assertTrue(
+      exists(probe.scalaFiles / "lib_check" / "aliases" / "Howdy.scala")
+    )
+    assertTrue(
+      exists(probe.scalaFiles / "lib_check" / "aliases" / "HelloAlias.scala")
+    )
     assertTrue(exists(probe.scalaFiles / "lib_check" / "functions.scala"))
-    assertTrue(exists(probe.scalaFiles / "lib_check" / "aliases.scala"))
+    assertTrue(exists(probe.scalaFiles / "lib_check" / "constants.scala"))
 
   }
 
@@ -151,12 +159,14 @@ class TestInterface {
 
     assertEquals(
       Set(
-        probe.scalaFiles / "lib_check" / "enumerations.scala",
-        probe.scalaFiles / "lib_check" / "constants.scala",
-        probe.scalaFiles / "lib_check" / "aliases.scala",
-        probe.scalaFiles / "lib_check" / "structs.scala",
+        probe.scalaFiles / "lib_check" / "enums" / "Bla.scala",
+        probe.scalaFiles / "lib_check" / "enums" / "_BindgenEnumCUnsignedInt.scala",
+        probe.scalaFiles / "lib_check" / "structs" / "Hello.scala",
+        probe.scalaFiles / "lib_check" / "unions" / "Test.scala",
+        probe.scalaFiles / "lib_check" / "aliases" / "Howdy.scala",
+        probe.scalaFiles / "lib_check" / "aliases" / "HelloAlias.scala",
         probe.scalaFiles / "lib_check" / "functions.scala",
-        probe.scalaFiles / "lib_check" / "unions.scala"
+        probe.scalaFiles / "lib_check" / "constants.scala"
       ),
       allFilesMultiScala.toSet
     )
