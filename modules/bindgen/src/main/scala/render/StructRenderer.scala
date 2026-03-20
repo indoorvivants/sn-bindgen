@@ -161,11 +161,11 @@ private[rendering] class StructRenderer(struct: ResolvedStruct, line: Appender)(
     struct.anonymous.zipWithIndex.foreach { (anon, idx) =>
       anon match
         case s: ResolvedStruct =>
-          rendering.struct(s, line)
+          StructRenderer(s, line).render()
         case u: ResolvedUnion =>
-          rendering.union(u, line)
+          UnionRenderer(u, line).render()
         case e: ResolvedEnum =>
-          rendering.enumeration(e, line)
+          EnumRenderer(e, line).render()
 
       if idx != struct.anonymous.length - 1 then line("")
     }

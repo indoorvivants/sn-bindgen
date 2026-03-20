@@ -1,4 +1,4 @@
-//!bindgen: --multi-file
+//!bindgen: --multi-file --macros HELLO_*
 
 union Test {
   int x;
@@ -19,3 +19,6 @@ void nice(char st);
 enum { Constant1, Constant2 };
 
 int test_varargs(int i, ...);
+
+#define HELLO_1 0.25
+#define HELLO_2 "yesss"

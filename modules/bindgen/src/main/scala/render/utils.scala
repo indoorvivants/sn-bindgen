@@ -134,7 +134,10 @@ object LineBuilder:
     def appendLine(s: String): LineBuilder = lb.append(s + SEP)
     def appendLineWhen(cond: Boolean)(s: String): LineBuilder =
       if cond then appendLine(s) else lb
+    def emptyLineWhen(cond: Boolean): LineBuilder =
+      if cond then emptyLine else lb
     def emptyLine: LineBuilder = lb.append(SEP)
     def emptyLines(n: Int): LineBuilder = lb.append(SEP * n)
     def append(s: String): LineBuilder = lb.append(s)
+  end extension
 end LineBuilder

@@ -599,8 +599,10 @@ bindgenTestFile := {
       Versions.Scala3
     ) / Test / resourceDirectory).value / "scala-native" / testFile
 
+  val pkg = if (args.contains("--package")) " " else "--package test"
+
   val output =
-    s"$built --package test --scala --header $testFileLocation ${rest.mkString(" ")}".!!
+    s"$built $pkg --scala --header $testFileLocation ${rest.mkString(" ")}".!!
   log.info(output)
 }
 
