@@ -1,8 +1,9 @@
 package bindgen
 
-import bindgen.rendering.{RenderedOutput, renderBinding}
+import bindgen.rendering.{RenderedOutput, MultiFileRender}
 
 import scala.scalanative.unsafe.Zone
+import bindgen.rendering.SingleFileRender
 
 case class ConfiguredEnvironment(
     clang: ClangInfo,
@@ -20,7 +21,10 @@ class InteractiveDriver(config: Config, environment: ConfiguredEnvironment):
   ): Either[BindingError, RenderedOutput] =
     analyse(context).map: binding =>
       given Context = context
-      renderBinding(binding, outputMode)
+      outputMode match
+        case _: OutputMode.MultiFile => MultiFileRender(binding).render()
+        case _                       => SingleFileRender(binding).render()
+
 end InteractiveDriver
 
 object InteractiveDriver:

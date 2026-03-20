@@ -6,6 +6,7 @@ import com.monovore.decline.HelpFormat
 import java.io.{File, FileWriter}
 import scala.scalanative.unsafe.*
 import scala.util.Using
+import java.nio.file.Files
 
 object Generate:
   def main(args: Array[String]): Unit =
@@ -71,6 +72,8 @@ object Generate:
                     val result = lb.result.trim()
                     if result.nonEmpty then
                       val file = path.resolve(sn.value + ".scala")
+                      if file.getParent() != path then
+                        Files.createDirectories(file.getParent())
                       Using.resource(new FileWriter(file.toFile)) { fw =>
                         fw.write(result)
                       }

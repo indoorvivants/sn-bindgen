@@ -161,6 +161,11 @@ enum Name:
 enum SignType:
   case Signed, Unsigned
 
+object SignType:
+  given Ordering[SignType] = Ordering.by:
+    case Signed   => 0
+    case Unsigned => 1
+
 opaque type StructParameterName = String
 object StructParameterName extends OpaqueString[StructParameterName]
 
@@ -175,6 +180,14 @@ object UnionName extends OpaqueString[UnionName]
 
 enum IntegralBase:
   case Char, Short, Int, Long, LongLong
+
+object IntegralBase:
+  given Ordering[IntegralBase] = Ordering.by:
+    case Char     => 0
+    case Short    => 1
+    case Int      => 2
+    case Long     => 3
+    case LongLong => 4
 
 enum FloatingBase:
   case Float, Double, LongDouble

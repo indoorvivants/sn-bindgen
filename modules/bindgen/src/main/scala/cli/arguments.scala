@@ -352,7 +352,7 @@ object CLI:
       .options[String](
         "render.external-name",
         help =
-          "Render all definitions with matchign names as if they were imported from some package" +
+          "Render all definitions with matching names as if they were imported from some package" +
             "\nexample: --render.external-name 'cairo_*=libcairo'"
       )
       .mapValidated { results =>
@@ -396,7 +396,7 @@ object CLI:
           OutputMode.MultiFile(OutputDirectory(f.value)).validNel
         else
           ("In multi-file mode, the --out " +
-            "parameter must be an existing directory").invalidNel
+            s"parameter must be an existing directory (${f} is not a directory or doesn't exist)").invalidNel
 
     }
 
