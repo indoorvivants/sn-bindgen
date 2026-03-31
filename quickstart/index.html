@@ -88,12 +88,12 @@
 </ul>
 <h3><a href="#sbt-plugin-stable" id="sbt-plugin-stable">SBT plugin (stable)</a></h3>
 <p><strong>project/plugins.sbt</strong></p>
-<pre><code class="language-scala">addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.4.2&quot;)
+<pre><code class="language-scala">addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.4.3&quot;)
 </code></pre>
 <h3><a href="#sbt-plugin-latest" id="sbt-plugin-latest">SBT plugin (latest)</a></h3>
 <p><strong>project/plugins.sbt</strong></p>
 <pre><code class="language-scala">ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
-addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.4.2&quot;)
+addSbtPlugin(&quot;com.indoorvivants&quot; % &quot;bindgen-sbt-plugin&quot; % &quot;0.4.3&quot;)
 </code></pre>
 <h2><a href="#usage" id="usage">Usage</a></h2>
 <p>This covers usage as part of an SBT project</p>
@@ -141,19 +141,20 @@ the Scala sources</li>
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
+// This file was generated using sn-bindgen 0.4.3: https://sn-bindgen.indoorvivants.com/
+
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
 import _root_.scala.scalanative.libc.*
 import _root_.scala.scalanative.*
 
 object predef:
-    private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
-      given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
-      extension (inline t: T)
-        inline def value: CUnsignedInt = t.asInstanceOf[CUnsignedInt]
-        inline def int: CInt = value.toInt
-        inline def uint: CUnsignedInt = value
-
+  private[libtest] trait _BindgenEnumCUnsignedInt[T](using eq: T =:= CUnsignedInt):
+    given Tag[T] = Tag.UInt.asInstanceOf[Tag[T]]
+    extension (inline t: T)
+      inline def value: CUnsignedInt = t.asInstanceOf[CUnsignedInt]
+      inline def int: CInt = value.toInt
+      inline def uint: CUnsignedInt = value
 
 object enumerations:
   import predef.*
@@ -180,12 +181,12 @@ private[libtest] object extern_functions:
   import _root_.libtest.enumerations.*
   def sum(one : bla, two : bla): Unit = extern
 
-
 object functions:
   import _root_.libtest.predef.*
   import _root_.libtest.enumerations.*
   import extern_functions.*
   export extern_functions.*
+
 
 object types:
     export _root_.libtest.enumerations.*

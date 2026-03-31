@@ -45,6 +45,8 @@ contain all the functions from the header file</li>
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
+// This file was generated using sn-bindgen 0.4.3: https://sn-bindgen.indoorvivants.com/
+
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
 import _root_.scala.scalanative.libc.*
@@ -53,11 +55,12 @@ import _root_.scala.scalanative.*
 trait ExportedFunctions:
   def myThing(n : CInt, i : CLongInt): CLongInt
 
-
 object functions extends ExportedFunctions:
   @exported
   override def myThing(n : CInt, i : CLongInt): CLongInt = libtest.impl.Implementations.myThing(n, i)
 
+object all:
+  export _root_.libtest.functions.myThing
 
 
 </code></pre>
@@ -95,6 +98,8 @@ long myThing(int n, const MyStuff* str);
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
+// This file was generated using sn-bindgen 0.4.3: https://sn-bindgen.indoorvivants.com/
+
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
 import _root_.scala.scalanative.libc.*
@@ -131,7 +136,6 @@ trait ExportedFunctions:
   import _root_.libtest.structs.*
   def myThing(n : CInt, str : Ptr[MyStuff]): CLongInt
 
-
 object functions extends ExportedFunctions:
   import _root_.libtest.structs.*
   @exported
@@ -142,6 +146,7 @@ object types:
 
 object all:
   export _root_.libtest.structs.MyStuff
+  export _root_.libtest.functions.myThing
 
 
 </code></pre>
