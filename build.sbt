@@ -38,7 +38,7 @@ lazy val Versions = new {
   val parsley = "5.0.0-M19"
 
   val Scala3 = "3.3.7"
-  val Scala3_Next = "3.8.2"
+  val Scala3_Next = "3.8.3"
   val Scala212 = "2.12.20"
   val Scala213 = "2.13.17"
   val Scala2 = List(Scala212, Scala213)
