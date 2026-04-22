@@ -12,7 +12,7 @@ class TestExternals:
 
   @Test def test_basics() =
     Zone:
-      val str = my_struct(25)
+      val str = lib_test_external_paths_inc.structs.my_struct(25)
       val result = my_func(str)
 
       assertEquals(result, 25 * 11)
