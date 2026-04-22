@@ -832,8 +832,8 @@ addCommandAlias(
 addCommandAlias("interfaceTests", "tests/test; tests3/test; tests2_12/test")
 addCommandAlias(
   "ci",
-  "clean; scalafixEnable; scalafmtCheckAll; scalafmtSbtCheck; cliTests;" +
-    "interfaceTests; pluginTests; generatorTests; exportTests"
+  "clean; scalafixEnable; scalafmtCheckAll; scalafmtSbtCheck; generatorTests; cliTests;" +
+    "interfaceTests; pluginTests;  exportTests"
 )
 
 addCommandAlias(
