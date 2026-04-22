@@ -2,6 +2,7 @@ package bindgen
 package rendering
 
 class BindingInfo(rawBinding: Binding)(using Config, Context):
+  // TODO: make it work with resolved versions
   private def shouldRender(definition: Def)(using config: Config) =
     definition.defName
       .map(_.n)
@@ -73,10 +74,12 @@ class BindingInfo(rawBinding: Binding)(using Config, Context):
 
   val exportMode = summon[Config].exportMode
 
-  val all = rawBinding.resolve
+  private val all = binding.resolve
 
   val aliasResolver =
-    AliasResolver.create(all)
+    // NOTE: We are using raw binding here to make sure that the information about all types is present
+    // Even though some of those types won't be rendered (if filtered by [[shouldRender]] above)
+    AliasResolver.create(rawBinding.resolve)
 
   val resolvedFunctions: scala.collection.mutable.Set[GeneratedFunction] =
     deduplicateFunctions(binding.functions).flatMap(
