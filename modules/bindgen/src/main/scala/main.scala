@@ -4,12 +4,23 @@ import bindgen.rendering.*
 import com.monovore.decline.HelpFormat
 
 import java.io.{File, FileWriter}
+import java.lang.Thread.UncaughtExceptionHandler
 import java.nio.file.Files
 import scala.scalanative.unsafe.*
 import scala.util.Using
 
 object Generate:
   def main(args: Array[String]): Unit =
+    Thread
+      .currentThread()
+      .setUncaughtExceptionHandler(
+        new UncaughtExceptionHandler:
+          override def uncaughtException(x: Thread, t: Throwable): Unit =
+            println(x)
+            println(t.getMessage())
+            println("Stacktrace: ")
+            x.getStackTrace().foreach(println)
+      )
     val arguments = args.takeWhile(_ != "--")
     val rest = args.drop(arguments.length + 1)
     Zone:

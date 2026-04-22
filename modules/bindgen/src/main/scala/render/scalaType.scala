@@ -34,7 +34,7 @@ def scalaNumericType(typ: CType.NumericIntegral) =
   prefix + bs
 end scalaNumericType
 
-def scalaType(typ: CType)(using AliasResolver, Config): String =
+def scalaType(typ: CType)(using Config): String =
   import CType.*
   typ match
     case Reference(n: Name.Model) =>
@@ -91,7 +91,7 @@ def scalaType(typ: CType)(using AliasResolver, Config): String =
   end match
 end scalaType
 
-def structArrayType(ct: CType.Struct)(using Config, AliasResolver) =
+def structArrayType(ct: CType.Struct) =
   CType.Arr(CType.Byte, Some(ct.hints.staticSize.toInt))
 
 def natDigits(i: Long): String =
