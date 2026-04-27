@@ -51,6 +51,15 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenFlavour = settingKey[Flavour](
       s"Bindgen flavour. Default: ${getBindgenFlavour(nativeVersion)}"
     )
+
+    object BindgenTags {
+
+      /** This tag is applied to the [[bindgenGenerateScalaSources]] and
+        * [[bindgenGenerateCSources]] tasks.
+        */
+      val Generate = Tags.Tag("bindgen-generate")
+    }
+
   }
 
   private def getBindgenFlavour(ver: String) =
@@ -190,60 +199,76 @@ object BindgenPlugin extends AutoPlugin {
     ) ++
       Seq(Compile, Test).flatMap(conf => inConfig(conf)(definedSettings(conf)))
 
+  override def globalSettings: Seq[Setting[?]] = Seq(
+    Global / concurrentRestrictions +=
+      Tags.limit(BindgenTags.Generate, 1)
+  )
+
   private def definedSettings(addConf: Configuration) = Seq(
     bindgenGenerateAll := {
       bindgenGenerateScalaSources.value ++ bindgenGenerateCSources.value
     },
-    bindgenGenerateScalaSources := {
-      val selected = (addConf / bindgenBindings).value.map { b =>
-        b.flavour match {
-          case None =>
-            b.withFlavour(bindgenFlavour.value)
-              .withBraces(scalacOptions.value.contains("-no-indent"))
-          case Some(_) =>
-            b.withBraces(scalacOptions.value.contains("-no-indent"))
+    bindgenGenerateScalaSources := Def
+      .task {
+        val selected = (addConf / bindgenBindings).value.map { b =>
+          b.flavour match {
+            case None =>
+              b.withFlavour(bindgenFlavour.value)
+                .withBraces(scalacOptions.value.contains("-no-indent"))
+            case Some(_) =>
+              b.withBraces(scalacOptions.value.contains("-no-indent"))
+          }
         }
-      }
 
-      val managedDestination = sourceManaged.value
+        val managedDestination = sourceManaged.value
 
-      val dest = bindgenMode.value match {
-        case BindgenMode.ResourceGenerator   => managedDestination
-        case BindgenMode.Manual(scalaDir, _) => scalaDir
-      }
-
-      incremental(
-        Config(bindgenVersion.value, bindgenBinary.value),
-        (selected).distinct,
-        dest,
-        BindingLang.Scala,
-        bindgenClangPath.value,
-        streams.value
-      )
-    },
-    bindgenGenerateCSources := {
-      val selected = (addConf / bindgenBindings).value.map { b =>
-        b.flavour match {
-          case None    => b.withFlavour(bindgenFlavour.value)
-          case Some(_) => b
+        val dest = bindgenMode.value match {
+          case BindgenMode.ResourceGenerator   => managedDestination
+          case BindgenMode.Manual(scalaDir, _) => scalaDir
         }
-      }
 
-      val managedDestination = (resourceManaged).value / "scala-native"
+        val targetDir = crossTarget.value / "sn-bindgen"
 
-      val dest = bindgenMode.value match {
-        case BindgenMode.ResourceGenerator => managedDestination
-        case BindgenMode.Manual(_, cDir)   => cDir
+        incremental(
+          Config(bindgenVersion.value, bindgenBinary.value),
+          (selected).distinct,
+          dest,
+          BindingLang.Scala,
+          bindgenClangPath.value,
+          streams.value,
+          targetDir
+        )
       }
-      incremental(
-        Config(bindgenVersion.value, bindgenBinary.value),
-        (selected).distinct,
-        dest,
-        BindingLang.C,
-        bindgenClangPath.value,
-        streams.value
-      )
-    },
+      .tag(BindgenTags.Generate)
+      .value,
+    bindgenGenerateCSources := Def
+      .task {
+        val selected = (addConf / bindgenBindings).value.map { b =>
+          b.flavour match {
+            case None    => b.withFlavour(bindgenFlavour.value)
+            case Some(_) => b
+          }
+        }
+
+        val managedDestination = (resourceManaged).value / "scala-native"
+        val targetDir = crossTarget.value / "sn-bindgen"
+
+        val dest = bindgenMode.value match {
+          case BindgenMode.ResourceGenerator => managedDestination
+          case BindgenMode.Manual(_, cDir)   => cDir
+        }
+        incremental(
+          Config(bindgenVersion.value, bindgenBinary.value),
+          (selected).distinct,
+          dest,
+          BindingLang.C,
+          bindgenClangPath.value,
+          streams.value,
+          targetDir = targetDir
+        )
+      }
+      .tag(BindgenTags.Generate)
+      .value,
     sourceGenerators ++= {
       if (bindgenMode.value.isInstanceOf[BindgenMode.Manual]) Seq.empty
       else Seq(bindgenGenerateScalaSources.taskValue)
@@ -301,7 +326,8 @@ object BindgenPlugin extends AutoPlugin {
       destination: File,
       lang: BindingLang,
       clangPath: java.nio.file.Path,
-      streams: TaskStreams
+      streams: TaskStreams,
+      targetDir: File
   ): Seq[File] = {
 
     import config.*
@@ -334,7 +360,12 @@ object BindgenPlugin extends AutoPlugin {
           (outDiff: ChangeReport[File]) =>
             if (changed || outDiff.modified.nonEmpty) {
               builder
-                .generate(defined, destination, lang, Some(clangPath))
+                .generate(
+                  defined,
+                  destination,
+                  lang,
+                  Some(clangPath)
+                )
                 .toSet
             } else outDiff.checked
         }
