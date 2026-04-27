@@ -17,13 +17,13 @@ class BindingInfo(rawBinding: Binding)(using Config, Context):
           config.rendering.matchesPackage(_.externalNames)(n)
 
         fileMatches.map((filterSpec, pkg) =>
-          trace(
+          info(
             s"Definition `$n` was not rendered because it matched path " +
               s"filter `$filterSpec`, and will be referenced instead from `$pkg` package"
           )
         ) orElse
           nameMatches.map((filterSpec, pkg) =>
-            trace(
+            info(
               s"Definition `$n` was not rendered because its name matched" +
                 s"filter `$filterSpec`, and will be referenced instead from `$pkg` package"
             )
@@ -32,6 +32,17 @@ class BindingInfo(rawBinding: Binding)(using Config, Context):
       .isEmpty
 
   val binding = rawBinding.filterAll(shouldRender)
+
+  info(
+    "Before filtering: " + rawBinding.structs.exists(
+      _.name == Some(StructName("GInputStream"))
+    )
+  )
+  info(
+    "After filtering: " + binding.structs.exists(
+      _.name == Some(StructName("GInputStream"))
+    )
+  )
 
   // In order
   def anonymousEnumBases(struct: Def.Struct | Def.Union | Def.Enum) =
@@ -94,5 +105,11 @@ class BindingInfo(rawBinding: Binding)(using Config, Context):
   val resolvedUnions = all.collect { case rs: ResolvedUnion => rs }
   val resolvedEnums = all.collect { case rs: ResolvedEnum => rs }
   val aliases = binding.aliases.toList.sortBy(_.name)
+
+  info(
+    "After resolving: " + resolvedStructs.exists(
+      _.name == StructName("GInputStream")
+    )
+  )
 
 end BindingInfo
