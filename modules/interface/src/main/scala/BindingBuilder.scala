@@ -84,17 +84,36 @@ class BindingBuilder(
       val process = new java.lang.ProcessBuilder(cmd*)
         .start()
 
-      io.Source
-        .fromInputStream(process.getErrorStream())
-        .getLines()
-        .foreach(errPrintln(_))
+      val stdoutReaderThread = new Thread(() => {
 
-      io.Source
-        .fromInputStream(process.getInputStream())
-        .getLines()
-        .foreach(logger.out(_))
+        val reader =
+          new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        var line = "";
+        while ({ line = reader.readLine(); line } != null) {
+          stdout += line
+        }
+
+      })
+
+      val stderrReaderThread = new Thread(() => {
+
+        val reader =
+          new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+        var line: String = "";
+        while ({ line = reader.readLine(); line } != null) {
+          errPrintln(line)
+        }
+      })
+
+      stdoutReaderThread.start()
+      stderrReaderThread.start()
 
       val result = process.waitFor()
+
+      stderrReaderThread.join()
+      stdoutReaderThread.join()
 
       files ++= stdout
         .result()
