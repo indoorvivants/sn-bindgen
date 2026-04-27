@@ -419,6 +419,103 @@ class Binding private (
   def withBraces(b: Boolean): Binding =
     copy(_.copy(useBraces = b))
 
+  override def toString(): String = {
+    def ifNotEmpty[A](ls: Iterable[A])(f: => Unit): Unit = {
+      if (ls.nonEmpty) f
+    }
+
+    val sb = List.newBuilder[String]
+    sb += "Binding {"
+    sb += s" headerFile: $headerFile"
+    sb += s" packageName: $packageName"
+    sb += s" linkName: $linkName"
+    ifNotEmpty(cImports) {
+      sb += s" cImports: ["
+      cImports.foreach { imp =>
+        sb += s"    $imp"
+      }
+      sb += "  ]"
+    }
+    ifNotEmpty(clangFlags) {
+      sb += s"  clangFlags: ["
+      clangFlags.foreach { flag =>
+        sb += s"    $flag"
+      }
+      sb += "  ]"
+    }
+    ifNotEmpty(exclusivePrefixes) {
+      sb += s"  exclusivePrefixes: ["
+      exclusivePrefixes.foreach { prefix =>
+        sb += s"    $prefix"
+      }
+      sb += "  ]"
+    }
+    sb += s"  logLevel: $logLevel"
+    sb += s"  systemIncludes: $systemIncludes"
+    ifNotEmpty(externalPaths) {
+      sb += s"  externalPaths: ["
+      externalPaths.toList.sortBy(_._1).foreach { case (key, value) =>
+        sb += s"    $key -> $value"
+      }
+      sb += "  ]"
+    }
+    ifNotEmpty(externalNames) {
+      sb += s"  externalNames: ["
+      externalNames.toList.sortBy(_._1).foreach { case (key, value) =>
+        sb += s"    $key -> $value"
+      }
+      sb += "  ]"
+    }
+    ifNotEmpty(noConstructor) {
+      sb += s"  noConstructor: ["
+      noConstructor.foreach { arg =>
+        sb += s"    $arg"
+      }
+      sb += "  ]"
+    }
+    ifNotEmpty(excludeSystemPaths) {
+      sb += s"  excludeSystemPaths: ["
+      excludeSystemPaths.foreach { path =>
+        sb += s"    $path"
+      }
+      sb += "  ]"
+    }
+    ifNotEmpty(opaqueStructs) {
+      sb += s"  opaqueStructs: ["
+      opaqueStructs.foreach { path =>
+        sb += s"    $path"
+      }
+      sb += "  ]"
+    }
+    ifNotEmpty(macroDefinitions) {
+      sb += s"  macroDefinitions: ["
+      macroDefinitions.foreach { path =>
+        sb += s"    $path"
+      }
+      sb += "  ]"
+    }
+    sb += s"  onlyValidMacros: $onlyValidMacros"
+    sb += s"  multiFile: $multiFile"
+    sb += s"  noComments: $noComments"
+    sb += s"  noLocation: $noLocation"
+    sb += s"  exportMode: $exportMode"
+    sb += s"  scalaFile: $scalaFile"
+    sb += s"  cFile: $cFile"
+    sb += s"  flavour: $flavour"
+    sb += s"  useBraces: $useBraces"
+    ifNotEmpty(bindgenArguments) {
+      sb += s"  bindgenArguments: ["
+      bindgenArguments.foreach { arg =>
+        sb += s"    $arg"
+      }
+      sb += "  ]"
+    }
+    sb += "  CMD: " + toCommand(BindingLang.Scala).mkString(" ")
+    sb += "}"
+
+    sb.result().mkString("\n")
+  }
+
   /** Produces a full list of CLI arguments that bindgen should be invoked with,
     * for a given output language
     *
