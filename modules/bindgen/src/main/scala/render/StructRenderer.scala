@@ -22,7 +22,11 @@ private[rendering] class StructRenderer(struct: ResolvedStruct, line: Appender)(
   val madeOpaque = c.rendering.matches(_.opaqueStruct)(structName.value)
 
   val structIsOpaque =
-    if struct.fields.size > 22 then true
+    if struct.fields.size > 22 then
+      warning(
+        s"${structName.value} will be rendered as a static array because it has more than 22 fields"
+      )
+      true
     else if struct.fields.size == 0 then false
     else
       madeOpaque match

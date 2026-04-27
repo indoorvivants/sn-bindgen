@@ -51,6 +51,7 @@ class MultiFileRender(rawBinding: Binding) extends RenderingBase:
       structs: Iterable[ResolvedStruct]
   )(using Config, AliasResolver, Context) =
     structs.foreach: struct =>
+      info("Rendering struct: " + struct.name)
       val out = stream(struct.name.value)
       StructRenderer(struct, to(out)).render()
 
@@ -59,6 +60,7 @@ class MultiFileRender(rawBinding: Binding) extends RenderingBase:
       unions: Iterable[ResolvedUnion]
   )(using Config, AliasResolver, Context) =
     unions.foreach: union =>
+      info("Rendering union: " + union.name)
       val out = stream(union.name.value)
       UnionRenderer(union, to(out)).render()
 
