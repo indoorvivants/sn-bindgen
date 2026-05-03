@@ -27,6 +27,11 @@ class TestAliases:
       assertEquals(t.value, hello_alias(25).value)
       assertEquals(t.value, 25)
 
+      assertEquals(
+        _hidden_enum.CAIRO_PATTERN_TYPE_SOLID,
+        enum_alias.CAIRO_PATTERN_TYPE_SOLID
+      )
+
   @Test def test_function_pointers() =
     Zone:
       val test = TestStruct(10)

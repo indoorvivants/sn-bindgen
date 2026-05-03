@@ -24,3 +24,9 @@ typedef int (*TestFunctionPointer)(struct TestStruct *container);
 
 int higher_order_function(int n, TestFunctionPointer handler,
                           struct TestStruct *container);
+
+
+typedef enum _hidden_enum {
+    CAIRO_PATTERN_TYPE_SOLID,
+    CAIRO_PATTERN_TYPE_SURFACE,
+} enum_alias;
