@@ -32,32 +32,44 @@ class AliasRender(model: Def.Alias, line: Appender)(using
 
     renderComment(line, model.meta)
     line(s"${modifier}type ${model.name} = ${scalaType(underlyingType)}")
-    objectBlock(line)(s"object ${sanitiseBeforeColon(model.name)}") {
-      model.underlying match
-        case Reference(Name.BuiltIn(name)) =>
-          line(s"val _tag: Tag[${model.name}] = summon[Tag[${name.full}]]")
-        case _ =>
-          line(s"given _tag: Tag[${model.name}] = ${scalaTag(underlyingType)}")
+    underlyingType match
+      case Reference(nm: Name.Model) =>
+        objectBlock(line)(s"object ${sanitiseBeforeColon(model.name)}"):
+          line(
+            s"inline def apply(inline o: ${scalaType(underlyingType)}): ${model.name} = o"
+          )
+          line(s"export ${renderName(nm)}.{apply => _, *, given}")
 
-      if isFunctionPointer then
-        line(
-          s"inline def fromPtr(ptr: Ptr[Byte] | $voidPtr): ${model.name} = CFuncPtr.fromPtr(ptr.asInstanceOf[Ptr[Byte]])"
-        )
-      end if
+      case _ =>
+        objectBlock(line)(s"object ${sanitiseBeforeColon(model.name)}") {
+          model.underlying match
+            case Reference(Name.BuiltIn(name)) =>
+              line(s"val _tag: Tag[${model.name}] = summon[Tag[${name.full}]]")
+            case _ =>
+              line(
+                s"given _tag: Tag[${model.name}] = ${scalaTag(underlyingType)}"
+              )
 
-      if enableConstructor then
-
-        line(
-          s"inline def apply(inline o: ${scalaType(underlyingType)}): ${model.name} = o"
-        )
-        defBlock(line)(s"extension (v: ${model.name})") {
-          line(s"inline def value: ${scalaType(underlyingType)} = v")
           if isFunctionPointer then
-            line(s"inline def toPtr: $voidPtr = CFuncPtr.toPtr(v)")
+            line(
+              s"inline def fromPtr(ptr: Ptr[Byte] | $voidPtr): ${model.name} = CFuncPtr.fromPtr(ptr.asInstanceOf[Ptr[Byte]])"
+            )
+          end if
+
+          if enableConstructor then
+
+            line(
+              s"inline def apply(inline o: ${scalaType(underlyingType)}): ${model.name} = o"
+            )
+            defBlock(line)(s"extension (v: ${model.name})") {
+              line(s"inline def value: ${scalaType(underlyingType)} = v")
+              if isFunctionPointer then
+                line(s"inline def toPtr: $voidPtr = CFuncPtr.toPtr(v)")
+              end if
+            }
           end if
         }
-      end if
-    }
+    end match
 
     Exported.Yes(model.name)
   end render
