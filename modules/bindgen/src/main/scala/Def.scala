@@ -22,14 +22,14 @@ object EnumName extends OpaqueString[EnumName]
 opaque type StructName = String
 object StructName extends OpaqueString[StructName]
 
-opaque type CommentText = String
-object CommentText extends OpaqueString[CommentText]
+opaque type CommentTextWithMarkers = String
+object CommentTextWithMarkers extends OpaqueString[CommentTextWithMarkers]
 
 opaque type DefinitionFile = String
 object DefinitionFile extends OpaqueString[DefinitionFile]
 
 case class Meta(
-    comment: Option[CommentText],
+    comment: Option[CommentTextWithMarkers],
     file: Option[DefinitionFile]
 )
 object Meta:
