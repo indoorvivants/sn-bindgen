@@ -848,7 +848,7 @@ usefulTasks := Seq(
 
 addCommandAlias("generatorTests", "testsNative3/clean; testsNative3/test")
 addCommandAlias("cliTests", "bindgen/test")
-addCommandAlias("pluginTests", "plugin/scripted")
+addCommandAlias("pluginTests", "plugin/scripted; plugin3/scripted")
 addCommandAlias(
   "exportTests",
   "exportTestsLibrary/runExportTests"
