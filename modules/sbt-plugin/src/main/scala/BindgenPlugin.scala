@@ -11,6 +11,13 @@ import scala.util.Try
 
 import ArtifactNames.*
 
+import sbtcompat.PluginCompat.*
+
+import sjsonnew.{Builder, JsonFormat, Unbuilder, deserializationError}
+// import lmcoursier.internal.shaded.coursier.core.shaded.geny.Internal
+import CacheImplicits.*
+import java.nio.file.Paths
+
 sealed trait BindgenMode extends Product with Serializable
 object BindgenMode {
   case object ResourceGenerator extends BindgenMode
@@ -25,21 +32,28 @@ object BindgenPlugin extends AutoPlugin {
     val bindgenVersion = settingKey[String](
       s"Version of bindgen to download. Default: ${BuildInfo.version} (matches the plugin version)"
     )
-    val bindgenBinary = taskKey[File](
+
+    @transient
+    val bindgenBinary = taskKey[FileRef](
       "Path to bindgen binary. By default it will be downloaded from Maven Central, but you can override it"
     )
 
+    @transient
     val bindgenBindings = taskKey[Seq[Binding]]("Binding definitions")
 
+    @transient
     val bindgenGenerateScalaSources =
-      taskKey[Seq[File]]("Generate Scala bindings")
+      taskKey[Seq[FileRef]]("Generate Scala bindings")
 
+    @transient
     val bindgenGenerateCSources =
-      taskKey[Seq[File]]("Generate C glue code for the bindings")
+      taskKey[Seq[FileRef]]("Generate C glue code for the bindings")
 
+    @transient
     val bindgenGenerateAll =
-      taskKey[Seq[File]]("Generate both Scala bindings and C code")
+      taskKey[Seq[FileRef]]("Generate both Scala bindings and C code")
 
+    @transient
     val bindgenClangPath = taskKey[java.nio.file.Path](
       "Path to `clang` command, used to figure out the paths to standard C/C++ library." +
         "\nDefault: same as `nativeConfig` from Scala Native plugin"
@@ -69,13 +83,18 @@ object BindgenPlugin extends AutoPlugin {
 
   import autoImport.*
 
-  private case class Config(version: String, binary: File)
+  private case class Config(version: String, binary: java.nio.file.Path)
 
   private val resolveBinaryTask =
     Def.task {
+      implicit val conv: xsbti.FileConverter = fileConverter.value
       val res = (dependencyResolution).value
 
-      def download(link: String, to: java.nio.file.Path, report: Int => Unit) =
+      def download(
+          link: String,
+          to: java.nio.file.Path,
+          report: Int => Unit
+      ): Try[FileRef] =
         Try {
           val url = new URI(link).toURL
           val conn = url.openConnection()
@@ -103,7 +122,9 @@ object BindgenPlugin extends AutoPlugin {
 
             }
 
-            to.toFile()
+            to.toFile().setExecutable(true)
+
+            toFileRef(to.toFile())
           } finally {
             is.foreach(_.close())
             out.foreach(_.close())
@@ -130,7 +151,7 @@ object BindgenPlugin extends AutoPlugin {
           .fold(uw => throw uw.resolveException, identity)
       }
 
-      def downloadFromMaven(platform: Platform.Target) = Try {
+      def downloadFromMaven(platform: Platform.Target): Try[FileRef] = Try {
         getJars(
           ModuleID(
             "com.indoorvivants",
@@ -145,9 +166,11 @@ object BindgenPlugin extends AutoPlugin {
                 classifier = jarString(platform)
               )
             )
-        ).headOption.getOrElse(
-          throw new Exception("Could not download the binary for bindgen")
-        )
+        ).headOption
+          .map { f => f.setExecutable(true); toFileRef(f) }
+          .getOrElse(
+            throw new Exception("Could not download the binary for bindgen")
+          )
       }
 
       downloadFromMaven(Platform.target)
@@ -162,13 +185,13 @@ object BindgenPlugin extends AutoPlugin {
 
           val path = cacheDir / s"v${bindgenVersion.value}"
           if (path.exists() && path.canExecute())
-            Try(path)
+            Try(toFileRef(path))
           else {
             sLog.value.info(
               s"Binary wasn't found on Maven Central, attempting to download from Github releases (to ${path})"
             )
 
-            download(
+            val file = download(
               link,
               path.toPath(), {
                 var prev = 0
@@ -179,10 +202,12 @@ object BindgenPlugin extends AutoPlugin {
                   }
               }
             )
+
+            file
+
           }
         }
         .map { file =>
-          file.setExecutable(true)
           file
         }
 
@@ -229,15 +254,17 @@ object BindgenPlugin extends AutoPlugin {
 
         val targetDir = crossTarget.value / "sn-bindgen"
 
+        implicit val conv: xsbti.FileConverter = fileConverter.value
+
         incremental(
-          Config(bindgenVersion.value, bindgenBinary.value),
+          Config(bindgenVersion.value, toNioPath(bindgenBinary.value)),
           (selected).distinct,
           dest,
           BindingLang.Scala,
           bindgenClangPath.value,
           streams.value,
           targetDir
-        )
+        ).map(f => toFileRef(f))
       }
       .tag(BindgenTags.Generate)
       .value,
@@ -253,29 +280,33 @@ object BindgenPlugin extends AutoPlugin {
         val managedDestination = (resourceManaged).value / "scala-native"
         val targetDir = crossTarget.value / "sn-bindgen"
 
+        implicit val conv: xsbti.FileConverter = fileConverter.value
+
         val dest = bindgenMode.value match {
           case BindgenMode.ResourceGenerator => managedDestination
           case BindgenMode.Manual(_, cDir)   => cDir
         }
         incremental(
-          Config(bindgenVersion.value, bindgenBinary.value),
+          Config(bindgenVersion.value, toNioPath(bindgenBinary.value)),
           (selected).distinct,
           dest,
           BindingLang.C,
           bindgenClangPath.value,
           streams.value,
           targetDir = targetDir
-        )
+        ).map(toFileRef(_))
       }
       .tag(BindgenTags.Generate)
       .value,
     sourceGenerators ++= {
+      implicit val conv: xsbti.FileConverter = fileConverter.value
       if (bindgenMode.value.isInstanceOf[BindgenMode.Manual]) Seq.empty
-      else Seq(bindgenGenerateScalaSources.taskValue)
+      else Seq(bindgenGenerateScalaSources.taskValue.map(_.map(toFile(_))))
     },
     resourceGenerators ++= {
+      implicit val conv: xsbti.FileConverter = fileConverter.value
       if (bindgenMode.value.isInstanceOf[BindgenMode.Manual]) Seq.empty
-      else Seq(bindgenGenerateCSources.taskValue)
+      else Seq(bindgenGenerateCSources.taskValue.map(_.map(toFile(_))))
     }
   )
 
@@ -320,6 +351,48 @@ object BindgenPlugin extends AutoPlugin {
       )
   }
 
+  /** Thrown when a JSON string does not match one of the known wire encodings.
+    */
+  final class DeserializationError(
+      val value: String,
+      val expected: Set[String],
+      message: String
+  ) extends RuntimeException(message)
+
+  object DeserializationError {
+    def apply(value: String, expected: Set[String]): Nothing = {
+      val msg =
+        s"invalid value '$value', expected one of: ${expected.toSeq.sorted.mkString(", ")}"
+      throw new DeserializationError(value, expected, msg)
+    }
+  }
+
+  private implicit val configFormat: JsonFormat[Config] =
+    new JsonFormat[Config] {
+      override def write[J](obj: Config, builder: Builder[J]): Unit = {
+        builder.beginObject()
+        builder.addField("version", obj.version)
+        builder.addField("binary", obj.binary)
+        builder.endObject()
+      }
+
+      override def read[J](
+          jsOpt: Option[J],
+          unbuilder: Unbuilder[J]
+      ): Config = {
+        val js = jsOpt.getOrElse(
+          deserializationError("Expected JSON object when reading Config")
+        )
+        unbuilder.beginObject(js)
+        try
+          Config(
+            unbuilder.readField[String]("version"),
+            Paths.get(unbuilder.readField[String]("binary"))
+          )
+        finally unbuilder.endObject()
+      }
+    }
+
   private def incremental(
       config: Config,
       defined: Seq[Binding],
@@ -332,15 +405,12 @@ object BindgenPlugin extends AutoPlugin {
 
     import config.*
     val logger = streams.log
-    val builder = new BindingBuilder(binary)
+    val builder = new BindingBuilder(binary.toFile)
     val cacheFile =
       streams.cacheDirectory / s"sn-bindgen"
 
     import sjsonnew.*
     import BasicJsonProtocol.*
-
-    implicit val configFormat: JsonFormat[Config] =
-      caseClassArray(Config.apply _, Config.unapply _)
 
     case class Input(
         config: Config,
@@ -349,10 +419,22 @@ object BindgenPlugin extends AutoPlugin {
     )
 
     implicit val ibFormat: JsonFormat[InternalBinding] =
-      caseClassArray(InternalBinding.apply _, InternalBinding.unapply _)
+      new JsonFormat[InternalBinding] {
+        override def write[J](obj: InternalBinding, builder: Builder[J]): Unit =
+          ???
+        override def read[J](
+            jsOpt: Option[J],
+            unbuilder: Unbuilder[J]
+        ): InternalBinding = ???
+      }
 
     implicit val inputFormat: JsonFormat[Input] =
-      caseClassArray(Input.apply _, Input.unapply _)
+      new JsonFormat[Input] {
+        override def write[J](obj: Input, builder: Builder[J]): Unit = ???
+        override def read[J](jsOpt: Option[J], unbuilder: Unbuilder[J]): Input =
+          ???
+      }
+    // caseClassArray(Input.apply _, Input.unapply _)
 
     val tracker = Tracked.inputChanged[Input, Set[File]](cacheFile / "input") {
       (changed: Boolean, in: Input) =>
