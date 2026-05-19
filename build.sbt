@@ -31,7 +31,7 @@ lazy val Versions = new {
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
-  val pluginTargetSN = "0.5.7"
+  val pluginTargetSN = "0.5.11"
   val pluginTargetSBT = "1.10.11"
   val detective = "0.1.0"
   val opaqueNewtypes = "0.1.0"
@@ -42,6 +42,9 @@ lazy val Versions = new {
   val Scala212 = "2.12.20"
   val Scala213 = "2.13.17"
   val Scala2 = List(Scala212, Scala213)
+
+  val Sbt1ScalaVersion = "2.12.20"
+  val Sbt2ScalaVersion = "3.8.3"
 
 }
 
@@ -231,14 +234,35 @@ lazy val plugin = projectMatrix
   .in(file("modules/sbt-plugin"))
   .dependsOn(iface)
   .defaultAxes(VirtualAxis.scalaABIVersion(Versions.Scala212), VirtualAxis.jvm)
-  .allVariations(List(Versions.Scala212), List(VirtualAxis.jvm))
+  .allVariations(
+    List(Versions.Sbt1ScalaVersion, Versions.Sbt2ScalaVersion),
+    List(VirtualAxis.jvm)
+  )
   .settings(remoteCacheMatrixSettings)
   .settings(
+    (pluginCrossBuild / sbtVersion) := {
+      scalaBinaryVersion.value match {
+        case "2.12" => "1.10.0"
+        case _      => "2.0.0-RC13"
+      }
+    },
+    scalacOptions ++= {
+      scalaBinaryVersion.value match {
+        case "2.12" => "-Xsource:3" :: Nil
+        case _      => Nil
+      }
+    },
+    sbtTestDirectory := {
+      scalaBinaryVersion.value match {
+        case "2.12" => (sourceDirectory).value / "sbt-test"
+        case _      => (sourceDirectory).value / "sbt-test-sbt2"
+      }
+    },
     sbtPlugin := true,
     addSbtPlugin(
       "org.scala-native" % "sbt-scala-native" % Versions.pluginTargetSN
     ),
-    pluginCrossBuild / sbtVersion := Versions.pluginTargetSBT,
+    addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.1.0"),
     moduleName := "bindgen-sbt-plugin",
     scriptedLaunchOpts := {
       scriptedLaunchOpts.value ++
