@@ -15,6 +15,7 @@ enum RenderedOutput:
 enum Exported:
   case No
   case Yes(as: String)
+  case Var(as: String)
 
 enum RenderMode:
   case Objects, Files

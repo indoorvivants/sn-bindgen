@@ -11,6 +11,7 @@ object RenderingConfig:
       noConstructor = Set.empty,
       opaqueStruct = Set.empty,
       macroDefs = Set.empty,
+      variables = Set.empty,
       onlyValidMacros = RenderOnlyValidMacros.No,
       comments = RenderComments.Yes,
       location = RenderLocation.No,
@@ -56,10 +57,14 @@ opaque type NoConstructorNameFilter <: NameFilter = NameFilter
 object NoConstructorNameFilter
     extends TotalWrapper[NoConstructorNameFilter, NameFilter]
 
+opaque type VariableNameFilter <: NameFilter = NameFilter
+object VariableNameFilter extends TotalWrapper[VariableNameFilter, NameFilter]
+
 case class RenderingConfig(
     noConstructor: Set[NoConstructorNameFilter],
     opaqueStruct: Set[OpaqueStructNameFilter],
     macroDefs: Set[MacroNameFilter],
+    variables: Set[VariableNameFilter],
     onlyValidMacros: RenderOnlyValidMacros,
     comments: RenderComments,
     location: RenderLocation,

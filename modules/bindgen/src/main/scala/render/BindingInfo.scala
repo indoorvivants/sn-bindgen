@@ -72,6 +72,7 @@ class BindingInfo(rawBinding: Binding)(using Config, Context):
   val hasAliases = binding.aliases.nonEmpty
   val hasUnions = binding.unions.nonEmpty
   val hasStructs = binding.structs.nonEmpty
+  val hasVariables = binding.variables.nonEmpty
   val hasConstants = binding.unnamedEnums.nonEmpty || binding.macros.nonEmpty
   val hasAnyTypes = hasAnyEnums || hasAliases || hasUnions || hasStructs
   val typeImports = TypeImports(

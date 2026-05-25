@@ -60,6 +60,13 @@ class Binding private (
     */
   def macroDefinitions: Set[String] = impl.macroDefinitions
 
+  /** Wildcard matchers or full names of extern variable declarations that
+    * bindgen will render as `var name: T = extern` inside the generated
+    * `variables` object. When empty (the default), every extern variable in
+    * non-system headers is rendered.
+    */
+  def variables: Set[String] = impl.variables
+
   /** When true, bindgen won't render unsupported macros as a compile-time only
     * artifact (one you can't use, but at least you can find it by name and see
     * what the C definition was)
@@ -300,6 +307,15 @@ class Binding private (
     _.copy(macroDefinitions = names)
   )
 
+  /** See [[variables]]
+    *
+    * @param names
+    * @return
+    */
+  def withVariables(names: Set[String]): Binding = copy(
+    _.copy(variables = names)
+  )
+
   /** See [[onlyValidMacros]]
     *
     * @param b
@@ -494,6 +510,13 @@ class Binding private (
       }
       sb += "  ]"
     }
+    ifNotEmpty(variables) {
+      sb += s"  variables: ["
+      variables.foreach { name =>
+        sb += s"    $name"
+      }
+      sb += "  ]"
+    }
     sb += s"  onlyValidMacros: $onlyValidMacros"
     sb += s"  multiFile: $multiFile"
     sb += s"  noComments: $noComments"
@@ -560,6 +583,9 @@ class Binding private (
     if (macroDefinitions.nonEmpty)
       arg("macros", macroDefinitions.toList.sorted.mkString(","))
 
+    if (variables.nonEmpty)
+      arg("variables", variables.toList.sorted.mkString(","))
+
     flag(logLevel.str)
     if (lang == BindingLang.Scala)
       flag("scala")
@@ -622,6 +648,7 @@ object Binding {
       noConstructor: Set[String] = Defaults.noConstructor,
       opaqueStructs: Set[String] = Defaults.opaqueStructs,
       macroDefinitions: Set[String] = Defaults.macroDefinitions,
+      variables: Set[String] = Defaults.variables,
       onlyValidMacros: Boolean = Defaults.onlyValidMacros,
       multiFile: Boolean = Defaults.multiFile,
       noComments: Boolean = Defaults.noComments,
@@ -646,6 +673,7 @@ object Binding {
     val noConstructor = Set.empty[String]
     val opaqueStructs = Set.empty[String]
     val macroDefinitions = Set.empty[String]
+    val variables = Set.empty[String]
     val onlyValidMacros = false
     val exclusivePrefixes = List.empty[String]
     val multiFile = false

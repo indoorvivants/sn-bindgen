@@ -264,3 +264,32 @@ val cSource =
 """.trim.stripMargin
 println(bindgen.BindgenRender.render(cSource, "libtest", "--macros", "SDL_*,AUDIO_U8,STR_*,FLT_*"))
 ```
+
+## Extern variable declarations are rendered as `var name: T = extern`
+
+`extern` variable declarations (including `extern const` ones, e.g. CoreFoundation's
+`kSecClass`, `kCFBooleanTrue` or libc's `errno`, `environ`) are collected into an
+`@extern object variables`. Each one becomes a `var` so Scala Native can read it
+(and write it, where the C side declares it mutable) directly from the linked
+library.
+
+By default every `extern` variable declaration found in non-system headers is
+rendered. To restrict the set, pass a name filter:
+
+- In CLI, `--variables 'kSec*,errno'` will render only matching extern variables
+- In SBT, `.withVariables(Set("kSec*", "errno"))` will produce the same result
+
+The C-level `const` qualifier is intentionally dropped on the Scala side –
+Scala Native's `var name: T = extern` is the only available form, and the user
+is expected not to assign to declarations the C library considers immutable.
+
+```scala mdoc:nest:passthrough
+val cSource =
+"""
+|extern const int simple_int_const;
+|extern int writable_int;
+|extern const char *some_string;
+|extern void *some_opaque;
+""".trim.stripMargin
+println(bindgen.BindgenRender.render(cSource, "libtest"))
+```

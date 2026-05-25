@@ -69,6 +69,8 @@ def definitionClosure(_d: Def)(using Config): Set[String] =
             case f: Def.Enum => Nil -> f.name.toSet.map(_.value)
             case a: Def.Alias =>
               Nil -> (Set(a.name) ++ referencedNames(a.underlying))
+            case v: Def.Variable =>
+              Nil -> (Set(v.name) ++ referencedNames(v.typ))
           end match
         end val
 

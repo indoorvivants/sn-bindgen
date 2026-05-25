@@ -302,6 +302,23 @@ object CLI:
       )
       .withDefault(Set.empty)
 
+    val variables = Opts
+      .option[String](
+        "variables",
+        help =
+          "Comma-separated list of names (or wildcards) of extern variable declarations to render.\n" +
+            "When omitted, every extern variable in non-system headers is rendered.\n" +
+            """examples:
+            --variables errno,environ
+            --variables 'kSec*,kCF*'"""
+      )
+      .map(
+        _.split(",").toSet
+          .map(RenderingConfig.NameFilter(_))
+          .map(VariableNameFilter.apply(_))
+      )
+      .withDefault(Set.empty)
+
     val onlyValidMacros = Opts
       .flag(
         "render.only-valid-macros",
@@ -372,6 +389,7 @@ object CLI:
       noConstructor,
       opaqueStruct,
       macroDefs,
+      variables,
       onlyValidMacros,
       comments,
       location,
