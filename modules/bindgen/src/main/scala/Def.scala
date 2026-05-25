@@ -131,14 +131,22 @@ enum Def(meta: Meta):
 
   case Alias(name: String, underlying: CType, meta: Meta) extends Def(meta)
 
+  case Variable(
+      name: String,
+      typ: CType,
+      isConst: Boolean,
+      meta: Meta
+  ) extends Def(meta)
+
   def metadata: Meta = meta
 
   def defName: Option[DefName] =
     this match
-      case Alias(name, _, _) => Some(DefName(name, DefTag.Alias))
-      case u: Union          => u.name.map(n => DefName(n.value, DefTag.Union))
-      case f: Function       => Some(DefName(f.name.value, DefTag.Function))
-      case s: Struct         => s.name.map(n => DefName(n.value, DefTag.Struct))
+      case Alias(name, _, _)    => Some(DefName(name, DefTag.Alias))
+      case u: Union             => u.name.map(n => DefName(n.value, DefTag.Union))
+      case f: Function          => Some(DefName(f.name.value, DefTag.Function))
+      case s: Struct            => s.name.map(n => DefName(n.value, DefTag.Struct))
+      case v: Variable          => Some(DefName(v.name, DefTag.Variable))
       case e: Enum =>
         e.name.map(enumName => DefName(enumName.value, DefTag.Enum))
 

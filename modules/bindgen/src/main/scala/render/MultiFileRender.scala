@@ -35,6 +35,14 @@ class MultiFileRender(rawBinding: Binding) extends RenderingBase:
         exportMode = info.exportMode
       ).render()
 
+    if info.hasVariables then
+      ScalaVariablesRenderer(
+        out = stream("variables"),
+        variables = info.binding.variables,
+        renderMode = RenderMode.Files,
+        typeImports = info.typeImports
+      ).render()
+
     RenderedOutput.Multi(multi.toMap)
   end render
 

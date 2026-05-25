@@ -45,6 +45,10 @@ class BindingBuilder(
     case (k, BindingDefinition(item: Def.Function, _)) => item
   }.toSet
 
+  def variables: Set[Def.Variable] = named.collect {
+    case (k, BindingDefinition(item: Def.Variable, _)) => item
+  }.toSet
+
   def build: Binding =
     Binding(
       aliases = this.aliases,
@@ -53,6 +57,7 @@ class BindingBuilder(
       functions = this.functions,
       enums = this.enums,
       macros = this.macros,
-      unnamedEnums = this.unnamedEnums
+      unnamedEnums = this.unnamedEnums,
+      variables = this.variables
     )
 end BindingBuilder

@@ -41,6 +41,24 @@ object ClangVisitor:
             binding.add(function, location)
           end if
 
+          if cursor.kind == CXCursorKind.CXCursor_VarDecl then
+            val storageClass = clang_Cursor_getStorageClass(cursor)
+            val isDefinition = clang_isCursorDefinition(cursor).toInt != 0
+
+            if storageClass == CX_StorageClass.CX_SC_Extern && !isDefinition
+            then
+              val name = cursor.spelling
+              val filter = conf.rendering.variables
+              val passes = filter.isEmpty ||
+                conf.rendering.matches(_.variables)(name).isDefined
+
+              if passes then
+                val variable = visitVariable(cursor)
+                binding.add(variable, location)
+              end if
+            end if
+          end if
+
           if cursor.kind == CXCursorKind.CXCursor_MacroDefinition
           then
             val name = cursor.spelling

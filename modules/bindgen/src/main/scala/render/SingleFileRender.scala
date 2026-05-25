@@ -7,10 +7,13 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
 
     given AliasResolver = info.aliasResolver
 
-    val exports = List.newBuilder[(String, String)]
+    val exports = List.newBuilder[(String, Exported)]
 
     def updateExports(location: String, names: Seq[Exported]) =
-      exports ++= names.collect { case Exported.Yes(v) => v }.map(location -> _)
+      exports ++= names.collect {
+        case e: Exported.Yes => location -> e
+        case e: Exported.Var => location -> e
+      }
 
     if summon[Context].lang == Lang.Scala then
       val out = createScalaStream
@@ -84,6 +87,20 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
             renderMode = RenderMode.Objects,
             typeImports = info.typeImports,
             exportMode = info.exportMode
+          ).render()
+        )
+
+        out.emptyLine
+      end if
+
+      if info.hasVariables then
+        updateExports(
+          "variables",
+          ScalaVariablesRenderer(
+            out = out,
+            variables = info.binding.variables,
+            renderMode = RenderMode.Objects,
+            typeImports = info.typeImports
           ).render()
         )
 
@@ -241,12 +258,16 @@ class SingleFileRender(rawBinding: Binding) extends RenderingBase:
 
   private def renderExports(
       out: LineBuilder,
-      exports: List[(String, String)]
+      exports: List[(String, Exported)]
   )(using Config, Context) =
     if exports.nonEmpty then
       maybeObjectBlock(out, RenderMode.Objects)("object all") {
-        exports.distinct.foreach { (scope, name) =>
-          to(out)(s"export _root_.$packageName.$scope.$name")
+        exports.distinct.foreach {
+          case (scope, Exported.Yes(name)) =>
+            to(out)(s"export _root_.$packageName.$scope.$name")
+          case (scope, Exported.Var(name)) =>
+            to(out)(s"export _root_.$packageName.$scope.{$name, ${name}_=}")
+          case (_, Exported.No) =>
         }
       }
 

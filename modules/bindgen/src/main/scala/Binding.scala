@@ -11,7 +11,8 @@ case class Binding(
     enums: Set[Def.Enum],
     macros: List[MacroDefinition],
     functions: Set[Def.Function],
-    unnamedEnums: Set[Def.Enum]
+    unnamedEnums: Set[Def.Enum],
+    variables: Set[Def.Variable] = Set.empty
 ):
   def resolve(using Config) =
     (aliases ++
@@ -27,6 +28,7 @@ case class Binding(
       structs = structs.filter(f),
       enums = enums.filter(f),
       functions = functions.filter(f),
-      unnamedEnums = unnamedEnums.filter(f)
+      unnamedEnums = unnamedEnums.filter(f),
+      variables = variables.filter(f)
     )
 end Binding
