@@ -29,9 +29,9 @@ object ClangVisitor:
             val filename = loc.getFilename
             Location(
               loc.isFromMainFile,
-              loc.isFromSystemHeader || filename.isEmpty || filename
+              filename.isEmpty || filename
                 .exists(
-                  systemDetector.isSystem
+                  systemDetector.isSystem(_, loc.isFromSystemHeader)
                 )
             )
 
