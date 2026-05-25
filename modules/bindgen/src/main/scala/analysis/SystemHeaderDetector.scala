@@ -10,13 +10,14 @@ class SystemHeaderDetector(
   private val includes = clangInfo.includePaths.map(Paths.get(_))
   private val excludes = excludeSystemPaths.map(_.value).map(Paths.get(_))
 
-  def isSystem(filename: String): Boolean =
+  def isSystem(filename: String, isFromClangSystemHeader: Boolean): Boolean =
     val path = java.nio.file.Paths.get(filename)
 
     def isChild(ip: Path) = path.startsWith(ip)
 
     val isInExcludedLocation = excludes.exists(isChild)
-    val isInSystemLocation = includes.exists(isChild)
+    val isInSystemLocation =
+      isFromClangSystemHeader || includes.exists(isChild)
 
     mut.getOrElseUpdate(
       filename,
