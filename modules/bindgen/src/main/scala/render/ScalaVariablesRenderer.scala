@@ -35,7 +35,9 @@ class ScalaVariablesRenderer(
             .getOrElse("")
 
           val externAnnotation =
-            Option.when(renderMode == RenderMode.Files)("@extern ").getOrElse("")
+            Option
+              .when(renderMode == RenderMode.Files)("@extern ")
+              .getOrElse("")
 
           renderComment(to(out), v.meta)
           to(out)(
