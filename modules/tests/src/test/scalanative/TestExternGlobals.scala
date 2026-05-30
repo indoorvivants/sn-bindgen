@@ -28,3 +28,4 @@ class TestExternGlobals:
 
   @Test def test_some_opaque_not_null(): Unit =
     assertNotEquals(null, some_opaque)
+end TestExternGlobals
