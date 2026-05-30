@@ -12,7 +12,7 @@ case class Binding(
     macros: List[MacroDefinition],
     functions: Set[Def.Function],
     unnamedEnums: Set[Def.Enum],
-    variables: Set[Def.Variable] = Set.empty
+    variables: Set[Def.Variable]
 ):
   def resolve(using Config) =
     (aliases ++
