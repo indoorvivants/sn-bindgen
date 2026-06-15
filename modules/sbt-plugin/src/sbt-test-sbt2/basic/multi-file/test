@@ -1,8 +1,1 @@
 > run
-$ exists target/scala-3.3.7/resource_managed/main/scala-native/bindings.c
-$ exists target/scala-3.3.7/src_managed/main/bindings/aliases/position.scala
-$ exists target/scala-3.3.7/src_managed/main/bindings/enums/X.scala
-$ exists target/scala-3.3.7/src_managed/main/bindings/structs/Test.scala
-$ exists target/scala-3.3.7/src_managed/main/bindings/unions/Bla.scala
-$ exists target/scala-3.3.7/src_managed/main/bindings/functions.scala
-$ exists target/scala-3.3.7/src_managed/main/bindings/constants.scala
