@@ -27,7 +27,7 @@ import java.nio.file.Paths
 
 lazy val Versions = new {
   val decline = "2.6.0"
-  val scribe = "3.17.0"
+  val scribe = "3.19.0"
   val scalaNative = nativeVersion
   val junit = "0.13.3"
   val scalameta = "4.5.13"
@@ -37,14 +37,17 @@ lazy val Versions = new {
   val opaqueNewtypes = "0.1.0"
   val parsley = "5.0.0-M19"
 
-  val Scala3 = "3.3.7"
-  val Scala3_Next = "3.8.2"
+  val Scala3 = "3.3.8"
+  val Scala3_Next = "3.8.4"
   val Scala212 = "2.12.20"
   val Scala213 = "2.13.17"
   val Scala2 = List(Scala212, Scala213)
 
   val Sbt1ScalaVersion = "2.12.20"
-  val Sbt2ScalaVersion = "3.8.3"
+  val Sbt2ScalaVersion = "3.8.4"
+
+  val Sbt1 = "1.12.12"
+  val Sbt2 = "2.0.0"
 
 }
 
@@ -242,8 +245,8 @@ lazy val plugin = projectMatrix
   .settings(
     (pluginCrossBuild / sbtVersion) := {
       scalaBinaryVersion.value match {
-        case "2.12" => "1.10.0"
-        case _      => "2.0.0-RC13"
+        case "2.12" => Versions.Sbt1
+        case _      => Versions.Sbt2
       }
     },
     scalacOptions ++= {
