@@ -1,4 +1,4 @@
-<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/atom-one-dark.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/extra.css" /><link rel="stylesheet" href="/assets/styles.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="sb-body"><header class="sb-header"><div class="sb-title-container"><a class="sb-title-link" href="/">sn-bindgen</a><p class="sb-title-tagline">Scala 3 Native binding generator to C libraries</p></div><div id="sb-search-container"></div><div class="sb-site-links"><a class="sb-github-link" href="https://github.com/indoorvivants/sn-bindgen"><img class="sb-github-image" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="sb-main-container"><aside class="sb-aside"><ul class="sb-navbar-container sb-navbar-container-0"><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/index.html">Home</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/quickstart/index.html">Quick start</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/configuration/index.html">Configuration </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/semantics/index.html">Semantics </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/cookbook/index.html">Cookbook</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/exports/index.html">Exports </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/limitations/index.html">Limitations</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/reporting-issues/index.html">Reporting issues</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/motivation/index.html">Motivation</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li></ul></aside><article class="sb-article"><div class="sb-toc-container"><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="sbt-toc-list-link" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="sbt-toc-list-link" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="sbt-toc-list-link" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="sbt-toc-list-link" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="sbt-toc-list-link" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="sbt-toc-list-link" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="sbt-toc-list-link" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="sbt-toc-list-link" href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></li><li><a class="sbt-toc-list-link" href="#some-macro-definitions-are-supported">Some macro definitions are supported</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
+<html><head><title>sn-bindgen: Semantics </title><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/atom-one-dark.min.css" /><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/scala.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/c.min.js"></script><script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/languages/dockerfile.min.js"></script><script>hljs.initHighlightingOnLoad();</script><link rel="stylesheet" href="/assets/extra.css" /><link rel="stylesheet" href="/assets/styles.css" /><script src="/assets/search.js" defer="defer"></script><script src="/assets/search-index.js" defer="defer"></script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head><body onclick="SubatomicSearchFrontend.sayHello()" class="sb-body"><header class="sb-header"><div class="sb-title-container"><a class="sb-title-link" href="/">sn-bindgen</a><p class="sb-title-tagline">Scala 3 Native binding generator to C libraries</p></div><div id="sb-search-container"></div><div class="sb-site-links"><a class="sb-github-link" href="https://github.com/indoorvivants/sn-bindgen"><img class="sb-github-image" src="https://cdn.svgporn.com/logos/github-icon.svg" /></a></div></header><main class="sb-main-container"><aside class="sb-aside"><ul class="sb-navbar-container sb-navbar-container-0"><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/index.html">Home</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/quickstart/index.html">Quick start</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/configuration/index.html">Configuration </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/cookbook/index.html">Cookbook</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/semantics/index.html">Semantics </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/exports/index.html">Exports </a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/limitations/index.html">Limitations</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/reporting-issues/index.html">Reporting issues</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li><li class="sb-navbar-link-container"><a class="sb-navbar-link sb-navbar-link-0" href="/motivation/index.html">Motivation</a><ul class="sb-navbar-container sb-navbar-container-1"></ul></li></ul></aside><article class="sb-article"><div class="sb-toc-container"><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#structs-are-converted-to-opaque-types">Structs are converted to opaque types</a><ul class="sbt-toc-list-container"><li><a class="sbt-toc-list-link" href="#you-can-disable-constructor-generation">You can disable constructor generation</a></li></ul></li><li><a class="sbt-toc-list-link" href="#unions-are-converted-to-opaque-types">Unions are converted to opaque types</a></li><li><a class="sbt-toc-list-link" href="#simple-functions-are-converted-to-direct-extern-functions">Simple functions are converted to direct `@extern` functions</a></li><li><a class="sbt-toc-list-link" href="#problematic-functions-generate-c-forwarders">Problematic functions generate C forwarders</a></li><li><a class="sbt-toc-list-link" href="#enums-are-generated-for-specific-c-type">Enums are generated for specific C type</a></li><li><a class="sbt-toc-list-link" href="#function-pointers-are-defined-as-opaque-types">Function pointers are defined as opaque types</a></li><li><a class="sbt-toc-list-link" href="#recursive-structs-are-rewritten-with-opaque-pointers">Recursive structs are rewritten with opaque pointers</a></li><li><a class="sbt-toc-list-link" href="#global-enums-are-rendered-as-constants">Global enums are rendered as constants</a></li><li><a class="sbt-toc-list-link" href="#anonymous-unionsstructs-are-fully-qualified-and-rendered-separately">Anonymous unions/structs are fully qualified and rendered separately</a></li><li><a class="sbt-toc-list-link" href="#some-macro-definitions-are-supported">Some macro definitions are supported</a></li></ul></div><div><h2><a href="#structs-are-converted-to-opaque-types" id="structs-are-converted-to-opaque-types">Structs are converted to opaque types</a></h2>
 <p>For those types, we generate getters, setters, <code>Tag</code> definition, and two <code>apply</code> methods:</p>
 <ol>
 <li>A constructor, which takes all the parameters as arguments</li>
@@ -24,7 +24,7 @@ typedef struct {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -123,7 +123,7 @@ typedef struct {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -211,7 +211,7 @@ typedef union {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -316,7 +316,7 @@ Small* with_pointers(Small *x, int y);
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -395,7 +395,7 @@ Small bad_return_type();
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -439,22 +439,22 @@ object functions:
   import extern_functions.*
   export extern_functions.*
 
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_arguments(n, n2)
-
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](2)
     !(__ptr_0 + 0) = n
     !(__ptr_0 + 1) = n2
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
-  def bad_return_type()(__return : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_return_type(__return)
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_arguments(n, n2)
 
   def bad_return_type()(using Zone): Small =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](1)
     __sn_wrap_libtest_bad_return_type((__ptr_0 + 0))
     !(__ptr_0 + 0)
+
+  def bad_return_type()(__return : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_return_type(__return)
 
 object types:
     export _root_.libtest.structs.*
@@ -469,7 +469,7 @@ object all:
  </div>
 <div class = "bindgen-generated-c">
 <div class = "bindgen-generated-c-title">Glue C code</div>
-<pre><code class="language-c">// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+<pre><code class="language-c">// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 #include &lt;string.h&gt;
 
@@ -516,7 +516,7 @@ typedef enum {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -603,7 +603,7 @@ typedef int (*Visitor)(Cursor*);
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -660,7 +660,7 @@ typedef struct {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -724,7 +724,7 @@ enum {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -778,7 +778,7 @@ but planned.</p>
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -958,7 +958,7 @@ with the original.</p>
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.4: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.4+6-2d4db964-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
