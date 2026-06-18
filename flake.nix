@@ -34,7 +34,7 @@
                 ./build.sbt
               ];
             };
-            depsSha256 = "sha256-guxXAKIlTi48ZFQwFyEV6bHPy0islCfQiOMf9slCsYM=";
+            depsSha256 = "sha256-27RfMT4XrPWOOJ6+RXBRs0LVnROs7m1+a4oRLqnf0GI=";
             buildPhase = ''
               sbt 'show buildBinary'
             '';
@@ -42,6 +42,7 @@
               sbt 'update'
               sbt 'iface/compile ; iface2_12/compile ; iface3/compile'
               sbt 'ifaceNative/compile ; ifaceNative2_12/compile ; ifaceNative3/compile'
+              sbt 'bindgen/compile'
             '';
             installPhase = ''
               mkdir -p $out/bin
