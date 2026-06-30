@@ -55,17 +55,37 @@ jobs:
       - name: Setup for examples
         run: |
           git clone https://github.com/keynmol/sn-bindgen-examples examples
-          cd examples
-          ./manual_setup.sh
 
           PLATFORM="$(uname)"
+
+          if [ $PLATFORM == "Darwin" ]; then
+            echo "It's a Mac"
+            brew install llvm@17 ninja sbt autoconf
+            echo "LLVM_BIN=/opt/homebrew/opt/llvm@17/bin" >> $GITHUB_ENV
+          else
+            echo "It's a Linux"
+            wget https://apt.llvm.org/llvm.sh
+            chmod +x llvm.sh
+            sudo ./llvm.sh 17
+            sudo apt-get install -y ninja-build nasm autoconf autoconf-archive automake libtool
+
+            # ALL OF THIS FOR SDL: https://wiki.libsdl.org/SDL3/README-linux#build-dependencies
+            sudo apt-get install -y build-essential git make \
+            pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
+            libaudio-dev libfribidi-dev libjack-dev libsndio-dev libx11-dev libxext-dev \
+            libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
+            libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
+            libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libthai-dev
+
+            echo "LLVM_BIN=/usr/lib/llvm-17/bin" >> $GITHUB_ENV
+          fi
+
           if [ $PLATFORM == "Darwin" ]; then
             python3 -m pip install packaging
           else
             docker run -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
             docker run -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql-password -e MYSQL_DATABASE=mysql_db -p 3306:3306 -d mysql
             docker run -p 6379:6379 -d redis
-            sudo apt install ninja-build nasm
           fi
 
       - name: Cache sbt-vcpkg
