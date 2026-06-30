@@ -24,7 +24,7 @@ typedef struct {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -123,7 +123,7 @@ typedef struct {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -211,7 +211,7 @@ typedef union {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -316,7 +316,7 @@ Small* with_pointers(Small *x, int y);
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -395,7 +395,7 @@ Small bad_return_type();
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -439,22 +439,22 @@ object functions:
   import extern_functions.*
   export extern_functions.*
 
-  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_arguments(n, n2)
-
   def bad_arguments(n : Small, n2 : Small)(using Zone): Unit =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](2)
     !(__ptr_0 + 0) = n
     !(__ptr_0 + 1) = n2
     __sn_wrap_libtest_bad_arguments((__ptr_0 + 0), (__ptr_0 + 1))
 
+  def bad_arguments(n : Ptr[Small], n2 : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_arguments(n, n2)
+
+  def bad_return_type()(__return : Ptr[Small]): Unit =
+    __sn_wrap_libtest_bad_return_type(__return)
+
   def bad_return_type()(using Zone): Small =
     val __ptr_0: Ptr[Small] = _root_.scala.scalanative.unsafe.alloc[Small](1)
     __sn_wrap_libtest_bad_return_type((__ptr_0 + 0))
     !(__ptr_0 + 0)
-
-  def bad_return_type()(__return : Ptr[Small]): Unit =
-    __sn_wrap_libtest_bad_return_type(__return)
 
 object types:
     export _root_.libtest.structs.*
@@ -469,7 +469,7 @@ object all:
  </div>
 <div class = "bindgen-generated-c">
 <div class = "bindgen-generated-c-title">Glue C code</div>
-<pre><code class="language-c">// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+<pre><code class="language-c">// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 #include &lt;string.h&gt;
 
@@ -516,7 +516,7 @@ typedef enum {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -603,7 +603,7 @@ typedef int (*Visitor)(Cursor*);
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -660,7 +660,7 @@ typedef struct {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -724,7 +724,7 @@ enum {
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -778,7 +778,7 @@ but planned.</p>
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -958,7 +958,7 @@ with the original.</p>
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
@@ -1028,7 +1028,7 @@ extern void *some_opaque;
  <div class = "bindgen-generated-scala-title">Scala code</div>
 <pre><code class="language-scala">package libtest
 
-// This file was generated using sn-bindgen 0.4.5+5-c49bd229-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
+// This file was generated using sn-bindgen 0.4.5+6-7f00cb27-SNAPSHOT: https://sn-bindgen.indoorvivants.com/
 
 import _root_.scala.scalanative.unsafe.*
 import _root_.scala.scalanative.unsigned.*
