@@ -63,6 +63,14 @@ def constructType(typ: CXType)(using
           parameterTypes.map(ctp => CType.Parameter(None, ctp)).toList
       )
 
+    case CXType_FunctionNoProto =>
+      val resultType = clang_getResultType(typ)
+
+      CType.Function(
+        returnType = constructType(resultType),
+        parameters = List.empty
+      )
+
     case CXType_Pointer =>
       val pointee = clang_getPointeeType(typ)
       CType.Pointer(of = constructType(pointee))

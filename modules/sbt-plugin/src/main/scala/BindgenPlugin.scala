@@ -3,20 +3,16 @@ import bindgen.interface.{LogLevel, *}
 import com.indoorvivants.detective.Platform
 import sbt.*
 import sbt.Keys.*
-import sjsonnew.JsonFormat
+import sbtcompat.PluginCompat.*
+import sjsonnew.{Builder, JsonFormat, Unbuilder, deserializationError}
 
 import java.io.{FileOutputStream, InputStream}
+import java.nio.file.Paths
 import scala.scalanative.sbtplugin.ScalaNativePlugin
 import scala.util.Try
 
 import ArtifactNames.*
-
-import sbtcompat.PluginCompat.*
-
-import sjsonnew.{Builder, JsonFormat, Unbuilder, deserializationError}
-// import lmcoursier.internal.shaded.coursier.core.shaded.geny.Internal
 import CacheImplicits.*
-import java.nio.file.Paths
 
 sealed trait BindgenMode extends Product with Serializable
 object BindgenMode {
