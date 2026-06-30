@@ -8,6 +8,19 @@ typedef struct {
     char *b;
 } HasComment;
 
+
+/// hello
+/// this is a doxygen support comment
+typedef struct {
+
+} HasTripleSlashComment;
+
+//! hello
+//! this is a doxygen support comment
+typedef struct {
+
+} HasWeirdComment;
+
 // hello
 typedef struct {
 

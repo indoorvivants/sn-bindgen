@@ -229,7 +229,7 @@ lazy val localBindgenArtifact = project
         .withConfigurations(Vector(Compile))
     addArtifact(
       Def.setting(build(jarString(Platform.target))),
-      Def.task { (bindgen / Compile / nativeLink).value }
+      Def.task { (bindgen / Compile / nativeLinkReleaseFast).value }
     )
   }
 

@@ -20,8 +20,26 @@ def extractMetadata(cursor: CXCursor)(using Zone, Config) =
     .map(_.string)
     .filter(_ != null)
     .map(_.trim.stripTrailing())
-    .filter: trimmed =>
-      trimmed.startsWith("/*") && trimmed.endsWith("*/")
+    .flatMap:
+      // regular javadoc style comment
+      case trimmed if (trimmed.startsWith("/*") && trimmed.endsWith("*/")) =>
+        Some(trimmed)
+      case trimmed =>
+        val lines = trimmed.linesIterator.toList.map(_.trim)
+        if lines.forall(l => l.startsWith("///") || l.isEmpty) then
+          Some(
+            "/**\n" + lines
+              .map("*" + _.stripPrefix("///"))
+              .mkString("\n") + "\n*/"
+          )
+        else if lines.forall(l => l.startsWith("//!") || l.isEmpty) then
+          Some(
+            "/**\n" + lines
+              .map("*" + _.stripPrefix("//!"))
+              .mkString("\n") + "\n*/"
+          )
+        else None
+        end if
 
   Meta(
     comment = rawComment.map(CommentTextWithMarkers(_)),
