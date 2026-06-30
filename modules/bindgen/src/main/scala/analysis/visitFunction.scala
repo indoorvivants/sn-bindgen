@@ -13,6 +13,8 @@ def visitFunction(functionCursor: CXCursor)(using Zone, Config): Def.Function =
   val functionName = clang_getCursorSpelling(functionCursor).string
   val returnType = clang_getResultType(typ)
 
+  trace(s"Visiting function ${functionName}")
+
   val (ptr, memory) = Captured.unsafe[DefBuilder.Function](
     DefBuilder.Function(
       name = FunctionName(functionName),
