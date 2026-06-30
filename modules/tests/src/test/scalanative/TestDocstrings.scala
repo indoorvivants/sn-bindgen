@@ -12,15 +12,47 @@ class TestDocstrings:
     val hasDoc =
       docOf[HasComment].map(_.linesIterator.map(_.trim).mkString("\n"))
 
-    val expected =
-      """
+    assertEquals(
+      hasDoc,
+      Some(
+        """
     |/**
     |* hello this is a comment
     |* It's rendered correctly
     |* @a is an integer
     |*/
     """.trim.stripMargin
+      )
+    )
 
-    assertEquals(hasDoc, Some(expected))
+    val hasTripleSlashDoc =
+      docOf[HasTripleSlashComment].map(
+        _.linesIterator.map(_.trim).mkString("\n")
+      )
+
+    assertEquals(
+      hasTripleSlashDoc,
+      Some("""
+    |/**
+    |* hello
+    |* this is a doxygen support comment
+    |*/
+    """.trim.stripMargin)
+    )
+
+    val hasWeirdComment =
+      docOf[HasWeirdComment].map(
+        _.linesIterator.map(_.trim).mkString("\n")
+      )
+
+    assertEquals(
+      hasWeirdComment,
+      Some("""
+    |/**
+    |* hello
+    |* this is a doxygen support comment
+    |*/
+    """.trim.stripMargin)
+    )
   end test_comments
 end TestDocstrings
