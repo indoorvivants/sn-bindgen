@@ -4,12 +4,21 @@ import libclang.*
 
 import fluent.*
 import scalanative.unsafe.*
+import scalanative.unsigned.*
 
 object BindingGenerator:
   def run(context: Context, environment: ConfiguredEnvironment)(using Zone)(
       using config: Config
   ): Either[BindingError, Binding] =
     val index = clang_createIndex(0, 0)
+    // clang_createIndex enables LLVM's crash recovery, which replaces the
+    // process's SIGBUS/SIGSEGV handlers with its own. Scala Native's
+    // multithreaded GC stops threads by having them fault on a protected page,
+    // and LLVM's handler answers a fault on a thread outside a crash recovery
+    // context by re-raising it with no fault address, which Scala Native then
+    // reports as an unrecoverable NullPointerException. Disabling it restores
+    // Scala Native's handlers; a libclang crash ends the run either way.
+    clang_toggleCrashRecovery(0.toUInt)
 
     ClangTranslationUnit
       .create(index, context.headerFile.value, environment.clang)
